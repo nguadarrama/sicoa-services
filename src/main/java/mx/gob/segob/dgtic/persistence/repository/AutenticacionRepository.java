@@ -1,0 +1,112 @@
+/*
+* ****************************************************
+* * Aplicaci&oacute;n Base
+* * Versi&oacute;n 1.0.0
+* * Secretar&iacute;a de Gobernaci&oacute;n - DGTIC
+* ****************************************************
+*/
+package mx.gob.segob.dgtic.persistence.repository;
+
+import java.util.List;
+
+import javax.security.auth.login.CredentialNotFoundException;
+
+import mx.gob.segob.dgtic.comun.transport.dto.autenticacion.UsuarioAcceso;
+
+/**
+ * Definici&oacute;n de los m&eacute;todos que interact&uacute;an con las estructuras relacionadas con la autenticaci&oacute;n
+ */
+public interface AutenticacionRepository {
+
+
+	/**
+	 * Obtener datos del usuario por clave.
+	 *
+	 * @param cveUsuario La clave &uacute;nica del usuario
+	 * @return Los datos del usuario
+	 */
+	UsuarioAcceso obtenerUsuarioAccesoByCve(String cveUsuario);
+
+	/**
+	 * Obtener la palabra clave asignada al usuario para su identificacion
+	 *
+	 * @param cveUsuario nombre del usuario a ingresar
+	 * @return La palabra clave que tiene asignada como sus credenciales de acceso
+	 * 
+	 * 
+	 * @throws CredentialNotFoundException Excepci&oacute;n lanzada cuando no existe un usuario con esa clave
+	 */
+	String obtenerPalabraClavePorUsuario(String cveUsuario) throws CredentialNotFoundException;
+	/**
+	 * Registra intento acceso.
+	 * 
+	 * <p> Actualiza el numero de intento fallido realizado con esa clave de usuario para posterior consulta
+	 *
+	 * @param cveUsuario La clave &uacute;nica del usuario
+	 * @param numeroIntento el n&uacute;mero de intento al cual se actualizara la informacion del usuario
+	 */
+	void registraIntentoAcceso(String cveUsuario, Integer numeroIntento);
+
+	/**
+	 * Bloquear usuario acceso.
+	 * <p>
+	 * Proceso que cambia a bloqueado la bandera que identifica el bloqueo de un usuario
+	 *
+	 * @param cveUsuario La clave &uacute;nica del usuario
+	 */
+	void bloquearUsuarioAcceso(String cveUsuario);
+	
+	/**
+	 * Desbloquear usuario acceso.
+	 *	<p>
+	 * Proceso que cambia a desbloqueado la bandera que identifica el bloqueo de un usuario
+	 *
+	 * @param cveUsuario La clave &uacute;nica del usuario
+	 */
+	void desbloquearUsuarioAcceso(String cveUsuario);
+
+	/**
+	 * Registrar acceso usuario.
+	 *	<p>
+	 *	Proceso que actualiza la informaci&oacute;n de ingreso para el usuario
+	 *
+	 * @param cveUsuario La clave &uacute;nica del usuario
+	 */
+	void registrarAccesoUsuario(String cveUsuario);
+	
+	/**
+	 * Obtener perfiles usuario.
+	 *
+	 * @param cveUsuario La clave &uacute;nica del usuario
+	 * @return Lista de perfiles activos asociados al usuario
+	 */
+	List<String> obtenerPerfilesUsuario(String cveUsuario);
+	
+	/**
+	 * Obtener permisos usuario.
+	 *
+	 * @param cveUsuario La clave &uacute;nica del usuario
+	 * @return Lista de permisos activos asociados al usuario
+	 */
+	List<String> obtenerPermisosUsuario(String cveUsuario);
+
+	/**
+	 * Cerrar session.
+	 * <p>
+	 * Proceso que cambia los estados que identifican a un usuario con sesi&oacute;n iniciada a sesi&oacute;n cerrada.
+	 *
+	 * @param cveUsuario La clave &uacute;nica del usuario
+	 */
+	void cerrarSession(String cveUsuario);
+
+	/**
+	 * Anular session usuarios.
+	 * <p>
+	 * Proceso que cambia el estado de su sesion a todos los usuarios por cerrado 
+	 */
+	void anularSessionUsuarios();
+	
+	void cambiarPassword(String password, String claveUsuario);
+
+	
+}

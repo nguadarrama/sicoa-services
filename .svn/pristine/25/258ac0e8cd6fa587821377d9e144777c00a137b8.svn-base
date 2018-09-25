@@ -1,0 +1,10 @@
+package mx.gob.segob.dgtic.persistence.repository;
+
+import java.util.List;
+
+import mx.gob.segob.dgtic.comun.transport.dto.asistencia.Asistencia;
+
+public interface AsistenciaRepository {
+	public void guardaAsistencia(List<Asistencia> asistencias);
+	public List<Asistencia> obtieneAsistencia();
+}

@@ -1,0 +1,6 @@
+package mx.gob.segob.dgtic.business.service;
+
+
+public interface AsistenciaService {
+	public void procesaAsistencia();
+}

@@ -1,0 +1,21 @@
+package mx.gob.segob.dgtic.business.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import mx.gob.segob.dgtic.business.rules.asistencia.AsistenciaRules;
+import mx.gob.segob.dgtic.business.service.AsistenciaService;
+
+@Service
+public class AsistenciaServiceImpl implements AsistenciaService {
+
+	@Autowired
+	private AsistenciaRules asistenciaRules;
+	
+	@Override
+	public void procesaAsistencia() {
+		asistenciaRules.procesaAsistencia();
+	}
+	
+	
+}

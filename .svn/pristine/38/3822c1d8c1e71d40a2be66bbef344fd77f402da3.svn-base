@@ -1,0 +1,25 @@
+###
+### Configuracion requerida para la ejecucion de pruebas unitarias
+###
+
+###
+### Datasource
+###
+#Mysql
+#jdbc.test.datasource.driver=com.mysql.jdbc.Driver
+#jdbc.test.datasource.url=jdbc:mysql://{HOST}:{PORT}/{BaseDatos}
+
+#Oracle
+#jdbc.test.datasource.driver=oracle.jdbc.driver.OracleDriver
+#jdbc.test.datasource.url=jdbc:oracle:thin:@{HOST}:{PORT}:{SID_SERVICENAME}
+
+#SQLServer
+#jdbc.test.datasource.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver
+#jdbc.test.datasource.url=jdbc:sqlserver://{HOST | HOST\\INSTANCIA}:{PORT};databaseName={NOMBRE_BASE}
+#Propiedades testing
+
+
+jdbc.test.datasource.driver=com.mysql.jdbc.Driver
+jdbc.test.datasource.url=jdbc:mysql://{HOST}:{PORT}/{BaseDatos}
+jdbc.test.datasource.user=changeit
+jdbc.test.datasource.secreto=changeit
