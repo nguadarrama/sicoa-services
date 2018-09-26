@@ -11,5 +11,6 @@ public interface UsuarioRepository {
 	public void agregaUsuario(UsuarioDto usuarioDto);
 	public void eliminaUsuario(String claveUsuario);
 	public String consultaContrasenia(String claveUsuario);
+	public void reiniciaContrasenia(String claveUsuario);
 	
 }

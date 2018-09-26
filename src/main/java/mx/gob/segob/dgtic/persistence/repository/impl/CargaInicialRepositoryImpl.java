@@ -9,18 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.jfree.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import mx.gob.segob.dgtic.comun.sicoa.dto.PerfilDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
-import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
 import mx.gob.segob.dgtic.persistence.repository.CargaInicialRepository;
-import mx.gob.segob.dgtic.persistence.repository.HorarioRepository;
-import mx.gob.segob.dgtic.persistence.repository.PerfilRepository;
 import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 
 @Repository
@@ -56,7 +51,7 @@ public class CargaInicialRepositoryImpl extends RecursoBase implements CargaInic
     		usuarioDto.setApellidoPaterno((String)usuario.get("APELLIDO_PATERNO"));
     		usuarioDto.setApellidoMaterno((String)usuario.get("APELLIDO_MATERNO"));
     		usuarioDto.setFechaIngreso((Timestamp)usuario.get("FECHA_ING_SECRETARIA"));
-    		usuarioDto.setClavePerfil("1");
+//    		usuarioDto.setClavePerfil("1");
     		usuarioDto.setPassword((String)usuario.get("NUMERO_EMPLEADO"));
     		usuarioDto.setIdPuesto((String)usuario.get("PUESTO_EMPLEADO"));
     		//usuarioDto.setClavePerfil(perfilDto);

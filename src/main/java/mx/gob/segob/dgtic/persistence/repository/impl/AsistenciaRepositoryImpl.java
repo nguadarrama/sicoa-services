@@ -1,113 +1,67 @@
 package mx.gob.segob.dgtic.persistence.repository.impl;
 
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.TipoDiaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
-import mx.gob.segob.dgtic.comun.transport.dto.asistencia.Asistencia;
+import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.persistence.repository.AsistenciaRepository;
-import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
+import mx.gob.segob.dgtic.persistence.repository.UsuarioRepository;
 
 @Repository
-public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaRepository {
-	
+public class AsistenciaRepositoryImpl implements AsistenciaRepository {
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 	
 	@Autowired
     private NamedParameterJdbcTemplate nameParameterJdbcTemplate;
 	
 	@Autowired
-	@Qualifier("jdbcTemplateSqlServer")
-	private JdbcTemplate jdbcTemplateSqlServer;
-
+	private UsuarioRepository usuarioRepository;
+	
 	@Override
-	public List<AsistenciaDto> obtieneAsistencia() {
+	public List<AsistenciaDto> buscaAsistenciaEmpleado(String claveEmpleado) {
+			
 		StringBuilder qry = new StringBuilder();
-        qry.append("SELECT * FROM ds_asistencia_sesnsp.dbo.m_asistencia");
-        List<Map<String, Object>> asistencias = jdbcTemplateSqlServer.queryForList(qry.toString());
+		
+		qry.append("SELECT a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre ");
+        qry.append("FROM m_asistencia a, c_tipo_dia t ");
+        qry.append("WHERE id_usuario = ?");
+        qry.append("and a.id_tipo_dia = t.id_tipo_dia");
+
+        MapSqlParameterSource parametros = new MapSqlParameterSource();
+        parametros.addValue("claveEmpleado", claveEmpleado);
+        
+        List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString(), claveEmpleado);
         List<AsistenciaDto> listaAsistencia = new ArrayList<>();
         
-        try {
-	        for (Map<String, Object> a : asistencias) {
-	    		
-	    		UsuarioDto usuarioDto = new UsuarioDto();
-	    		usuarioDto.setClaveUsuario(a.get("id_enrolamiento").toString());
-	    		
-	    		AsistenciaDto asistencia = new AsistenciaDto();
-	    		asistencia.setUsuarioDto(usuarioDto);
-	    		asistencia.setEntrada((Timestamp) a.get("fecha"));
-	    		
-	    		listaAsistencia.add(asistencia);
-	    	}
-        } catch (Exception e) {
-        	logger.warn("No se recuperaron las asistencias del sistema de asistencias: " + e.getMessage());
-        }
+        UsuarioDto usuario = usuarioRepository.buscaUsuario(claveEmpleado);
         
-        logger.info(listaAsistencia.size() + " eventos en ASISTENCIAS");
+        for (Map<String, Object> a : asistencias) {
+        	TipoDiaDto tipoDia = new TipoDiaDto();
+        	tipoDia.setIdTipoDia((Integer) a.get("id_tipo_dia"));
+        	tipoDia.setNombre((String) a.get("nombre"));
+        	
+        	AsistenciaDto asistencia = new AsistenciaDto();
+    		asistencia.setUsuarioDto(usuario);
+    		asistencia.setIdTipoDia(tipoDia);
+    		asistencia.setEntrada((Timestamp) a.get("entrada"));
+    		asistencia.setSalida((Timestamp) a.get("salida"));
+    		
+    		listaAsistencia.add(asistencia);
+    	}
         
-		return listaAsistencia;
+        return listaAsistencia;
 	}
 
-	@Override
-	public void guardaAsistencia(final List<AsistenciaDto> asistencias) {
-		int[] inserciones = null;
-		StringBuilder qry = new StringBuilder();
-		
-		qry.append("INSERT INTO M_ASISTENCIA (id_usuario, id_tipo_dia, id_estatus, entrada, salida) ");
-		qry.append("VALUES (?, null, null, ?, null) ");
-		
-		try {
-		
-			inserciones = jdbcTemplate.batchUpdate(qry.toString(), new BatchPreparedStatementSetter() {
-	
-				@Override
-				public int getBatchSize() {
-					return asistencias.size();
-				}
-	
-				@Override
-				public void setValues(java.sql.PreparedStatement ps, int i) throws SQLException {
-					AsistenciaDto asistencia = asistencias.get(i);
-					ps.setString(1, asistencia.getUsuarioDto().getClaveUsuario());
-					ps.setTimestamp(2, asistencia.getEntrada());
-				}
-				
-			});
-			
-		} catch (Exception e) {
-			logger.warn("No se insertaron las asistencias: " + e.getMessage());
-		}
-			
-		logger.info("Se guardaron " + inserciones.length + " asistencias");
-	}
-
-	@Override
-	public List<AsistenciaDto> obtenerListaAsistencia() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AsistenciaDto buscaAsistencia(int idHorario) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void eliminaAsistencia(Integer id) {
-		// TODO Auto-generated method stub
-		
-	}
 }

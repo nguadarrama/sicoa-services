@@ -1,5 +1,6 @@
 package mx.gob.segob.dgtic.persistence.repository.impl;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,9 +13,11 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import mx.gob.segob.dgtic.business.service.HorarioService;
+import mx.gob.segob.dgtic.comun.sicoa.dto.PerfilDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
 import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
+import mx.gob.segob.dgtic.persistence.repository.PerfilRepository;
 import mx.gob.segob.dgtic.persistence.repository.UsuarioRepository;
 import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 
@@ -30,13 +33,16 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 	@Autowired
 	private HorarioService horarioService;
 	
+	@Autowired
+	private PerfilRepository perfilRepository;
+	
 	
 	@Override
 	public List<UsuarioDto> obtenerListaUsuarios() {
 		StringBuilder qry = new StringBuilder();
-        qry.append("SELECT id_usuario, id_area, cve_c_perfil, id_horario, id_puesto, cve_m_usuario, nombre, apellido_paterno, apellido_materno, "
+        qry.append("select id_usuario, id_area, cve_c_perfil, id_horario, id_puesto, cve_m_usuario, nombre, apellido_paterno, apellido_materno, "
         		+ "fecha_ingreso, activo, nuevo, en_sesion, ultimo_acceso, numero_intentos, bloqueado, fecha_bloqueo,  primera_vez, estatus ");
-        qry.append("FROM m_usuario ");
+        qry.append("from m_usuario ");
         
         List<Map<String, Object>> usuarios = jdbcTemplate.queryForList(qry.toString());
         List<UsuarioDto> listaUsuario = new ArrayList<>();
@@ -74,25 +80,52 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 	@Override
 	public UsuarioDto buscaUsuario(String claveUsuario) {
 		
-		
         StringBuilder qry = new StringBuilder();
-        qry.append("SELECT id_usuario, id_area, cve_c_perfil, id_horario, id_puesto, cve_m_usuario, nombre, apellido_paterno, apellido_materno, "
-        		+ "fecha_ingreso, activo, nuevo, en_sesion, ultimo_acceso, numero_intentos, bloqueado, fecha_bloqueo,  primera_vez, estatus ");
-        qry.append("FROM m_usuario ");
-        qry.append("WHERE cve_m_usuario = :claveUsuario");
+        qry.append("select u.id_usuario, u.id_area, u.cve_c_perfil, u.id_horario, u.id_puesto, u.cve_m_usuario, ");
+        qry.append("u.nombre, u.apellido_paterno, u.apellido_materno, u.fecha_ingreso, u.activo, u.nuevo, u.en_sesion, ");
+        qry.append("u.ultimo_acceso, u.numero_intentos, u.bloqueado, u.fecha_bloqueo, u.primera_vez, u.estatus, ");
+        qry.append("p.descripcion, p.estatus, ");
+        qry.append("h.hora_entrada, h.hora_salida ");
+        qry.append("from m_usuario u, c_perfil p, c_horario h ");
+        qry.append("where cve_m_usuario = :claveUsuario ");
+        qry.append("and u.cve_c_perfil = p.cve_c_perfil ");
+        qry.append("and u.id_horario = h.id_horario");
+        
         MapSqlParameterSource parametros = new MapSqlParameterSource();
         parametros.addValue("claveUsuario", claveUsuario);
         
-        UsuarioDto usuario = nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<UsuarioDto>(UsuarioDto.class));
+        Map<String, Object> informacionConsulta = nameParameterJdbcTemplate.queryForMap(qry.toString(), parametros);
         
-        //busca el horario del usuario y se lo setea
-        /*if (usuario.getIdHorario() != null && usuario.getIdHorario().getIdHorario() != null) { 
-	    	Horario horario = horarioService.buscaHorario(usuario.getIdHorario().getIdHorario());
-	    	usuario.getIdHorario().setHoraEntrada(horario.getHoraEntrada());
-	        usuario.getIdHorario().setHoraSalida(horario.getHoraSalida());
-        } else {
-        	logger.info("Usuario: " + usuario.getClaveUsuario() + " no cuenta con id_horario");
-        }*/
+        Horario horario = new Horario();
+        horario.setIdHorario((Integer) informacionConsulta.get("id_horario"));
+        horario.setHoraEntrada((Time) informacionConsulta.get("hora_entrada"));
+        horario.setHoraSalida((Time) informacionConsulta.get("hora_salida"));
+        
+        PerfilDto perfil = new PerfilDto();
+        perfil.setClavePerfil((String) informacionConsulta.get("cve_c_perfil"));
+        perfil.setDescripcion((String) informacionConsulta.get("descripcion"));
+        
+        UsuarioDto usuario = new UsuarioDto();
+        
+        usuario.setIdUsuario((Integer) informacionConsulta.get("id_usuario"));
+//        usuario.setIdArea(area);
+        usuario.setClavePerfil(perfil);
+        usuario.setIdHorario(horario);
+//        usuario.setIdPuesto(puesto);
+        usuario.setClaveUsuario((String) informacionConsulta.get("cve_m_usuario"));
+        usuario.setNombre((String) informacionConsulta.get("nombre"));
+        usuario.setApellidoPaterno((String) informacionConsulta.get("apellido_paterno"));
+        usuario.setApellidoMaterno((String) informacionConsulta.get("apellido_materno"));
+        usuario.setFechaIngreso((Date) informacionConsulta.get("fecha_ingreso"));
+        usuario.setActivo((Boolean) informacionConsulta.get("activo"));
+        usuario.setNuevo((Boolean) informacionConsulta.get("nuevo"));
+        usuario.setEnSesion((String) informacionConsulta.get("en_sesion"));
+        usuario.setUltimoAcceso((Date) informacionConsulta.get("ultimo_acceso"));
+        usuario.setNumeroIntentos((Integer) informacionConsulta.get("numero_intentos"));
+        usuario.setBloqueado((String) informacionConsulta.get("bloqueado"));
+        usuario.setFechaBloqueo((Date) informacionConsulta.get("fecha_bloqueo"));
+        usuario.setPrimeraVez((String) informacionConsulta.get("primera_vez"));
+        usuario.setEstatus((String) informacionConsulta.get("estatus"));
         
         return usuario;
 		
@@ -102,7 +135,7 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 	public void modificaUsuario(UsuarioDto usuarioDto) {
 		
 		StringBuilder qry = new StringBuilder();
-		qry.append("UPDATE m_usuario SET id_area = :idArea, cve_c_perfil = :clavePerfil, id_horario = :idHorario, id_puesto = :idPuesto, nombre = :nombre, "
+		qry.append("update m_usuario set id_area = :idArea, cve_c_perfil = :clavePerfil, id_horario = :idHorario, id_puesto = :idPuesto, nombre = :nombre, "
 				+ "apellido_paterno = : apellidoPaterno, apellido_materno =: apellidoMaterno, fecha_ingreso =: fechaIngreso, password =: password, activo =:activo, "
 				+ "nuevo =: nuevo, en_sesion =: enSesion, ultimo_acceso =: ultimoAcceso, numero_intentos =: numeroIntentos, bloqueado =: bloqueado, "
 				+ "fecha_bloqueo =: fechaBloqueo, primera_vez =: primeraVez, estatus =: estatus");
@@ -136,9 +169,9 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 		
 		StringBuilder qry = new StringBuilder();
 		System.out.println(" numero de intentos"+usuarioDto.getNumeroIntentos());
-		qry.append("INSERT INTO m_usuario (id_area, cve_c_perfil, id_horario, id_puesto, cve_m_usuario, nombre, apellido_paterno, apellido_materno, "
+		qry.append("insert into m_usuario (id_area, cve_c_perfil, id_horario, id_puesto, cve_m_usuario, nombre, apellido_paterno, apellido_materno, "
         		+ "fecha_ingreso, password, activo, nuevo, en_sesion, ultimo_acceso, numero_intentos, bloqueado, fecha_bloqueo,  primera_vez, estatus) ");
-		qry.append("VALUES ( :idArea, :clavePerfil, :idHorario, :idPuesto, :claveUsuario, :nombre, :apellidoPaterno, :apellidoMaterno, :fechaIngreso, "
+		qry.append("values ( :idArea, :clavePerfil, :idHorario, :idPuesto, :claveUsuario, :nombre, :apellidoPaterno, :apellidoMaterno, :fechaIngreso, "
 				+ ":password, :activo, :nuevo, :enSesion, :ultimoAcceso, :numeroIntentos, :bloqueado, :fechaBloqueo, :primeraVez, :estatus) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
@@ -168,7 +201,7 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 	public void eliminaUsuario(String claveUsuario) {
 		
 		StringBuilder qry = new StringBuilder();
-		qry.append("DELETE FROM m_usuario WHERE cve_m_usuario = :claveUsuario");
+		qry.append("delete from m_usuario where cve_m_usuario = :claveUsuario");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("claveUsuario", claveUsuario);
@@ -179,14 +212,25 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 	public String consultaContrasenia(String claveUsuario) {
 	StringBuilder qry = new StringBuilder();
 	UsuarioDto usuarioDto=null;
-	       qry.append("SELECT password ");
-	       qry.append("FROM m_usuario ");
-	       qry.append("WHERE cve_m_usuario = :claveUsuario");
+	       qry.append("select password ");
+	       qry.append("from m_usuario ");
+	       qry.append("where cve_m_usuario = :claveUsuario");
 	       MapSqlParameterSource parametros = new MapSqlParameterSource();
 	       parametros.addValue("claveUsuario", claveUsuario);
 	       
 	       usuarioDto= nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<UsuarioDto>(UsuarioDto.class));
 	       return usuarioDto.getPassword();
 	}
+	
+	@Override
+	public void reiniciaContrasenia(String claveUsuario) {
+		System.out.println("contrasenia reiniciada "+claveUsuario);
+		StringBuilder qry = new StringBuilder();
+		qry.append("update m_usuario set primera_vez ='S' WHERE cve_m_usuario = :claveUsuario  ");
+		MapSqlParameterSource parametros = new MapSqlParameterSource();
+		parametros.addValue("claveUsuario", claveUsuario);
+		nameParameterJdbcTemplate.update(qry.toString(), parametros);	
+	}
+	
 	
 }

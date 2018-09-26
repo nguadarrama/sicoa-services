@@ -13,12 +13,15 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import mx.gob.segob.dgtic.business.service.CargaInicialService;
 import mx.gob.segob.dgtic.business.service.TipoDiaService;
 import mx.gob.segob.dgtic.business.service.UsuarioService;
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.TipoDiaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.persistence.repository.CargaAsistenciaRepository;
+import mx.gob.segob.dgtic.persistence.repository.CargaInicialRepository;
+import mx.gob.segob.dgtic.persistence.repository.ConfiguracionRepository;
 import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 
 @Component
@@ -33,23 +36,38 @@ public class CargaAsistenciaRules extends RecursoBase {
 	@Autowired
 	private TipoDiaService tipoDiaService;
 	
+	@Autowired
+	private ConfiguracionRepository configuracionRepository;
+	
+	@Autowired
+	private CargaInicialService cargaInicialService;
+	
 	public void procesaAsistencia() {
 
 		logger.info("***** PROCESANDO ASISTENCIA *****");
 		
-		
 		//Filtra asistencia, sólo se procesa aquella asistencia en la que el empleado se encuentra en nómina 
 		List<AsistenciaDto> listaAsistencia = filtraAsistencia();
 		
-		//Se calculan las entradas y salidas
-		List<AsistenciaDto> listaAsistenciaEntradaSalida = calculaEntradasSalidas(listaAsistencia);
+		if (listaAsistencia != null) {
 		
-		//Se calculan las incidencias con base a las entradas y salidas
-		List<AsistenciaDto> listaAsistenciaCalculada = calculaIncidencias(listaAsistenciaEntradaSalida);
+			//Se calculan las entradas y salidas
+			List<AsistenciaDto> listaAsistenciaEntradaSalida = calculaEntradasSalidas(listaAsistencia);
+			
+			//Se calculan las incidencias con base a las entradas y salidas
 		
-		//la asistencia se guarda
-		asistenciaRepository.guardaAsistencia(listaAsistenciaCalculada);
+			List<AsistenciaDto> listaAsistenciaCalculada = calculaIncidencias(listaAsistenciaEntradaSalida);
 		
+		
+			//la asistencia se guarda
+			asistenciaRepository.guardaAsistencia(listaAsistenciaCalculada);
+			
+			//actualiza la última fecha de carga de asistencias
+			configuracionRepository.actualizaUltimaFechaCargaAsistencia();
+		} else {
+			logger.info("No se generó ninguna asistencia");
+		}
+			
 		logger.info("***** TERMINA PROCESO ASISTENCIA *****");
 	}
 	
@@ -58,7 +76,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 		List<UsuarioDto> listaUsuarios = usuarioService.obtenerListaUsuarios();
 		
 		//obtiene asistencia del sistema de asistencias (biométricos - ASISTENCIA)
-		List<AsistenciaDto> listaAsistenciaCompleta = asistenciaRepository.obtieneAsistencia();
+		List<AsistenciaDto> listaAsistenciaCompleta = asistenciaRepository.obtieneAsistencia(configuracionRepository.obtieneUltimaFechaCargaAsistencia());
 		
 		if (listaAsistenciaCompleta.size() != 0) {
 			List<AsistenciaDto> listaAsistenciaFiltrada = new ArrayList<>();
@@ -239,30 +257,30 @@ public class CargaAsistenciaRules extends RecursoBase {
 			
 			UsuarioDto usuario = usuarioService.buscaUsuario(a.getUsuarioDto().getClaveUsuario());
 			
-//			if (a.getEntrada() != null) {
-//				if (esPuntualEntrada(a.getEntrada(), usuario.getIdHorario())) {
-//					if (a.getSalida() != null) { 
-//						if (esPuntualSalida(a.getSalida(), usuario.getIdHorario())) { //Día normal. Fue puntual en entrada y salida
-//							TipoDiaDto tipoDia = obtieneTipoDia("Día Normal");
-//							a.setIdTipoDia(tipoDia);
-//						} else {
-//							TipoDiaDto tipoDia = obtieneTipoDia("Omisión de Salida");			//checó salida antes: "Omisión de Salida"
-//							a.setIdTipoDia(tipoDia);
-//						}
-//					} else {																	//no checó salida: "Omisión de Salida"
-//						TipoDiaDto tipoDia = obtieneTipoDia("Omisión de Salida");
-//						a.setIdTipoDia(tipoDia);
-//					}
-//				} else {																	  //Incidencia por permanencia
-//					TipoDiaDto tipoDia = obtieneTipoDia("Incidencia por Permanencia");
-//					a.setIdTipoDia(tipoDia);
-//				}
-//			} else if (a.getEntrada() == null) { 											//no checó entrada: "Omisión de Entrada"
-//				if (a.getSalida() != null) {
-//					TipoDiaDto tipoDia = obtieneTipoDia("Omisión de Entrada");
-//					a.setIdTipoDia(tipoDia);
-//				}
-//			}
+			if (a.getEntrada() != null) {
+				if (esPuntualEntrada(a.getEntrada(), usuario.getIdHorario().getHoraEntrada())) {
+					if (a.getSalida() != null) { 
+						if (esPuntualSalida(a.getSalida(), usuario.getIdHorario().getHoraSalida())) { 
+							TipoDiaDto tipoDia = obtieneTipoDia(1); 	//Día normal. Fue puntual en entrada y salida
+							a.setIdTipoDia(tipoDia);
+						} else {
+							TipoDiaDto tipoDia = obtieneTipoDia(3);		//checó salida antes: "Omisión de Salida"
+							a.setIdTipoDia(tipoDia);
+						}
+					} else {																	
+						TipoDiaDto tipoDia = obtieneTipoDia(3);			//no checó salida: "Omisión de Salida"
+						a.setIdTipoDia(tipoDia);
+					}
+				} else {																	  
+					TipoDiaDto tipoDia = obtieneTipoDia(4);				// "Incidencia por permanencia"
+					a.setIdTipoDia(tipoDia);
+				}
+			} else if (a.getEntrada() == null) { 											
+				if (a.getSalida() != null) {
+					TipoDiaDto tipoDia = obtieneTipoDia(2);				//no checó entrada: "Omisión de Entrada"
+					a.setIdTipoDia(tipoDia);
+				}
+			}
 		}
 		
 		logger.info(listaAsistencia.size() + " asistencias procesadas. Termina cálculo de incidencias");
@@ -270,10 +288,10 @@ public class CargaAsistenciaRules extends RecursoBase {
 		return listaAsistencia;
 	}
 	
-	private TipoDiaDto obtieneTipoDia(String nombreTipoDia) {
+	private TipoDiaDto obtieneTipoDia(int idTipoDia) {
 		
 		for (TipoDiaDto t : tipoDiaService.obtenerListaTipoDias()) {
-			if (nombreTipoDia.equals(t.getNombre())) {
+			if (idTipoDia == t.getIdTipoDia()) {
 				return t;
 			}
 		}

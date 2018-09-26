@@ -32,34 +32,15 @@ public class AsistenciaRecurso {
 	
 	@Autowired
 	private AsistenciaService asistenciaService;
-		
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("obtieneAsistencias")	
-	@PermitAll
-	public Response obtieneAsistencia() {
-
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.obtenerListaAsistencia());
-	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("buscaAsistencia")	
+	@Path("obtieneAsistenciasEmpleado")	
 	@PermitAll
-	public Response buscaAsistencia(@QueryParam("id") Integer id) {
+	public Response buscaAsistenciaEmpleado(@QueryParam("claveEmpleado") String claveEmpleado) {
 
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistencia(id));
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistenciaEmpleado(claveEmpleado));
 	}
 	
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("eliminaAsistencia")	
-	@PermitAll
-	public Response elimina(@QueryParam("id") Integer id) {
-		
-//		asistenciaService.eliminaAsistencia(id);
-
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
-	}
 	
 }
