@@ -27,6 +27,7 @@ import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 @Path("catalogo")
 @Component
 public class TipoDiaRecurso {
+	
 	@Autowired 
 	private TipoDiaService tipoDiaService;
 	

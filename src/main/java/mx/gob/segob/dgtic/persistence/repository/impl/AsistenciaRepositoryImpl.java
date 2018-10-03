@@ -20,6 +20,7 @@ import mx.gob.segob.dgtic.persistence.repository.UsuarioRepository;
 
 @Repository
 public class AsistenciaRepositoryImpl implements AsistenciaRepository {
+	
 	@Autowired
     private JdbcTemplate jdbcTemplate;
 	
