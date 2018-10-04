@@ -1,5 +1,6 @@
 package mx.gob.segob.dgtic.business.rules.asistencia;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,20 @@ public class AsistenciaRules {
 	@Autowired
 	private AsistenciaRepository asistenciaRepository;
 	
-	public List<AsistenciaDto> buscaAsistenciaEmpleado(String claveEmpleado) {
+	public List<AsistenciaDto> buscaAsistenciaEmpleadoMes(String claveEmpleado) {
 		
-		return asistenciaRepository.buscaAsistenciaEmpleado(claveEmpleado);
+		return asistenciaRepository.buscaAsistenciaEmpleadoMes(claveEmpleado);
+		
+	}
+	
+	public List<AsistenciaDto> buscaAsistenciaEmpleadoRango(String claveEmpleado, Date fechaInicio, Date fechaFin) {
+		
+		return asistenciaRepository.buscaAsistenciaEmpleadoRango(claveEmpleado, fechaInicio, fechaFin);
+		
+	}
+	
+	public AsistenciaDto buscaAsistenciaPorId(Integer id) {
+		return asistenciaRepository.buscaAsistenciaPorId(id);
 	}
 	
 }

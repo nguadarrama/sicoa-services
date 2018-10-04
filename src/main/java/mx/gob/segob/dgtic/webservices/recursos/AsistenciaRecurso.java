@@ -35,12 +35,34 @@ public class AsistenciaRecurso {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("obtieneAsistenciasEmpleado")	
+	@Path("obtieneAsistenciasEmpleadoMes")	
 	@PermitAll
-	public Response buscaAsistenciaEmpleado(@QueryParam("claveEmpleado") String claveEmpleado) {
+	public Response buscaAsistenciaEmpleadoMes(@QueryParam("claveEmpleado") String claveEmpleado) {
 
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistenciaEmpleado(claveEmpleado));
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistenciaEmpleadoMes(claveEmpleado));
 	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("obtieneAsistenciasEmpleadoRango")	
+	@PermitAll
+	public Response buscaAsistenciaEmpleadoRango(
+			@QueryParam("claveEmpleado") String claveEmpleado, 
+			@QueryParam("inicio") String inicio, 
+			@QueryParam("fin") String fin) {
+
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistenciaEmpleadoRango(claveEmpleado, inicio, fin));
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("obtieneAsistenciaPorId")	
+	@PermitAll
+	public Response buscaAsistenciaPorId(@QueryParam("id") Integer id) {
+
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistenciaPorId(id));
+	}
+	
 	
 	
 }
