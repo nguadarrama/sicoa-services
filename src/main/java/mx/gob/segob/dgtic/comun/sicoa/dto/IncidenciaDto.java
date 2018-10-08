@@ -18,12 +18,12 @@ public class IncidenciaDto {
 	    /**
 		    * El id tipo incidencia.
 		    */
-		   @MapeaColumna(columna = "id_tipo_incidencia") private Integer idTipoIncidencia;
+		@MapeaColumna(columna = "id_tipo_dia") private TipoDiaDto tipoDia;
 	    
 	    /**
 	     * El id estatus.
 	     */
-	    @MapeaColumnasInternas(columnas={"id_estatus", "id_estatus"}) private EstatusDto idEstatus;
+	    @MapeaColumnasInternas(columnas={"id_estatus", "id_estatus"}) private EstatusDto estatus;
 	   
 	   /**
 	     * El id archivo.
@@ -44,6 +44,11 @@ public class IncidenciaDto {
 	     * Observaciones de la incidencia.
 	     */
 	    @MapeaColumna(columna = "observaciones") private String observaciones;
+	    
+	    /**
+	     * Justificación de la incidencia.
+	     */
+	    @MapeaColumna(columna = "id_justificacion") private JustificacionDto justificacion;
 
 	    /**
 		    * El id incidencia.
@@ -81,32 +86,32 @@ public class IncidenciaDto {
 		    * El id tipo incidencia.
 		    * @return idTipoIncidencia
 		    */
-		public Integer getIdTipoIncidencia() {
-			return idTipoIncidencia;
+		public TipoDiaDto getTipoDia() {
+			return tipoDia;
 		}
 		
 		/**
 		    * El id tipo incidencia.
 		    * @param idTipoIncidencia
 		    */
-		public void setIdTipoIncidencia(Integer idTipoIncidencia) {
-			this.idTipoIncidencia = idTipoIncidencia;
+		public void setTipoDia(TipoDiaDto tipoDia) {
+			this.tipoDia = tipoDia;
 		}
 		
 		/**
 	     * El id estatus.
 	     * @return idEstatus
 	     */
-		public EstatusDto getIdEstatus() {
-			return idEstatus;
+		public EstatusDto getEstatus() {
+			return estatus;
 		}
 		
 		/**
 	     * El id estatus.
 	     * @param idEstatus
 	     */
-		public void setIdEstatus(EstatusDto idEstatus) {
-			this.idEstatus = idEstatus;
+		public void setEstatus(EstatusDto estatus) {
+			this.estatus = estatus;
 		}
 		
 		/**
@@ -172,4 +177,14 @@ public class IncidenciaDto {
 		public void setObservaciones(String observaciones) {
 			this.observaciones = observaciones;
 		}
+
+		public JustificacionDto getJustificacion() {
+			return justificacion;
+		}
+
+		public void setJustificacion(JustificacionDto justificacion) {
+			this.justificacion = justificacion;
+		}
+		
+		
 }

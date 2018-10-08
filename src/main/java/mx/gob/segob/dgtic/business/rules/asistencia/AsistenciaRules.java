@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.IncidenciaDto;
 import mx.gob.segob.dgtic.persistence.repository.AsistenciaRepository;
 
 @Component
@@ -29,6 +30,19 @@ public class AsistenciaRules {
 	
 	public AsistenciaDto buscaAsistenciaPorId(Integer id) {
 		return asistenciaRepository.buscaAsistenciaPorId(id);
+	}
+	
+	public void creaIncidencia(IncidenciaDto incidencia) {
+		
+		//si la justificación NO existe entonces la crea
+		if (!asistenciaRepository.existeIncidencia(incidencia.getIdAsistencia().getIdAsistencia())) { 
+			asistenciaRepository.creaIncidencia(incidencia);
+		} else {//si la justificación SÍ existe la edita
+			asistenciaRepository.editaIncidencia(incidencia);
+		}
+		
+		
+		
 	}
 	
 }

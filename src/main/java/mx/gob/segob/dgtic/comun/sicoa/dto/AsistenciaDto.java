@@ -39,6 +39,11 @@ public class AsistenciaDto {
 	   @MapeaColumna(columna = "salida") private Timestamp salida;
 	   
 	   /**
+	    * La incidencia.
+	    */
+	   @MapeaColumna(columna = "id_incidencia") private IncidenciaDto incidencia;
+	   
+	   /**
 	    * El id asistencia.
 	    * @return idAsistencia
 	    */
@@ -140,4 +145,12 @@ public class AsistenciaDto {
 			this.salida = salida;
 		}
 
+		public IncidenciaDto getIncidencia() {
+			return incidencia;
+		}
+
+		public void setIncidencia(IncidenciaDto incidencia) {
+			this.incidencia = incidencia;
+		}
+		
 }

@@ -4,6 +4,7 @@ package mx.gob.segob.dgtic.business.rules.asistencia;
 import java.util.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -42,22 +43,23 @@ public class CargaAsistenciaRules extends RecursoBase {
 	@Autowired
 	private CargaInicialService cargaInicialService;
 	
+	private List<UsuarioDto> listaUsuarios = new ArrayList<>();
+	private List<String> listaClaveUsuariosEnAsistencia = new ArrayList<>();
+	
 	public void procesaAsistencia() {
 
 		logger.info("***** PROCESANDO ASISTENCIA *****");
 		
 		//Filtra asistencia, sólo se procesa aquella asistencia en la que el empleado se encuentra en nómina 
-		List<AsistenciaDto> listaAsistencia = filtraAsistencia();
+		List<AsistenciaDto> listaAsistenciaFiltrada = filtraAsistencia();
 		
-		if (listaAsistencia != null) {
+		if (listaAsistenciaFiltrada != null) {
 		
 			//Se calculan las entradas y salidas
-			List<AsistenciaDto> listaAsistenciaEntradaSalida = calculaEntradasSalidas(listaAsistencia);
+			List<AsistenciaDto> listaAsistenciaEntradaSalida = calculaEntradasSalidas(listaAsistenciaFiltrada);
 			
 			//Se calculan las incidencias con base a las entradas y salidas
-		
-			List<AsistenciaDto> listaAsistenciaCalculada = calculaIncidencias(listaAsistenciaEntradaSalida);
-		
+			List<AsistenciaDto> listaAsistenciaCalculada = calculaIncidencias(listaAsistenciaEntradaSalida, listaAsistenciaFiltrada);
 		
 			//la asistencia se guarda
 			asistenciaRepository.guardaAsistencia(listaAsistenciaCalculada);
@@ -73,7 +75,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 	
 	private List<AsistenciaDto> filtraAsistencia() {
 		//obtiene nómina del sistema de nómina (SIRNO)
-		List<UsuarioDto> listaUsuarios = usuarioService.obtenerListaUsuarios();
+		listaUsuarios = usuarioService.obtenerListaUsuarios();
 		
 		//obtiene asistencia del sistema de asistencias (biométricos - ASISTENCIA)
 		List<AsistenciaDto> listaAsistenciaCompleta = asistenciaRepository.obtieneAsistencia(configuracionRepository.obtieneUltimaFechaCargaAsistencia());
@@ -120,6 +122,10 @@ public class CargaAsistenciaRules extends RecursoBase {
 		
 		//agrupa las asistencias de cada id de usuario
 		for (String idUsuario : hashSetIdUsuarios) {
+			
+			//guarda las claves de los usuarios en la asistencia para otro proceso más adelante
+			listaClaveUsuariosEnAsistencia.add(idUsuario);
+			
 			UsuarioChecada usuarioChecadas = new UsuarioChecada();
 			usuarioChecadas.setIdUsuario(idUsuario);
 			
@@ -250,7 +256,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 		return listaAsistenciaCalculada;
 	}
 	
-	private List<AsistenciaDto> calculaIncidencias(List<AsistenciaDto> listaAsistencia) {
+	private List<AsistenciaDto> calculaIncidencias(List<AsistenciaDto> listaAsistencia, List<AsistenciaDto> listaAsistenciaFiltrada) {
 		logger.info(listaAsistencia.size() + " calculando incidencias...");
 		
 		for (AsistenciaDto a : listaAsistencia) {
@@ -280,6 +286,34 @@ public class CargaAsistenciaRules extends RecursoBase {
 					TipoDiaDto tipoDia = obtieneTipoDia(2);				//no checó entrada: "Omisión de Entrada"
 					a.setIdTipoDia(tipoDia);
 				}
+			}
+		}
+		
+		//calculo de inasistencias. son aquellas usurios que no tienen registro en el sistema de asistencias
+		logger.info(listaAsistencia.size() + " calculando y creando inasistencias...");
+		for (UsuarioDto usuario : listaUsuarios) {
+			if (!listaClaveUsuariosEnAsistencia.contains(usuario.getClaveUsuario())) {
+				TipoDiaDto tipoDia = obtieneTipoDia(6);				//usuario no tiene evento registrado: inasistencia
+				AsistenciaDto asistencia = new AsistenciaDto();
+				
+				//obtiene la fecha de hoy
+				Timestamp hoy = new Timestamp(new Date().getTime());
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Calendar c = Calendar.getInstance();
+				
+				c.setTime(hoy);
+				c.add(Calendar.DAY_OF_MONTH, -1); //se resta un día a la fecha porque el servicio corre al día siguiente 
+				c.set(Calendar.HOUR, 0);          //no interesa la hora
+		        c.set(Calendar.MINUTE, 0);
+		        c.set(Calendar.SECOND, 0);
+				hoy.setTime(c.getTimeInMillis());
+				
+				asistencia.setEntrada(hoy);
+				asistencia.setUsuarioDto(usuario);
+				asistencia.setIdTipoDia(tipoDia);
+				
+				listaAsistencia.add(asistencia);
 			}
 		}
 		

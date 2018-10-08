@@ -22,6 +22,7 @@ import com.google.gson.JsonParser;
 
 import mx.gob.segob.dgtic.business.service.AsistenciaService;
 import mx.gob.segob.dgtic.business.service.HorarioService;
+import mx.gob.segob.dgtic.comun.sicoa.dto.IncidenciaDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
 import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
@@ -61,6 +62,24 @@ public class AsistenciaRecurso {
 	public Response buscaAsistenciaPorId(@QueryParam("id") Integer id) {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistenciaPorId(id));
+	}
+	
+	@PUT
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("creaIncidencia")	
+	@PermitAll
+	public Response creaIncidencia(@RequestParam String jsonIncidencia) {
+		JsonObject jsonObject = new JsonParser().parse(jsonIncidencia).getAsJsonObject();
+		
+		GsonBuilder builder = new GsonBuilder();
+		builder.setDateFormat("yyyy-MM-dd");
+		Gson gson = builder.create();
+		IncidenciaDto incidencia = gson.fromJson(jsonObject.get("incidencia"), IncidenciaDto.class);
+		
+		asistenciaService.creaIncidencia(incidencia);
+
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 	}
 	
 	

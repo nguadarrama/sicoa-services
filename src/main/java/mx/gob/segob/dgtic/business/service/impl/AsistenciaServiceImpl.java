@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import mx.gob.segob.dgtic.business.rules.asistencia.AsistenciaRules;
 import mx.gob.segob.dgtic.business.service.AsistenciaService;
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.IncidenciaDto;
 import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 
 @Service
@@ -57,6 +58,11 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 	@Override
 	public AsistenciaDto buscaAsistenciaPorId(Integer id) {
 		return asistenciaRules.buscaAsistenciaPorId(id);
+	}
+	
+	@Override
+	public void creaIncidencia(IncidenciaDto incidencia) {
+		asistenciaRules.creaIncidencia(incidencia);
 	}
 	
 }

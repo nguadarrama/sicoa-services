@@ -14,6 +14,7 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.IncidenciaDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.TipoDiaDto;
 import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.persistence.repository.IncidenciaRepository;
 
@@ -29,25 +30,28 @@ public class IncidenciaRepositoryImpl implements IncidenciaRepository {
 	@Override
 	public List<IncidenciaDto> obtenerListaIncidencias() {
 		StringBuilder qry = new StringBuilder();
-        qry.append("SELECT id_incidencia, id_asistencia, id_tipo_incidencia, id_archivo, id_estatus, id_responsable, descuento, observaciones ");
+        qry.append("SELECT id_incidencia, id_asistencia, id_tipo_dia, id_archivo, id_estatus, id_responsable, descuento, observaciones ");
         qry.append("FROM m_incidencia ");
         
         List<Map<String, Object>> incidencias = jdbcTemplate.queryForList(qry.toString());
         List<IncidenciaDto> listaIncidencia = new ArrayList<>();
         
         for (Map<String, Object> incidencia : incidencias) {
+        	TipoDiaDto tipoDia = new TipoDiaDto();
+        	tipoDia.setIdTipoDia((Integer)incidencia.get("id_tipo_dia"));
+        	
         	IncidenciaDto incidenciaDto = new IncidenciaDto();
         	incidenciaDto.setIdIncidencia((Integer)incidencia.get("id_incidencia"));
         	AsistenciaDto asistenciaDto = new AsistenciaDto();
         	asistenciaDto.setIdAsistencia((Integer)incidencia.get("id_asistencia"));
     		incidenciaDto.setIdAsistencia(asistenciaDto);
-    		incidenciaDto.setIdTipoIncidencia((Integer)incidencia.get("id_tipo_incidencia"));
+    		incidenciaDto.setTipoDia(tipoDia);
     		ArchivoDto archivoDto = new ArchivoDto();
         	archivoDto.setIdArchivo((Integer)incidencia.get("id_archivo"));
     		incidenciaDto.setIdArchivo(archivoDto);
     		EstatusDto estatusDto= new EstatusDto();
     		estatusDto.setIdEstatus((Integer)incidencia.get("id_estatus"));
-    		incidenciaDto.setIdEstatus(estatusDto);
+    		incidenciaDto.setEstatus(estatusDto);
     		incidenciaDto.setIdResponsable((Integer)incidencia.get("id_responsable"));
     		incidenciaDto.setDescuento((Boolean)incidencia.get("descuento"));
     		incidenciaDto.setObservaciones((String)incidencia.get("observaciones"));
@@ -77,8 +81,8 @@ public class IncidenciaRepositoryImpl implements IncidenciaRepository {
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idIncidencia", incidenciaDto.getIdIncidencia());
-		parametros.addValue("idTipoIncidencia", incidenciaDto.getIdTipoIncidencia());
-		parametros.addValue("idEstatus", incidenciaDto.getIdEstatus().getIdEstatus());
+		parametros.addValue("idTipoIncidencia", incidenciaDto.getTipoDia());
+		parametros.addValue("idEstatus", incidenciaDto.getEstatus().getIdEstatus());
 		parametros.addValue("descuento", incidenciaDto.getDescuento());
 		parametros.addValue("observaciones", incidenciaDto.getObservaciones());
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
@@ -94,9 +98,9 @@ public class IncidenciaRepositoryImpl implements IncidenciaRepository {
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idAsistencia", incidenciaDto.getIdAsistencia().getIdAsistencia());
-		parametros.addValue("idTipoIncidencia", incidenciaDto.getIdTipoIncidencia());
+		parametros.addValue("idTipoIncidencia", incidenciaDto.getTipoDia());
 		parametros.addValue("idArchivo", incidenciaDto.getIdArchivo().getIdArchivo());
-		parametros.addValue("idEstatus", incidenciaDto.getIdEstatus().getIdEstatus());
+		parametros.addValue("idEstatus", incidenciaDto.getEstatus().getIdEstatus());
 		parametros.addValue("idReponsable", incidenciaDto.getIdResponsable());
 		parametros.addValue("descuento", incidenciaDto.getDescuento());
 		parametros.addValue("observaciones", incidenciaDto.getObservaciones());

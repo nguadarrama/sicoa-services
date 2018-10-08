@@ -13,15 +13,19 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.IncidenciaDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.JustificacionDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.TipoDiaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
 import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.persistence.repository.AsistenciaRepository;
 import mx.gob.segob.dgtic.persistence.repository.UsuarioRepository;
+import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 
 @Repository
-public class AsistenciaRepositoryImpl implements AsistenciaRepository {
+public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaRepository {
 	@Autowired
     private JdbcTemplate jdbcTemplate;
 	
@@ -73,20 +77,18 @@ public class AsistenciaRepositoryImpl implements AsistenciaRepository {
 	public List<AsistenciaDto> buscaAsistenciaEmpleadoRango(String claveEmpleado, Date fechaInicio, Date fechaFin) {
 			
 		StringBuilder qry = new StringBuilder();
-		
-		qry.append("SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre ");
-        qry.append("FROM m_asistencia a, c_tipo_dia t ");
+		       
+        qry.append("SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus ");
+        qry.append("FROM m_asistencia a ");
+        qry.append("inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ");
+        qry.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia ");
+        qry.append("left join m_estatus e on e.id_estatus = i.id_estatus ");
         qry.append("WHERE id_usuario = ? ");
         qry.append("and a.id_tipo_dia = t.id_tipo_dia ");
         qry.append("and entrada >= ? ");
         qry.append("and entrada < ? ");
         qry.append("order by entrada");
 
-        MapSqlParameterSource parametros = new MapSqlParameterSource();
-        parametros.addValue("claveEmpleado", claveEmpleado);
-        parametros.addValue("fechaInicio", fechaInicio);
-        parametros.addValue("fechaFin", fechaFin);
-        
         List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString(), claveEmpleado, fechaInicio, fechaFin);
         List<AsistenciaDto> listaAsistencia = new ArrayList<>();
         
@@ -97,12 +99,16 @@ public class AsistenciaRepositoryImpl implements AsistenciaRepository {
         	tipoDia.setIdTipoDia((Integer) a.get("id_tipo_dia"));
         	tipoDia.setNombre((String) a.get("nombre"));
         	
+        	EstatusDto estatus = new EstatusDto();
+        	estatus.setEstatus((String) a.get("estatus"));
+        	
         	AsistenciaDto asistencia = new AsistenciaDto();
         	asistencia.setIdAsistencia((Integer) a.get("id_asistencia"));
     		asistencia.setUsuarioDto(usuario);
     		asistencia.setIdTipoDia(tipoDia);
     		asistencia.setEntrada((Timestamp) a.get("entrada"));
     		asistencia.setSalida((Timestamp) a.get("salida"));
+    		asistencia.setIdEstatus(estatus);
     		
     		listaAsistencia.add(asistencia);
     	}
@@ -114,9 +120,14 @@ public class AsistenciaRepositoryImpl implements AsistenciaRepository {
 	public AsistenciaDto buscaAsistenciaPorId(Integer id) {
 		
 		StringBuilder qry = new StringBuilder();
-		qry.append("SELECT a.id_asistencia, a.entrada, a.id_tipo_dia, t.nombre ");
-        qry.append("FROM m_asistencia a, c_tipo_dia t ");
-        qry.append("WHERE id_asistencia = :idAsistencia ");
+        
+        qry.append("SELECT a.id_asistencia, a.entrada, a.id_tipo_dia, t.nombre, e.estatus, e.id_estatus, i.id_incidencia, j.id_justificacion, j.justificacion ");
+        qry.append("FROM m_asistencia a ");
+        qry.append("inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ");
+        qry.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia ");
+        qry.append("left join m_estatus e on e.id_estatus = i.id_estatus ");
+        qry.append("left join c_justificacion j on j.id_justificacion = i.id_justificacion ");
+        qry.append("WHERE a.id_asistencia = :idAsistencia ");
         qry.append("and a.id_tipo_dia = t.id_tipo_dia");
 
         MapSqlParameterSource parametros = new MapSqlParameterSource();
@@ -126,16 +137,83 @@ public class AsistenciaRepositoryImpl implements AsistenciaRepository {
         
         TipoDiaDto tipoDia = new TipoDiaDto();
         tipoDia.setIdTipoDia((Integer) informacionConsulta.get("id_tipo_dia"));
-//        tipoDia.setNombre((String) informacionConsulta.get("nombre"));
+        tipoDia.setNombre((String) informacionConsulta.get("nombre"));
         
-        AsistenciaDto asistencia = new AsistenciaDto();
+        EstatusDto estatus = new EstatusDto();
+        estatus.setIdEstatus((Integer) informacionConsulta.get("id_estatus") );
+    	estatus.setEstatus((String) informacionConsulta.get("estatus"));
+    	
+    	JustificacionDto justificacion = new JustificacionDto();
+    	justificacion.setIdJustificacion((Integer) informacionConsulta.get("id_justificacion"));
+    	justificacion.setJustificacion((String) informacionConsulta.get("justificacion"));
+    	
+    	IncidenciaDto incidencia = new IncidenciaDto();
+    	incidencia.setIdIncidencia((Integer) informacionConsulta.get("id_incidencia"));
+    	incidencia.setJustificacion(justificacion);
+    	
+    	AsistenciaDto asistencia = new AsistenciaDto();
         asistencia.setIdAsistencia((Integer) informacionConsulta.get("id_asistencia"));
         asistencia.setEntrada((Timestamp) informacionConsulta.get("entrada"));
         asistencia.setIdTipoDia(tipoDia);
+        asistencia.setIdEstatus(estatus);
+        asistencia.setIncidencia(incidencia);
 
         return asistencia;
 	}
-		
 
+	@Override
+	public void creaIncidencia(IncidenciaDto incidencia) {
+		StringBuilder qry = new StringBuilder();
+		qry.append("INSERT INTO m_incidencia (id_asistencia, id_tipo_dia, id_archivo, id_estatus, id_responsable, descuento, observaciones, id_justificacion) ");
+		qry.append("VALUES (:idAsistencia, :idTipoDia, null, :idEstatus, null, null, null, :idJustificacion) ");
+		
+		MapSqlParameterSource parametros = new MapSqlParameterSource();
+		parametros.addValue("idAsistencia", incidencia.getIdAsistencia().getIdAsistencia());
+		parametros.addValue("idTipoDia", incidencia.getTipoDia().getIdTipoDia());
+		parametros.addValue("idEstatus", incidencia.getEstatus().getIdEstatus());
+		parametros.addValue("idJustificacion", incidencia.getJustificacion().getIdJustificacion());
+
+		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+	}
+
+	@Override
+	public boolean existeIncidencia(Integer idAsistencia) {
+		StringBuilder qry = new StringBuilder();
+		
+		qry.append("SELECT id_incidencia ");
+        qry.append("FROM m_incidencia ");
+        qry.append("WHERE id_asistencia = ? ");
+
+        MapSqlParameterSource parametros = new MapSqlParameterSource();
+        parametros.addValue("idAsistencia", idAsistencia);
+        
+        List<Map<String, Object>> asistencia = jdbcTemplate.queryForList(qry.toString(), idAsistencia);
+        
+        if (asistencia.size() == 0) {
+        	return false;
+        } else {
+        	return true;
+        }
+	}
+
+	@Override
+	public void editaIncidencia(IncidenciaDto incidencia) {
+		StringBuilder qry = new StringBuilder();
+		
+		qry.append("update m_incidencia ");
+		qry.append("set id_justificacion = :idJustificacion ");
+        qry.append("WHERE id_asistencia = :idAsistencia");
+        
+        MapSqlParameterSource parametros = new MapSqlParameterSource();
+		parametros.addValue("idAsistencia", incidencia.getIdAsistencia().getIdAsistencia());
+		parametros.addValue("idJustificacion", incidencia.getJustificacion().getIdJustificacion());
+		
+		try {
+			nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		} catch (Exception e) {
+			logger.error("Error al consultar la incidencia con número de asistencia: " + incidencia.getIdAsistencia().getIdAsistencia());
+		}
+		
+	}
 
 }
