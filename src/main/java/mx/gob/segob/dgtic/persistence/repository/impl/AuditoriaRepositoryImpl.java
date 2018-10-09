@@ -40,7 +40,7 @@ public class AuditoriaRepositoryImpl extends RepositoryBase implements Auditoria
 	public void guardarAuditoriaBitacora(AuditoriaBitacoraDto auditoriaBitacora){
 		
 		StringBuilder qry = new StringBuilder();
-		qry.append(" INSERT INTO H_BITACORA_AUDITORIA (");
+		qry.append(" INSERT INTO h_bitacora_auditoria (");
 		qry.append(" FECHA_HORA, CVE_M_USUARIO, URI, MODULO, PARAMETROS, CODIGO_RESPUESTA, CONTENT_TYPE_RESPUESTA, RESPUESTA ");
 		qry.append(" ) VALUES ( " );
 		qry.append(" :fechaHora, :cveUsuario, :uri, :modulo, :parametros, :codigoRespuesta, :contentTypeRespuesta, :respuesta ");

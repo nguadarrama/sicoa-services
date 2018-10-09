@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import mx.gob.segob.dgtic.comun.sicoa.dto.PerfilDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
+import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
 import mx.gob.segob.dgtic.persistence.repository.CargaInicialRepository;
 import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 
@@ -37,11 +39,11 @@ public class CargaInicialRepositoryImpl extends RecursoBase implements CargaInic
         
         List<Map<String, Object>> usuarios = jdbcTemplateOracle.queryForList(qry.toString());
         List<UsuarioDto> listaUsuario = new ArrayList<>();
-        //PerfilDto perfilDto= new PerfilDto();
-        //perfilDto=perfilRepository.buscaPerfil("CVE000001");
+        PerfilDto perfilDto= new PerfilDto();
+        perfilDto.setClavePerfil("1");
         //Log.info("dato recuperado "+perfilDto.getClavePerfil());
-        //Horario horarioDto=new Horario(); 
-        //horarioDto=horarioRepository.buscaHorario(1);
+        Horario horarioDto=new Horario(); 
+        horarioDto.setIdHorario(1);
         for (Map<String, Object> usuario : usuarios) {
     		UsuarioDto usuarioDto=new UsuarioDto();
     		//
@@ -51,7 +53,7 @@ public class CargaInicialRepositoryImpl extends RecursoBase implements CargaInic
     		usuarioDto.setApellidoPaterno((String)usuario.get("APELLIDO_PATERNO"));
     		usuarioDto.setApellidoMaterno((String)usuario.get("APELLIDO_MATERNO"));
     		usuarioDto.setFechaIngreso((Timestamp)usuario.get("FECHA_ING_SECRETARIA"));
-//    		usuarioDto.setClavePerfil("1");
+    		usuarioDto.setClavePerfil(perfilDto);
     		usuarioDto.setPassword((String)usuario.get("NUMERO_EMPLEADO"));
     		usuarioDto.setIdPuesto((String)usuario.get("PUESTO_EMPLEADO"));
     		//usuarioDto.setClavePerfil(perfilDto);
@@ -59,7 +61,7 @@ public class CargaInicialRepositoryImpl extends RecursoBase implements CargaInic
     		usuarioDto.setBloqueado("N");
     		usuarioDto.setPrimeraVez("Y");
     		usuarioDto.setEstatus("A");
-    		//usuarioDto.setIdHorario(horarioDto);
+    		usuarioDto.setIdHorario(horarioDto);
     		usuarioDto.setNumeroIntentos(0);
     		String formatter = formatoFecha.format((usuario.get("FECHA_ING_SECRETARIA")));
     		Date date = null;

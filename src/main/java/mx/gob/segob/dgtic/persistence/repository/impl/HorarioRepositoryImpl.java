@@ -65,7 +65,7 @@ public class HorarioRepositoryImpl implements HorarioRepository {
 	@Override
 	public void modificaHorario(Horario horario) {
 		StringBuilder qry = new StringBuilder();
-		qry.append("UPDATE C_HORARIO SET hora_entrada = :horaEntrada, hora_salida = :horaSalida, activo = :activo ");
+		qry.append("UPDATE c_horario SET hora_entrada = :horaEntrada, hora_salida = :horaSalida, activo = :activo ");
 		qry.append("WHERE id_horario = :idHorario");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
@@ -80,7 +80,7 @@ public class HorarioRepositoryImpl implements HorarioRepository {
 	@Override
 	public void agregaHorario(Horario horario) {
 		StringBuilder qry = new StringBuilder();
-		qry.append("INSERT INTO C_HORARIO (hora_entrada, hora_salida, activo) ");
+		qry.append("INSERT INTO c_horario (hora_entrada, hora_salida, activo) ");
 		qry.append("VALUES (:horaEntrada, :horaSalida, :activo) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
@@ -94,7 +94,7 @@ public class HorarioRepositoryImpl implements HorarioRepository {
 	@Override
 	public void eliminaHorario(Integer id) {
 		StringBuilder qry = new StringBuilder();
-		qry.append("DELETE FROM C_HORARIO WHERE id_horario = :idHorario");
+		qry.append("DELETE FROM c_horario WHERE id_horario = :idHorario");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idHorario", id);

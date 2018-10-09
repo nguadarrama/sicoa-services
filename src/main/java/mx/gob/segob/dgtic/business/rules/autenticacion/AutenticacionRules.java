@@ -7,6 +7,7 @@
 */
 package mx.gob.segob.dgtic.business.rules.autenticacion;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,13 +19,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import mx.gob.segob.dgtic.comun.transport.constants.EstatusEnum;
+import mx.gob.segob.dgtic.business.rules.catalogo.CargaInicialRules;
 import mx.gob.segob.dgtic.business.rules.catalogo.UsuarioRules;
-import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
+import mx.gob.segob.dgtic.business.service.CargaInicialService;
 import mx.gob.segob.dgtic.comun.transport.constants.DecisionEnum;
 import mx.gob.segob.dgtic.comun.transport.dto.autenticacion.UsuarioAcceso;
 import mx.gob.segob.dgtic.comun.util.config.AplicacionPropertiesUtil;
 import mx.gob.segob.dgtic.comun.util.crypto.HashUtils;
 import mx.gob.segob.dgtic.persistence.repository.AutenticacionRepository;
+import mx.gob.segob.dgtic.persistence.repository.ConfiguracionRepository;
 
 /**
  * Reglas de negocio aplicadas a la autenticaci&oacute;n de usuarios.
@@ -65,7 +68,10 @@ public class AutenticacionRules {
 	
 	@Autowired 
 	private UsuarioRules usuarioRules;
-		
+	
+	@Autowired ConfiguracionRepository configuracionRepository;
+	
+	@Autowired CargaInicialService cargaInicialService;
 	/**
 	 * Valida las reglas de negocio para la autentiaci&oacute;n.
 	 * 
@@ -106,6 +112,14 @@ public class AutenticacionRules {
 			}  else if(!permitirAutenticacionMultisesion(usuario)){
 				errores.add(USUARIO_SESSION_ACTIVA);
 			}			
+		}
+		String indicador = configuracionRepository.obtieneUltimaFechaCargaUsuarios();
+		System.out.println("Valor de carga "+indicador);
+		if(indicador=="N"){
+			System.out.println("cargando "+indicador);
+			cargaInicialService.cargaInicial();
+			configuracionRepository.actualizaUltimaFechaCargaUsuarios();
+			
 		}
 		return errores;
 	}

@@ -62,7 +62,7 @@ public class TipoDiaRepositoryImpl implements TipoDiaRepository {
 	public void modificaTipoDia (TipoDiaDto tipoDiaDto){
 		
 		StringBuilder qry = new StringBuilder();
-		qry.append("UPDATE C_TIPO_DIA SET nombre= :nombre, observacion = :observacion, incidencia = :incidencia ");
+		qry.append("UPDATE c_tipo_dia SET nombre= :nombre, observacion = :observacion, incidencia = :incidencia ");
 		qry.append("WHERE id_tipo_dia = :idTipoDia");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
@@ -78,7 +78,7 @@ public class TipoDiaRepositoryImpl implements TipoDiaRepository {
 	public void agregaTipoDia (TipoDiaDto tipoDiaDto){
 		
 		StringBuilder qry = new StringBuilder();
-		qry.append("INSERT INTO C_TIPO_DIA (nombre, observacion, incidencia) ");
+		qry.append("INSERT INTO c_tipo_dia (nombre, observacion, incidencia) ");
 		qry.append("VALUES (:nombre, :observacion, :incidencia) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
@@ -93,7 +93,7 @@ public class TipoDiaRepositoryImpl implements TipoDiaRepository {
 	public void eliminaTipoDia (Integer idTipoDia){
 		
 		StringBuilder qry = new StringBuilder();
-		qry.append("DELETE FROM C_TIPO_DIA WHERE id_tipo_dia = :idTipoDia");
+		qry.append("DELETE FROM c_tipo_dia WHERE id_tipo_dia = :idTipoDia");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idTipoDia", idTipoDia);

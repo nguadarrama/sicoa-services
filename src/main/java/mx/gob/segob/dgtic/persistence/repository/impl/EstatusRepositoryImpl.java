@@ -63,7 +63,7 @@ public class EstatusRepositoryImpl implements EstatusRepository{
 	public void modificaEstatus(EstatusDto estatusDto){
 		
 		StringBuilder qry = new StringBuilder();
-		qry.append("UPDATE M_ESTATUS SET descripcion= :descripcion, estatus = :estatus ");
+		qry.append("UPDATE m_estatus SET descripcion= :descripcion, estatus = :estatus ");
 		qry.append("WHERE id_estatus = :idEstatus");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();

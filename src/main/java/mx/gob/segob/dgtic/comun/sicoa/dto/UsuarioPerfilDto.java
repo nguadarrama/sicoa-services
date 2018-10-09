@@ -8,52 +8,47 @@
 package mx.gob.segob.dgtic.comun.sicoa.dto;
 
 import mx.gob.segob.dgtic.comun.util.mapper.annotations.MapeaColumna;
+import mx.gob.segob.dgtic.comun.util.mapper.annotations.MapeaColumnasInternas;
 
 public class UsuarioPerfilDto {
 
 	/**
-    * La clave perfil.
+    * El id usuario perfil.
     */
-   @MapeaColumna(columna = "cve_m_usuario") private String claveUsuario;
+   @MapeaColumna(columna = "id_usuario_perfil") private Integer idUsuarioPerfil;
    
    /**
-    * La clave permiso.
+    * la clave del usuario.
     */
-   @MapeaColumna(columna = "cve_c_perfil") private String clavePerfil;
+   @MapeaColumnasInternas(columnas={"cve_m_usuario", "cve_m_usuario"}) private UsuarioDto claveUsuario;
    
    /**
-	 * Obtener la clave perfil.
-	 *
-	 * @return clavePerfil
-	 */
-	public String getClavePerfil() {
-		return clavePerfil;
-	}
-	
-	/**
-	 * Pasar la clave perfil.
-	 *
-	 * @param clavePerfil
-	 */
-	public void setClavePerfil(String clavePerfil) {
-		this.clavePerfil = clavePerfil;
-	}
-	
-	/**
-	 * Obtener la clave usuario.
-	 *
-	 * @return claveUsuario
-	 */
-	public String getClaveUsuario() {
-		return claveUsuario;
-	}
-	
-	/**
-	 * Pasar la clave usuario.
-	 *
-	 * @param claveUsuario
-	 */
-	public void setClaveUsuario(String claveUsuario) {
-		this.claveUsuario = claveUsuario;
-	}
+    * la clave del perfil.
+    */
+   @MapeaColumnasInternas(columnas={"cve_c_perfil", "cve_c_perfil"}) private PerfilDto clavePerfil;
+
+public Integer getIdUsuarioPerfil() {
+	return idUsuarioPerfil;
+}
+
+public void setIdUsuarioPerfil(Integer idUsuarioPerfil) {
+	this.idUsuarioPerfil = idUsuarioPerfil;
+}
+
+public UsuarioDto getClaveUsuario() {
+	return claveUsuario;
+}
+
+public void setClaveUsuario(UsuarioDto claveUsuario) {
+	this.claveUsuario = claveUsuario;
+}
+
+public PerfilDto getClavePerfil() {
+	return clavePerfil;
+}
+
+public void setClavePerfil(PerfilDto clavePerfil) {
+	this.clavePerfil = clavePerfil;
+}
+   
 }

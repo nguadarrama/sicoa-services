@@ -77,6 +77,7 @@ public class ArchivoRecurso {
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		ArchivoDto archivoDto = gson.fromJson(jsonObject.get("archivo"), ArchivoDto.class);
+		System.out.println("archivo en recurso "+archivoDto.getArchivo());
 		
 		archivoService.agregaArhivo(archivoDto);
 

@@ -34,4 +34,8 @@ public class VacacionPeriodoServiceImpl implements VacacionPeriodoService {
 	public void eliminaVacacionPeriodo(Integer idVacacion){
 		vacacionPeriodoRules.eliminaVacacionPeriodo(idVacacion);
 	}
+	
+	public VacacionPeriodoDto consultaVacacionPeriodoPorClaveUsuarioYPeriodo(Integer idPeriodo, String claveUsuario){
+		return vacacionPeriodoRules.consultaVacacionPeriodoPorClaveUsuarioYPeriodo(idPeriodo, claveUsuario);
+	}
 }

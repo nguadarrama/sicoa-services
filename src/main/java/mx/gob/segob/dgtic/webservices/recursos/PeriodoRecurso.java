@@ -23,12 +23,12 @@ import mx.gob.segob.dgtic.business.service.PeriodoService;
 import mx.gob.segob.dgtic.comun.sicoa.dto.PeriodoDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
-
+@Path("catalogo")
+@Component
 public class PeriodoRecurso {
 
-	@Path("catalogo")
-	@Component
-	public class PerfilRecurso {
+	
+	
 		
 		@Autowired
 		private PeriodoService periodoService;
@@ -95,5 +95,14 @@ public class PeriodoRecurso {
 
 			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 		}
-	}
+		
+		@GET
+		@Produces(MediaType.APPLICATION_JSON)
+		@Path("buscaPeriodoPorClaveUsuario")	
+		@PermitAll
+		public Response buscaPeriodoPorClaveUsuario(@QueryParam("claveUsuario") String claveUsuario) {
+			System.out.println("usuario "+claveUsuario);
+			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, periodoService.buscaPeriodoPorClaveUsuario(claveUsuario));
+		}
+	
 }

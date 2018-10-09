@@ -37,14 +37,19 @@ public class DetalleVacacionServiceImpl implements DetalleVacacionService {
 	@Override
 	public void agregaDetalleVacacion (DetalleVacacionDto detalleVacacionDto) {
 		
-		detalleVacacionRules.agregaArchivo(detalleVacacionDto);
+		detalleVacacionRules.agregaDetalleVacacion(detalleVacacionDto);
 		
 	}
 
 	@Override
 	public void eliminaDetalleVacacion(Integer idDetalle) {
 		
-		detalleVacacionRules.eliminaDetalleVacacion(idDetalle);
+		detalleVacacionRules.eliminaDetalleVacacion(idDetalle);	
+	}
+
+	@Override
+	public void aceptaORechazaDetalleVacacion(DetalleVacacionDto detalleVacacionDto) {
+		detalleVacacionRules.aceptaORechazaDetalleVacacion(detalleVacacionDto);
 		
 	}
 }

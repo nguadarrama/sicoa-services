@@ -16,7 +16,7 @@ public class PerfilPermisoRepositoryImpl implements PerfilPermisoRepository {
 	@Override
 	public void guardarPermisoRepository(PerfilPermisoDto perfilPermisoDto) {
 		StringBuilder qry = new StringBuilder();
-		qry.append("INSERT INTO D_PERFIL_PERMISO (cve_c_perfil, cve_c_permiso) ");
+		qry.append("INSERT INTO d_perfil_permiso (cve_c_perfil, cve_c_permiso) ");
 		qry.append("VALUES (:clavePerfil, :clavePermiso) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();

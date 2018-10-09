@@ -63,7 +63,47 @@ public class ConfiguracionRepositoryImpl extends RecursoBase implements Configur
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
         
 	}
+	
+	@Override
+	public String obtieneUltimaFechaCargaUsuarios() {
+		StringBuilder qry = new StringBuilder();
+        qry.append("select fecha from c_configuracion where id_configuracion = :idConfiguracion ");
+        
+        int idConfiguracion = 2; //Última asistencia procesada
+        
+        MapSqlParameterSource parametros = new MapSqlParameterSource();
+        parametros.addValue("idConfiguracion", idConfiguracion);
+        
+        ConfiguracionDto configuracion = null;
+        
+        	configuracion = nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<ConfiguracionDto>(ConfiguracionDto.class));
+        	System.out.println("Fecha "+configuracion.getFecha());
+        	if(configuracion.getFecha()!=null && configuracion.getFecha().toString()!=""){
+        		return "S";	
+        	}else{
+        		return "N";	
+        	}
+        
+        
+		
+	}
 
+	@Override
+	public void actualizaUltimaFechaCargaUsuarios() {
+		StringBuilder qry = new StringBuilder();
+		qry.append("update c_configuracion set fecha = :ultimaFecha ");
+		qry.append("where id_configuracion = :idConfiguracion");
+		
+		int idConfiguracion = 2; //ultima asistencia procesada
+		Timestamp ultimaFechaCargaAsistencia = new Timestamp(System.currentTimeMillis());
+		
+		MapSqlParameterSource parametros = new MapSqlParameterSource();
+		parametros.addValue("ultimaFecha", ultimaFechaCargaAsistencia);
+		parametros.addValue("idConfiguracion", idConfiguracion);
+
+		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		
+	}
 	
 
 }

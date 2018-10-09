@@ -75,7 +75,7 @@ public class ComisionRepositoryImpl implements ComisionRepository{
 	@Override
 	public void modificaComision(ComisionDto comisionDto) {
 		StringBuilder qry = new StringBuilder();
-		qry.append("UPDATE M_COMISION SET fecha_inicio= :fechaInicio, fecha_fin = :fechaFin, dias = :dias, comision = :comision");
+		qry.append("UPDATE m_comision SET fecha_inicio= :fechaInicio, fecha_fin = :fechaFin, dias = :dias, comision = :comision");
 		qry.append("WHERE id_comision = :idComision");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
@@ -91,7 +91,7 @@ public class ComisionRepositoryImpl implements ComisionRepository{
 	@Override
 	public void agregaComision(ComisionDto comisionDto) {
 		StringBuilder qry = new StringBuilder();
-		qry.append("INSERT INTO M_COMISION (id_usuario, id_responsable, id_archivo, id_estatus, fecha_inicio,fecha_fin, dias, comision ) ");
+		qry.append("INSERT INTO m_comision (id_usuario, id_responsable, id_archivo, id_estatus, fecha_inicio,fecha_fin, dias, comision ) ");
 		qry.append("VALUES (:idUsuario, :idResponsable, :idArchivo, :idEstatus, :fechaInicio, :fechaFin, :dias, :comision ) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
@@ -111,7 +111,7 @@ public class ComisionRepositoryImpl implements ComisionRepository{
 	@Override
 	public void eliminaComision(Integer idComision) {
 		StringBuilder qry = new StringBuilder();
-		qry.append("DELETE FROM M_COMISION  WHERE id_comision = :idComision");
+		qry.append("DELETE FROM m_comision  WHERE id_comision = :idComision");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idComision", idComision);

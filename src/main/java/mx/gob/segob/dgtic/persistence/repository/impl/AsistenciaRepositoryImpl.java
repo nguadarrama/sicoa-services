@@ -215,5 +215,24 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		}
 		
 	}
+	
+
+@Override
+	public void agregaAsistencia(AsistenciaDto asistenciaDto) {
+		StringBuilder qry = new StringBuilder();
+		qry.append("insert into m_asistencia (id_usuario, id_tipo_dia, id_estatus, entrada, salida ) ");
+		qry.append("values (:idUsuario, :idTipoDia, :idEstatus, :entrada, :salida) ");
+		
+		MapSqlParameterSource parametros = new MapSqlParameterSource();
+		parametros.addValue("idUsuario", asistenciaDto.getUsuarioDto().getClaveUsuario());
+		parametros.addValue("idTipoDia", asistenciaDto.getIdTipoDia().getIdTipoDia());
+		parametros.addValue("idEstatus", asistenciaDto.getIdEstatus().getIdEstatus());
+		parametros.addValue("entrada", asistenciaDto.getEntrada());
+		parametros.addValue("salida", asistenciaDto.getSalida());
+		
+
+		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		
+	}
 
 }

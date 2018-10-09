@@ -136,15 +136,15 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 		
 		StringBuilder qry = new StringBuilder();
 		qry.append("update m_usuario set id_area = :idArea, cve_c_perfil = :clavePerfil, id_horario = :idHorario, id_puesto = :idPuesto, nombre = :nombre, "
-				+ "apellido_paterno = : apellidoPaterno, apellido_materno =: apellidoMaterno, fecha_ingreso =: fechaIngreso, password =: password, activo =:activo, "
-				+ "nuevo =: nuevo, en_sesion =: enSesion, ultimo_acceso =: ultimoAcceso, numero_intentos =: numeroIntentos, bloqueado =: bloqueado, "
-				+ "fecha_bloqueo =: fechaBloqueo, primera_vez =: primeraVez, estatus =: estatus");
+				+ "apellido_paterno = :apellidoPaterno, apellido_materno = :apellidoMaterno, fecha_ingreso = :fechaIngreso, password = :password, activo = :activo, "
+				+ "nuevo =: nuevo, en_sesion =: enSesion, ultimo_acceso =: ultimoAcceso, numero_intentos = :numeroIntentos, bloqueado = :bloqueado, "
+				+ "fecha_bloqueo = :fechaBloqueo, primera_vez = :primeraVez, estatus = :estatus ");
 		qry.append("WHERE cve_m_usuario = :claveUsuario");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idArea", usuarioDto.getIdArea());
-		//parametros.addValue("clavePerfil", usuarioDto.getClavePerfil().getClavePerfil());
-		//parametros.addValue("idHorario", usuarioDto.getIdHorario().getIdHorario());
+		parametros.addValue("clavePerfil", usuarioDto.getClavePerfil().getClavePerfil());
+		parametros.addValue("idHorario", usuarioDto.getIdHorario().getIdHorario());
 		parametros.addValue("idPuesto", usuarioDto.getIdPuesto());
 		parametros.addValue("claveUsuario", usuarioDto.getClaveUsuario());
 		parametros.addValue("nombre", usuarioDto.getNombre());
@@ -176,8 +176,8 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idArea", usuarioDto.getIdArea());
-		parametros.addValue("clavePerfil", usuarioDto.getClavePerfil());
-		parametros.addValue("idHorario", usuarioDto.getIdHorario());
+		parametros.addValue("clavePerfil", usuarioDto.getClavePerfil().getClavePerfil());
+		parametros.addValue("idHorario", usuarioDto.getIdHorario().getIdHorario());
 		parametros.addValue("idPuesto", usuarioDto.getIdPuesto());
 		parametros.addValue("claveUsuario", usuarioDto.getClaveUsuario());
 		parametros.addValue("nombre", usuarioDto.getNombre());
@@ -224,7 +224,6 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 	
 	@Override
 	public void reiniciaContrasenia(String claveUsuario) {
-		System.out.println("contrasenia reiniciada "+claveUsuario);
 		StringBuilder qry = new StringBuilder();
 		qry.append("update m_usuario set primera_vez ='S' WHERE cve_m_usuario = :claveUsuario  ");
 		MapSqlParameterSource parametros = new MapSqlParameterSource();

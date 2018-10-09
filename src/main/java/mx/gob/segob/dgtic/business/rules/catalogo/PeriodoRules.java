@@ -34,4 +34,8 @@ public class PeriodoRules {
 	public void eliminaPeriodo(Integer idPeriodo){
 		periodoRepository.eliminaPeriodo(idPeriodo);
 	}
+	
+	public PeriodoDto buscaPeriodoPorClaveUsuario(String claveUsuario){
+		return periodoRepository.buscaPeriodoPorClaveUsuario(claveUsuario);
+	}
 }

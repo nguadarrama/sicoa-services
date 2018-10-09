@@ -14,4 +14,5 @@ public interface AsistenciaRepository {
 	public void creaIncidencia(IncidenciaDto incidencia);
 	public boolean existeIncidencia(Integer idAsistencia);
 	public void editaIncidencia(IncidenciaDto incidencia);
+	public void agregaAsistencia(AsistenciaDto asistenciaDto);
 }

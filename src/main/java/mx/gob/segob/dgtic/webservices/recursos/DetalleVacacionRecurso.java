@@ -1,5 +1,10 @@
 package mx.gob.segob.dgtic.webservices.recursos;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -36,9 +41,14 @@ public class DetalleVacacionRecurso {
 	@Path("obtieneDetalleVacaciones")	
 	@PermitAll
 	public Response obtieneDetalleVacaciones() {
-
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.obtenerListaDetalleVacaciones());
-	}
+		List<DetalleVacacionDto> lista = new ArrayList<>();
+		lista= detalleVacacionService.obtenerListaDetalleVacaciones();
+		
+		for (DetalleVacacionDto detalleVacacion : lista) {
+			System.out.println("FechaInicio "+detalleVacacion.getFechaInicio());
+		}
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, lista);
+		}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -90,6 +100,23 @@ public class DetalleVacacionRecurso {
 	public Response eliminaDetalleVacacion(@QueryParam("id") Integer id) {
 		
 		detalleVacacionService.eliminaDetalleVacacion(id);
+
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+	}
+	
+	@PUT
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("aceptaORechazaDetalleVacacion")	
+	@PermitAll
+	public Response aceptaORechazaDetalleVacacion(@RequestParam String jsonDetalleVacacion) {
+		JsonObject jsonObject = new JsonParser().parse(jsonDetalleVacacion).getAsJsonObject();
+		
+		GsonBuilder builder = new GsonBuilder();
+		Gson gson = builder.create();
+		DetalleVacacionDto detalleVacacionDto = gson.fromJson(jsonObject.get("detalleVacacion"), DetalleVacacionDto.class);
+		
+		detalleVacacionService.aceptaORechazaDetalleVacacion(detalleVacacionDto);
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 	}

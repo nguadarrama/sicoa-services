@@ -63,7 +63,7 @@ public class PermisoRepositoryImpl implements PermisoRepository {
 	public void modificaPermiso(PermisoDto permisoDto){
 		
 		StringBuilder qry = new StringBuilder();
-		qry.append("UPDATE C_PERMISO SET descripcion= :descripcion, estatus = :estatus ");
+		qry.append("UPDATE c_permiso SET descripcion= :descripcion, estatus = :estatus ");
 		qry.append("WHERE cve_c_permiso = :idPermiso");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
@@ -78,7 +78,7 @@ public class PermisoRepositoryImpl implements PermisoRepository {
 	public void agregaPermiso (PermisoDto permisoDto){
 		
 		StringBuilder qry = new StringBuilder();
-		qry.append("INSERT INTO C_PERMISO (cve_c_permiso, descripcion, estatus) ");
+		qry.append("INSERT INTO c_permiso (cve_c_permiso, descripcion, estatus) ");
 		qry.append("VALUES (:cve_c_permiso, :descripcion, :estatus) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
@@ -93,7 +93,7 @@ public class PermisoRepositoryImpl implements PermisoRepository {
 	public void eliminaPermiso (String idPermiso){
 		
 		StringBuilder qry = new StringBuilder();
-		qry.append("DELETE FROM C_PERMISO WHERE cve_c_permiso = :idPermiso");
+		qry.append("DELETE FROM c_permiso WHERE cve_c_permiso = :idPermiso");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idPermiso", idPermiso);

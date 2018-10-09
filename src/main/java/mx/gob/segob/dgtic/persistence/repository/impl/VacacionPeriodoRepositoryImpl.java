@@ -72,7 +72,7 @@ public class VacacionPeriodoRepositoryImpl implements VacacionPeriodoRepository{
 	@Override
 	public void modificaVacacionPeriodo(VacacionPeriodoDto vacacionPeriodoDto) {
 		StringBuilder qry = new StringBuilder();
-		qry.append("UPDATE M_VACACION_PERIODO SET id_estatus = :idEstatus, fecha_inicio = :fechaInicio, dias = :dias, activo = :activo ");
+		qry.append("UPDATE m_vacacion_periodo SET id_estatus = :idEstatus, fecha_inicio = :fechaInicio, dias = :dias, activo = :activo ");
 		qry.append("WHERE id_incidencia = :idIncidencia");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
@@ -87,7 +87,7 @@ public class VacacionPeriodoRepositoryImpl implements VacacionPeriodoRepository{
 	@Override
 	public void agregaVacacionPeriodo(VacacionPeriodoDto vacacionPeriodoDto) {
 		StringBuilder qry = new StringBuilder();
-		qry.append("INSERT INTO M_VACACION_PERIODO (id_usuario, id_periodo, id_estatus, fecha_inicio, dias, activo ) ");
+		qry.append("INSERT INTO m_vacacion_periodo (id_usuario, id_periodo, id_estatus, fecha_inicio, dias, activo ) ");
 		qry.append("VALUES (:idUsuario, :idPeriodo, :idEstatus, :fechaInicio, :dias, :activo) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
@@ -106,13 +106,27 @@ public class VacacionPeriodoRepositoryImpl implements VacacionPeriodoRepository{
 	@Override
 	public void eliminaVacacionPeriodo(Integer idVacacion) {
 		StringBuilder qry = new StringBuilder();
-		qry.append("DELETE FROM M_VACACION_PERIODO WHERE id_vacacion = :idVacacion");
+		qry.append("DELETE FROM m_vacacion_periodo WHERE id_vacacion = :idVacacion");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idVacacion", idVacacion);
 
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		
+	}
+	
+	@Override
+	public VacacionPeriodoDto consultaVacacionPeriodoPorClaveUsuarioYPeriodo(Integer idPeriodo, String claveUsuario){
+		StringBuilder qry = new StringBuilder();
+		qry.append("select vacacion.id_vacacion, vacacion.dias ");
+        qry.append("from r_periodo periodo, m_vacacion_periodo vacacion , m_usuario usuario ");
+        qry.append("where vacacion.activo=true and vacacion.id_usuario=usuario.id_usuario and vacacion.dias>0 and periodo.activo=true and usuario.cve_m_usuario = :claveUsuario and periodo.id_periodo = :idPeriodo and vacacion.id_periodo=periodo.id_periodo order by vacacion.fecha_inicio asc limit 1 ");
+        
+        MapSqlParameterSource parametros = new MapSqlParameterSource();
+        parametros.addValue("claveUsuario", claveUsuario);
+        parametros.addValue("idPeriodo", idPeriodo);
+
+        return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<VacacionPeriodoDto>(VacacionPeriodoDto.class));
 	}
 
 }

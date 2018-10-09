@@ -9,5 +9,7 @@ public interface ConfiguracionRepository {
 
 	public Timestamp obtieneUltimaFechaCargaAsistencia();
 	public void actualizaUltimaFechaCargaAsistencia();
+	public String obtieneUltimaFechaCargaUsuarios();
+	public void actualizaUltimaFechaCargaUsuarios();
 	
 }

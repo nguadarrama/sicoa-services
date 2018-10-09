@@ -83,4 +83,23 @@ public class VacacionPeriodoRecurso {
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 	}
 	
+	@PUT
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("buscaVacacionPeriodoPorClaveUsuarioYPeriodo")	
+	@PermitAll
+	public Response buscaVacacionPeriodoPorClaveUsuarioYPeriodo(@RequestParam String jsonVacaciones ) {
+		JsonObject jsonObject = new JsonParser().parse(jsonVacaciones).getAsJsonObject();
+		String datoUsuario="claveUsuario";
+		String usuario =""+ jsonObject.get(datoUsuario);
+		usuario=usuario.replace("\"", "");
+		System.out.println("clave para usuario "+usuario);
+		String dato="idPeriodo";
+		String id =""+ jsonObject.get(dato);
+		id=id.replace("\"", "");
+		Integer idPeriodo=Integer.parseInt(id);
+		System.out.println("clave para periodo "+idPeriodo);
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, vacacionPeriodoService.consultaVacacionPeriodoPorClaveUsuarioYPeriodo(idPeriodo, usuario));
+	}
+	
 }

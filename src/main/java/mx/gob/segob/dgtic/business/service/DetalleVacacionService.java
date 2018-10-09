@@ -11,4 +11,5 @@ public interface DetalleVacacionService {
 	public void modificaDetalleVacacion(DetalleVacacionDto detalleVacacionDto);
 	public void agregaDetalleVacacion(DetalleVacacionDto detalleVacacionDto);
 	public void eliminaDetalleVacacion(Integer idDetalle);
+	public void aceptaORechazaDetalleVacacion(DetalleVacacionDto detalleVacacionDto);
 }

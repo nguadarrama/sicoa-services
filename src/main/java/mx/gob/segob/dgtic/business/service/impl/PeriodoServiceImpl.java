@@ -45,4 +45,9 @@ public class PeriodoServiceImpl implements PeriodoService {
 	public void eliminaPeriodo(Integer idPeriodo){
 		periodoRules.eliminaPeriodo(idPeriodo);
 	}
+	
+	@Override 
+	public PeriodoDto buscaPeriodoPorClaveUsuario(String claveUsuario){
+		return periodoRules.buscaPeriodoPorClaveUsuario(claveUsuario);
+	}
 }

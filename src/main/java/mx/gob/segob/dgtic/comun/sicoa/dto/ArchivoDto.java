@@ -7,6 +7,10 @@
 */
 package mx.gob.segob.dgtic.comun.sicoa.dto;
 
+import java.io.InputStream;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import mx.gob.segob.dgtic.comun.util.mapper.annotations.MapeaColumna;
 
 public class ArchivoDto {
@@ -36,11 +40,18 @@ public class ArchivoDto {
 	    */
 	   @MapeaColumna(columna = "activo") private Boolean activo;
 	   
+	   private byte[] archivo;
+	   
+	   private String accion;
+	   
+	   private String claveUsuario;
+	   
 	   /**
 		 * Obtener el id archivo.
 		 *
 		 * @return idArchivo
 		 */
+
 		public Integer getIdArchivo() {
 			return idArchivo;
 		}
@@ -124,5 +135,29 @@ public class ArchivoDto {
 		 */
 		public void setActivo(Boolean activo) {
 			this.activo = activo;
+		}
+
+		public byte[] getArchivo() {
+			return archivo;
+		}
+
+		public void setArchivo(byte[] archivo) {
+			this.archivo = archivo;
+		}
+
+		public String getAccion() {
+			return accion;
+		}
+
+		public void setAccion(String accion) {
+			this.accion = accion;
+		}
+
+		public String getClaveUsuario() {
+			return claveUsuario;
+		}
+
+		public void setClaveUsuario(String claveUsuario) {
+			this.claveUsuario = claveUsuario;
 		}
 }

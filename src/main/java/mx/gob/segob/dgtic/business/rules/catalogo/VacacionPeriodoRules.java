@@ -34,4 +34,7 @@ public class VacacionPeriodoRules {
 		vacacionPeriodoRepository.eliminaVacacionPeriodo(idVacacion);
 	}
 	
+	public VacacionPeriodoDto consultaVacacionPeriodoPorClaveUsuarioYPeriodo(Integer idPeriodo, String claveUsuario){
+		return vacacionPeriodoRepository.consultaVacacionPeriodoPorClaveUsuarioYPeriodo(idPeriodo, claveUsuario);
+	}
 }

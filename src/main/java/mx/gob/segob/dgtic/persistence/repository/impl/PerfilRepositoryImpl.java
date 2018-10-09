@@ -63,7 +63,7 @@ public class PerfilRepositoryImpl implements PerfilRepository {
 	public void modificaPerfil(PerfilDto perfilDto){
 		
 		StringBuilder qry = new StringBuilder();
-		qry.append("UPDATE C_PERFIL SET descripcion= :descripcion, estatus = :estatus ");
+		qry.append("UPDATE c_perfil SET descripcion= :descripcion, estatus = :estatus ");
 		qry.append("WHERE cve_c_perfil = :idPerfil");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
@@ -78,7 +78,7 @@ public class PerfilRepositoryImpl implements PerfilRepository {
 	public void agregaPerfil (PerfilDto perfilDto){
 		
 		StringBuilder qry = new StringBuilder();
-		qry.append("INSERT INTO C_PERFIL (cve_c_perfil, descripcion, estatus) ");
+		qry.append("INSERT INTO c_perfil (cve_c_perfil, descripcion, estatus) ");
 		qry.append("VALUES (:cve_c_perfil, :descripcion, :estatus) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
@@ -93,7 +93,7 @@ public class PerfilRepositoryImpl implements PerfilRepository {
 	public void eliminaPerfil (String idPerfil){
 		
 		StringBuilder qry = new StringBuilder();
-		qry.append("DELETE FROM C_PERFIL WHERE cve_c_perfil = :idPerfil");
+		qry.append("DELETE FROM c_perfil WHERE cve_c_perfil = :idPerfil");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idPerfil", idPerfil);

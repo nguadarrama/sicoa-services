@@ -11,4 +11,5 @@ public interface VacacionPeriodoRepository {
 	public void modificaVacacionPeriodo(VacacionPeriodoDto vacacionPeriodoDto);
 	public void agregaVacacionPeriodo(VacacionPeriodoDto vacacionPeriodoDto);
 	public void eliminaVacacionPeriodo(Integer idVacacion);
+	public VacacionPeriodoDto consultaVacacionPeriodoPorClaveUsuarioYPeriodo(Integer idPeriodo, String claveUsuario);
 }

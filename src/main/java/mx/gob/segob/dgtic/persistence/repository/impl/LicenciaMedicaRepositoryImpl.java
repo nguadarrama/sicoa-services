@@ -74,7 +74,7 @@ public class LicenciaMedicaRepositoryImpl implements LicenciaMedicaRepository{
 	@Override
 	public void modificaLicenciaMedica(LicenciaMedicaDto licenciaMedicaDto) {
 		StringBuilder qry = new StringBuilder();
-		qry.append("UPDATE M_LICENCIA_MEDICA SET id_estatus= :idEstatus, fecha_inicio = :fechaInicio, fecha_fin = :fechaFin, dias = :dias, padecimiento = :padecimiento ");
+		qry.append("UPDATE m_licencia_medica SET id_estatus= :idEstatus, fecha_inicio = :fechaInicio, fecha_fin = :fechaFin, dias = :dias, padecimiento = :padecimiento ");
 		qry.append("WHERE id_licencia = :idLicencia");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
@@ -91,7 +91,7 @@ public class LicenciaMedicaRepositoryImpl implements LicenciaMedicaRepository{
 	@Override
 	public void agregaLicenciaMedica(LicenciaMedicaDto licenciaMedicaDto) {
 		StringBuilder qry = new StringBuilder();
-		qry.append("INSERT INTO M_LICENCIA_MEDICA (id_usuario, id_reponsable, id_archivo, id_estatus, fecha_inicio, fecha_fin, dias, padecimiento ) ");
+		qry.append("INSERT INTO m_licencia_medica (id_usuario, id_reponsable, id_archivo, id_estatus, fecha_inicio, fecha_fin, dias, padecimiento ) ");
 		qry.append("VALUES (:idUsuario, :idResponsable, :idArchivo, :idEstatus, :fechaInicio, :fechaFin, :dias, :padecimiento) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
@@ -111,7 +111,7 @@ public class LicenciaMedicaRepositoryImpl implements LicenciaMedicaRepository{
 	@Override
 	public void eliminaLicenciaMedica(Integer idLicencia) {
 		StringBuilder qry = new StringBuilder();
-		qry.append("DELETE FROM M_LICENCIA_MEDICA WHERE id_licencia = :idLicencia");
+		qry.append("DELETE FROM m_licencia_medica WHERE id_licencia = :idLicencia");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idLicencia", idLicencia);

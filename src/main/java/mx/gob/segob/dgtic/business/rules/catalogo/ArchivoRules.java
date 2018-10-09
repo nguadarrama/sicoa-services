@@ -26,8 +26,8 @@ public class ArchivoRules {
 		archivoRepository.modificaArchivo(archivoDto);
 	}
 	
-	public void agregaArchivo(ArchivoDto archivoDto){
-		archivoRepository.agregaArchivo(archivoDto);
+	public Integer agregaArchivo(ArchivoDto archivoDto){
+		return archivoRepository.agregaArchivo(archivoDto);
 	}
 	
 	public void eliminaArchivo(Integer idArchivo){
