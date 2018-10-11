@@ -65,4 +65,9 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 		asistenciaRules.creaIncidencia(incidencia);
 	}
 	
+	@Override
+	public void dictaminaIncidencia(IncidenciaDto incidencia) {
+		asistenciaRules.dictaminaIncidencia(incidencia);
+	}
+	
 }

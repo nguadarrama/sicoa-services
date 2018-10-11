@@ -16,6 +16,7 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.IncidenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.JustificacionDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.PerfilDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.TipoDiaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
@@ -121,23 +122,37 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		
 		StringBuilder qry = new StringBuilder();
         
-        qry.append("SELECT a.id_asistencia, a.entrada, a.id_tipo_dia, t.nombre, e.estatus, e.id_estatus, i.id_incidencia, j.id_justificacion, j.justificacion ");
+        qry.append("SELECT a.id_asistencia, a.entrada, a.id_tipo_dia, t.nombre as nombre_tipo, e.estatus, e.id_estatus, ");
+        qry.append("i.id_incidencia, j.id_justificacion, j.justificacion, u.nombre as nombre_usuario, u.apellido_paterno, u.apellido_materno, ");
+        qry.append("u.fecha_ingreso, cve_m_usuario, p.descripcion ");
         qry.append("FROM m_asistencia a ");
+        qry.append("inner join m_usuario u on u.cve_m_usuario = a.id_usuario ");
+        qry.append("inner join c_perfil p on p.cve_c_perfil = u.cve_c_perfil ");
         qry.append("inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ");
         qry.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia ");
         qry.append("left join m_estatus e on e.id_estatus = i.id_estatus ");
         qry.append("left join c_justificacion j on j.id_justificacion = i.id_justificacion ");
         qry.append("WHERE a.id_asistencia = :idAsistencia ");
-        qry.append("and a.id_tipo_dia = t.id_tipo_dia");
 
         MapSqlParameterSource parametros = new MapSqlParameterSource();
         parametros.addValue("idAsistencia", id);
         
         Map<String, Object> informacionConsulta = nameParameterJdbcTemplate.queryForMap(qry.toString(), parametros);
         
+        PerfilDto perfil = new PerfilDto();
+        perfil.setDescripcion((String) informacionConsulta.get("descripcion"));
+        
+        UsuarioDto usuario = new UsuarioDto();
+        usuario.setNombre((String) informacionConsulta.get("nombre_usuario"));
+        usuario.setApellidoPaterno((String) informacionConsulta.get("apellido_paterno"));
+        usuario.setApellidoMaterno((String) informacionConsulta.get("apellido_materno"));
+        usuario.setFechaIngreso((Date) informacionConsulta.get("fecha_ingreso"));
+        usuario.setClaveUsuario((String) informacionConsulta.get("cve_m_usuario"));
+        usuario.setClavePerfil(perfil);
+        
         TipoDiaDto tipoDia = new TipoDiaDto();
         tipoDia.setIdTipoDia((Integer) informacionConsulta.get("id_tipo_dia"));
-        tipoDia.setNombre((String) informacionConsulta.get("nombre"));
+        tipoDia.setNombre((String) informacionConsulta.get("nombre_tipo"));
         
         EstatusDto estatus = new EstatusDto();
         estatus.setIdEstatus((Integer) informacionConsulta.get("id_estatus") );
@@ -157,6 +172,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         asistencia.setIdTipoDia(tipoDia);
         asistencia.setIdEstatus(estatus);
         asistencia.setIncidencia(incidencia);
+        asistencia.setUsuarioDto(usuario);
 
         return asistencia;
 	}
@@ -165,13 +181,14 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 	public void creaIncidencia(IncidenciaDto incidencia) {
 		StringBuilder qry = new StringBuilder();
 		qry.append("INSERT INTO m_incidencia (id_asistencia, id_tipo_dia, id_archivo, id_estatus, id_responsable, descuento, observaciones, id_justificacion) ");
-		qry.append("VALUES (:idAsistencia, :idTipoDia, null, :idEstatus, null, null, null, :idJustificacion) ");
+		qry.append("VALUES (:idAsistencia, :idTipoDia, :idArchivo, :idEstatus, null, null, null, :idJustificacion) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idAsistencia", incidencia.getIdAsistencia().getIdAsistencia());
 		parametros.addValue("idTipoDia", incidencia.getTipoDia().getIdTipoDia());
 		parametros.addValue("idEstatus", incidencia.getEstatus().getIdEstatus());
 		parametros.addValue("idJustificacion", incidencia.getJustificacion().getIdJustificacion());
+		parametros.addValue("idArchivo", incidencia.getIdArchivo().getIdArchivo());
 
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 	}
@@ -201,12 +218,13 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		StringBuilder qry = new StringBuilder();
 		
 		qry.append("update m_incidencia ");
-		qry.append("set id_justificacion = :idJustificacion ");
+		qry.append("set id_justificacion = :idJustificacion, id_archivo = :idArchivo  ");
         qry.append("WHERE id_asistencia = :idAsistencia");
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idAsistencia", incidencia.getIdAsistencia().getIdAsistencia());
 		parametros.addValue("idJustificacion", incidencia.getJustificacion().getIdJustificacion());
+		parametros.addValue("idArchivo", incidencia.getIdArchivo().getIdArchivo());
 		
 		try {
 			nameParameterJdbcTemplate.update(qry.toString(), parametros);
@@ -216,8 +234,27 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		
 	}
 	
+	@Override
+	public void dictaminaIncidencia(IncidenciaDto incidencia) {
+		StringBuilder qry = new StringBuilder();
+		
+		qry.append("update m_incidencia ");
+		qry.append("set id_estatus = :idEstatus ");
+        qry.append("WHERE id_asistencia = :idAsistencia");
+        
+        MapSqlParameterSource parametros = new MapSqlParameterSource();
+		parametros.addValue("idAsistencia", incidencia.getIdAsistencia().getIdAsistencia());
+		parametros.addValue("idEstatus", incidencia.getEstatus().getIdEstatus());
+		
+		try {
+			nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		} catch (Exception e) {
+			logger.error("Error al dictaminar la justificación: " + incidencia.getIdAsistencia().getIdAsistencia() + " " + e.getMessage());
+		}
+		
+	}
 
-@Override
+	@Override
 	public void agregaAsistencia(AsistenciaDto asistenciaDto) {
 		StringBuilder qry = new StringBuilder();
 		qry.append("insert into m_asistencia (id_usuario, id_tipo_dia, id_estatus, entrada, salida ) ");
@@ -229,10 +266,8 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		parametros.addValue("idEstatus", asistenciaDto.getIdEstatus().getIdEstatus());
 		parametros.addValue("entrada", asistenciaDto.getEntrada());
 		parametros.addValue("salida", asistenciaDto.getSalida());
-		
 
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
-		
 	}
 
 }

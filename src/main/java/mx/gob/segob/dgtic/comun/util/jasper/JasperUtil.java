@@ -68,7 +68,7 @@ public class JasperUtil {
      * @throws ArchivoException Excepci&oacute;n generada por la conversi&oacute;n del archivo
      * 
      */
-    public static byte[] generarReportePDF(String pathResourcesJasper,
+	public static byte[] generarReportePDF(String pathResourcesJasper,
                                            List<?> listaDataSource,
                                            Map<String, Object> parametrosReporte ) throws ArchivoException {
 

@@ -79,9 +79,12 @@ public class ArchivoRecurso {
 		ArchivoDto archivoDto = gson.fromJson(jsonObject.get("archivo"), ArchivoDto.class);
 		System.out.println("archivo en recurso "+archivoDto.getArchivo());
 		
-		archivoService.agregaArhivo(archivoDto);
+		Integer idArchivo = archivoService.agregaArhivo(archivoDto);
+		
+		ArchivoDto archivo = new ArchivoDto();
+		archivo.setIdArchivo(idArchivo);
 
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, archivo);
 	}
 	
 	@GET

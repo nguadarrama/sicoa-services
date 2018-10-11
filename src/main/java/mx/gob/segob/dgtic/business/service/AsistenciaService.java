@@ -10,4 +10,5 @@ public interface AsistenciaService {
 	public List<AsistenciaDto> buscaAsistenciaEmpleadoRango(String claveEmpleado, String fechaInicio, String fechaFin);
 	public AsistenciaDto buscaAsistenciaPorId(Integer id);
 	public void creaIncidencia(IncidenciaDto incidencia);
+	public void dictaminaIncidencia(IncidenciaDto incidencia);
 }
