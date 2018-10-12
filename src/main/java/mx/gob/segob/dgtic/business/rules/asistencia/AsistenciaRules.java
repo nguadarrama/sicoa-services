@@ -13,9 +13,11 @@ import mx.gob.segob.dgtic.comun.exception.ArchivoException;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.IncidenciaDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.comun.util.jasper.JasperUtil;
 import mx.gob.segob.dgtic.persistence.repository.ArchivoRepository;
 import mx.gob.segob.dgtic.persistence.repository.AsistenciaRepository;
+import mx.gob.segob.dgtic.persistence.repository.UsuarioRepository;
 
 @Component
 public class AsistenciaRules {
@@ -26,6 +28,9 @@ public class AsistenciaRules {
 	@Autowired
 	private ArchivoRepository archivoRepository;
 	
+	@Autowired
+	private UsuarioRepository usuarioRepository;
+	
 	public List<AsistenciaDto> buscaAsistenciaEmpleadoMes(String claveEmpleado) {
 		
 		return asistenciaRepository.buscaAsistenciaEmpleadoMes(claveEmpleado);
@@ -33,25 +38,18 @@ public class AsistenciaRules {
 	}
 	
 	public List<AsistenciaDto> buscaAsistenciaEmpleadoRango(String claveEmpleado, Date fechaInicio, Date fechaFin) {
-		
 		List<AsistenciaDto> listaAsistencia = asistenciaRepository.buscaAsistenciaEmpleadoRango(claveEmpleado, fechaInicio, fechaFin);
-				
-				
-				
-//		String plantilla = "/plantillas/ejemplo.jasper";
-//		  
-//		 Map<String, Object> parametros = new HashMap<>(0);
-//		 parametros.put("tituloReporte", "Reporte de prueba");
-//		 
-//		 try {
-//			byte[] archivoPDF = JasperUtil.generarReportePDF(plantilla, listaAsistencia, parametros);
-//		} catch (ArchivoException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 		
 		return listaAsistencia;
+	}
+	
+	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(String claveEmpleado, Date fechaInicio, Date fechaFin, String cveCoordinador) {
+		//se obitiene la unidad administrativa del coordinador
+		UsuarioDto coordinador = usuarioRepository.buscaUsuario(cveCoordinador);
 		
+		List<AsistenciaDto> listaAsistencia = asistenciaRepository.buscaAsistenciaEmpleadoRangoCoordinador(claveEmpleado, fechaInicio, fechaFin, coordinador.getIdUnidad());
+		
+		return listaAsistencia;
 	}
 	
 	public AsistenciaDto buscaAsistenciaPorId(Integer id) {

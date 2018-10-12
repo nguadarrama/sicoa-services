@@ -57,6 +57,19 @@ public class AsistenciaRecurso {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
+	@Path("obtieneAsistenciasEmpleadoRangoCoordinador")	
+	@PermitAll
+	public Response buscaAsistenciaEmpleadoRangoCoordinador(
+			@QueryParam("claveEmpleado") String claveEmpleado, 
+			@QueryParam("inicio") String inicio, 
+			@QueryParam("fin") String fin,
+			@QueryParam("cveCoordinador") String cveCoordinador) {
+
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistenciaEmpleadoRangoCoordinador(claveEmpleado, inicio, fin, cveCoordinador));
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneAsistenciaPorId")	
 	@PermitAll
 	public Response buscaAsistenciaPorId(@QueryParam("id") Integer id) {

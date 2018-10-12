@@ -54,6 +54,34 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 		
 		return null;
 	}
+	
+	@Override
+	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(String claveEmpleado, String inicio, String fin, String cveCoordinador) {
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy"); 
+    	
+    	try {
+			Date parsedInicio = formatter.parse(inicio);
+			Date parsedFin = formatter.parse(fin);
+			
+			java.sql.Date fechaInicio = new java.sql.Date(parsedInicio.getTime());
+			java.sql.Date fechaFin = new java.sql.Date(parsedFin.getTime());
+			
+			//se suma un día a la fecha fin para incluirla en la búsqueda
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-dd");
+			Calendar c = Calendar.getInstance();
+			
+			c.setTime(fechaFin);
+			c.add(Calendar.DAY_OF_MONTH, 1);  
+			fechaFin.setTime(c.getTimeInMillis());
+			
+			return asistenciaRules.buscaAsistenciaEmpleadoRangoCoordinador(claveEmpleado, fechaInicio, fechaFin, cveCoordinador);
+		} catch (ParseException e) {
+			logger.warn("Error al convertir la fecha en búsqueda de asistencia: " + e.getMessage());
+		}
+		
+		return null;
+	}
 
 	@Override
 	public AsistenciaDto buscaAsistenciaPorId(Integer id) {

@@ -118,15 +118,63 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 	}
 	
 	@Override
+	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(String claveEmpleado, Date fechaInicio, Date fechaFin, Integer idUnidadCoordinador) {
+			
+		StringBuilder qry = new StringBuilder();
+	       
+        qry.append("SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus ");
+        qry.append("FROM m_asistencia a ");
+        qry.append("inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ");
+        qry.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia ");
+        qry.append("left join m_estatus e on e.id_estatus = i.id_estatus ");
+        qry.append("inner join m_usuario u on u.cve_m_usuario = a.id_usuario ");
+        qry.append("inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ");
+        qry.append("WHERE a.id_usuario = ? ");
+        qry.append("and a.id_tipo_dia = t.id_tipo_dia ");
+        qry.append("and entrada >= ? ");
+        qry.append("and entrada < ? ");
+        qry.append("and uua.id_unidad = ? "); //solo muestra el usuario que se encuentra en la misma unidad que el coordinador
+        qry.append("order by entrada");
+
+        List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString(), claveEmpleado, fechaInicio, fechaFin, idUnidadCoordinador);
+        List<AsistenciaDto> listaAsistencia = new ArrayList<>();
+        
+        UsuarioDto usuario = usuarioRepository.buscaUsuario(claveEmpleado);
+        
+        for (Map<String, Object> a : asistencias) {
+        	TipoDiaDto tipoDia = new TipoDiaDto();
+        	tipoDia.setIdTipoDia((Integer) a.get("id_tipo_dia"));
+        	tipoDia.setNombre((String) a.get("nombre"));
+        	
+        	EstatusDto estatus = new EstatusDto();
+        	estatus.setEstatus((String) a.get("estatus"));
+        	
+        	AsistenciaDto asistencia = new AsistenciaDto();
+        	asistencia.setIdAsistencia((Integer) a.get("id_asistencia"));
+    		asistencia.setUsuarioDto(usuario);
+    		asistencia.setIdTipoDia(tipoDia);
+    		asistencia.setEntrada((Timestamp) a.get("entrada"));
+    		asistencia.setSalida((Timestamp) a.get("salida"));
+    		asistencia.setIdEstatus(estatus);
+    		
+    		listaAsistencia.add(asistencia);
+    	}
+        
+        return listaAsistencia;
+	}
+	
+	@Override
 	public AsistenciaDto buscaAsistenciaPorId(Integer id) {
 		
 		StringBuilder qry = new StringBuilder();
         
         qry.append("SELECT a.id_asistencia, a.entrada, a.id_tipo_dia, t.nombre as nombre_tipo, e.estatus, e.id_estatus, ");
         qry.append("i.id_incidencia, j.id_justificacion, j.justificacion, u.nombre as nombre_usuario, u.apellido_paterno, u.apellido_materno, ");
-        qry.append("u.fecha_ingreso, cve_m_usuario, p.descripcion ");
+        qry.append("u.fecha_ingreso, u.cve_m_usuario, p.descripcion, u.id_puesto, u.rfc, ua.nombre as nombre_unidad ");
         qry.append("FROM m_asistencia a ");
         qry.append("inner join m_usuario u on u.cve_m_usuario = a.id_usuario ");
+        qry.append("inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ");
+        qry.append("inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ");
         qry.append("inner join c_perfil p on p.cve_c_perfil = u.cve_c_perfil ");
         qry.append("inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ");
         qry.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia ");
@@ -149,6 +197,10 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         usuario.setFechaIngreso((Date) informacionConsulta.get("fecha_ingreso"));
         usuario.setClaveUsuario((String) informacionConsulta.get("cve_m_usuario"));
         usuario.setClavePerfil(perfil);
+        usuario.setIdPuesto((String) informacionConsulta.get("puesto"));
+        usuario.setRfc((String) informacionConsulta.get("rfc")) ;
+        usuario.setIdPuesto((String) informacionConsulta.get("id_puesto"));
+        usuario.setNombreUnidad((String) informacionConsulta.get("nombre_unidad"));
         
         TipoDiaDto tipoDia = new TipoDiaDto();
         tipoDia.setIdTipoDia((Integer) informacionConsulta.get("id_tipo_dia"));
