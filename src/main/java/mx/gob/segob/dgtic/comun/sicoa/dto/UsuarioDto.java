@@ -114,10 +114,17 @@ public class UsuarioDto {
 	 */
     @MapeaColumna(columna = "primera_vez") private String primeraVez;
     
+    private String nombreUnidad;
+    private Integer idUnidad;
+    
     /**
 	 * Estatus de usuario.
 	 */
     @MapeaColumna(columna = "estatus") private String estatus;
+    
+    @MapeaColumna(columna = "nivel") private String nivel;
+    
+    @MapeaColumna(columna = "rfc") private String rfc;
     
     
     /**
@@ -483,6 +490,38 @@ public class UsuarioDto {
 
 	public void setClavePerfil(PerfilDto clavePerfil) {
 		this.clavePerfil = clavePerfil;
+	}
+
+	public String getNivel() {
+		return nivel;
+	}
+
+	public void setNivel(String nivel) {
+		this.nivel = nivel;
+	}
+
+	public String getRfc() {
+		return rfc;
+	}
+
+	public void setRfc(String rfc) {
+		this.rfc = rfc;
+	}
+
+	public String getNombreUnidad() {
+		return nombreUnidad;
+	}
+
+	public void setNombreUnidad(String nombre_unidad) {
+		this.nombreUnidad = nombre_unidad;
+	}
+
+	public Integer getIdUnidad() {
+		return idUnidad;
+	}
+
+	public void setIdUnidad(Integer idUnidad) {
+		this.idUnidad = idUnidad;
 	}
 
 }

@@ -1,5 +1,7 @@
 package mx.gob.segob.dgtic.business.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,5 +20,16 @@ public class UsuarioPerfilServiceImpl implements UsuarioPerfilService {
 		
 		usuarioPerfilRules.agregaUsuarioPerfil(usuarioPerfilDto);
 		
+	}
+
+	@Override
+	public void insertaEliminaUsuarioPerfil(UsuarioPerfilDto usuarioPerfilDto) {
+		usuarioPerfilRules.insertaEliminaUsuarioPerfil(usuarioPerfilDto);
+		
+	}
+
+	@Override
+	public List<UsuarioPerfilDto> consultaPerfilesPorUsuario(String claveUsuario) {
+		return usuarioPerfilRules.consultaPerfilesPorUsuario(claveUsuario);
 	}
 }

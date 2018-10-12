@@ -247,14 +247,12 @@ public class AutenticacionRules {
 	public Boolean cambiarPassword(String claveUsuario, String password){
 		password=HashUtils.md5(password);
 		Boolean resultado=false;
-		String  contrasenia=usuarioRules.consultaContrasenia(claveUsuario);
-		if(contrasenia.equals(password)){
+		//String  contrasenia=usuarioRules.consultaContrasenia(claveUsuario);
+		/*if(contrasenia.equals(password)){
 			resultado=false;
-		}else{
+		}else{*/
 		repositorioAutenticacion.cambiarPassword(password, claveUsuario);
-		resultado=true;
-		}
-		return resultado;
+		return true;
 		
 	}
 }

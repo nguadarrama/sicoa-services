@@ -41,7 +41,7 @@ public class UnidadAdministrativaRepositoryImpl implements UnidadAdministrativaR
         
         for (Map<String, Object> unidad : unidadesArdminsitrativas) {
         	UsuarioUnidadAdministrativaDto usuarioUnidadAdministrativaDto = new UsuarioUnidadAdministrativaDto();
-        	
+        	System.out.println("unidad "+unidad.get("nombre"));
     		UnidadAdministrativaDto unidadAdministrativaDto = new UnidadAdministrativaDto();
     		unidadAdministrativaDto.setIdUnidad((Integer)unidad.get("id_unidad"));
     		unidadAdministrativaDto.setNombre((String)unidad.get("nombre"));
