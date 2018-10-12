@@ -60,7 +60,7 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
         	estatusDto.setIdEstatus((Integer)detalleVacacion.get("id_estatus"));
         	estatusDto.setDescripcion((String)detalleVacacion.get("descripcion"));
         	detalleVacacionDto.setIdEstatus(estatusDto);
-        	
+        	System.out.println("Vacaciones resuperadas"+detalleVacacion.get("id_detalle"));
         	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 //        	System.out.println("fecha actual"+(Date)detalleVacacion.get("fecha_inicio"));
         	String fechaIni=""+detalleVacacion.get("fecha_inicio");
@@ -152,6 +152,7 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idEstatus", detalleVacacionDto.getIdEstatus().getIdEstatus());
+		parametros.addValue("idDetalle", detalleVacacionDto.getIdDetalle());
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		
 	}

@@ -49,13 +49,13 @@ public class DetalleVacacionRules {
 	}
 	
 	public void agregaDetalleVacacion(DetalleVacacionDto detalleVacacionDto){
-		detalleVacacionRepository.agregaDetalleVacacion(detalleVacacionDto);
-		
+		//detalleVacacionRepository.agregaDetalleVacacion(detalleVacacionDto);
+		System.out.println("idVacacion "+detalleVacacionDto.getIdVacacion().getIdVacacion());
 	    ArchivoDto archivoDto = new ArchivoDto();
 	    
-	    Integer idArchivo=archivoRepository.agregaArchivo(archivoDto);
-	    archivoDto.setIdArchivo(idArchivo);
-	    detalleVacacionDto.setIdArchivo(archivoDto);
+	    //Integer idArchivo=archivoRepository.agregaArchivo(archivoDto);
+	    //archivoDto.setIdArchivo(idArchivo);
+	    //detalleVacacionDto.setIdArchivo(archivoDto);
 	    //
 	    VacacionPeriodoDto vacacionPeriodoDto= new VacacionPeriodoDto();
 	    //se obtienen los datos de la tabla vacacion_periodo
@@ -77,7 +77,8 @@ public class DetalleVacacionRules {
 	}
 	
 	public void aceptaORechazaDetalleVacacion(DetalleVacacionDto detalleVacacionDto){
-		if(detalleVacacionDto.getIdEstatus().getIdEstatus()==1){
+		System.out.println("idDetalle en el rules "+detalleVacacionDto.getIdDetalle());
+		if(detalleVacacionDto.getIdEstatus().getIdEstatus()==2){
 			Date fechaInicio=detalleVacacionDto.getFechaInicio();
 			Date fechaFin=detalleVacacionDto.getFechaFin();
 			Calendar c1 = Calendar.getInstance();
@@ -98,6 +99,7 @@ public class DetalleVacacionRules {
 		        AsistenciaDto asistenciaDto = new AsistenciaDto(); 
 		        asistenciaDto.setEntrada(new Timestamp(date.getTime()));
 		        asistenciaDto.setSalida(new Timestamp(date.getTime()));
+		        System.out.println("detalleVacacionDto.getIdUsuario().getIdUsuario() "+detalleVacacionDto.getIdUsuario().getIdUsuario());
 		        asistenciaDto.setUsuarioDto(detalleVacacionDto.getIdUsuario());
 		        asistenciaDto.setIdEstatus(estatusDto);
 		        asistenciaDto.setIdTipoDia(tipoDiaDto);
@@ -105,13 +107,13 @@ public class DetalleVacacionRules {
 		        System.out.println("Fecha "+date+" registro insertado");  
 		    }
 		    detalleVacacionRepository.aceptaORechazaDetalleVacacion(detalleVacacionDto); 
-		}else if(detalleVacacionDto.getIdEstatus().getIdEstatus()==2){
+		}else if(detalleVacacionDto.getIdEstatus().getIdEstatus()==3){
 			//detalleVacacionRepository.eliminaDetalleVacacion(detalleVacacionDto.getIdDetalle());
 			detalleVacacionRepository.aceptaORechazaDetalleVacacion(detalleVacacionDto);
 			VacacionPeriodoDto vacacionPeriodoDto= new VacacionPeriodoDto();
 		    //se obtienen los datos de la tabla vacacion_periodo
 		    vacacionPeriodoDto=vacacionPeriodoRepository.buscaVacacionPeriodo(detalleVacacionDto.getIdVacacion().getIdVacacion());
-		    //Resta de los dias disponibles menos los dias que se han pedido
+		    //Suma los dias pedidos que ya no se necesitan
 		    Integer resta=vacacionPeriodoDto.getDias()+detalleVacacionDto.getDias();
 		    //setea el nueo numero de dias disponibles
 		    vacacionPeriodoDto.setDias(resta);
