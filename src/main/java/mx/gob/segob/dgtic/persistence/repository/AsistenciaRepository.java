@@ -17,4 +17,5 @@ public interface AsistenciaRepository {
 	public void editaIncidencia(IncidenciaDto incidencia);
 	public void dictaminaIncidencia(IncidenciaDto incidencia);
 	public void agregaAsistencia(AsistenciaDto asistenciaDto);
+	public List<String> obtieneListaEmpleadosDeVacacionesHoy();
 }

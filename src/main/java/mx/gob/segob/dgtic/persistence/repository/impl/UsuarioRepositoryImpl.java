@@ -132,13 +132,10 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
         usuario.setPrimeraVez((String) informacionConsulta.get("primera_vez"));
         usuario.setEstatus((String) informacionConsulta.get("estatus"));
         usuario.setNivel((String) informacionConsulta.get("nivel"));
-        System.out.println("nivel "+informacionConsulta.get("nivel"));
         usuario.setRfc((String) informacionConsulta.get("rfc"));
-        System.out.println("rfc "+informacionConsulta.get("rfc"));
         usuario.setIdUnidad((Integer)informacionConsulta.get("id_unidad"));
         
         return usuario;
-		
 	}
 
 	@Override
