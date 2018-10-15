@@ -30,7 +30,7 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 	@Override
 	public List<AsistenciaDto> buscaAsistenciaEmpleadoRango(String claveEmpleado, String inicio, String fin) {
 		
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy"); 
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
     	
     	try {
 			Date parsedInicio = formatter.parse(inicio);
@@ -40,7 +40,6 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 			java.sql.Date fechaFin = new java.sql.Date(parsedFin.getTime());
 			
 			//se suma un día a la fecha fin para incluirla en la búsqueda
-			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-dd");
 			Calendar c = Calendar.getInstance();
 			
 			c.setTime(fechaFin);
@@ -58,7 +57,7 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 	@Override
 	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(String claveEmpleado, String inicio, String fin, String cveCoordinador) {
 		
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy"); 
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
     	
     	try {
 			Date parsedInicio = formatter.parse(inicio);
@@ -68,7 +67,6 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 			java.sql.Date fechaFin = new java.sql.Date(parsedFin.getTime());
 			
 			//se suma un día a la fecha fin para incluirla en la búsqueda
-			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-dd");
 			Calendar c = Calendar.getInstance();
 			
 			c.setTime(fechaFin);
