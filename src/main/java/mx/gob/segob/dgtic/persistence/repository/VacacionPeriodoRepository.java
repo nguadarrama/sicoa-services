@@ -14,4 +14,5 @@ public interface VacacionPeriodoRepository {
 	public VacacionPeriodoDto consultaVacacionPeriodoPorClaveUsuarioYPeriodo(Integer idPeriodo, String claveUsuario);
 	
 	public void generarVacacionPeriodotodos(int idUsuario, int idPeriodo, int estatus, String inicio, int dias, boolean activo, String ingreso);
+	
 }

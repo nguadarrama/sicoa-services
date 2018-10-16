@@ -1,5 +1,6 @@
 package mx.gob.segob.dgtic.persistence.repository;
 
+import java.sql.Date;
 import java.util.List;
 
 import mx.gob.segob.dgtic.comun.sicoa.dto.PeriodoDto;

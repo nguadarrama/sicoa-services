@@ -88,17 +88,12 @@ public class PeriodoDto {
 		public void setFechaFin(Date fechaFin) {
 			this.fechaFin = fechaFin;
 		}
-		/**
-		 * La descripción.
-		 * @return descripcion
-		 */
+		
+
 		public String getDescripcion() {
 			return descripcion;
 		}
-		/**
-		 * La descripción
-		 * @param descripcion
-		 */
+
 		public void setDescripcion(String descripcion) {
 			this.descripcion = descripcion;
 		}

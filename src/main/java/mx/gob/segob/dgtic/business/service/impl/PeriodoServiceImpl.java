@@ -90,7 +90,7 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 			c.add(Calendar.DAY_OF_MONTH, 548);
 			fechaFin.setTime(c.getTimeInMillis());
 			logger.info("fechaFin= "+fin);
-			periodo = periodoRules.generaPeriodoVacacional(inicio, fin, descripcion, activo);
+			periodo = periodoRules.generaPeriodoVacacional(inicio, sdf.format(fin), descripcion, activo);
 			logger.info("periodo: "+periodo);
 			if(periodo == 1) {
 				Calendar c2 = Calendar.getInstance();
