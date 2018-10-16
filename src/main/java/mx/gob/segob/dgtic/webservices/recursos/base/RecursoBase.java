@@ -21,4 +21,9 @@ public abstract class RecursoBase {
      * Intancia para realizar log.
      */
     protected final Logger logger = LoggerFactory.getLogger(ServiceBase.class);
+
+	public void generaPeriodoVacacional(String inicio, String descripcion, boolean activo) {
+		// TODO Auto-generated method stub
+		
+	}
 }

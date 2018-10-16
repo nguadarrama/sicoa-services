@@ -1,5 +1,6 @@
 package mx.gob.segob.dgtic.persistence.repository;
 
+import java.sql.Date;
 import java.util.List;
 
 import mx.gob.segob.dgtic.comun.sicoa.dto.PeriodoDto;
@@ -12,4 +13,6 @@ public interface PeriodoRepository {
 	public void agregaPeriodo(PeriodoDto periodoDto);
 	public void eliminaPeriodo(Integer idPeriodo);
 	public PeriodoDto buscaPeriodoPorClaveUsuario(String claveUsuario);
+	
+	public int generaPeriodoVacacional (String inicio, String fin, String descripcion, boolean activo);
 }

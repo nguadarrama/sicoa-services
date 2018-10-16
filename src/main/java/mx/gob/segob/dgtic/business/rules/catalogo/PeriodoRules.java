@@ -38,4 +38,8 @@ public class PeriodoRules {
 	public PeriodoDto buscaPeriodoPorClaveUsuario(String claveUsuario){
 		return periodoRepository.buscaPeriodoPorClaveUsuario(claveUsuario);
 	}
+	
+	public int generaPeriodoVacacional(String inicio, String fin, String descripcion, boolean activo) {
+		return periodoRepository.generaPeriodoVacacional(inicio, fin, descripcion, activo);
+	}
 }
