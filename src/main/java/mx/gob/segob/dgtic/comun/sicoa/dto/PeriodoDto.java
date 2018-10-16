@@ -29,6 +29,11 @@ public class PeriodoDto {
 	   @MapeaColumna(columna = "fecha_fin") private Date fechaFin;
 	   
 	   /**
+	    * La descripción.
+	    */
+	   @MapeaColumna (columna = "descripcion") private String descripcion;
+	   
+	   /**
 	    * El dato activo.
 	    */
 	   @MapeaColumna(columna = "activo") private Boolean activo;
@@ -83,7 +88,21 @@ public class PeriodoDto {
 		public void setFechaFin(Date fechaFin) {
 			this.fechaFin = fechaFin;
 		}
-		
+		/**
+		 * La descripción.
+		 * @return descripcion
+		 */
+		public String getDescripcion() {
+			return descripcion;
+		}
+		/**
+		 * La descripción
+		 * @param descripcion
+		 */
+		public void setDescripcion(String descripcion) {
+			this.descripcion = descripcion;
+		}
+
 		/**
 		* El dato activo.
 		* @return activo

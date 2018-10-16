@@ -37,4 +37,8 @@ public class VacacionPeriodoRules {
 	public VacacionPeriodoDto consultaVacacionPeriodoPorClaveUsuarioYPeriodo(Integer idPeriodo, String claveUsuario){
 		return vacacionPeriodoRepository.consultaVacacionPeriodoPorClaveUsuarioYPeriodo(idPeriodo, claveUsuario);
 	}
+	
+	public void generarVacacionesTodos (int idUsuario, int idPeriodo, int estatus, String inicio, int dias, boolean activo, String ingreso) {
+		vacacionPeriodoRepository.generarVacacionPeriodotodos(idUsuario, idPeriodo, estatus, inicio, dias, activo, ingreso);
+	}
 }

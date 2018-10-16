@@ -230,6 +230,56 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 		parametros.addValue("claveUsuario", claveUsuario);
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);	
 	}
+
+	@Override
+	public List<UsuarioDto> obtenerListaUsuariosActivos(String fecha) {
+		StringBuilder qry = new StringBuilder();
+        qry.append("select id_usuario, id_area, cve_c_perfil, id_horario, id_puesto,"
+        		+ " cve_m_usuario, nombre, apellido_paterno, apellido_materno, "
+        		+ "fecha_ingreso, activo, nuevo, en_sesion, ultimo_acceso, numero_intentos,"
+        		+ " bloqueado, fecha_bloqueo,  primera_vez, estatus ");
+        qry.append("from m_usuario ");
+        qry.append(" where activo = 1 ");
+        qry.append(" and fecha_ingreso <= :fecha");
+        
+        MapSqlParameterSource parametros = new MapSqlParameterSource();
+        parametros.addValue("fecha", fecha);
+        
+        List<Map<String, Object>> usuarios = jdbcTemplate.queryForList(qry.toString());
+        List<UsuarioDto> listaUsuario = new ArrayList<>();
+        
+        for (Map<String, Object> usuario : usuarios) {
+    		UsuarioDto usuarioDto = new UsuarioDto();
+    		usuarioDto.setIdUsuario((Integer)usuario.get("id_usuario"));
+    		usuarioDto.setIdArea((Integer)usuario.get("id_area"));
+    		//usuarioDto.setIdIncidencia ((Integer)usuario.get("id_incidencia"));
+    		//usuarioDto.setClavePerfil(PerfilDto)usuario.get("cve_c_perfil"));
+    		usuarioDto.setIdPuesto((String)usuario.get("id_puesto"));
+    		usuarioDto.setClaveUsuario((String)usuario.get("cve_m_usuario"));
+    		usuarioDto.setNombre((String)usuario.get("nombre"));
+    		usuarioDto.setApellidoPaterno((String)usuario.get("apellido_paterno"));
+    		usuarioDto.setApellidoMaterno((String)usuario.get("apellido_materno"));
+    		usuarioDto.setFechaIngreso((Date)usuario.get("fecha_ingreso"));
+    		//usuarioDto.setPassword((String)usuario.get("password"));
+    		usuarioDto.setActivo((Boolean)usuario.get("activo"));
+    		usuarioDto.setNuevo((Boolean)usuario.get("nuevo"));
+    		usuarioDto.setEnSesion((String)usuario.get("en_sesion"));
+    		usuarioDto.setUltimoAcceso((Date)usuario.get("ultimo_acceso"));
+    		usuarioDto.setNumeroIntentos((Integer)usuario.get("numero_intentos"));
+    		usuarioDto.setBloqueado((String)usuario.get("bloqueado"));
+    		usuarioDto.setActivo((Boolean)usuario.get("activo"));
+    		usuarioDto.setFechaBloqueo((Date)usuario.get("fecha_bloqueo"));
+    		usuarioDto.setPrimeraVez((String)usuario.get("primera_vez"));
+    		usuarioDto.setEstatus((String)usuario.get("estatus"));
+    		//usuarioDto.setRfc((String)usuario.get("rfc"));
+    		//usuarioDto.setNivel((String)usuario.get("nivel"));
+    		listaUsuario.add(usuarioDto);
+    	}
+        
+        logger.info(listaUsuario.size() + " usuarios encontrados.");
+        
+		return listaUsuario;
+	}
 	
 	
 }

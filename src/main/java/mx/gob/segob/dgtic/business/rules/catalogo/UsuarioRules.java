@@ -39,5 +39,7 @@ public class UsuarioRules {
 		return usuarioRepository.consultaContrasenia(claveUsuario);
 	}
 	
-
+	public List<UsuarioDto> obtenerListaUsuariosActivos (String fecha){
+		return usuarioRepository.obtenerListaUsuariosActivos(fecha);
+	}
 }

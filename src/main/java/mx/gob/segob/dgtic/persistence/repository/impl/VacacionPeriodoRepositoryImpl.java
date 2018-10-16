@@ -128,5 +128,25 @@ public class VacacionPeriodoRepositoryImpl implements VacacionPeriodoRepository{
 
         return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<VacacionPeriodoDto>(VacacionPeriodoDto.class));
 	}
+	
+	@Override
+	public void generarVacacionPeriodotodos(int idUsuario, int idPeriodo, int estatus, String inicio, int dias, boolean activo, String ingreso) {
+		StringBuilder qry = new StringBuilder();
+		qry.append("INSERT INTO m_vacacion_periodo (id_usuario, id_periodo, id_estatus, fecha_inicio, dias, activo ) ");
+		qry.append("VALUES (:idUsuario, :idPeriodo, :idEstatus, :fechaInicio, :dias, :activo) ");
+		qry.append(" WHERE m_usuario.fecha_ingreso <= :ingreso ");
+		
+		MapSqlParameterSource parametros = new MapSqlParameterSource();
+		parametros.addValue("idUsuario", idUsuario);
+		parametros.addValue("idPeriodo", idPeriodo);
+		parametros.addValue("idEstatus", estatus);
+		parametros.addValue("fechaInicio", inicio);
+		parametros.addValue("dias", dias);
+		parametros.addValue("activo", activo);
+		parametros.addValue("ingreso", ingreso);
+
+		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		
+	}
 
 }

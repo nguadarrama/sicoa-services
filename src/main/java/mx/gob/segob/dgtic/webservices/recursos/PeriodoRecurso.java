@@ -104,5 +104,16 @@ public class PeriodoRecurso {
 			System.out.println("usuario "+claveUsuario);
 			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, periodoService.buscaPeriodoPorClaveUsuario(claveUsuario));
 		}
+		
+		@GET
+		@Produces(MediaType.APPLICATION_JSON)
+		@Consumes(MediaType.APPLICATION_JSON)
+		@Path("generaPeriodoVacacional")	
+		@PermitAll
+		public Response generaPeriodoVacacional(@RequestParam String inicio, @RequestParam String descripcion,@RequestParam boolean activo) {
+			System.out.println("datos recibidos: "+" fechhaInicio: "+inicio+" descripcion: "+descripcion+" activo: "+activo);
+			periodoService.generaPeriodoVacacional(inicio, descripcion, activo);
+			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+		}
 	
 }

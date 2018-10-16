@@ -13,4 +13,6 @@ public interface UsuarioRepository {
 	public String consultaContrasenia(String claveUsuario);
 	public void reiniciaContrasenia(String claveUsuario);
 	
+	public List<UsuarioDto> obtenerListaUsuariosActivos(String fecha);
+	
 }
