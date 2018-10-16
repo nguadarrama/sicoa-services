@@ -2,6 +2,7 @@ package mx.gob.segob.dgtic.webservices.recursos;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -121,5 +122,57 @@ public class DetalleVacacionRecurso {
 		detalleVacacionService.aceptaORechazaDetalleVacacion(detalleVacacionDto);
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("consultaVacacionesPropiasPorFiltros")	
+	@PermitAll
+	public Response consultaVacacionesPropiasPorFiltros(@QueryParam("claveUsuario") String claveUsuario, @QueryParam("idEstatus") String idEstatus, @QueryParam("idPeriodo") String idPeriodo, @QueryParam("fechaInicio") String fechaInicio, @QueryParam("fechaFin") String fechaFin) {
+		Integer nuevoIdPeriodo;
+		Integer nuevoIdEstatus;
+		try{
+			nuevoIdPeriodo=Integer.parseInt(idPeriodo);
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			nuevoIdPeriodo=null;
+			
+		}
+		try{
+			
+			nuevoIdEstatus=Integer.parseInt(idEstatus);
+		}catch(Exception e){
+			e.printStackTrace();
+			
+			nuevoIdEstatus=null;
+		}
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.consultaVacacionesPropiasPorFiltros(claveUsuario, nuevoIdPeriodo, nuevoIdEstatus, fechaInicio, fechaFin));
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("obtenerVacacionesPorFiltros")	
+	@PermitAll
+	public Response obtenerVacacionesPorFiltros(@QueryParam("claveUsuario") String claveUsuario, @QueryParam("nombre") String nombre, @QueryParam("apellidoPaterno") String apellidoPaterno, @QueryParam("apellidoMaterno") String apellidoMaterno, @QueryParam("idUnidad") String idUnidad, @QueryParam("idEstatus") String idEstatus) {
+		Integer nuevoIdUnidad;
+		Integer nuevoIdEstatus;
+		try{
+			nuevoIdUnidad=Integer.parseInt(idUnidad);
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			nuevoIdUnidad=null;
+			
+		}
+		try{
+			
+			nuevoIdEstatus=Integer.parseInt(idEstatus);
+		}catch(Exception e){
+			e.printStackTrace();
+			
+			nuevoIdEstatus=null;
+		}
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.obtenerVacacionesPorFiltros(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, nuevoIdUnidad, nuevoIdEstatus));
 	}
 }

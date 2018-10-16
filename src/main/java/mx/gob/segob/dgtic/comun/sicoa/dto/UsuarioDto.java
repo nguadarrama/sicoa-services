@@ -512,8 +512,8 @@ public class UsuarioDto {
 		return nombreUnidad;
 	}
 
-	public void setNombreUnidad(String nombre_unidad) {
-		this.nombreUnidad = nombre_unidad;
+	public void setNombreUnidad(String nombreUnidad) {
+		this.nombreUnidad = nombreUnidad;
 	}
 
 	public Integer getIdUnidad() {

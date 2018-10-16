@@ -38,6 +38,7 @@ public class EstatusRepositoryImpl implements EstatusRepository{
 	    		estatusDto.setIdEstatus((Integer)estatus.get("id_estatus"));
 	    		estatusDto.setDescripcion((String)estatus.get("descripcion"));
 	    		estatusDto.setEstatus((String)estatus.get("estatus"));
+	    		System.out.println("estatus "+estatus.get("estatus"));
 	    		listaEstatus.add(estatusDto);
 	    	}
 	     return listaEstatus;	

@@ -1,5 +1,6 @@
 package mx.gob.segob.dgtic.business.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,5 +52,17 @@ public class DetalleVacacionServiceImpl implements DetalleVacacionService {
 	public void aceptaORechazaDetalleVacacion(DetalleVacacionDto detalleVacacionDto) {
 		detalleVacacionRules.aceptaORechazaDetalleVacacion(detalleVacacionDto);
 		
+	}
+
+	@Override
+	public List<DetalleVacacionDto> obtenerVacacionesPorFiltros(String claveUsuario, String nombre,
+			String apellidoPaterno, String apellidoMaterno, Integer idUnidad, Integer idEstatus) {
+		return detalleVacacionRules.obtenerVacacionesPorFiltros(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, idUnidad, idEstatus);
+	}
+
+	@Override
+	public List<DetalleVacacionDto> consultaVacacionesPropiasPorFiltros(String claveUsuario, Integer idPeriodo,
+			Integer idEstatus, String pfechaInicio, String pfechaFin) {
+		return detalleVacacionRules.consultaVacacionesPropiasPorFiltros(claveUsuario, idPeriodo, idEstatus, pfechaInicio, pfechaFin);
 	}
 }

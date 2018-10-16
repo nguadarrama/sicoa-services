@@ -319,7 +319,9 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
         	detalleVacacionDto.setDias((Integer)detalleVacacion.get("dias"));
     		listaDetalleVacacion.add(detalleVacacionDto);
     	}
+        
      return listaDetalleVacacion;
+     
 	}
 	
 	

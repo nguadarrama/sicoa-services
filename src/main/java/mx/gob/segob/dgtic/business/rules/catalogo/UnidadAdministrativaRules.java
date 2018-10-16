@@ -17,7 +17,8 @@ public class UnidadAdministrativaRules {
 	public List<UsuarioUnidadAdministrativaDto> obtenerListaUnidadAdministrativa() {
 		
 		return unidadAdministrativaRepository.obtenerListaUnidadAdministrativa();
-}
+	}
+	
 	public void consultaRegistraUsuarioUnidadAdministrativa(UsuarioUnidadAdministrativaDto usuarioUnidadAdministrativaDto){
 		UsuarioUnidadAdministrativaDto usuarioUnidadAdministrativaAuxDto = null;
 		usuarioUnidadAdministrativaAuxDto=unidadAdministrativaRepository.buscaUsuarioUnidadAdministrativa(usuarioUnidadAdministrativaDto.getClaveUsuario().getClaveUsuario());
@@ -26,6 +27,14 @@ public class UnidadAdministrativaRules {
 		}else{
 			unidadAdministrativaRepository.guardaUsuarioUnidadAdministrativa(usuarioUnidadAdministrativaDto);
 		}
+	}
+	
+	public List<UsuarioUnidadAdministrativaDto> consultaResponsable(String claveUsuario){
+		return unidadAdministrativaRepository.consultaResponsable(claveUsuario);
+	}
+	
+	public List<UsuarioUnidadAdministrativaDto> obtenerUnidadesAdministrativas(){
+		return unidadAdministrativaRepository.obtenerUnidadesAdministrativas();
 	}
 
 }

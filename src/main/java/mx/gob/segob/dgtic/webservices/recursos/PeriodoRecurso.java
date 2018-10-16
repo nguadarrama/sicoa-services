@@ -101,8 +101,10 @@ public class PeriodoRecurso {
 		@Path("buscaPeriodoPorClaveUsuario")	
 		@PermitAll
 		public Response buscaPeriodoPorClaveUsuario(@QueryParam("claveUsuario") String claveUsuario) {
-			System.out.println("usuario "+claveUsuario);
-			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, periodoService.buscaPeriodoPorClaveUsuario(claveUsuario));
+			
+			PeriodoDto periodo=periodoService.buscaPeriodoPorClaveUsuario(claveUsuario);
+			System.out.println("usuario "+claveUsuario+" tu puto periodo "+periodo.getIdPeriodo());
+			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,periodo );
 		}
 		
 		@GET

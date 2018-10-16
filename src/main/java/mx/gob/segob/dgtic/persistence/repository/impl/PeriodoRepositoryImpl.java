@@ -115,14 +115,20 @@ public class PeriodoRepositoryImpl implements PeriodoRepository{
 	public PeriodoDto buscaPeriodoPorClaveUsuario(String claveUsuario) {
 		
 		StringBuilder qry = new StringBuilder();
-		qry.append("select periodo.id_periodo, periodo.fecha_inicio, periodo.fecha_fin, periodo.descripcion, periodo.activo ");
+		qry.append("select periodo.id_periodo, periodo.fecha_inicio, periodo.fecha_fin, periodo.activo ");
         qry.append("from r_periodo periodo, m_vacacion_periodo vacacion, m_usuario usuario ");
         qry.append("where vacacion.activo=true and vacacion.id_usuario=usuario.id_usuario and vacacion.dias>0 and periodo.activo=true and usuario.cve_m_usuario= :claveUsuario order by vacacion.fecha_inicio asc limit 1");
-        
+        System.out.println("Consulta "+qry.toString());
         MapSqlParameterSource parametros = new MapSqlParameterSource();
         parametros.addValue("claveUsuario", claveUsuario);
-
-        return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<PeriodoDto>(PeriodoDto.class));
+        try{
+        PeriodoDto periodo= nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<PeriodoDto>(PeriodoDto.class));
+        System.out.println("periodo recuperado "+periodo.getIdPeriodo());
+        return periodo;
+        }catch(Exception e){
+        	e.printStackTrace();
+        	return new PeriodoDto();
+        }
 	}
 
 	@Override

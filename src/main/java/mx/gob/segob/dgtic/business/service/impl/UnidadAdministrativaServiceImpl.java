@@ -27,6 +27,15 @@ public class UnidadAdministrativaServiceImpl implements UnidadAdministrativaServ
 		unidadAdministrativaRules.consultaRegistraUsuarioUnidadAdministrativa(usuarioUnidadAdministrativaDto);
 		
 	}
+
+	@Override
+	public List<UsuarioUnidadAdministrativaDto> consultaResponsable(String claveUsuario) {
+		return unidadAdministrativaRules.consultaResponsable(claveUsuario);
+	}
 	
+	@Override
+	public List<UsuarioUnidadAdministrativaDto> obtenerUnidadesAdministrativas(){
+		return unidadAdministrativaRules.obtenerUnidadesAdministrativas();
+	}
 
 }

@@ -1,6 +1,9 @@
 package mx.gob.segob.dgtic.business.rules.catalogo;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -120,6 +123,16 @@ public class DetalleVacacionRules {
 		    //modificamos el numero de vacaciones en la tabla vacacion_periodo
 		    vacacionPeriodoRepository.modificaVacacionPeriodo(vacacionPeriodoDto);
 		}
+	}
+	
+	public List<DetalleVacacionDto> obtenerVacacionesPorFiltros(String claveUsuario, String nombre, String apellidoPaterno, String apellidoMaterno, Integer idUnidad, Integer idEstatus){
+		return detalleVacacionRepository.obtenerVacacionesPorFiltros(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, idUnidad, idEstatus);
+	}
+	
+	public List<DetalleVacacionDto> consultaVacacionesPropiasPorFiltros(String claveUsuario, Integer idPeriodo, Integer idEstatus, String pfechaInicio, String pfechaFin ){
+		
+    	
+		return detalleVacacionRepository.consultaVacacionesPropiasPorFiltros(claveUsuario, idPeriodo, idEstatus, pfechaInicio, pfechaFin);
 	}
 
 }

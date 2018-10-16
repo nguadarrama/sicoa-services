@@ -20,8 +20,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import mx.gob.segob.dgtic.business.service.VacacionPeriodoService;
+import mx.gob.segob.dgtic.comun.sicoa.dto.PeriodoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionPeriodoDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
+import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
 @Path("catalogo")
@@ -97,9 +99,14 @@ public class VacacionPeriodoRecurso {
 		String dato="idPeriodo";
 		String id =""+ jsonObject.get(dato);
 		id=id.replace("\"", "");
-		Integer idPeriodo=Integer.parseInt(id);
-		System.out.println("clave para periodo "+idPeriodo);
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, vacacionPeriodoService.consultaVacacionPeriodoPorClaveUsuarioYPeriodo(idPeriodo, usuario));
+		System.out.println("id "+id);
+		
+				Integer idPeriodo=Integer.parseInt(id);
+				System.out.println("clave para periodo "+idPeriodo);
+				return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, vacacionPeriodoService.consultaVacacionPeriodoPorClaveUsuarioYPeriodo(idPeriodo, usuario));
+		        
+			
+		
 	}
 	
 }

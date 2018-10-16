@@ -6,6 +6,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -55,5 +56,22 @@ public class UnidadAdministrativaRecurso {
 		unidadAdministrativaService.consultaRegistraUsuarioUnidadAdministrativa(usuarioUnidadAdministrativaDto);
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("consultaResponsable")	
+	@PermitAll
+	public Response consultaResponsable(@QueryParam("id") String id) {
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, unidadAdministrativaService.consultaResponsable(id));
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("obtieneUnidadesAdministrativasCompletas")	
+	@PermitAll
+	public Response obtieneUnidadesAdministrativasCompletas() {
+
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, unidadAdministrativaService.obtenerUnidadesAdministrativas());
 	}
 }

@@ -119,4 +119,59 @@ public class UnidadAdministrativaRepositoryImpl implements UnidadAdministrativaR
 		
 	}
 
+	@Override
+	public List<UsuarioUnidadAdministrativaDto> consultaResponsable(String claveUsuario) {
+		
+		String query="select usuario.id_usuario, usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, unidad.id_unidad, unidad.nombre nombre_unidad ";
+		query+="from c_unidad_administrativa unidad, m_usuario usuario, usuario_unidad_administrativa relacion where usuario.cve_m_usuario=relacion.cve_m_usuario and unidad.id_unidad=relacion.id_unidad and relacion.encargado=true and unidad.id_unidad in ";
+		query+="(select unidad.id_unidad ";
+		query+="from c_unidad_administrativa unidad, m_usuario usuario, usuario_unidad_administrativa relacion ";
+		query+="where usuario.cve_m_usuario=relacion.cve_m_usuario and unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario ='"+claveUsuario+"');";
+		System.out.println("query "+query);
+		List<Map<String, Object>> unidadesArdminsitrativas = jdbcTemplate.queryForList(query);
+        List<UsuarioUnidadAdministrativaDto> listaUnidadAdministrativa = new ArrayList<>();
+        
+        for (Map<String, Object> unidad : unidadesArdminsitrativas) {
+        	UsuarioUnidadAdministrativaDto usuarioUnidadAdministrativaDto = new UsuarioUnidadAdministrativaDto();
+        	System.out.println("unidad "+unidad.get("nombre"));
+    		UnidadAdministrativaDto unidadAdministrativaDto = new UnidadAdministrativaDto();
+    		unidadAdministrativaDto.setIdUnidad((Integer)unidad.get("id_unidad"));
+    		unidadAdministrativaDto.setNombre((String)unidad.get("nombre_unidad"));
+    		UsuarioDto usuarioDto = new UsuarioDto();
+    		usuarioUnidadAdministrativaDto.setIdUnidad(unidadAdministrativaDto);
+    		usuarioDto.setIdUsuario((Integer)unidad.get("id_usuario"));
+    		usuarioDto.setClaveUsuario((String)unidad.get("cve_m_usuario"));
+    		usuarioDto.setNombre((String)unidad.get("nombre"));
+    		usuarioDto.setApellidoPaterno((String)unidad.get("apellido_paterno"));
+    		usuarioDto.setApellidoMaterno((String)unidad.get("apellido_materno"));
+    		System.out.println("Datos "+unidad.get("cve_m_usuario")+" "+unidad.get("nombre"));
+    		usuarioUnidadAdministrativaDto.setClaveUsuario(usuarioDto);
+    		
+    		listaUnidadAdministrativa.add(usuarioUnidadAdministrativaDto);
+    	}
+     return listaUnidadAdministrativa;
+	}
+
+	@Override
+	public List<UsuarioUnidadAdministrativaDto> obtenerUnidadesAdministrativas() {
+		
+			StringBuilder qry = new StringBuilder();
+	        qry.append("select id_unidad, nombre ");
+	        qry.append("from c_unidad_administrativa ");
+	        
+	        List<Map<String, Object>> unidadesArdminsitrativas = jdbcTemplate.queryForList(qry.toString());
+	        List<UsuarioUnidadAdministrativaDto> listaUnidadAdministrativa = new ArrayList<>();
+	        
+	        for (Map<String, Object> unidad : unidadesArdminsitrativas) {
+	        	UsuarioUnidadAdministrativaDto usuarioUnidadAdministrativaDto = new UsuarioUnidadAdministrativaDto();
+	        	System.out.println("unidad recuperada "+unidad.get("nombre"));
+	    		UnidadAdministrativaDto unidadAdministrativaDto = new UnidadAdministrativaDto();
+	    		unidadAdministrativaDto.setIdUnidad((Integer)unidad.get("id_unidad"));
+	    		unidadAdministrativaDto.setNombre((String)unidad.get("nombre"));
+	    		usuarioUnidadAdministrativaDto.setIdUnidad(unidadAdministrativaDto);
+	    		listaUnidadAdministrativa.add(usuarioUnidadAdministrativaDto);
+	    	}
+	     return listaUnidadAdministrativa;
+	}
+
 }
