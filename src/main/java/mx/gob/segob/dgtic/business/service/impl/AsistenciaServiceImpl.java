@@ -55,13 +55,15 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 	}
 	
 	@Override
-	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(String claveEmpleado, String inicio, String fin, String cveCoordinador) {
+	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(String cve_m_usuario, String nombre, String paterno,
+			String materno, String nivel, String tipo, String estado, String fechaInicial, String fechaFinal,
+			String unidadAdministrativa, String cveCoordinador) {
 		
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
     	
     	try {
-			Date parsedInicio = formatter.parse(inicio);
-			Date parsedFin = formatter.parse(fin);
+			Date parsedInicio = formatter.parse(fechaInicial);
+			Date parsedFin = formatter.parse(fechaFinal);
 			
 			java.sql.Date fechaInicio = new java.sql.Date(parsedInicio.getTime());
 			java.sql.Date fechaFin = new java.sql.Date(parsedFin.getTime());
@@ -73,7 +75,38 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 			c.add(Calendar.DAY_OF_MONTH, 1);  
 			fechaFin.setTime(c.getTimeInMillis());
 			
-			return asistenciaRules.buscaAsistenciaEmpleadoRangoCoordinador(claveEmpleado, fechaInicio, fechaFin, cveCoordinador);
+			return asistenciaRules.buscaAsistenciaEmpleadoRangoCoordinador(cve_m_usuario, nombre, 
+					paterno, materno, nivel, tipo, estado, fechaInicio, fechaFin, unidadAdministrativa, cveCoordinador);
+		} catch (ParseException e) {
+			logger.warn("Error al convertir la fecha en búsqueda de asistencia: " + e.getMessage());
+		}
+		
+		return null;
+	}
+	
+	@Override
+	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoDireccion(String cve_m_usuario, String nombre, String paterno,
+			String materno, String nivel, String tipo, String estado, String fechaInicial, String fechaFinal,
+			String unidadAdministrativa) {
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
+    	
+    	try {
+			Date parsedInicio = formatter.parse(fechaInicial);
+			Date parsedFin = formatter.parse(fechaFinal);
+			
+			java.sql.Date fechaInicio = new java.sql.Date(parsedInicio.getTime());
+			java.sql.Date fechaFin = new java.sql.Date(parsedFin.getTime());
+			
+			//se suma un día a la fecha fin para incluirla en la búsqueda
+			Calendar c = Calendar.getInstance();
+			
+			c.setTime(fechaFin);
+			c.add(Calendar.DAY_OF_MONTH, 1);  
+			fechaFin.setTime(c.getTimeInMillis());
+			
+			return asistenciaRules.buscaAsistenciaEmpleadoRangoDireccion(cve_m_usuario, nombre, 
+					paterno, materno, nivel, tipo, estado, fechaInicio, fechaFin, unidadAdministrativa);
 		} catch (ParseException e) {
 			logger.warn("Error al convertir la fecha en búsqueda de asistencia: " + e.getMessage());
 		}

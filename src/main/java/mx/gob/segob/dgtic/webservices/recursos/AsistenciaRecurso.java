@@ -60,12 +60,40 @@ public class AsistenciaRecurso {
 	@Path("obtieneAsistenciasEmpleadoRangoCoordinador")	
 	@PermitAll
 	public Response buscaAsistenciaEmpleadoRangoCoordinador(
-			@QueryParam("claveEmpleado") String claveEmpleado, 
+			@QueryParam("claveEmpleado") String claveEmpleado,
+			@QueryParam("nombre") String nombre,
+			@QueryParam("paterno") String paterno,
+			@QueryParam("materno") String materno,
+			@QueryParam("nivel") String nivel,
+			@QueryParam("tipo") String tipo,
+			@QueryParam("estado") String estado, 
 			@QueryParam("inicio") String inicio, 
 			@QueryParam("fin") String fin,
+			@QueryParam("unidad") String unidadAdministrativa, 
 			@QueryParam("cveCoordinador") String cveCoordinador) {
 
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistenciaEmpleadoRangoCoordinador(claveEmpleado, inicio, fin, cveCoordinador));
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistenciaEmpleadoRangoCoordinador(claveEmpleado, nombre, 
+				paterno, materno, nivel, tipo, estado, inicio, fin, unidadAdministrativa, cveCoordinador));
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("obtieneAsistenciasEmpleadoRangoDireccion")	
+	@PermitAll
+	public Response buscaAsistenciaEmpleadoRangoDireccion(
+			@QueryParam("claveEmpleado") String claveEmpleado,
+			@QueryParam("nombre") String nombre,
+			@QueryParam("paterno") String paterno,
+			@QueryParam("materno") String materno,
+			@QueryParam("nivel") String nivel,
+			@QueryParam("tipo") String tipo,
+			@QueryParam("estado") String estado, 
+			@QueryParam("inicio") String inicio, 
+			@QueryParam("fin") String fin,
+			@QueryParam("unidad") String unidadAdministrativa) {
+
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistenciaEmpleadoRangoDireccion(claveEmpleado, nombre, 
+				paterno, materno, nivel, tipo, estado, inicio, fin, unidadAdministrativa));
 	}
 	
 	@GET

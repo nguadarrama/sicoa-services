@@ -43,11 +43,25 @@ public class AsistenciaRules {
 		return listaAsistencia;
 	}
 	
-	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(String claveEmpleado, Date fechaInicio, Date fechaFin, String cveCoordinador) {
-		//se obitiene la unidad administrativa del coordinador
+	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(String cve_m_usuario, String nombre, String paterno,
+			String materno, String nivel, String tipo, String estado, Date fechaInicial, Date fechaFinal,
+			String unidadAdministrativa, String cveCoordinador) {
+		
+		//se obtiene la unidad administrativa del coordinador
 		UsuarioDto coordinador = usuarioRepository.buscaUsuario(cveCoordinador);
 		
-		List<AsistenciaDto> listaAsistencia = asistenciaRepository.buscaAsistenciaEmpleadoRangoCoordinador(claveEmpleado, fechaInicio, fechaFin, coordinador.getIdUnidad());
+		List<AsistenciaDto> listaAsistencia = asistenciaRepository.buscaAsistenciaEmpleadoRangoCoordinador(cve_m_usuario, nombre, 
+				paterno, materno, nivel, tipo, estado, fechaInicial, fechaFinal, unidadAdministrativa, coordinador.getIdUnidad());
+		
+		return listaAsistencia;
+	}
+	
+	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoDireccion(String cve_m_usuario, String nombre, String paterno,
+			String materno, String nivel, String tipo, String estado, Date fechaInicial, Date fechaFinal,
+			String unidadAdministrativa) {
+		
+		List<AsistenciaDto> listaAsistencia = asistenciaRepository.buscaAsistenciaEmpleadoRangoDireccion(cve_m_usuario, nombre, 
+				paterno, materno, nivel, tipo, estado, fechaInicial, fechaFinal, unidadAdministrativa);
 		
 		return listaAsistencia;
 	}

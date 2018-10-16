@@ -118,7 +118,9 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 	}
 	
 	@Override
-	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(String claveEmpleado, Date fechaInicio, Date fechaFin, Integer idUnidadCoordinador) {
+	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(String cve_m_usuario, String nombre, String paterno,
+			String materno, String nivel, String tipo, String estado, Date fechaInicial, Date fechaFinal,
+			String unidadAdministrativa, Integer idUnidadCoordinador) {
 			
 		StringBuilder qry = new StringBuilder();
 	       
@@ -129,19 +131,126 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         qry.append("left join m_estatus e on e.id_estatus = i.id_estatus ");
         qry.append("inner join m_usuario u on u.cve_m_usuario = a.id_usuario ");
         qry.append("inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ");
-        qry.append("WHERE a.id_usuario = ? ");
-        qry.append("and a.id_tipo_dia = t.id_tipo_dia ");
-        qry.append("and entrada >= ? ");
-        qry.append("and entrada < ? ");
-        qry.append("and uua.id_unidad = ? "); //solo muestra el usuario que se encuentra en la misma unidad que el coordinador
-        qry.append("order by entrada");
-
-        List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString(), claveEmpleado, fechaInicio, fechaFin, idUnidadCoordinador);
+        qry.append("inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ");
+        qry.append("where entrada >= '" + fechaInicial + "'");
+        qry.append(" and entrada < '" + fechaFinal  + "'");
+        qry.append(" and uua.id_unidad = " + idUnidadCoordinador);
+        
+        if (!cve_m_usuario.isEmpty()) {
+        	qry.append(" and a.id_usuario = " + cve_m_usuario);
+        }
+        
+        if (!nombre.isEmpty()) {
+        	qry.append(" and u.nombre like '%" + nombre + "%' ");
+        }
+        
+        if (!paterno.isEmpty()) {
+        	qry.append(" and u.apellido_paterno like '%" + paterno + "%' ");
+        }
+        
+        if (!materno.isEmpty()) {
+        	qry.append(" and u.apellido_materno like '%" + materno + "%' ");
+        }
+        
+        if (!unidadAdministrativa.isEmpty()) {
+        	qry.append(" and ua.nombre like '%" + unidadAdministrativa + "%' ");
+        }
+        
+        if (!nivel.isEmpty()) {
+        	qry.append(" and u.nivel like '%" + nivel + "%' ");
+        }
+        
+        if (!tipo.isEmpty()) {
+        	qry.append(" and t.nombre like '%" + tipo + "%' ");
+        }
+        
+        if (!estado.isEmpty()) {
+        	qry.append(" and e.estatus like '%" + estado + "%' ");
+        }
+        
+        List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString());
         List<AsistenciaDto> listaAsistencia = new ArrayList<>();
         
-        UsuarioDto usuario = usuarioRepository.buscaUsuario(claveEmpleado);
+        for (Map<String, Object> a : asistencias) {
+        	UsuarioDto usuario = usuarioRepository.buscaUsuario((String) a.get("id_usuario"));
+        	
+        	TipoDiaDto tipoDia = new TipoDiaDto();
+        	tipoDia.setIdTipoDia((Integer) a.get("id_tipo_dia"));
+        	tipoDia.setNombre((String) a.get("nombre"));
+        	
+        	EstatusDto estatus = new EstatusDto();
+        	estatus.setEstatus((String) a.get("estatus"));
+        	
+        	AsistenciaDto asistencia = new AsistenciaDto();
+        	asistencia.setIdAsistencia((Integer) a.get("id_asistencia"));
+    		asistencia.setUsuarioDto(usuario);
+    		asistencia.setIdTipoDia(tipoDia);
+    		asistencia.setEntrada((Timestamp) a.get("entrada"));
+    		asistencia.setSalida((Timestamp) a.get("salida"));
+    		asistencia.setIdEstatus(estatus);
+    		
+    		listaAsistencia.add(asistencia);
+    	}
+        
+        return listaAsistencia;
+	}
+	
+	@Override
+	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoDireccion(String cve_m_usuario, String nombre, String paterno,
+			String materno, String nivel, String tipo, String estado, Date fechaInicial, Date fechaFinal,
+			String unidadAdministrativa) {
+			
+		StringBuilder qry = new StringBuilder();
+	       
+        qry.append("SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus ");
+        qry.append("FROM m_asistencia a ");
+        qry.append("inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ");
+        qry.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia ");
+        qry.append("left join m_estatus e on e.id_estatus = i.id_estatus ");
+        qry.append("inner join m_usuario u on u.cve_m_usuario = a.id_usuario ");
+        qry.append("inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ");
+        qry.append("inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ");
+        qry.append("where entrada >= '" + fechaInicial + "'");
+        qry.append(" and entrada < '" + fechaFinal  + "'");
+        
+        if (!cve_m_usuario.isEmpty()) {
+        	qry.append(" and a.id_usuario = " + cve_m_usuario);
+        }
+        
+        if (!nombre.isEmpty()) {
+        	qry.append(" and u.nombre like '%" + nombre + "%' ");
+        }
+        
+        if (!paterno.isEmpty()) {
+        	qry.append(" and u.apellido_paterno like '%" + paterno + "%' ");
+        }
+        
+        if (!materno.isEmpty()) {
+        	qry.append(" and u.apellido_materno like '%" + materno + "%' ");
+        }
+        
+        if (!unidadAdministrativa.isEmpty()) {
+        	qry.append(" and ua.nombre like '%" + unidadAdministrativa + "%' ");
+        }
+        
+        if (!nivel.isEmpty()) {
+        	qry.append(" and u.nivel like '%" + nivel + "%' ");
+        }
+        
+        if (!tipo.isEmpty()) {
+        	qry.append(" and t.nombre like '%" + tipo + "%' ");
+        }
+        
+        if (!estado.isEmpty()) {
+        	qry.append(" and e.estatus like '%" + estado + "%' ");
+        }
+        
+        List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString());
+        List<AsistenciaDto> listaAsistencia = new ArrayList<>();
         
         for (Map<String, Object> a : asistencias) {
+        	UsuarioDto usuario = usuarioRepository.buscaUsuario((String) a.get("id_usuario"));
+        	
         	TipoDiaDto tipoDia = new TipoDiaDto();
         	tipoDia.setIdTipoDia((Integer) a.get("id_tipo_dia"));
         	tipoDia.setNombre((String) a.get("nombre"));
