@@ -26,6 +26,8 @@ public class UsuarioPerfilDto {
     * la clave del perfil.
     */
    @MapeaColumnasInternas(columnas={"cve_c_perfil", "cve_c_perfil"}) private PerfilDto clavePerfil;
+   
+   Integer[] idsPerfil;
 
 public Integer getIdUsuarioPerfil() {
 	return idUsuarioPerfil;
@@ -49,6 +51,14 @@ public PerfilDto getClavePerfil() {
 
 public void setClavePerfil(PerfilDto clavePerfil) {
 	this.clavePerfil = clavePerfil;
+}
+
+public Integer[] getIdsPerfil() {
+	return idsPerfil;
+}
+
+public void setIdsPerfil(Integer[] idsPerfil) {
+	this.idsPerfil = idsPerfil;
 }
    
 }

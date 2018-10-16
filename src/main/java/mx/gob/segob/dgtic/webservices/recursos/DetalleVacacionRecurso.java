@@ -41,10 +41,12 @@ public class DetalleVacacionRecurso {
 	@Path("obtieneDetalleVacaciones")	
 	@PermitAll
 	public Response obtieneDetalleVacaciones() {
+		System.out.println("Peticion de vacacionesRecurso");
 		List<DetalleVacacionDto> lista = new ArrayList<>();
 		lista= detalleVacacionService.obtenerListaDetalleVacaciones();
 		
 		for (DetalleVacacionDto detalleVacacion : lista) {
+			
 			System.out.println("FechaInicio "+detalleVacacion.getFechaInicio());
 		}
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, lista);
@@ -87,7 +89,7 @@ public class DetalleVacacionRecurso {
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		DetalleVacacionDto detalleVacacionDto = gson.fromJson(jsonObject.get("detalleVacacion"), DetalleVacacionDto.class);
-		
+		System.out.println("Datos para idVacacion "+detalleVacacionDto.getIdVacacion().getIdVacacion());
 		detalleVacacionService.agregaDetalleVacacion(detalleVacacionDto);
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
@@ -115,7 +117,7 @@ public class DetalleVacacionRecurso {
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		DetalleVacacionDto detalleVacacionDto = gson.fromJson(jsonObject.get("detalleVacacion"), DetalleVacacionDto.class);
-		
+		System.out.println("Valor de idUsuario "+detalleVacacionDto.getIdUsuario().getIdUsuario());
 		detalleVacacionService.aceptaORechazaDetalleVacacion(detalleVacacionDto);
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");

@@ -40,9 +40,9 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 	@Override
 	public List<UsuarioDto> obtenerListaUsuarios() {
 		StringBuilder qry = new StringBuilder();
-        qry.append("select id_usuario, id_area, cve_c_perfil, id_horario, id_puesto, cve_m_usuario, nombre, apellido_paterno, apellido_materno, "
-        		+ "fecha_ingreso, activo, nuevo, en_sesion, ultimo_acceso, numero_intentos, bloqueado, fecha_bloqueo,  primera_vez, estatus ");
-        qry.append("from m_usuario ");
+        qry.append("select usuario.id_usuario, usuario.id_area, usuario.cve_c_perfil, usuario.id_horario, usuario.id_puesto, usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, usuario.fecha_ingreso, usuario.activo, usuario.nuevo, usuario.en_sesion, usuario.ultimo_acceso, usuario.numero_intentos, usuario.bloqueado, usuario.fecha_bloqueo,  usuario.primera_vez, usuario.estatus, usuario.nivel, usuario.rfc, unidad.id_unidad, unidad.nombre nombre_unidad ");
+        qry.append("from m_usuario usuario, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion ");
+        qry.append("where unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario ");
         
         List<Map<String, Object>> usuarios = jdbcTemplate.queryForList(qry.toString());
         List<UsuarioDto> listaUsuario = new ArrayList<>();
@@ -69,6 +69,10 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
     		usuarioDto.setFechaBloqueo((Date)usuario.get("fecha_bloqueo"));
     		usuarioDto.setPrimeraVez((String)usuario.get("primera_vez"));
     		usuarioDto.setEstatus((String)usuario.get("estatus"));
+    		usuarioDto.setNivel((String)usuario.get("nivel"));
+    		usuarioDto.setRfc((String)usuario.get("rfc"));
+    		usuarioDto.setNombreUnidad((String)usuario.get("nombre_unidad"));
+    		usuarioDto.setIdUnidad((Integer)usuario.get("id_unidad"));
     		listaUsuario.add(usuarioDto);
     	}
         
@@ -83,13 +87,13 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
         StringBuilder qry = new StringBuilder();
         qry.append("select u.id_usuario, u.id_area, u.cve_c_perfil, u.id_horario, u.id_puesto, u.cve_m_usuario, ");
         qry.append("u.nombre, u.apellido_paterno, u.apellido_materno, u.fecha_ingreso, u.activo, u.nuevo, u.en_sesion, ");
-        qry.append("u.ultimo_acceso, u.numero_intentos, u.bloqueado, u.fecha_bloqueo, u.primera_vez, u.estatus, ");
-        qry.append("p.descripcion, p.estatus, ");
+        qry.append("u.ultimo_acceso, u.numero_intentos, u.bloqueado, u.fecha_bloqueo, u.primera_vez, u.estatus, u.nivel, u.rfc, ");
+        qry.append("p.descripcion, p.estatus, unidad.id_unidad, ");
         qry.append("h.hora_entrada, h.hora_salida ");
-        qry.append("from m_usuario u, c_perfil p, c_horario h ");
-        qry.append("where cve_m_usuario = :claveUsuario ");
+        qry.append("from m_usuario u, c_perfil p, c_horario h, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion ");
+        qry.append("where u.cve_m_usuario = :claveUsuario ");
         qry.append("and u.cve_c_perfil = p.cve_c_perfil ");
-        qry.append("and u.id_horario = h.id_horario");
+        qry.append("and u.id_horario = h.id_horario and unidad.id_unidad=relacion.id_unidad and u.cve_m_usuario=relacion.cve_m_usuario limit 1");
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
         parametros.addValue("claveUsuario", claveUsuario);
@@ -112,6 +116,7 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
         usuario.setClavePerfil(perfil);
         usuario.setIdHorario(horario);
 //        usuario.setIdPuesto(puesto);
+        usuario.setIdPuesto((String) informacionConsulta.get("id_puesto"));
         usuario.setClaveUsuario((String) informacionConsulta.get("cve_m_usuario"));
         usuario.setNombre((String) informacionConsulta.get("nombre"));
         usuario.setApellidoPaterno((String) informacionConsulta.get("apellido_paterno"));
@@ -126,31 +131,33 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
         usuario.setFechaBloqueo((Date) informacionConsulta.get("fecha_bloqueo"));
         usuario.setPrimeraVez((String) informacionConsulta.get("primera_vez"));
         usuario.setEstatus((String) informacionConsulta.get("estatus"));
+        usuario.setNivel((String) informacionConsulta.get("nivel"));
+        usuario.setRfc((String) informacionConsulta.get("rfc"));
+        usuario.setIdUnidad((Integer)informacionConsulta.get("id_unidad"));
         
         return usuario;
-		
 	}
 
 	@Override
 	public void modificaUsuario(UsuarioDto usuarioDto) {
 		
 		StringBuilder qry = new StringBuilder();
-		qry.append("update m_usuario set id_area = :idArea, cve_c_perfil = :clavePerfil, id_horario = :idHorario, id_puesto = :idPuesto, nombre = :nombre, "
-				+ "apellido_paterno = :apellidoPaterno, apellido_materno = :apellidoMaterno, fecha_ingreso = :fechaIngreso, password = :password, activo = :activo, "
+		qry.append("update m_usuario set id_area = :idArea, id_horario = :idHorario, "
+				+ "password = :password, activo = :activo, "
 				+ "nuevo =: nuevo, en_sesion =: enSesion, ultimo_acceso =: ultimoAcceso, numero_intentos = :numeroIntentos, bloqueado = :bloqueado, "
 				+ "fecha_bloqueo = :fechaBloqueo, primera_vez = :primeraVez, estatus = :estatus ");
 		qry.append("WHERE cve_m_usuario = :claveUsuario");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idArea", usuarioDto.getIdArea());
-		parametros.addValue("clavePerfil", usuarioDto.getClavePerfil().getClavePerfil());
+		//parametros.addValue("clavePerfil", usuarioDto.getClavePerfil().getClavePerfil());
 		parametros.addValue("idHorario", usuarioDto.getIdHorario().getIdHorario());
-		parametros.addValue("idPuesto", usuarioDto.getIdPuesto());
+		//parametros.addValue("idPuesto", usuarioDto.getIdPuesto());
 		parametros.addValue("claveUsuario", usuarioDto.getClaveUsuario());
-		parametros.addValue("nombre", usuarioDto.getNombre());
-		parametros.addValue("apellidoPaterno", usuarioDto.getApellidoPaterno());
-		parametros.addValue("apellidoMaterno", usuarioDto.getApellidoMaterno());
-		parametros.addValue("fechaIngreso", usuarioDto.getFechaIngreso());
+		//parametros.addValue("nombre", usuarioDto.getNombre());
+		//parametros.addValue("apellidoPaterno", usuarioDto.getApellidoPaterno());
+		//parametros.addValue("apellidoMaterno", usuarioDto.getApellidoMaterno());
+		//parametros.addValue("fechaIngreso", usuarioDto.getFechaIngreso());
 		parametros.addValue("password", usuarioDto.getPassword());
 		parametros.addValue("activo", usuarioDto.getActivo());
 		parametros.addValue("nuevo", usuarioDto.getNuevo());
@@ -170,9 +177,11 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 		StringBuilder qry = new StringBuilder();
 		System.out.println(" numero de intentos"+usuarioDto.getNumeroIntentos());
 		qry.append("insert into m_usuario (id_area, cve_c_perfil, id_horario, id_puesto, cve_m_usuario, nombre, apellido_paterno, apellido_materno, "
-        		+ "fecha_ingreso, password, activo, nuevo, en_sesion, ultimo_acceso, numero_intentos, bloqueado, fecha_bloqueo,  primera_vez, estatus) ");
+        		+ "fecha_ingreso, password, activo, nuevo, en_sesion, ultimo_acceso, numero_intentos, bloqueado, fecha_bloqueo,  primera_vez, estatus, "
+        		+ "nivel, rfc) ");
 		qry.append("values ( :idArea, :clavePerfil, :idHorario, :idPuesto, :claveUsuario, :nombre, :apellidoPaterno, :apellidoMaterno, :fechaIngreso, "
-				+ ":password, :activo, :nuevo, :enSesion, :ultimoAcceso, :numeroIntentos, :bloqueado, :fechaBloqueo, :primeraVez, :estatus) ");
+				+ ":password, :activo, :nuevo, :enSesion, :ultimoAcceso, :numeroIntentos, :bloqueado, :fechaBloqueo, :primeraVez, :estatus, "
+				+ ":nivel, :rfc ) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idArea", usuarioDto.getIdArea());
@@ -194,6 +203,8 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 		parametros.addValue("fechaBloqueo", usuarioDto.getFechaBloqueo());
 		parametros.addValue("primeraVez", usuarioDto.getPrimeraVez());
 		parametros.addValue("estatus", usuarioDto.getEstatus());
+		parametros.addValue("nivel", usuarioDto.getNivel());
+		parametros.addValue("rfc", usuarioDto.getRfc());
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 	}
 

@@ -14,14 +14,13 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import mx.gob.segob.dgtic.business.service.CargaInicialService;
 import mx.gob.segob.dgtic.business.service.TipoDiaService;
 import mx.gob.segob.dgtic.business.service.UsuarioService;
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.TipoDiaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
+import mx.gob.segob.dgtic.persistence.repository.AsistenciaRepository;
 import mx.gob.segob.dgtic.persistence.repository.CargaAsistenciaRepository;
-import mx.gob.segob.dgtic.persistence.repository.CargaInicialRepository;
 import mx.gob.segob.dgtic.persistence.repository.ConfiguracionRepository;
 import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 
@@ -29,7 +28,7 @@ import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 public class CargaAsistenciaRules extends RecursoBase {
 	
 	@Autowired
-	private CargaAsistenciaRepository asistenciaRepository;
+	private CargaAsistenciaRepository cargaAsistenciaRepository;
 	
 	@Autowired
 	private UsuarioService usuarioService;
@@ -41,7 +40,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 	private ConfiguracionRepository configuracionRepository;
 	
 	@Autowired
-	private CargaInicialService cargaInicialService;
+	private AsistenciaRepository asistenciaRepository;
 	
 	private List<UsuarioDto> listaUsuarios = new ArrayList<>();
 	private List<String> listaClaveUsuariosEnAsistencia = new ArrayList<>();
@@ -62,7 +61,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 			List<AsistenciaDto> listaAsistenciaCalculada = calculaIncidencias(listaAsistenciaEntradaSalida, listaAsistenciaFiltrada);
 		
 			//la asistencia se guarda
-			asistenciaRepository.guardaAsistencia(listaAsistenciaCalculada);
+			cargaAsistenciaRepository.guardaAsistencia(listaAsistenciaCalculada);
 			
 			//actualiza la última fecha de carga de asistencias
 			configuracionRepository.actualizaUltimaFechaCargaAsistencia();
@@ -78,7 +77,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 		listaUsuarios = usuarioService.obtenerListaUsuarios();
 		
 		//obtiene asistencia del sistema de asistencias (biométricos - ASISTENCIA)
-		List<AsistenciaDto> listaAsistenciaCompleta = asistenciaRepository.obtieneAsistencia(configuracionRepository.obtieneUltimaFechaCargaAsistencia());
+		List<AsistenciaDto> listaAsistenciaCompleta = cargaAsistenciaRepository.obtieneAsistencia(configuracionRepository.obtieneUltimaFechaCargaAsistencia());
 		
 		if (listaAsistenciaCompleta.size() != 0) {
 			List<AsistenciaDto> listaAsistenciaFiltrada = new ArrayList<>();
@@ -291,6 +290,11 @@ public class CargaAsistenciaRules extends RecursoBase {
 		
 		//calculo de inasistencias. son aquellas usurios que no tienen registro en el sistema de asistencias
 		logger.info(listaAsistencia.size() + " calculando y creando inasistencias...");
+		
+		//se obtienen los usuarios que están de vacaciones hoy
+		List<String> listaEmpleadosDeVacacionesHoy = asistenciaRepository.obtieneListaEmpleadosDeVacacionesHoy();
+		logger.info(asistenciaRepository.obtieneListaEmpleadosDeVacacionesHoy().size() + " empleados de vacaciones (" + new Date()  + ")");
+		
 		for (UsuarioDto usuario : listaUsuarios) {
 			if (!listaClaveUsuariosEnAsistencia.contains(usuario.getClaveUsuario())) {
 				TipoDiaDto tipoDia = obtieneTipoDia(6);				//usuario no tiene evento registrado: inasistencia
@@ -309,11 +313,28 @@ public class CargaAsistenciaRules extends RecursoBase {
 		        c.set(Calendar.SECOND, 0);
 				hoy.setTime(c.getTimeInMillis());
 				
-				asistencia.setEntrada(hoy);
-				asistencia.setUsuarioDto(usuario);
-				asistencia.setIdTipoDia(tipoDia);
-				
-				listaAsistencia.add(asistencia);
+				if (listaEmpleadosDeVacacionesHoy.size() > 0) {
+					
+					if (!listaEmpleadosDeVacacionesHoy.contains(usuario.getClaveUsuario())) {
+						//el empleado no está en la lista de vacaciones, entonces se genera la inasistencia
+						asistencia.setEntrada(hoy);
+						asistencia.setUsuarioDto(usuario);
+						asistencia.setIdTipoDia(tipoDia);
+						
+						listaAsistencia.add(asistencia);
+					} else {
+						//cuando el empleado que faltó sí se encuentra de vacaciones no se requiere ninguna acción
+						logger.info("* " + usuario.getClaveUsuario() + ": el empleado se encuentra de vacaciones");
+					}
+
+				} else {
+					//hoy no epleados de vacaciones, se genera la inasistencia
+					asistencia.setEntrada(hoy);
+					asistencia.setUsuarioDto(usuario);
+					asistencia.setIdTipoDia(tipoDia);
+					
+					listaAsistencia.add(asistencia);
+				}
 			}
 		}
 		

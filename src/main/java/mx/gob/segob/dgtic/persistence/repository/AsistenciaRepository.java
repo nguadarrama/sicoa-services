@@ -10,9 +10,12 @@ public interface AsistenciaRepository {
 
 	public List<AsistenciaDto> buscaAsistenciaEmpleadoMes(String claveEmpleado);
 	public List<AsistenciaDto> buscaAsistenciaEmpleadoRango(String claveEmpleado, Date fechaInicio, Date fechaFin);
+	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(String claveEmpleado, Date fechaInicio, Date fechaFin, Integer idunidadCoordinador);
 	public AsistenciaDto buscaAsistenciaPorId(Integer id);
 	public void creaIncidencia(IncidenciaDto incidencia);
 	public boolean existeIncidencia(Integer idAsistencia);
 	public void editaIncidencia(IncidenciaDto incidencia);
+	public void dictaminaIncidencia(IncidenciaDto incidencia);
 	public void agregaAsistencia(AsistenciaDto asistenciaDto);
+	public List<String> obtieneListaEmpleadosDeVacacionesHoy();
 }

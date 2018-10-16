@@ -59,15 +59,17 @@ public class UsuarioPerfilRepositoryImpl implements UsuarioPerfilRepository{
 
 	@Override
 	public List<UsuarioPerfilDto> consultaUsuarioPerfil(String claveUsuario) {
-		StringBuilder qry = new StringBuilder();
-        qry.append("select usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, perfil.cve_c_perfil, perfil.descripcion ");
-        qry.append("from m_usuario usuario, c_perfil perfil, d_usuario_perfil relacion ");
-        qry.append("where relacion.cve_m_usuario=usuario.cve_m_usuario and relacion.cve_c_perfil=perfil.cve_c_perfil and usuario.cve_m_usuario = :clavePerfil ");
-        
-        MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("claveUsuario", claveUsuario); 
+		System.out.println("clave usuario para consulta "+claveUsuario);
+//		StringBuilder qry = new StringBuilder();
+//		qry.append("select usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, perfil.cve_c_perfil, perfil.descripcion ");
+//		qry.append("");
+		String query="";
+		query+="select relacion.id_usuario_perfil, usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, perfil.cve_c_perfil, perfil.descripcion ";
+		query+="from m_usuario usuario, c_perfil perfil, d_usuario_perfil relacion ";
+		query+="where relacion.cve_m_usuario=usuario.cve_m_usuario and relacion.cve_c_perfil=perfil.cve_c_perfil and usuario.cve_m_usuario = '"+claveUsuario+"'";
+		System.out.println("consulta "+query);
 		
-        List<Map<String, Object>> usuariosPerfiles = jdbcTemplate.queryForList(qry.toString(),parametros);
+        List<Map<String, Object>> usuariosPerfiles = jdbcTemplate.queryForList(query);
         List<UsuarioPerfilDto> listaUsuarioPerfil = new ArrayList<>();
         
         for (Map<String, Object> usuarioPerfil : usuariosPerfiles) {
@@ -77,13 +79,14 @@ public class UsuarioPerfilRepositoryImpl implements UsuarioPerfilRepository{
     		perfilDto.setClavePerfil((String)usuarioPerfil.get("cve_c_perfil"));
     		perfilDto.setDescripcion((String)usuarioPerfil.get("descripcion"));
     		usuarioPerfilDto.setClavePerfil(perfilDto);
-    		
+    		System.out.println("descripcion "+usuarioPerfil.get("descripcion"));
     		UsuarioDto usuarioDto = new UsuarioDto();
     		usuarioDto.setClaveUsuario((String)usuarioPerfil.get("cve_m_usuario"));
     		usuarioDto.setNombre((String)usuarioPerfil.get("nombre"));
     		usuarioDto.setApellidoPaterno((String)usuarioPerfil.get("apellido_paterno"));
     		usuarioDto.setApellidoMaterno((String)usuarioPerfil.get("apellido_materno"));
     		usuarioPerfilDto.setClaveUsuario(usuarioDto);
+    		usuarioPerfilDto.setIdUsuarioPerfil((Integer)usuarioPerfil.get("id_usuario_perfil"));
     		
     		listaUsuarioPerfil.add(usuarioPerfilDto);
     	}

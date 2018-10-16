@@ -19,9 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
 import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.persistence.repository.ArchivoRepository;
+import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 
 @Repository
-public class ArchivoRepositoryImpl implements ArchivoRepository{
+public class ArchivoRepositoryImpl extends RecursoBase implements ArchivoRepository{
 
 	@Autowired
     private JdbcTemplate jdbcTemplate;
@@ -121,10 +122,10 @@ public class ArchivoRepositoryImpl implements ArchivoRepository{
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		//Obtenemos el d del archivo que se acaba de insertar
 		qry = new StringBuilder();
-		qry.append("select max(id_usuario) as id_usuario ");
-		qry.append("from m_usuario");
+		qry.append("select max(id_archivo) as id_archivo ");
+		qry.append("from m_archivo");
 		Map<String, Object> archivo = jdbcTemplate.queryForMap(qry.toString());
-        Integer idArchivo = (Integer) archivo.get("id_usuario");
+        Integer idArchivo = (Integer) archivo.get("id_archivo");
         return idArchivo;
 	}
 	
@@ -139,6 +140,5 @@ public class ArchivoRepositoryImpl implements ArchivoRepository{
 
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 	}
-
 	
 }

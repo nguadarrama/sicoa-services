@@ -35,6 +35,7 @@ public class PerfilRepositoryImpl implements PerfilRepository {
 	        
 	        for (Map<String, Object> perfil : perfiles) {
 	    		PerfilDto perfilDto = new PerfilDto();
+	    		System.out.println("Perfiles "+perfil.get("descripcion"));
 	    		perfilDto.setClavePerfil((String)perfil.get("cve_c_perfil"));
 	    		perfilDto.setDescripcion((String)perfil.get("descripcion"));
 	    		perfilDto.setEstatus((String)perfil.get("estatus"));

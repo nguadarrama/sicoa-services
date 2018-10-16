@@ -58,6 +58,7 @@ public class VacacionPeriodoRepositoryImpl implements VacacionPeriodoRepository{
 
 	@Override
 	public VacacionPeriodoDto buscaVacacionPeriodo(Integer idVacacion) {
+		System.out.println("idVacacion para la busqueda "+idVacacion);
 		StringBuilder qry = new StringBuilder();
 		qry.append("SELECT id_vacacion, id_usuario, id_periodo, id_estatus, fecha_inicio, dias, activo ");
         qry.append("FROM m_vacacion_periodo ");
@@ -73,10 +74,11 @@ public class VacacionPeriodoRepositoryImpl implements VacacionPeriodoRepository{
 	public void modificaVacacionPeriodo(VacacionPeriodoDto vacacionPeriodoDto) {
 		StringBuilder qry = new StringBuilder();
 		qry.append("UPDATE m_vacacion_periodo SET id_estatus = :idEstatus, fecha_inicio = :fechaInicio, dias = :dias, activo = :activo ");
-		qry.append("WHERE id_incidencia = :idIncidencia");
+		qry.append("WHERE id_vacacion = :idVacacion");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idEstatus", vacacionPeriodoDto.getIdEstatus().getIdEstatus());
+		parametros.addValue("idVacacion", vacacionPeriodoDto.getIdVacacion());
 		parametros.addValue("fechaInicio", vacacionPeriodoDto.getFechaInicio());
 		parametros.addValue("dias", vacacionPeriodoDto.getDias());
 		parametros.addValue("activo", vacacionPeriodoDto.getActivo());
