@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.IncidenciaDto;
@@ -279,7 +280,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         
         qry.append("SELECT a.id_asistencia, a.entrada, a.id_tipo_dia, t.nombre as nombre_tipo, e.estatus, e.id_estatus, ");
         qry.append("i.id_incidencia, j.id_justificacion, j.justificacion, u.nombre as nombre_usuario, u.apellido_paterno, u.apellido_materno, ");
-        qry.append("u.fecha_ingreso, u.cve_m_usuario, p.descripcion, u.id_puesto, u.rfc, ua.nombre as nombre_unidad ");
+        qry.append("u.fecha_ingreso, u.cve_m_usuario, p.descripcion, u.id_puesto, u.rfc, ua.nombre as nombre_unidad, i.id_archivo, ch.url, ch.nombre as nombre_archivo ");
         qry.append("FROM m_asistencia a ");
         qry.append("inner join m_usuario u on u.cve_m_usuario = a.id_usuario ");
         qry.append("inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ");
@@ -289,6 +290,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         qry.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia ");
         qry.append("left join m_estatus e on e.id_estatus = i.id_estatus ");
         qry.append("left join c_justificacion j on j.id_justificacion = i.id_justificacion ");
+        qry.append("left join m_archivo ch on ch.id_archivo = i.id_archivo ");
         qry.append("WHERE a.id_asistencia = :idAsistencia ");
 
         MapSqlParameterSource parametros = new MapSqlParameterSource();
@@ -323,9 +325,15 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
     	justificacion.setIdJustificacion((Integer) informacionConsulta.get("id_justificacion"));
     	justificacion.setJustificacion((String) informacionConsulta.get("justificacion"));
     	
+    	ArchivoDto archivo = new ArchivoDto();
+    	archivo.setIdArchivo((Integer) informacionConsulta.get("id_archivo"));
+    	archivo.setUrl((String) informacionConsulta.get("url"));
+    	archivo.setNombre((String) informacionConsulta.get("nombre_archivo"));
+    	
     	IncidenciaDto incidencia = new IncidenciaDto();
     	incidencia.setIdIncidencia((Integer) informacionConsulta.get("id_incidencia"));
     	incidencia.setJustificacion(justificacion);
+    	incidencia.setIdArchivo(archivo);
     	
     	AsistenciaDto asistencia = new AsistenciaDto();
         asistencia.setIdAsistencia((Integer) informacionConsulta.get("id_asistencia"));
