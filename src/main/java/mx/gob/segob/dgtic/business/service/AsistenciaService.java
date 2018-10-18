@@ -18,4 +18,5 @@ public interface AsistenciaService {
 	public AsistenciaDto buscaAsistenciaPorId(Integer id);
 	public void creaIncidencia(IncidenciaDto incidencia);
 	public void dictaminaIncidencia(IncidenciaDto incidencia);
+	public void aplicaDescuento(IncidenciaDto incidencia);
 }

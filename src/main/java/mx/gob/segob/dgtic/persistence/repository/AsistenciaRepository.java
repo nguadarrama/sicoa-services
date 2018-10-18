@@ -22,6 +22,7 @@ public interface AsistenciaRepository {
 	public boolean existeIncidencia(Integer idAsistencia);
 	public void editaIncidencia(IncidenciaDto incidencia);
 	public void dictaminaIncidencia(IncidenciaDto incidencia);
+	public void aplicaDescuento(IncidenciaDto incidencia);
 	public void agregaAsistencia(AsistenciaDto asistenciaDto);
 	public List<String> obtieneListaEmpleadosDeVacacionesHoy();
 }

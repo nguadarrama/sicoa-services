@@ -84,4 +84,8 @@ public class AsistenciaRules {
 		asistenciaRepository.dictaminaIncidencia(incidencia);
 	}
 	
+	public void aplicaDescuento(IncidenciaDto incidencia) {
+		asistenciaRepository.aplicaDescuento(incidencia);
+	}
+	
 }

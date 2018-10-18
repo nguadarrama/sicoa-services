@@ -125,7 +125,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 			
 		StringBuilder qry = new StringBuilder();
 	       
-        qry.append("SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus ");
+        qry.append("SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus, e.id_estatus ");
         qry.append("FROM m_asistencia a ");
         qry.append("inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ");
         qry.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia ");
@@ -181,6 +181,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         	
         	EstatusDto estatus = new EstatusDto();
         	estatus.setEstatus((String) a.get("estatus"));
+        	estatus.setIdEstatus((Integer) a.get("id_estatus"));
         	
         	AsistenciaDto asistencia = new AsistenciaDto();
         	asistencia.setIdAsistencia((Integer) a.get("id_asistencia"));
@@ -418,7 +419,28 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		try {
 			nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		} catch (Exception e) {
-			logger.error("Error al dictaminar la justificación: " + incidencia.getIdAsistencia().getIdAsistencia() + " " + e.getMessage());
+			logger.error("Error al dictaminar la justificación, en la indicencia: " + incidencia.getIdAsistencia().getIdAsistencia() + " " + e.getMessage());
+		}
+		
+	}
+	
+	@Override
+	public void aplicaDescuento(IncidenciaDto incidencia) {
+		StringBuilder qry = new StringBuilder();
+		
+		qry.append("update m_incidencia ");
+		qry.append("set descuento = 1, ");
+		qry.append("id_archivo = :idArchivo ");
+        qry.append("WHERE id_asistencia = :idAsistencia");
+        
+        MapSqlParameterSource parametros = new MapSqlParameterSource();
+		parametros.addValue("idAsistencia", incidencia.getIdAsistencia().getIdAsistencia());
+		parametros.addValue("idArchivo", incidencia.getIdArchivo().getIdArchivo());
+		
+		try {
+			nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		} catch (Exception e) {
+			logger.error("Error al aplicar descuento en la incidencia: " + incidencia.getIdAsistencia().getIdAsistencia() + " " + e.getMessage());
 		}
 		
 	}
