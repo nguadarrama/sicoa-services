@@ -14,5 +14,5 @@ public interface UsuarioRepository {
 	public void reiniciaContrasenia(String claveUsuario);
 	public UsuarioDto buscaUsuarioPorId(Integer idUsuario);
 	public List<UsuarioDto> obtenerListaUsuariosActivos(String fecha);
-	
+	public List<UsuarioDto> obtenerListaJefes();
 }

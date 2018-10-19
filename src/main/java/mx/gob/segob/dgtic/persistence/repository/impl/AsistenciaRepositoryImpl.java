@@ -125,7 +125,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 			
 		StringBuilder qry = new StringBuilder();
 	       
-        qry.append("SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus, e.id_estatus ");
+        qry.append("SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus, e.id_estatus, ua.nombre as nombre_unidad ");
         qry.append("FROM m_asistencia a ");
         qry.append("inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ");
         qry.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia ");
@@ -281,7 +281,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         
         qry.append("SELECT a.id_asistencia, a.entrada, a.id_tipo_dia, t.nombre as nombre_tipo, e.estatus, e.id_estatus, ");
         qry.append("i.id_incidencia, j.id_justificacion, j.justificacion, u.nombre as nombre_usuario, u.apellido_paterno, u.apellido_materno, ");
-        qry.append("u.fecha_ingreso, u.cve_m_usuario, p.descripcion, u.id_puesto, u.rfc, ua.nombre as nombre_unidad, i.id_archivo, ch.url, ch.nombre as nombre_archivo ");
+        qry.append("u.fecha_ingreso, u.cve_m_usuario, u.nombre_jefe, p.descripcion, u.id_puesto, u.rfc, u.nivel, ua.nombre as nombre_unidad, i.id_archivo, ch.url, ch.nombre as nombre_archivo ");
         qry.append("FROM m_asistencia a ");
         qry.append("inner join m_usuario u on u.cve_m_usuario = a.id_usuario ");
         qry.append("inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ");
@@ -311,8 +311,10 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         usuario.setClavePerfil(perfil);
         usuario.setIdPuesto((String) informacionConsulta.get("puesto"));
         usuario.setRfc((String) informacionConsulta.get("rfc")) ;
+        usuario.setNivel((String) informacionConsulta.get("nivel"));
         usuario.setIdPuesto((String) informacionConsulta.get("id_puesto"));
         usuario.setNombreUnidad((String) informacionConsulta.get("nombre_unidad"));
+        usuario.setNombreJefe((String) informacionConsulta.get("nombre_jefe"));
         
         TipoDiaDto tipoDia = new TipoDiaDto();
         tipoDia.setIdTipoDia((Integer) informacionConsulta.get("id_tipo_dia"));
@@ -350,8 +352,8 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 	@Override
 	public void creaIncidencia(IncidenciaDto incidencia) {
 		StringBuilder qry = new StringBuilder();
-		qry.append("INSERT INTO m_incidencia (id_asistencia, id_tipo_dia, id_archivo, id_estatus, id_responsable, descuento, observaciones, id_justificacion) ");
-		qry.append("VALUES (:idAsistencia, :idTipoDia, :idArchivo, :idEstatus, null, null, null, :idJustificacion) ");
+		qry.append("INSERT INTO m_incidencia (id_asistencia, id_tipo_dia, id_archivo, id_estatus, id_responsable, descuento, observaciones, id_justificacion, nombre_autorizador) ");
+		qry.append("VALUES (:idAsistencia, :idTipoDia, :idArchivo, :idEstatus, null, null, null, :idJustificacion, :nombreAutorizador) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idAsistencia", incidencia.getIdAsistencia().getIdAsistencia());
@@ -359,6 +361,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		parametros.addValue("idEstatus", incidencia.getEstatus().getIdEstatus());
 		parametros.addValue("idJustificacion", incidencia.getJustificacion().getIdJustificacion());
 		parametros.addValue("idArchivo", incidencia.getIdArchivo().getIdArchivo());
+		parametros.addValue("nombreAutorizador", incidencia.getNombreAutorizador());
 
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 	}
@@ -388,13 +391,14 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		StringBuilder qry = new StringBuilder();
 		
 		qry.append("update m_incidencia ");
-		qry.append("set id_justificacion = :idJustificacion, id_archivo = :idArchivo  ");
+		qry.append("set id_justificacion = :idJustificacion, id_archivo = :idArchivo, nombre_autorizador = :nombreAutorizador ");
         qry.append("WHERE id_asistencia = :idAsistencia");
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idAsistencia", incidencia.getIdAsistencia().getIdAsistencia());
 		parametros.addValue("idJustificacion", incidencia.getJustificacion().getIdJustificacion());
 		parametros.addValue("idArchivo", incidencia.getIdArchivo().getIdArchivo());
+		parametros.addValue(":nombreAutorizador", incidencia.getNombreAutorizador());
 		
 		try {
 			nameParameterJdbcTemplate.update(qry.toString(), parametros);

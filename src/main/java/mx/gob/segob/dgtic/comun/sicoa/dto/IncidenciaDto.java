@@ -49,6 +49,8 @@ public class IncidenciaDto {
 	     * Justificación de la incidencia.
 	     */
 	    @MapeaColumna(columna = "id_justificacion") private JustificacionDto justificacion;
+	    
+	    @MapeaColumna(columna = "nombre_autorizador") private String nombreAutorizador;
 
 	    /**
 		    * El id incidencia.
@@ -184,6 +186,14 @@ public class IncidenciaDto {
 
 		public void setJustificacion(JustificacionDto justificacion) {
 			this.justificacion = justificacion;
+		}
+
+		public String getNombreAutorizador() {
+			return nombreAutorizador;
+		}
+
+		public void setNombreAutorizador(String nombreAutorizador) {
+			this.nombreAutorizador = nombreAutorizador;
 		}
 		
 		

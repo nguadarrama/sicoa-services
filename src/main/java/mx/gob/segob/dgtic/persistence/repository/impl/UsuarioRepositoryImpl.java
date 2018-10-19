@@ -356,5 +356,23 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
         return usuario;
 	}
 	
+	@Override
+	public List<UsuarioDto> obtenerListaJefes() {
+		StringBuilder qry = new StringBuilder();
+        qry.append("select distinct(nombre_jefe) as nombre_jefe ");
+        qry.append("from m_usuario ");
+        qry.append("where nombre_jefe is not null");
+        
+        List<Map<String, Object>> jefes = jdbcTemplate.queryForList(qry.toString());
+        List<UsuarioDto> listaUsuarios = new ArrayList<>();
+        
+        for (Map<String, Object> j : jefes) {
+        	UsuarioDto usuario = new UsuarioDto();
+    		usuario.setNombre((String) j.get("nombre_jefe"));
+    		listaUsuarios.add(usuario);
+    	}
+        
+        return listaUsuarios;
+	}
 	
 }

@@ -108,4 +108,13 @@ public class UsuarioRecurso {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, usuarioService.buscaUsuarioPorId(Integer.parseInt(id)));
 	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("obtieneJefes")	
+	@PermitAll
+	public Response obtieneJefesActivos() {
+		
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, usuarioService.obtenerListaJefes());
+	}
 }

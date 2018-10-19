@@ -51,4 +51,8 @@ public class UsuarioRules {
 		return usuarioRepository.buscaUsuarioPorId(idUsuario);
 	}
 	
+	public List<UsuarioDto> obtenerListajefes() {
+		return usuarioRepository.obtenerListaJefes();
+	}
+	
 }

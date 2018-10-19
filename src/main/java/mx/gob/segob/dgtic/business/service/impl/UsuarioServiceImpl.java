@@ -65,5 +65,11 @@ public class UsuarioServiceImpl implements UsuarioService{
 
 	}
 
+	@Override
+	public List<UsuarioDto> obtenerListaJefes() {
+		
+		return usuarioRules.obtenerListajefes();
+		
+	}
 	
 }
