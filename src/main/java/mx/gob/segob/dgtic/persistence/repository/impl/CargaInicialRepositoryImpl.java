@@ -34,7 +34,7 @@ public class CargaInicialRepositoryImpl extends RecursoBase implements CargaInic
 	@Override
 	public List<UsuarioDto> recuperarUsuariosCargaInicial() {
 		StringBuilder qry = new StringBuilder();
-        qry.append("SELECT NUMERO_EMPLEADO, NOMBRE, APELLIDO_PATERNO, APELLIDO_MATERNO, FECHA_ING_SECRETARIA, PUESTO_EMPLEADO, RFC, NIVEL ");
+        qry.append("SELECT NUMERO_EMPLEADO, NOMBRE, APELLIDO_PATERNO, APELLIDO_MATERNO, FECHA_ING_SECRETARIA, PUESTO_EMPLEADO, RFC, NIVEL, NOMBRE_JEFE ");
         qry.append("FROM VW_SEGOB_W00_ACT ");
         
         List<Map<String, Object>> usuarios = jdbcTemplateOracle.queryForList(qry.toString());
@@ -58,6 +58,7 @@ public class CargaInicialRepositoryImpl extends RecursoBase implements CargaInic
     		usuarioDto.setIdPuesto((String)usuario.get("PUESTO_EMPLEADO"));
     		usuarioDto.setRfc((String)usuario.get("RFC"));
     		usuarioDto.setNivel((String)usuario.get("NIVEL"));
+    		usuarioDto.setNombreJefe((String) usuario.get("NOMBRE_JEFE"));
     		usuarioDto.setEnSesion("N");
     		usuarioDto.setBloqueado("N");
     		usuarioDto.setPrimeraVez("Y");

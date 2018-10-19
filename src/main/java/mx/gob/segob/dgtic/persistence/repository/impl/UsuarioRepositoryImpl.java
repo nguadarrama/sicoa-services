@@ -178,10 +178,10 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 		System.out.println(" numero de intentos"+usuarioDto.getNumeroIntentos());
 		qry.append("insert into m_usuario (id_area, cve_c_perfil, id_horario, id_puesto, cve_m_usuario, nombre, apellido_paterno, apellido_materno, "
         		+ "fecha_ingreso, password, activo, nuevo, en_sesion, ultimo_acceso, numero_intentos, bloqueado, fecha_bloqueo,  primera_vez, estatus, "
-        		+ "nivel, rfc) ");
+        		+ "nivel, rfc, nombre_jefe) ");
 		qry.append("values ( :idArea, :clavePerfil, :idHorario, :idPuesto, :claveUsuario, :nombre, :apellidoPaterno, :apellidoMaterno, :fechaIngreso, "
 				+ ":password, :activo, :nuevo, :enSesion, :ultimoAcceso, :numeroIntentos, :bloqueado, :fechaBloqueo, :primeraVez, :estatus, "
-				+ ":nivel, :rfc ) ");
+				+ ":nivel, :rfc, :nombreJefe ) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idArea", usuarioDto.getIdArea());
@@ -205,6 +205,7 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 		parametros.addValue("estatus", usuarioDto.getEstatus());
 		parametros.addValue("nivel", usuarioDto.getNivel());
 		parametros.addValue("rfc", usuarioDto.getRfc());
+		parametros.addValue("nombreJefe", usuarioDto.getNombreJefe());
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 	}
 

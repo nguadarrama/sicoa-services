@@ -126,6 +126,8 @@ public class UsuarioDto {
     
     @MapeaColumna(columna = "rfc") private String rfc;
     
+    @MapeaColumna(columna = "nombre_jefe") private String nombreJefe;
+    
     
     /**
 	 * Obtener el id usuario.
@@ -506,6 +508,14 @@ public class UsuarioDto {
 
 	public void setRfc(String rfc) {
 		this.rfc = rfc;
+	}
+	
+	public String getNombreJefe() {
+		return nombreJefe;
+	}
+
+	public void setNombreJefe(String nombreJefe) {
+		this.nombreJefe = nombreJefe;
 	}
 
 	public String getNombreUnidad() {
