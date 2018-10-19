@@ -8,7 +8,6 @@
 package mx.gob.segob.dgtic.comun.sicoa.dto;
 
 import java.sql.Time;
-import java.sql.Timestamp;
 
 import mx.gob.segob.dgtic.comun.util.mapper.annotations.MapeaColumna;
 
@@ -18,6 +17,12 @@ public class HorarioDto {
      * El id horario.
      */
     @MapeaColumna(columna = "id_horario") private Integer idHorario;
+
+    
+    /**
+     * horario activo.
+     */
+    @MapeaColumna(columna = "nombre") private String nombre;
     
     /**
      * horario de entrada.
@@ -53,6 +58,20 @@ public class HorarioDto {
 		this.idHorario = idHorario;
 	}
 	
+	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @param nombre the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
 	/**
 	 * Obtener hora de entrada.
 	 *

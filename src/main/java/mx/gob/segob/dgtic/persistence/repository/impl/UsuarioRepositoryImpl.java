@@ -16,6 +16,7 @@ import mx.gob.segob.dgtic.business.service.HorarioService;
 import mx.gob.segob.dgtic.comun.sicoa.dto.PerfilDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
+import mx.gob.segob.dgtic.comun.util.crypto.HashUtils;
 import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.persistence.repository.PerfilRepository;
 import mx.gob.segob.dgtic.persistence.repository.UsuarioRepository;
@@ -237,9 +238,12 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 	@Override
 	public void reiniciaContrasenia(String claveUsuario) {
 		StringBuilder qry = new StringBuilder();
-		qry.append("update m_usuario set primera_vez ='S' WHERE cve_m_usuario = :claveUsuario  ");
+		qry.append("update m_usuario set primera_vez ='S', password = :nuevaContrasenia WHERE cve_m_usuario = :claveUsuario  ");
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("claveUsuario", claveUsuario);
+		String nuevaContrasenia=HashUtils.md5(claveUsuario);
+		System.out.println("Datos idUsuario "+claveUsuario+" contrasenia "+nuevaContrasenia);
+		parametros.addValue("nuevaContrasenia", nuevaContrasenia);
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);	
 	}
 
@@ -291,6 +295,65 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
         logger.info(listaUsuario.size() + " usuarios encontrados.");
         
 		return listaUsuario;
+	}
+	
+	@Override
+	public UsuarioDto buscaUsuarioPorId(Integer idUsuario) {
+		StringBuilder qry = new StringBuilder();
+        qry.append("select u.id_usuario, u.id_area, u.cve_c_perfil, u.id_horario, u.id_puesto, u.cve_m_usuario, ");
+        qry.append("u.nombre, u.apellido_paterno, u.apellido_materno, u.fecha_ingreso, u.activo, u.nuevo, u.en_sesion, ");
+        qry.append("u.ultimo_acceso, u.numero_intentos, u.bloqueado, u.fecha_bloqueo, u.primera_vez, u.estatus, u.nivel, u.rfc, ");
+        qry.append("p.descripcion, p.estatus, unidad.id_unidad, unidad.nombre nombre_unidad, ");
+        qry.append("h.hora_entrada, h.hora_salida ");
+        qry.append("from m_usuario u, c_perfil p, c_horario h, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion ");
+        qry.append("where u.id_usuario = :idUsuario ");
+        qry.append("and u.cve_c_perfil = p.cve_c_perfil ");
+        qry.append("and u.id_horario = h.id_horario and unidad.id_unidad=relacion.id_unidad and u.cve_m_usuario=relacion.cve_m_usuario limit 1");
+        
+        MapSqlParameterSource parametros = new MapSqlParameterSource();
+        parametros.addValue("idUsuario", idUsuario);
+        
+        Map<String, Object> informacionConsulta = nameParameterJdbcTemplate.queryForMap(qry.toString(), parametros);
+        
+        Horario horario = new Horario();
+        horario.setIdHorario((Integer) informacionConsulta.get("id_horario"));
+        horario.setHoraEntrada((Time) informacionConsulta.get("hora_entrada"));
+        horario.setHoraSalida((Time) informacionConsulta.get("hora_salida"));
+        
+        PerfilDto perfil = new PerfilDto();
+        perfil.setClavePerfil((String) informacionConsulta.get("cve_c_perfil"));
+        perfil.setDescripcion((String) informacionConsulta.get("descripcion"));
+        
+        UsuarioDto usuario = new UsuarioDto();
+        
+        usuario.setIdUsuario((Integer) informacionConsulta.get("id_usuario"));
+//        usuario.setIdArea(area);
+        usuario.setClavePerfil(perfil);
+        usuario.setIdHorario(horario);
+//        usuario.setIdPuesto(puesto);
+        usuario.setIdPuesto((String) informacionConsulta.get("id_puesto"));
+        usuario.setClaveUsuario((String) informacionConsulta.get("cve_m_usuario"));
+        usuario.setNombre((String) informacionConsulta.get("nombre"));
+        usuario.setApellidoPaterno((String) informacionConsulta.get("apellido_paterno"));
+        usuario.setApellidoMaterno((String) informacionConsulta.get("apellido_materno"));
+        usuario.setFechaIngreso((Date) informacionConsulta.get("fecha_ingreso"));
+        usuario.setActivo((Boolean) informacionConsulta.get("activo"));
+        usuario.setNuevo((Boolean) informacionConsulta.get("nuevo"));
+        usuario.setEnSesion((String) informacionConsulta.get("en_sesion"));
+        usuario.setUltimoAcceso((Date) informacionConsulta.get("ultimo_acceso"));
+        usuario.setNumeroIntentos((Integer) informacionConsulta.get("numero_intentos"));
+        usuario.setBloqueado((String) informacionConsulta.get("bloqueado"));
+        usuario.setFechaBloqueo((Date) informacionConsulta.get("fecha_bloqueo"));
+        usuario.setPrimeraVez((String) informacionConsulta.get("primera_vez"));
+        usuario.setEstatus((String) informacionConsulta.get("estatus"));
+        usuario.setNivel((String) informacionConsulta.get("nivel"));
+        usuario.setRfc((String) informacionConsulta.get("rfc"));
+        usuario.setIdUnidad((Integer)informacionConsulta.get("id_unidad"));
+        usuario.setNombreUnidad((String)informacionConsulta.get("nombre_unidad"));
+        System.out.println("uniddAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAd "+informacionConsulta.get("nombre_unidad"));
+        
+        
+        return usuario;
 	}
 	
 	

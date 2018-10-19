@@ -59,7 +59,7 @@ public class DiaFestivoRepositoryImpl implements DiaFestivoRepository {
 	}
 	
 	@Override
-	public void modificaDiaFestivo (DiaFestivoDto diaFestivo){
+	public DiaFestivoDto modificaDiaFestivo (DiaFestivoDto diaFestivo){
 		
 		StringBuilder qry = new StringBuilder();
 		qry.append("UPDATE c_dia_festivo SET nombre= :nombre, fecha = :fecha, activo = :activo ");
@@ -71,11 +71,23 @@ public class DiaFestivoRepositoryImpl implements DiaFestivoRepository {
 		parametros.addValue("fecha", diaFestivo.getFecha());
 		parametros.addValue("activo", diaFestivo.getActivo());
 
-		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		try{
+			Integer i = nameParameterJdbcTemplate.update(qry.toString(), parametros);
+			if(i == 1){
+				diaFestivo.setMensaje("El Día Inhábil se ha actualizado correctamente.");
+			}else{
+				diaFestivo.setMensaje("Se ha generado un error al guardar, revise la información");
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			diaFestivo.setMensaje("El registro ya existe en el sistema, favor de validar");
+		}
+		return diaFestivo;
+		
 	}
 	
 	@Override 
-	public void agregaDiaFestivo (DiaFestivoDto diaFestivo){
+	public DiaFestivoDto agregaDiaFestivo (DiaFestivoDto diaFestivo){
 		
 		StringBuilder qry = new StringBuilder();
 		qry.append("INSERT INTO c_dia_festivo (nombre, fecha, activo) ");
@@ -85,8 +97,18 @@ public class DiaFestivoRepositoryImpl implements DiaFestivoRepository {
 		parametros.addValue("nombre", diaFestivo.getNombre());
 		parametros.addValue("fecha", diaFestivo.getFecha());
 		parametros.addValue("activo", diaFestivo.getActivo());
-
-		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		try{
+			Integer i = nameParameterJdbcTemplate.update(qry.toString(), parametros);
+			if(i == 1){
+				diaFestivo.setMensaje("El Día Inhábil se ha registrado correctamente.");
+			}else{
+				diaFestivo.setMensaje("Se ha generado un error al guardar, revise la información");
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			diaFestivo.setMensaje("El registro ya existe en el sistema, favor de validar");
+		}
+		return diaFestivo;
 	}
 	
 	@Override

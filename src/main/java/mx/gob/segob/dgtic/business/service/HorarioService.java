@@ -7,7 +7,7 @@ import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
 public interface HorarioService {
 	public List<Horario> obtenerListaHorarios();
 	public Horario buscaHorario(int id);
-	public void modificaHorario(Horario horario);
-	public void agregaHorario(Horario horario);
+	public Horario modificaHorario(Horario horario);
+	public Horario agregaHorario(Horario horario);
 	public void eliminaHorario(Integer id);
 }

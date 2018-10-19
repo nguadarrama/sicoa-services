@@ -10,17 +10,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
-import mx.gob.segob.dgtic.business.service.AsistenciaService;
 import mx.gob.segob.dgtic.business.service.HorarioService;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
 import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
@@ -32,9 +28,6 @@ public class HorarioRecurso {
 	
 	@Autowired
 	private HorarioService horarioService;
-	
-	@Autowired
-	private AsistenciaService asistenciaService;
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -68,9 +61,7 @@ public class HorarioRecurso {
 		Gson gson = builder.create();
 		Horario horario = gson.fromJson(jsonObject.get("horario"), Horario.class);
 		
-		horarioService.modificaHorario(horario);
-
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, horarioService.modificaHorario(horario));
 	}
 	
 	@PUT
@@ -80,15 +71,11 @@ public class HorarioRecurso {
 	@PermitAll
 	public Response agregaaHorario(@RequestParam String jsonHorario) {
 		JsonObject jsonObject = new JsonParser().parse(jsonHorario).getAsJsonObject();
-		
 		GsonBuilder builder = new GsonBuilder();
 		builder.setDateFormat("yyyy-MM-dd");
 		Gson gson = builder.create();
-		Horario horario = gson.fromJson(jsonObject.get("horario"), Horario.class);
-		
-		horarioService.agregaHorario(horario);
-
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+		Horario horario = gson.fromJson(jsonObject.get("horario"), Horario.class);	
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, horarioService.agregaHorario(horario));
 	}
 	
 	@GET
@@ -96,9 +83,7 @@ public class HorarioRecurso {
 	@Path("eliminaHorario")	
 	@PermitAll
 	public Response eliminaHorario(@QueryParam("id") Integer id) {
-		
 		horarioService.eliminaHorario(id);
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 	}
 	

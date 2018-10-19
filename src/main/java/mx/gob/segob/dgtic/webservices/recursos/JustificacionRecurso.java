@@ -56,9 +56,7 @@ public class JustificacionRecurso {
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		JustificacionDto justificacionDto = gson.fromJson(jsonObject.get("justificacion"), JustificacionDto.class);
-		justificacionService.modificaJustificacion(justificacionDto);
-
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, justificacionService.modificaJustificacion(justificacionDto));
 	}
 	
 	@PUT
@@ -72,10 +70,8 @@ public class JustificacionRecurso {
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		JustificacionDto justificacionDto = gson.fromJson(jsonObject.get("justificacion"), JustificacionDto.class);
-		
-		justificacionService.agregaJustificacion(justificacionDto);
 
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, justificacionService.agregaJustificacion(justificacionDto));
 	}
 	
 	@GET

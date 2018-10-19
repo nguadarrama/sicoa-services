@@ -6,6 +6,8 @@ package mx.gob.segob.dgtic.comun.sicoa.dto;
 import java.text.ParseException;
 import java.util.Date;
 
+import javax.persistence.Transient;
+
 import mx.gob.segob.dgtic.comun.util.mapper.annotations.MapeaColumna;
 
 /**
@@ -17,24 +19,29 @@ public class DiaFestivoDto {
 	/**
 	    * El id estatus.
 	    */
-	   @MapeaColumna(columna = "id_festivo") private Integer idDiaFestivo;
+	   @MapeaColumna(columna = "id_festivo") 
+	   private Integer idDiaFestivo;
 	   
 	   /**
 	    * La descripción de la festividad o motivo del día
 	    */
-	   @MapeaColumna(columna = "nombre") private String nombre;
+	   @MapeaColumna(columna = "nombre") 
+	   private String nombre;
 	   
 	   /**
 	    * Fecha del día inhabíl.
 	    */
-	   @MapeaColumna(columna = "fecha") private Date fecha;
+	   @MapeaColumna(columna = "fecha") 
+	   private Date fecha;
 	   
 	   /**
-	    * El id estatus
+	    * Estatus del catalogo
 	    */
-	   @MapeaColumna(columna = "activo") private Boolean activo;
-	   
-	   
+	   @MapeaColumna(columna = "activo") 
+	   private Boolean activo;
+
+	   @Transient
+	   private String mensaje;
 
 	/**
 	 * 
@@ -51,12 +58,13 @@ public class DiaFestivoDto {
 	 * @param fecha
 	 * @param activo
 	 */
-	public DiaFestivoDto(Integer idDiaFestivo, String nombre, Date fecha, Boolean activo) {
+	public DiaFestivoDto(Integer idDiaFestivo, String nombre, Date fecha, Boolean activo, String mensaje) {
 		super();
 		this.idDiaFestivo = idDiaFestivo;
 		this.nombre = nombre;
 		this.fecha = fecha;
 		this.activo = activo;
+		this.mensaje = mensaje;
 	}
 
 
@@ -132,5 +140,22 @@ public class DiaFestivoDto {
 		this.activo = activo;
 	}
 
-	
+
+
+	/**
+	 * @return the mensaje
+	 */
+	public String getMensaje() {
+		return mensaje;
+	}
+
+
+
+	/**
+	 * @param mensaje the mensaje to set
+	 */
+	public void setMensaje(String mensaje) {
+		this.mensaje = mensaje;
+	}
+
 }

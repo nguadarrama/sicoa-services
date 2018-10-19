@@ -24,12 +24,12 @@ public class HorarioRules {
 		return horarioRepository.buscaHorario(id);
 	}
 	
-	public void modificaHorario(Horario horario) {
-		horarioRepository.modificaHorario(horario);
+	public Horario modificaHorario(Horario horario) {
+		return horarioRepository.modificaHorario(horario);
 	}
 	
-	public void agregaHorario(Horario horario) {
-		horarioRepository.agregaHorario(horario);
+	public Horario agregaHorario(Horario horario) {
+		return horarioRepository.agregaHorario(horario);
 	}
 	
 	public void eliminaHorario(Integer id) {

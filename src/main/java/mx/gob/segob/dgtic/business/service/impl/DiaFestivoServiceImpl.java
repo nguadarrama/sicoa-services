@@ -26,15 +26,15 @@ public class DiaFestivoServiceImpl implements DiaFestivoService {
 		
 	}
 
-	public void modificaDiaFestivo(DiaFestivoDto diaFestivo){
+	public DiaFestivoDto modificaDiaFestivo(DiaFestivoDto diaFestivo){
 		
-		diaFestivoRules.modificaDiaFestivo(diaFestivo);
+		return diaFestivoRules.modificaDiaFestivo(diaFestivo);
 		
 	}
 
-	public void agregaDiaFestivo(DiaFestivoDto diaFestivo){
+	public DiaFestivoDto agregaDiaFestivo(DiaFestivoDto diaFestivo){
 		
-		diaFestivoRules.agregaDiaFestivo(diaFestivo);
+		return diaFestivoRules.agregaDiaFestivo(diaFestivo);
 		
 	}
 

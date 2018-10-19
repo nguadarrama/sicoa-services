@@ -38,4 +38,10 @@ public class VacacionPeriodoServiceImpl implements VacacionPeriodoService {
 	public VacacionPeriodoDto consultaVacacionPeriodoPorClaveUsuarioYPeriodo(Integer idPeriodo, String claveUsuario){
 		return vacacionPeriodoRules.consultaVacacionPeriodoPorClaveUsuarioYPeriodo(idPeriodo, claveUsuario);
 	}
+
+	@Override
+	public List<VacacionPeriodoDto> obtenerUsuariosConVacacionesPorFiltros(String claveUsuario, String nombre,
+			String apellidoPaterno, String apellidoMaterno, String idUnidad) {
+		return vacacionPeriodoRules.obtenerUsuariosConVacacionesPorFiltros(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, idUnidad);
+	}
 }

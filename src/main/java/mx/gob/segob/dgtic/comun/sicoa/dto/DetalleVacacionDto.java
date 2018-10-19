@@ -60,6 +60,8 @@ public class DetalleVacacionDto {
      */
     @MapeaColumna(columna = "dias") private Integer dias;
     
+    @MapeaColumna(columna = "fecha_registro") private Date fechaRegistro;
+    
     /**
      * El id detalle vacaci&oacute;n.
      * @return idDetalle
@@ -98,8 +100,8 @@ public class DetalleVacacionDto {
      * La fecha inicio.
      * @return fechaInicio
      */
-	public Date getFechaInicio() {
-		return fechaInicio;
+	public Date getFechaRegistro() {
+		return fechaRegistro;
 	}
 	
 	/**
@@ -107,8 +109,8 @@ public class DetalleVacacionDto {
      * @param fechaInicio
      * @return fechaInicio
      */
-	public void setFechaInicio(Date fechaInicio) {
-		this.fechaInicio = fechaInicio;
+	public void setFechaRegistro(Date fechaRegistro) {
+		this.fechaRegistro = fechaRegistro;
 	}
 	
 	/**
@@ -211,6 +213,14 @@ public class DetalleVacacionDto {
      */
 	public void setIdEstatus(EstatusDto idEstatus) {
 		this.idEstatus = idEstatus;
+	}
+
+	public Date getFechaInicio() {
+		return fechaInicio;
+	}
+
+	public void setFechaInicio(Date fechaInicio) {
+		this.fechaInicio = fechaInicio;
 	}
     
 	

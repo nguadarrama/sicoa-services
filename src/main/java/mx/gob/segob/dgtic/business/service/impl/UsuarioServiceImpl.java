@@ -52,5 +52,18 @@ public class UsuarioServiceImpl implements UsuarioService{
 		
 	}
 
+	@Override
+	public void reiniciaContrasenia(String claveUsuario) {
+		usuarioRules.reiniciaContrasenia(claveUsuario);
+		
+	}
+	
+	@Override
+	public UsuarioDto buscaUsuarioPorId(Integer idUsuario) {
+		UsuarioDto usuarioDto= null;
+		 return usuarioRules.buscaUsuarioPorId(idUsuario);
+
+	}
+
 	
 }

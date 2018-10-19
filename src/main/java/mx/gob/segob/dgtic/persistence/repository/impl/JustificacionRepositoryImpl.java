@@ -27,7 +27,7 @@ public class JustificacionRepositoryImpl implements JustificacionRepository {
 	public List<JustificacionDto> obtenerListaJustificaciones(){
 	
 		StringBuilder qry = new StringBuilder();
-        qry.append("SELECT id_justificacion, justificacion, activo ");
+        qry.append("SELECT clave, id_justificacion, justificacion, activo ");
         qry.append("FROM c_justificacion ");
         
         List<Map<String, Object>> justificaciones = jdbcTemplate.queryForList(qry.toString());
@@ -35,6 +35,7 @@ public class JustificacionRepositoryImpl implements JustificacionRepository {
         
         for (Map<String, Object> justificacion : justificaciones) {
     		JustificacionDto justificacionDto = new JustificacionDto();
+    		justificacionDto.setClave((String)justificacion.get("clave"));
     		justificacionDto.setIdJustificacion((Integer)justificacion.get("id_justificacion"));
     		justificacionDto.setJustificacion((String)justificacion.get("justificacion"));
     		justificacionDto.setActivo((Boolean)justificacion.get("activo"));
@@ -47,7 +48,7 @@ public class JustificacionRepositoryImpl implements JustificacionRepository {
 	public JustificacionDto buscaJustificacion (Integer idJustificacion){
 		
 		StringBuilder qry = new StringBuilder();
-		qry.append("SELECT id_justificacion, justificacion, activo ");
+		qry.append("SELECT id_justificacion, clave, justificacion, activo ");
         qry.append("FROM c_justificacion ");
         qry.append("WHERE id_justificacion = :idJustificacion");
         
@@ -58,32 +59,53 @@ public class JustificacionRepositoryImpl implements JustificacionRepository {
 	}
 	
 	@Override
-	public void modificaJustificacion (JustificacionDto justificacionDto){
+	public JustificacionDto modificaJustificacion (JustificacionDto justificacionDto){
 		
 		StringBuilder qry = new StringBuilder();
-		qry.append("UPDATE c_justificacion SET justificacion = :justificacion, activo = :activo ");
+		qry.append("UPDATE c_justificacion SET clave = :clave, justificacion = :justificacion, activo = :activo ");
 		qry.append("WHERE id_justificacion = :idJustificacion");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
+		parametros.addValue("clave", justificacionDto.getClave());
 		parametros.addValue("idJustificacion", justificacionDto.getIdJustificacion());
 		parametros.addValue("justificacion", justificacionDto.getJustificacion());
 		parametros.addValue("activo", justificacionDto.isActivo());
-
-		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		try{
+		Integer i = nameParameterJdbcTemplate.update(qry.toString(), parametros);
+			if(i == 1)
+				justificacionDto.setMensaje("La justificación se ha registrado correctamente.");
+			else
+				justificacionDto.setMensaje("Se ha generado un error al guardar, revise la información");
+		}catch(Exception e){
+			e.printStackTrace();
+			justificacionDto.setMensaje("El registro ya existe en el sistema, favor de validar");
+		}
+		return justificacionDto;
 	}
 	
 	@Override 
-	public void agregaJustificacion(JustificacionDto justificacionDto){
+	public JustificacionDto agregaJustificacion(JustificacionDto justificacionDto){
 		
 		StringBuilder qry = new StringBuilder();
-		qry.append("INSERT INTO c_justificacion (justificacion, activo) ");
-		qry.append("VALUES ( :justificacion, :activo ) ");
+		qry.append("INSERT INTO c_justificacion (clave, justificacion, activo) ");
+		qry.append("VALUES (:clave, :justificacion, :activo ) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
+		parametros.addValue("clave", justificacionDto.getIdJustificacion());
 		parametros.addValue("justificacion", justificacionDto.getJustificacion());
 		parametros.addValue("activo", justificacionDto.isActivo());
-
-		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		try{
+			Integer i = nameParameterJdbcTemplate.update(qry.toString(), parametros);
+			if(i == 1){
+				justificacionDto.setMensaje("La justificación se ha registrado correctamente.");
+			}else{
+				justificacionDto.setMensaje("Se ha generado un error al guardar, revise la información");
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			justificacionDto.setMensaje("El registro ya existe en el sistema, favor de validar");
+		}
+		return justificacionDto;
 	}
 	
 	@Override

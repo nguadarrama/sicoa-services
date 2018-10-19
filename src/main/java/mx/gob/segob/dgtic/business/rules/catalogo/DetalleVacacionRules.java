@@ -81,10 +81,16 @@ public class DetalleVacacionRules {
 	
 	public void aceptaORechazaDetalleVacacion(DetalleVacacionDto detalleVacacionDto){
 		System.out.println("idDetalle en el rules "+detalleVacacionDto.getIdDetalle());
+		DetalleVacacionDto detalleAux= new DetalleVacacionDto();
+		detalleAux=detalleVacacionRepository.buscaDetalleVacacion(detalleVacacionDto.getIdDetalle());
+		detalleVacacionDto.setFechaInicio(detalleAux.getFechaInicio());
+		detalleVacacionDto.setFechaFin(detalleAux.getFechaFin());
 		if(detalleVacacionDto.getIdEstatus().getIdEstatus()==2){
 			Date fechaInicio=detalleVacacionDto.getFechaInicio();
 			Date fechaFin=detalleVacacionDto.getFechaFin();
+			
 			Calendar c1 = Calendar.getInstance();
+			System.out.println("Fechas fecha inicial "+detalleVacacionDto.getFechaInicio()+" fecha final "+detalleVacacionDto.getFechaFin());
 		    c1.setTime(fechaInicio);
 		    Calendar c2 = Calendar.getInstance();
 		    c2.setTime(fechaFin);

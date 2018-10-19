@@ -15,4 +15,5 @@ public interface DetalleVacacionRepository {
 	public void aceptaORechazaDetalleVacacion(DetalleVacacionDto detalleVacacionDto);
 	public List<DetalleVacacionDto> obtenerVacacionesPorFiltros(String claveUsuario, String nombre, String apellidoPaterno, String apellidoMaterno, Integer idUnidad, Integer idEstatus);
 	public List<DetalleVacacionDto> consultaVacacionesPropiasPorFiltros(String claveUsuario, Integer idPeriodo, Integer idEstatus, String pfechaInicio, String pfechaFin );
+	
 }

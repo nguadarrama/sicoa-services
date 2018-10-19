@@ -25,13 +25,13 @@ public class JustificacionServiceImpl implements JustificacionService {
 	}
 
 	@Override
-	public void modificaJustificacion(JustificacionDto justificacionDto) {		
-		justificacionRules.modificaJustificacion(justificacionDto);
+	public JustificacionDto modificaJustificacion(JustificacionDto justificacionDto) {		
+		return justificacionRules.modificaJustificacion(justificacionDto);
 	}
 	
 	@Override
-	public void agregaJustificacion(JustificacionDto justificacionDto) {		
-		justificacionRules.agregaJustificacion(justificacionDto);
+	public JustificacionDto agregaJustificacion(JustificacionDto justificacionDto) {		
+		return justificacionRules.agregaJustificacion(justificacionDto);
 	}
 
 	@Override

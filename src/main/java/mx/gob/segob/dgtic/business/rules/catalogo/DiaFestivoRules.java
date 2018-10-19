@@ -25,15 +25,15 @@ public class DiaFestivoRules {
 		
 	}
 
-	public void modificaDiaFestivo(DiaFestivoDto diaFestivo){
+	public DiaFestivoDto modificaDiaFestivo(DiaFestivoDto diaFestivo){
 		
-		diaFestivoRepository.modificaDiaFestivo(diaFestivo);
+		return diaFestivoRepository.modificaDiaFestivo(diaFestivo);
 		
 	}
 
-	public void agregaDiaFestivo(DiaFestivoDto diaFestivo){
+	public DiaFestivoDto agregaDiaFestivo(DiaFestivoDto diaFestivo){
 		
-		diaFestivoRepository.agregaDiaFestivo(diaFestivo);
+		return diaFestivoRepository.agregaDiaFestivo(diaFestivo);
 		
 	}
 

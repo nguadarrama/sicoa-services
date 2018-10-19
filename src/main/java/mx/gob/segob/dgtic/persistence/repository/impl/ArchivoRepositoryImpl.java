@@ -74,19 +74,41 @@ public class ArchivoRepositoryImpl extends RecursoBase implements ArchivoReposit
 		StringBuilder qry = new StringBuilder();
 		qry.append("UPDATE m_archivo SET nombre= :nombre, url = :url, size = :size, activo = :activo ");
 		qry.append("WHERE id_archivo = :idArchivo");
-		
+		if(archivoDto.getArchivo()!=null){
+			try {
+				System.out.println("Guardando archivo");
+			byte[] bite=archivoDto.getArchivo();
+			System.out.println("datos del archivo "+bite);
+			Path path= Paths.get(archivoDto.getUrl());
+			Path pathNombre= Paths.get(archivoDto.getUrl()+archivoDto.getIdArchivo()+archivoDto.getNombre());
+			if (!Files.exists(path)){
+			    Files.createDirectories(path);
+			}
+				
+				Files.write(pathNombre, bite);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idArchivo", archivoDto.getIdArchivo());
 		parametros.addValue("nombre", archivoDto.getNombre());
 		parametros.addValue("size", archivoDto.getSize());
 		parametros.addValue("activo", archivoDto.getActivo());
+		parametros.addValue("url", archivoDto.getUrl());
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 	}
 	
 	@Override
 	public Integer agregaArchivo (ArchivoDto archivoDto){
-		
+		StringBuilder qry = new StringBuilder();
+		qry.append("select max(id_archivo) as id_archivo ");
+		qry.append("from m_archivo");
+		Map<String, Object> id1 = jdbcTemplate.queryForMap(qry.toString());
+        Integer id = ((Integer) id1.get("id_archivo"))+1;
 		//String ruta="C:/Sicoa/"+archivoDto.getClaveUsuario()+"/"+archivoDto.getAccion();
+        archivoDto.setNombre(id+archivoDto.getNombre());
 		if(archivoDto.getArchivo()!=null){
 			try {
 				System.out.println("Guardando archivo");
@@ -104,12 +126,13 @@ public class ArchivoRepositoryImpl extends RecursoBase implements ArchivoReposit
 				e.printStackTrace();
 			}
 		}
+		qry = new StringBuilder();
 		//String valorRuta= ruta+archivoDto.getArchivo().getOriginalFilename();
 		//archivoDto.setUrl(valorRuta);
 		//archivoDto.setSize((int) (long) archivoDto.getArchivo().getSize());
 		//archivoDto.setActivo(true);
 	    //archivoDto.setNombre(archivoDto.getArchivo().getOriginalFilename());
-		StringBuilder qry = new StringBuilder();
+		
 		qry.append("INSERT INTO m_archivo (nombre, url, size, activo) ");
 		qry.append("VALUES (:nombre, :url, :size, :activo) ");
 		

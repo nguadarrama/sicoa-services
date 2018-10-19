@@ -12,7 +12,7 @@ public interface UsuarioRepository {
 	public void eliminaUsuario(String claveUsuario);
 	public String consultaContrasenia(String claveUsuario);
 	public void reiniciaContrasenia(String claveUsuario);
-	
+	public UsuarioDto buscaUsuarioPorId(Integer idUsuario);
 	public List<UsuarioDto> obtenerListaUsuariosActivos(String fecha);
 	
 }

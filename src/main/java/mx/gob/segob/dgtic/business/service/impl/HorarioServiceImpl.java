@@ -1,14 +1,11 @@
 package mx.gob.segob.dgtic.business.service.impl;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import mx.gob.segob.dgtic.business.rules.catalogo.HorarioRules;
 import mx.gob.segob.dgtic.business.service.HorarioService;
 import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
-import mx.gob.segob.dgtic.persistence.repository.HorarioRepository;
 
 @Service
 public class HorarioServiceImpl implements HorarioService {
@@ -28,15 +25,13 @@ public class HorarioServiceImpl implements HorarioService {
 	}
 
 	@Override
-	public void modificaHorario(Horario horario) {
-		
-		horarioRules.modificaHorario(horario);
+	public Horario modificaHorario(Horario horario) {
+		return horarioRules.modificaHorario(horario);
 	}
 	
 	@Override
-	public void agregaHorario(Horario horario) {
-		
-		horarioRules.agregaHorario(horario);
+	public Horario agregaHorario(Horario horario) {
+		return horarioRules.agregaHorario(horario);
 	}
 
 	@Override

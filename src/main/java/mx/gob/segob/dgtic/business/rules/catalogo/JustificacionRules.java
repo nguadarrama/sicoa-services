@@ -24,13 +24,13 @@ public class JustificacionRules {
 	}
 	
 	
-	public void modificaJustificacion (JustificacionDto justificacionDto){
-		justificacionRepository.modificaJustificacion(justificacionDto);
+	public JustificacionDto modificaJustificacion (JustificacionDto justificacionDto){
+		return justificacionRepository.modificaJustificacion(justificacionDto);
 	}
 	
 	
-	public void agregaJustificacion (JustificacionDto justificacionDto){
-		justificacionRepository.agregaJustificacion(justificacionDto);
+	public JustificacionDto agregaJustificacion (JustificacionDto justificacionDto){
+		return justificacionRepository.agregaJustificacion(justificacionDto);
 	}
 	
 	

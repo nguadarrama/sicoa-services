@@ -27,6 +27,7 @@ import com.google.gson.JsonParser;
 
 import mx.gob.segob.dgtic.business.service.DetalleVacacionService;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DetalleVacacionDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.GeneraReporteArchivo;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
@@ -58,7 +59,7 @@ public class DetalleVacacionRecurso {
 	@Path("buscaDetalleVacacion")	
 	@PermitAll
 	public Response buscaDetalleVacacion(@QueryParam("id") Integer id) {
-
+		
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.buscaDetalleVacacion(id));
 	}
 	
@@ -174,5 +175,21 @@ public class DetalleVacacionRecurso {
 			nuevoIdEstatus=null;
 		}
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.obtenerVacacionesPorFiltros(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, nuevoIdUnidad, nuevoIdEstatus));
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("generaReporte")	
+	@PermitAll
+	public Response generaReporte(@RequestParam String jsonDetalleVacacion) {
+		JsonObject jsonObject = new JsonParser().parse(jsonDetalleVacacion).getAsJsonObject();
+		
+		GsonBuilder builder = new GsonBuilder();
+		Gson gson = builder.create();
+		GeneraReporteArchivo generaReporteArchivo = gson.fromJson(jsonObject.get("generaReporteArchivo"), GeneraReporteArchivo.class);
+		
+		
+
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,detalleVacacionService.generaReporteVacaciones(generaReporteArchivo));
 	}
 }

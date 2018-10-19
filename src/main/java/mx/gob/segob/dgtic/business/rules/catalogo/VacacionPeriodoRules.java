@@ -41,4 +41,8 @@ public class VacacionPeriodoRules {
 	public void generarVacacionesTodos (int idUsuario, int idPeriodo, int estatus, String inicio, int dias, boolean activo, String ingreso) {
 		vacacionPeriodoRepository.generarVacacionPeriodotodos(idUsuario, idPeriodo, estatus, inicio, dias, activo, ingreso);
 	}
+	
+	public List<VacacionPeriodoDto> obtenerUsuariosConVacacionesPorFiltros(String claveUsuario, String nombre, String apellidoPaterno, String apellidoMaterno, String idUnidad) {
+		return vacacionPeriodoRepository.obtenerUsuariosConVacacionesPorFiltros(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, idUnidad);
+}
 }

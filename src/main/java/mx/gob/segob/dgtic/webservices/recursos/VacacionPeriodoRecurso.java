@@ -1,5 +1,8 @@
 package mx.gob.segob.dgtic.webservices.recursos;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -107,6 +110,21 @@ public class VacacionPeriodoRecurso {
 		        
 			
 		
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("obtenerUsuariosVacacionesPorFiltros")	
+	@PermitAll
+	public Response obtenerUsuariosVacacionesPorFiltros(@QueryParam("claveUsuario") String claveUsuario, @QueryParam("nombre") String nombre, @QueryParam("apellidoPaterno") String apellidoPaterno, @QueryParam("apellidoMaterno") String apellidoMaterno, @QueryParam("idUnidad") String idUnidad) {
+		
+		List<VacacionPeriodoDto> lista = new ArrayList<>();
+		lista= vacacionPeriodoService.obtenerUsuariosConVacacionesPorFiltros(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, idUnidad);
+		System.out.println("pasa por aqui "+lista.size());
+		for(VacacionPeriodoDto vacacion: lista){
+			System.out.println("DatoSSSSSSSSSSSSSSSSSSSSSSSS"+vacacion.getIdUsuario().getClaveUsuario());
+		}
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, lista);
 	}
 	
 }

@@ -42,4 +42,13 @@ public class UsuarioRules {
 	public List<UsuarioDto> obtenerListaUsuariosActivos (String fecha){
 		return usuarioRepository.obtenerListaUsuariosActivos(fecha);
 	}
+	
+	public void reiniciaContrasenia(String claveUsuario){
+		usuarioRepository.reiniciaContrasenia(claveUsuario);
+	}
+	
+	public UsuarioDto buscaUsuarioPorId(Integer idUsuario){
+		return usuarioRepository.buscaUsuarioPorId(idUsuario);
+	}
+	
 }

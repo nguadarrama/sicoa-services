@@ -28,7 +28,7 @@ public class HorarioRepositoryImpl implements HorarioRepository {
     public List<Horario> obtenerListaHorarios() {
 
         StringBuilder qry = new StringBuilder();
-        qry.append("SELECT id_horario, hora_entrada, hora_salida, activo ");
+        qry.append("SELECT nombre, id_horario, hora_entrada, hora_salida, activo ");
         qry.append("FROM c_horario ");
         
         List<Map<String, Object>> horarios = jdbcTemplate.queryForList(qry.toString());
@@ -36,6 +36,7 @@ public class HorarioRepositoryImpl implements HorarioRepository {
         
         for (Map<String, Object> h : horarios) {
     		Horario horario = new Horario();
+    		horario.setNombre((String) h.get("nombre"));
     		horario.setIdHorario((int) h.get("id_horario"));
     		horario.setHoraEntrada((Time) h.get("hora_entrada"));
     		horario.setHoraSalida((Time) h.get("hora_salida"));
@@ -52,7 +53,7 @@ public class HorarioRepositoryImpl implements HorarioRepository {
 	public Horario buscaHorario(int idHorario) {
 
 		StringBuilder qry = new StringBuilder();
-		qry.append("SELECT id_horario, hora_entrada, hora_salida, activo ");
+		qry.append("SELECT id_horario, nombre, hora_entrada, hora_salida, activo ");
         qry.append("FROM c_horario ");
         qry.append("WHERE id_horario = :idHorario");
 
@@ -63,32 +64,55 @@ public class HorarioRepositoryImpl implements HorarioRepository {
 	}
 
 	@Override
-	public void modificaHorario(Horario horario) {
+	public Horario modificaHorario(Horario horario) {
 		StringBuilder qry = new StringBuilder();
-		qry.append("UPDATE c_horario SET hora_entrada = :horaEntrada, hora_salida = :horaSalida, activo = :activo ");
+		qry.append("UPDATE c_horario SET nombre = :nombre, hora_entrada = :horaEntrada, hora_salida = :horaSalida, activo = :activo ");
 		qry.append("WHERE id_horario = :idHorario");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idHorario", horario.getIdHorario());
+		parametros.addValue("nombre", horario.getNombre());
 		parametros.addValue("horaEntrada", horario.getHoraEntrada().toString());
 		parametros.addValue("horaSalida", horario.getHoraSalida());
 		parametros.addValue("activo", horario.getActivo());
 
-		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		try{
+			Integer i = nameParameterJdbcTemplate.update(qry.toString(), parametros);
+			if(i == 1){
+				horario.setMensaje("El  Horario se ha actualizado correctamente.");
+			}else{
+				horario.setMensaje("Se ha generado un error al guardar, revise la información");
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			horario.setMensaje("El registro ya existe en el sistema, favor de validar");
+		}
+		return horario;
 	}
 	
 	@Override
-	public void agregaHorario(Horario horario) {
+	public Horario agregaHorario(Horario horario) {
 		StringBuilder qry = new StringBuilder();
-		qry.append("INSERT INTO c_horario (hora_entrada, hora_salida, activo) ");
-		qry.append("VALUES (:horaEntrada, :horaSalida, :activo) ");
+		qry.append("INSERT INTO c_horario (nombre, hora_entrada, hora_salida, activo) ");
+		qry.append("VALUES (:nombre, :horaEntrada, :horaSalida, :activo) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
+		parametros.addValue("nombre", horario.getNombre());
 		parametros.addValue("horaEntrada", horario.getHoraEntrada().toString());
 		parametros.addValue("horaSalida", horario.getHoraSalida());
 		parametros.addValue("activo", horario.getActivo());
-
-		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		try{
+			Integer i = nameParameterJdbcTemplate.update(qry.toString(), parametros);
+			if(i == 1){
+				horario.setMensaje("El Nuevo Horario se ha registrado correctamente.");
+			}else{
+				horario.setMensaje("Se ha generado un error al guardar, revise la información");
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			horario.setMensaje("El registro ya existe en el sistema, favor de validar");
+		}
+		return horario;
 	}
 
 	@Override

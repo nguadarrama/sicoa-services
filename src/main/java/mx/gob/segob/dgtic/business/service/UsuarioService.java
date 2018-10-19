@@ -11,4 +11,6 @@ public interface UsuarioService {
 	public void modificaUsuario(UsuarioDto usuarioDto);
 	public void agregaUsuario(UsuarioDto usuarioDto);
 	public void eliminaUsuario(String claveUsuario);
+	public void reiniciaContrasenia(String claveUsuario);
+	public UsuarioDto buscaUsuarioPorId(Integer idUsuario);
 }

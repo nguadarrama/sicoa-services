@@ -151,4 +151,50 @@ public class VacacionPeriodoRepositoryImpl implements VacacionPeriodoRepository{
 		
 	}
 
+	@Override
+	public List<VacacionPeriodoDto> obtenerUsuariosConVacacionesPorFiltros(String claveUsuario, String nombre,
+			String apellidoPaterno, String apellidoMaterno, String idUnidad) {
+		System.out.println("Valores "+claveUsuario+" "+nombre+ " "+apellidoPaterno+" "+apellidoMaterno+" "+idUnidad);
+		String query="";
+		 
+		query+="select usuario.id_usuario,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, vacacionPeriodo.dias, periodo.descripcion, periodo.id_periodo, vacacionPeriodo.id_vacacion ";
+        query+="from m_usuario usuario, m_vacacion_periodo vacacionPeriodo, r_periodo periodo ";
+        query+="where periodo.id_periodo=vacacionPeriodo.id_periodo and usuario.id_usuario=vacacionPeriodo.id_usuario and vacacionPeriodo.dias>0 ";
+        if(claveUsuario!=null && !claveUsuario.toString().isEmpty()){
+        	query+="and usuario.cve_m_usuario like '%"+claveUsuario+"%' ";
+        }
+        if(nombre!=null && !nombre.toString().isEmpty()){
+        	query+="and usuario.nombre like '%"+nombre+"%' ";
+        }
+        if(apellidoPaterno!=null && !apellidoPaterno.toString().isEmpty()){
+        	query+="and usuario.apellido_paterno like '%"+apellidoPaterno+"%' ";
+        }
+        if(apellidoMaterno!=null && !apellidoMaterno.toString().isEmpty()){
+        	query+="and usuario.apellido_materno like '%"+apellidoMaterno+"%' ";
+        }
+       System.out.println("Query "+query);
+		List<Map<String, Object>> detalleVacaciones = jdbcTemplate.queryForList(query);
+		List<VacacionPeriodoDto> listaVacacionPeriodo=new  ArrayList<>();
+		for (Map<String, Object> detalleVacacion : detalleVacaciones) {
+			VacacionPeriodoDto vacacionPeriodoDto= new VacacionPeriodoDto();
+			UsuarioDto usuarioDto = new UsuarioDto();
+			System.out.println("Valorrrrrrrrrrrrrrrrrrrrrrrrr "+detalleVacacion.get("cve_m_usuario"));
+			usuarioDto.setIdUsuario((Integer)detalleVacacion.get("id_usuario"));
+			usuarioDto.setClaveUsuario((String)detalleVacacion.get("cve_m_usuario"));
+			usuarioDto.setNombre((String)detalleVacacion.get("nombre"));
+			usuarioDto.setApellidoPaterno((String)detalleVacacion.get("apellido_paterno"));
+			usuarioDto.setApellidoMaterno((String)detalleVacacion.get("apellido_materno"));
+			vacacionPeriodoDto.setIdUsuario(usuarioDto);
+			PeriodoDto periodoDto = new PeriodoDto();
+			periodoDto.setIdPeriodo((Integer)detalleVacacion.get("id_periodo"));
+			periodoDto.setDescripcion((String)detalleVacacion.get("descripcion"));
+			vacacionPeriodoDto.setIdPeriodo(periodoDto);
+			vacacionPeriodoDto.setDias((Integer)detalleVacacion.get("dias"));
+			vacacionPeriodoDto.setIdVacacion((Integer)detalleVacacion.get("id_vacacion"));
+			listaVacacionPeriodo.add(vacacionPeriodoDto);
+		}
+		return listaVacacionPeriodo;
+			
+	}
+
 }

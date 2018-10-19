@@ -88,4 +88,24 @@ public class UsuarioRecurso {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("reiniciaContrasenia")	
+	@PermitAll
+	public Response reiniciaContrasenia(@QueryParam("claveUsuario") String claveUsuario) {
+		
+		usuarioService.reiniciaContrasenia(claveUsuario);
+
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("buscaUsuarioPorId")	
+	@PermitAll
+	public Response buscaUsuarioPorId(@QueryParam("id") String id) {
+
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, usuarioService.buscaUsuarioPorId(Integer.parseInt(id)));
+	}
 }

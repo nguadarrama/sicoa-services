@@ -10,9 +10,9 @@ public interface JustificacionService {
 
 	public JustificacionDto buscaJustificacion(Integer idJustificacion);
 
-	public void modificaJustificacion(JustificacionDto justificacionDto);
+	public JustificacionDto modificaJustificacion(JustificacionDto justificacionDto);
 
-	public void agregaJustificacion(JustificacionDto justificacionDto);
+	public JustificacionDto agregaJustificacion(JustificacionDto justificacionDto);
 
 	public void eliminaJustificacion(Integer idJustificacion);
 

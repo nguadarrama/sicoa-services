@@ -9,9 +9,9 @@ public interface DiaFestivoRepository {
 
 	public DiaFestivoDto buscaDiaFestivo(Integer id_festivo);
 
-	public void modificaDiaFestivo(DiaFestivoDto diaFestivo);
+	public DiaFestivoDto modificaDiaFestivo(DiaFestivoDto diaFestivo);
 
-	public void agregaDiaFestivo(DiaFestivoDto diaFestivo);
+	public DiaFestivoDto agregaDiaFestivo(DiaFestivoDto diaFestivo);
 
 	public void eliminaDiaFestivo(Integer idDia);
 
