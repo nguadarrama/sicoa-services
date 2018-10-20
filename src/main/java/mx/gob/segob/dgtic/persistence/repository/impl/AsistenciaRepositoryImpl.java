@@ -398,12 +398,12 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		parametros.addValue("idAsistencia", incidencia.getIdAsistencia().getIdAsistencia());
 		parametros.addValue("idJustificacion", incidencia.getJustificacion().getIdJustificacion());
 		parametros.addValue("idArchivo", incidencia.getIdArchivo().getIdArchivo());
-		parametros.addValue(":nombreAutorizador", incidencia.getNombreAutorizador());
+		parametros.addValue("nombreAutorizador", incidencia.getNombreAutorizador());
 		
 		try {
 			nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		} catch (Exception e) {
-			logger.error("Error al consultar la incidencia con número de asistencia: " + incidencia.getIdAsistencia().getIdAsistencia());
+			logger.error("Error al consultar la incidencia con número de asistencia: " + incidencia.getIdAsistencia().getIdAsistencia() + ". " + e.getMessage());
 		}
 		
 	}
