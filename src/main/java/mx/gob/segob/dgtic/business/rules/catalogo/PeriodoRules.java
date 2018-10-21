@@ -54,4 +54,11 @@ public class PeriodoRules {
 	public void modificaEstatustPeridoEmpleados(Integer id, boolean activo) {
 		periodoRepository.modificaEstatustPeridoEmpleados(id, activo);
 	}
+	
+	public boolean existePeriodo(String fecha) {
+		boolean existe = false;
+		existe = periodoRepository.existePeriodo(fecha);
+		System.out.println("PeriodoRules method-- existePeriodo= "+existe);
+		return existe;
+	}
 }

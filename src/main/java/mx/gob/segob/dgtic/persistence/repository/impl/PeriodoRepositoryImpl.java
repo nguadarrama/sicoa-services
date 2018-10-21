@@ -9,7 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -27,6 +31,7 @@ public class PeriodoRepositoryImpl implements PeriodoRepository{
 	@Autowired
     private NamedParameterJdbcTemplate nameParameterJdbcTemplate;
 
+	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_COMMITTED)
 	@Override
 	public List<PeriodoDto> obtenerListaPeriodos() {
 		StringBuilder qry = new StringBuilder();
@@ -131,6 +136,7 @@ public class PeriodoRepositoryImpl implements PeriodoRepository{
         }
 	}
 
+	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_COMMITTED)
 	@Override
 	public int generaPeriodoVacacional(String inicio, String fin, String descripcion, boolean activo) {
 		int periodo = 0;
@@ -148,6 +154,7 @@ public class PeriodoRepositoryImpl implements PeriodoRepository{
 		
 	}
 
+	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_COMMITTED)
 	@Override
 	public List<PeriodoDto> topPeriodo() {
 		StringBuilder qry = new StringBuilder();
@@ -172,6 +179,7 @@ public class PeriodoRepositoryImpl implements PeriodoRepository{
      return topPeriodo;	
 	}
 
+	@Transactional(propagation = Propagation.MANDATORY, isolation = Isolation.READ_COMMITTED)
 	@Override
 	public void cambioEstatusPeriodo(Integer id, boolean activo) {
 		StringBuilder qry = new StringBuilder();
@@ -183,6 +191,7 @@ public class PeriodoRepositoryImpl implements PeriodoRepository{
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 	}
 
+	@Transactional(propagation = Propagation.MANDATORY, isolation = Isolation.READ_COMMITTED)
 	@Override
 	public void modificaEstatustPeridoEmpleados(Integer id, boolean activo) {
 		StringBuilder qry = new StringBuilder();
@@ -194,5 +203,22 @@ public class PeriodoRepositoryImpl implements PeriodoRepository{
 
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		
+	}
+	
+	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_COMMITTED)
+	@Override
+	public boolean existePeriodo(String fechaInicio) {
+		boolean existe = false;
+		StringBuilder qry = new StringBuilder();
+		qry.append(" select id_periodo, descripcion, activo ");
+		qry.append(" from r_periodo");
+		qry.append(" where fecha_inicio =:fechaInicio");
+		MapSqlParameterSource param = new MapSqlParameterSource();
+		param.addValue("fechaInicio", fechaInicio);
+		SqlRowSet rs = nameParameterJdbcTemplate.queryForRowSet(qry.toString(), param);
+		if(rs.next()) {
+			existe = true;
+		}
+		return existe;
 	}
 }

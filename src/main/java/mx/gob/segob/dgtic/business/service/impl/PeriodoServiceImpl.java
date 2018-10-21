@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -30,6 +31,7 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 	@Autowired
 	private UsuarioRules usuarioRules;
 
+	@Transactional
 	@Override
 	public List<PeriodoDto> obtenerListaPeriodos() {
 		List<PeriodoDto> listaP;
@@ -55,6 +57,7 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 		periodoRules.modificaPeriodo(periodoDto);
 	}
 
+	@Transactional
 	@Override
 	public void agregaPeriodo(PeriodoDto periodoDto) {
 		int periodo = 0;
@@ -75,6 +78,17 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 			c.add(Calendar.MONTH, 18);
 			fechaFin.setTime(c.getTimeInMillis());
 			logger.info("fechaFin= "+fechaFin);
+			
+			/**
+			 * Verificando que no exista el periodo a dar de alta
+			 */
+			boolean existe = false;
+			existe = periodoRules.existePeriodo(sdf.format(fechaInicio));
+			if(existe) {
+				System.out.println("El periodo ya existe");
+			}
+			else {
+		
 			periodo = periodoRules.generaPeriodoVacacional(sdf.format(periodoDto.getFechaInicio()), sdf.format(fechaFin), periodoDto.getDescripcion(), periodoDto.getActivo());
 			logger.info("periodo: "+periodo);
 			if(periodo == 1) {
@@ -94,18 +108,21 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 				Gson gson = new GsonBuilder().setPrettyPrinting().create();
 				System.out.println("usuarios devueltos PeriodoService: "+gson.toJson(usuarios));
 				List<PeriodoDto> periodos = periodoRules.topPeriodo();
-				System.out.println("periodoID: "+periodos.get(0).getIdPeriodo());
+				for (PeriodoDto top: periodos)
+					
 				for(UsuarioDto user :usuarios) {
 					/*************************************************************
 					 * Aqui se agregan los periodos a todos los usuarios devueltos
 					 *************************************************************/
-					vacacionRules.generarVacacionesTodos(user.getIdUsuario(), periodos.get(0).getIdPeriodo(), estatusPeriodo, sdf.format(fechaInicio), 10, periodoDto.getActivo());
+					int idUltimo = top.getIdPeriodo();
+					vacacionRules.generarVacacionesTodos(user.getIdUsuario(), idUltimo , estatusPeriodo, sdf.format(fechaInicio), 10, periodoDto.getActivo());
 					break;
 				}
-			}		
+			}	
+			} // fin de else
 		} catch (ParseException e) {
 			logger.warn("Error al convertir la fecha en búsqueda de asistencia: " + e.getMessage());
-		}
+		}		
 	}
 
 	@Override
@@ -123,6 +140,7 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 		
 	}
 	
+	@Transactional
 	@Override
 	public void cambiaEstatusPeriodo(Integer id, boolean activo) {
 		periodoRules.cambioEstatusPeriodo(id, activo);

@@ -18,4 +18,5 @@ public interface PeriodoRepository {
 	public List<PeriodoDto> topPeriodo();
 	public void cambioEstatusPeriodo (Integer id, boolean activo);
 	public void modificaEstatustPeridoEmpleados(Integer id, boolean activo);
+	public boolean existePeriodo(String fechaInicio);
 }
