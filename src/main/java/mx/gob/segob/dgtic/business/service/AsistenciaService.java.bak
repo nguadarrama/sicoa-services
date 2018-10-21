@@ -1,8 +1,0 @@
-package mx.gob.segob.dgtic.business.service;
-
-
-public interface AsistenciaService {
-	public List<AsistenciaDto> obtenerListaAsistencia();
-	public AsistenciaDto buscaAsistencia(int id);
-	public void eliminaAsistencia(Integer id);
-}
