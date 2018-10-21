@@ -89,7 +89,7 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
         qry.append("select u.id_usuario, u.id_area, u.cve_c_perfil, u.id_horario, u.id_puesto, u.cve_m_usuario, ");
         qry.append("u.nombre, u.apellido_paterno, u.apellido_materno, u.fecha_ingreso, u.activo, u.nuevo, u.en_sesion, ");
         qry.append("u.ultimo_acceso, u.numero_intentos, u.bloqueado, u.fecha_bloqueo, u.primera_vez, u.estatus, u.nivel, u.rfc, ");
-        qry.append("p.descripcion, p.estatus, unidad.id_unidad, ");
+        qry.append("p.descripcion, p.estatus, unidad.id_unidad, unidad.nombre as nombre_unidad, ");
         qry.append("h.hora_entrada, h.hora_salida ");
         qry.append("from m_usuario u, c_perfil p, c_horario h, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion ");
         qry.append("where u.cve_m_usuario = :claveUsuario ");
@@ -135,6 +135,7 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
         usuario.setNivel((String) informacionConsulta.get("nivel"));
         usuario.setRfc((String) informacionConsulta.get("rfc"));
         usuario.setIdUnidad((Integer)informacionConsulta.get("id_unidad"));
+        usuario.setNombreUnidad((String) informacionConsulta.get("nombre_unidad"));
         
         return usuario;
 	}

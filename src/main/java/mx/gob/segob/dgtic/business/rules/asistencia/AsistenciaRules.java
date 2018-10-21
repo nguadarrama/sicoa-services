@@ -80,6 +80,16 @@ public class AsistenciaRules {
 		}
 	}
 	
+	public void creaDescuento(IncidenciaDto incidencia) {
+
+		//si el descuento NO existe entonces la crea
+		if (!asistenciaRepository.existeDescuento(incidencia.getIdAsistencia().getIdAsistencia())) { 
+			asistenciaRepository.creaDescuento(incidencia);
+		} else {//si la justificación SÍ existe la edita
+			asistenciaRepository.editaDescuento(incidencia);
+		}
+	}
+	
 	public void dictaminaIncidencia(IncidenciaDto incidencia) {
 		asistenciaRepository.dictaminaIncidencia(incidencia);
 	}

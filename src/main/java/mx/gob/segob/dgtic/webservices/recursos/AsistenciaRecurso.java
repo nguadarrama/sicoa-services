@@ -126,6 +126,24 @@ public class AsistenciaRecurso {
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("creaDescuento")	
+	@PermitAll
+	public Response creaDescuento(@RequestParam String jsonDescuento) {
+		JsonObject jsonObject = new JsonParser().parse(jsonDescuento).getAsJsonObject();
+		
+		GsonBuilder builder = new GsonBuilder();
+		builder.setDateFormat("yyyy-MM-dd");
+		Gson gson = builder.create();
+		IncidenciaDto descuento = gson.fromJson(jsonObject.get("incidencia"), IncidenciaDto.class);
+		
+		asistenciaService.creaDescuento(descuento);
+
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+	}
+	
+	@PUT
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("dictaminaIncidencia")	
 	@PermitAll
 	public Response dictaminaIncidencia(@RequestParam String jsonIncidencia) {
