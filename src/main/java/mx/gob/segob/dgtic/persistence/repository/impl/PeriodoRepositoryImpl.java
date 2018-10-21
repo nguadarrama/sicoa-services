@@ -56,7 +56,7 @@ public class PeriodoRepositoryImpl implements PeriodoRepository{
 		StringBuilder qry = new StringBuilder();
 		qry.append("select id_periodo, fecha_inicio, fecha_fin, descripcion, activo ");
         qry.append("from r_periodo ");
-        qry.append("where id_perfil = :idPerfil");
+        qry.append("where id_periodo = :idPeriodo");
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
         parametros.addValue("idPeriodo", idPeriodo);
@@ -148,4 +148,51 @@ public class PeriodoRepositoryImpl implements PeriodoRepository{
 		
 	}
 
+	@Override
+	public List<PeriodoDto> topPeriodo() {
+		StringBuilder qry = new StringBuilder();
+        qry.append("select id_periodo, fecha_inicio, fecha_fin, descripcion, activo ");
+        qry.append("from r_periodo ");
+        qry.append("order by id_periodo desc limit 1");
+        
+        List<Map<String, Object>> periodos = jdbcTemplate.queryForList(qry.toString());
+        List<PeriodoDto> topPeriodo = new ArrayList<>();
+        
+        for (Map<String, Object> periodo : periodos) {
+    		PeriodoDto periodoDto = new PeriodoDto();
+    		periodoDto.setIdPeriodo((Integer)periodo.get("id_periodo"));
+    		periodoDto.setFechaInicio((Date)periodo.get("fecha_inicio"));
+    		periodoDto.setFechaFin((Date)periodo.get("fecha_fin"));
+    		periodoDto.setDescripcion((String) periodo.get("descripcion"));
+    		periodoDto.setActivo((Boolean)periodo.get("activo"));
+    		topPeriodo.add(periodoDto);
+    	}
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        System.out.println("listaPeriodo: "+gson.toJson(topPeriodo));
+     return topPeriodo;	
+	}
+
+	@Override
+	public void cambioEstatusPeriodo(Integer id, boolean activo) {
+		StringBuilder qry = new StringBuilder();
+		qry.append("update r_periodo set activo = :activo ");
+		qry.append("where id_periodo = :idPeriodo");
+		MapSqlParameterSource parametros = new MapSqlParameterSource();
+		parametros.addValue("activo", activo);
+		parametros.addValue("idPeriodo", id);
+		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+	}
+
+	@Override
+	public void modificaEstatustPeridoEmpleados(Integer id, boolean activo) {
+		StringBuilder qry = new StringBuilder();
+		qry.append("update m_vacacion_periodo set activo = :activo ");
+		qry.append("where id_periodo = :idPeriodo");
+		MapSqlParameterSource parametros = new MapSqlParameterSource();
+		parametros.addValue("idPeriodo", id);
+		parametros.addValue("activo", activo);
+
+		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		
+	}
 }

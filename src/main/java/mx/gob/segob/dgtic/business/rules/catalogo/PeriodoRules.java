@@ -42,4 +42,16 @@ public class PeriodoRules {
 	public int generaPeriodoVacacional(String inicio, String fin, String descripcion, boolean activo) {
 		return periodoRepository.generaPeriodoVacacional(inicio, fin, descripcion, activo);
 	}
+	
+	public List<PeriodoDto> topPeriodo (){
+		return periodoRepository.topPeriodo();
+	}
+	
+	public void cambioEstatusPeriodo (Integer id, boolean activo) {
+		periodoRepository.cambioEstatusPeriodo(id, activo);
+	}
+	
+	public void modificaEstatustPeridoEmpleados(Integer id, boolean activo) {
+		periodoRepository.modificaEstatustPeridoEmpleados(id, activo);
+	}
 }

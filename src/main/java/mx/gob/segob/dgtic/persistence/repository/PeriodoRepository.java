@@ -15,4 +15,7 @@ public interface PeriodoRepository {
 	public PeriodoDto buscaPeriodoPorClaveUsuario(String claveUsuario);
 	
 	public int generaPeriodoVacacional (String inicio, String fin, String descripcion, boolean activo);
+	public List<PeriodoDto> topPeriodo();
+	public void cambioEstatusPeriodo (Integer id, boolean activo);
+	public void modificaEstatustPeridoEmpleados(Integer id, boolean activo);
 }

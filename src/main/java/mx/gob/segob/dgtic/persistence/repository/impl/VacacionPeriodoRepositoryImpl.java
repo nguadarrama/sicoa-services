@@ -11,6 +11,9 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.PeriodoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
@@ -132,23 +135,24 @@ public class VacacionPeriodoRepositoryImpl implements VacacionPeriodoRepository{
 	}
 	
 	@Override
-	public void generarVacacionPeriodotodos(int idUsuario, int idPeriodo, int estatus, String inicio, int dias, boolean activo, String ingreso) {
+	public void generarVacacionPeriodotodos(int idUsuario, int idPeriodo, int estatus, String inicio, int dias, boolean activo) {
+		System.out.println("valores recibidos vacacionesPeriodoRepoImpl: "
+				+ " idUsusario: "+idUsuario+" idPeriodo: "+idPeriodo+" estatus: "+estatus+" fechaInicio: "+inicio+" dias: "+dias+" activo: "+activo);
 		StringBuilder qry = new StringBuilder();
 		qry.append("INSERT INTO m_vacacion_periodo (id_usuario, id_periodo, id_estatus, fecha_inicio, dias, activo ) ");
-		qry.append("VALUES (:idUsuario, :idPeriodo, :idEstatus, :fechaInicio, :dias, :activo) ");
-		qry.append(" WHERE m_usuario.fecha_ingreso <= :ingreso ");
+		qry.append("VALUES (:idUsuario, :idPeriodo, :idEstatus, '");
+		qry.append(inicio);
+		qry.append("', :dias, :activo) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idUsuario", idUsuario);
 		parametros.addValue("idPeriodo", idPeriodo);
 		parametros.addValue("idEstatus", estatus);
-		parametros.addValue("fechaInicio", inicio);
 		parametros.addValue("dias", dias);
 		parametros.addValue("activo", activo);
-		parametros.addValue("ingreso", ingreso);
-
-		nameParameterJdbcTemplate.update(qry.toString(), parametros);
-		
+//		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//		System.out.println("parametros method--VacacionPeriodoRepoImpl: "+gson.toJson(parametros));
+		nameParameterJdbcTemplate.update(qry.toString(), parametros);	
 	}
 
 	@Override

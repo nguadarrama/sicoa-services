@@ -14,4 +14,5 @@ public interface PeriodoService {
 	public PeriodoDto buscaPeriodoPorClaveUsuario(String claveUsuario);
 	
 	public void generaPeriodoVacacional (String inicio, String descripcion, boolean activo);
+	public void cambiaEstatusPeriodo(Integer id, boolean activo);
 }
