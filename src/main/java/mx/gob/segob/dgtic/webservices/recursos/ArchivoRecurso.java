@@ -45,7 +45,7 @@ public class ArchivoRecurso {
 	@Path("buscaArchivo")	
 	@PermitAll
 	public Response buscaArchivo(@QueryParam("id") Integer id) {
-
+		System.out.println("IdArchivo en recurso "+id);
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, archivoService.buscaArchivo(id));
 	}
 	

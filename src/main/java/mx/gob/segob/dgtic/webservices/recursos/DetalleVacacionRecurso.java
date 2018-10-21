@@ -28,6 +28,7 @@ import com.google.gson.JsonParser;
 import mx.gob.segob.dgtic.business.service.DetalleVacacionService;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DetalleVacacionDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.GeneraReporteArchivo;
+import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionesAux;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
@@ -90,8 +91,9 @@ public class DetalleVacacionRecurso {
 		
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
-		DetalleVacacionDto detalleVacacionDto = gson.fromJson(jsonObject.get("detalleVacacion"), DetalleVacacionDto.class);
-		System.out.println("Datos para idVacacion "+detalleVacacionDto.getIdVacacion().getIdVacacion());
+		VacacionesAux detalleVacacionDto = gson.fromJson(jsonObject.get("detalleVacacion"), VacacionesAux.class);
+		System.out.println("Datos para idVacacion en recurso "+detalleVacacionDto.getIdVacacion()+" fechaInicio "+detalleVacacionDto.getFechaInicio()+
+				" fechaFin "+detalleVacacionDto.getFechaFin());
 		detalleVacacionService.agregaDetalleVacacion(detalleVacacionDto);
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");

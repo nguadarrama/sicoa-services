@@ -55,16 +55,19 @@ public class ArchivoRepositoryImpl extends RecursoBase implements ArchivoReposit
 	@Override
 	public ArchivoDto buscaArchivo(Integer idArchivo){
 		
-		
+		System.out.println("idArchivo en repository "+idArchivo);
 		StringBuilder qry = new StringBuilder();
-		qry.append("SELECT id_archivo, nombre, url, size, activo ");
-        qry.append("FROM m_archivo ");
-        qry.append("WHERE id_archivo = :idArchivo");
+		qry.append("Select id_archivo, nombre, url, size, activo ");
+        qry.append("from m_archivo ");
+        qry.append("where id_archivo = :idArchivo");
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
         parametros.addValue("idArchivo", idArchivo);
-
-        return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<ArchivoDto>(ArchivoDto.class));
+        ArchivoDto archivo= new ArchivoDto();
+       
+        archivo=nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<ArchivoDto>(ArchivoDto.class));
+        System.out.println("Dato que se va a retornar "+archivo.getUrl()+" query "+qry.toString());
+        return archivo;
 		
 	}
 	

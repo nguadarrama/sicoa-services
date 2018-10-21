@@ -43,9 +43,9 @@ mx\gob\segob\dgtic\business\rules\catalogo\HorarioRules.class
 mx\gob\segob\dgtic\persistence\repository\JustificacionRepository.class
 mx\gob\segob\dgtic\comun\util\spring\SpringBeanFactoryUtil.class
 mx\gob\segob\dgtic\comun\transport\dto\demo\DemoAnotacionesMapperDTO.class
+mx\gob\segob\dgtic\persistence\repository\IncidenciaRepository.class
 mx\gob\segob\dgtic\business\service\UsuarioPerfilService.class
 mx\gob\segob\dgtic\comun\sicoa\dto\UnidadAdministrativaDto.class
-mx\gob\segob\dgtic\persistence\repository\IncidenciaRepository.class
 mx\gob\segob\dgtic\persistence\repository\PerfilPermisoRepository.class
 mx\gob\segob\dgtic\persistence\repository\base\RepositoryBase.class
 mx\gob\segob\dgtic\business\rules\asistencia\UsuarioChecada.class

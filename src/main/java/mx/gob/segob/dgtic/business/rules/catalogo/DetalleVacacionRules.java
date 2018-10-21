@@ -53,8 +53,8 @@ public class DetalleVacacionRules {
 	
 	public void agregaDetalleVacacion(DetalleVacacionDto detalleVacacionDto){
 		//detalleVacacionRepository.agregaDetalleVacacion(detalleVacacionDto);
-		System.out.println("idVacacion "+detalleVacacionDto.getIdVacacion().getIdVacacion());
-	    ArchivoDto archivoDto = new ArchivoDto();
+		System.out.println("idVacacion en rules "+detalleVacacionDto.getIdVacacion().getIdVacacion());
+	    //ArchivoDto archivoDto = new ArchivoDto();
 	    
 	    //Integer idArchivo=archivoRepository.agregaArchivo(archivoDto);
 	    //archivoDto.setIdArchivo(idArchivo);
@@ -64,6 +64,7 @@ public class DetalleVacacionRules {
 	    //se obtienen los datos de la tabla vacacion_periodo
 	    vacacionPeriodoDto=vacacionPeriodoRepository.buscaVacacionPeriodo(detalleVacacionDto.getIdVacacion().getIdVacacion());
 	    //Resta de los dias disponibles menos los dias que se han pedido
+	    System.out.println("Dias del periodo "+vacacionPeriodoDto.getDias()+" dias pedidos "+ detalleVacacionDto.getDias());
 	    Integer resta=vacacionPeriodoDto.getDias()-detalleVacacionDto.getDias();
 	    //setea el nueo numero de dias disponibles
 	    vacacionPeriodoDto.setDias(resta);
@@ -136,8 +137,6 @@ public class DetalleVacacionRules {
 	}
 	
 	public List<DetalleVacacionDto> consultaVacacionesPropiasPorFiltros(String claveUsuario, Integer idPeriodo, Integer idEstatus, String pfechaInicio, String pfechaFin ){
-		
-    	
 		return detalleVacacionRepository.consultaVacacionesPropiasPorFiltros(claveUsuario, idPeriodo, idEstatus, pfechaInicio, pfechaFin);
 	}
 

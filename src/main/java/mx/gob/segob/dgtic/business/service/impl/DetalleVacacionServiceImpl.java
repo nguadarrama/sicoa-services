@@ -1,5 +1,8 @@
 package mx.gob.segob.dgtic.business.service.impl;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +15,11 @@ import mx.gob.segob.dgtic.business.rules.catalogo.DetalleVacacionRules;
 import mx.gob.segob.dgtic.business.service.DetalleVacacionService;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DetalleVacacionDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.GeneraReporteArchivo;
+import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionPeriodoDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionesAux;
 import mx.gob.segob.dgtic.comun.sicoa.dto.reporte;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.JREmptyDataSource;
@@ -50,9 +57,37 @@ public class DetalleVacacionServiceImpl implements DetalleVacacionService {
 	}
 
 	@Override
-	public void agregaDetalleVacacion (DetalleVacacionDto detalleVacacionDto) {
+	public void agregaDetalleVacacion (VacacionesAux detalleVacacionDto) {
 		
-		detalleVacacionRules.agregaDetalleVacacion(detalleVacacionDto);
+		DetalleVacacionDto vacacion= new DetalleVacacionDto();
+		EstatusDto estatusDto = new EstatusDto();
+		estatusDto.setIdEstatus(1);
+		UsuarioDto usuarioDto = new UsuarioDto();
+		usuarioDto.setIdUsuario(detalleVacacionDto.getIdUsuario());
+		VacacionPeriodoDto vacacionPeriodoDto= new VacacionPeriodoDto();
+		vacacionPeriodoDto.setIdVacacion(detalleVacacionDto.getIdVacacion());
+		vacacion.setIdUsuario(usuarioDto);
+		vacacion.setIdVacacion(vacacionPeriodoDto);
+		vacacion.setIdEstatus(estatusDto);
+		System.out.println("idResponsable "+detalleVacacionDto.getIdResponsable());
+		vacacion.setIdResponsable(detalleVacacionDto.getIdResponsable());
+		vacacion.setDias(detalleVacacionDto.getDias());
+		Date fechaInicial = new Date();
+    	Date fechaFinal = new Date();
+    	DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    	
+    	try {
+    		fechaInicial = df.parse(detalleVacacionDto.getFechaInicio());
+    		fechaFinal=df.parse(detalleVacacionDto.getFechaFin());
+			System.out.println("fechaInicio "+fechaInicial);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	vacacion.setFechaInicio(fechaInicial);
+    	vacacion.setFechaFin(fechaFinal);
+    	
+		detalleVacacionRules.agregaDetalleVacacion(vacacion);
 		
 	}
 

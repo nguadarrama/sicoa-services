@@ -184,9 +184,8 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idUsuario", detalleVacacionDto.getIdUsuario().getIdUsuario());
-		//parametros.addValue("idVacacion", detalleVacacionDto.getIdVacacion().getIdVacacion());
+		parametros.addValue("idVacacion", detalleVacacionDto.getIdVacacion().getIdVacacion());
 		parametros.addValue("idResponsable", detalleVacacionDto.getIdResponsable());
-		parametros.addValue("idArchivo", detalleVacacionDto.getIdArchivo().getIdArchivo());
 		parametros.addValue("idEstatus", detalleVacacionDto.getIdEstatus().getIdEstatus());
 		parametros.addValue("fechaInicio", detalleVacacionDto.getFechaInicio());
 		parametros.addValue("fechaFin", detalleVacacionDto.getFechaFin());
