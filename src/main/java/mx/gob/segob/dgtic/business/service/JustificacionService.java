@@ -8,6 +8,8 @@ public interface JustificacionService {
 	
 	public List<JustificacionDto> obtenerListaJustificaciones();
 
+	public List<JustificacionDto> obtenerLista();
+	
 	public JustificacionDto buscaJustificacion(Integer idJustificacion);
 
 	public JustificacionDto modificaJustificacion(JustificacionDto justificacionDto);

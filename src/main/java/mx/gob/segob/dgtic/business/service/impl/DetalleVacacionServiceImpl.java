@@ -107,9 +107,12 @@ public class DetalleVacacionServiceImpl implements DetalleVacacionService {
 			parametros.put("numeroEmpleado", generaReporteArchivo.getNumeroEmpleado());
 			parametros.put("diasVacaciones", generaReporteArchivo.getDias());
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
-			//JasperViewer archivo= JasperViewer(jasperPrint,false);
-			JasperExportManager.exportReportToPdfFile(jasperPrint,"");
-			 output = JasperExportManager.exportReportToPdf (jasperPrint);
+			output = JasperExportManager.exportReportToPdf (jasperPrint); 
+			
+//			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
+//			//JasperViewer archivo= JasperViewer(jasperPrint,false);
+//			JasperExportManager.exportReportToPdfFile(jasperPrint,"");
+//			 output = JasperExportManager.exportReportToPdf (jasperPrint);
 			 repo.setNombre(output);
 			
 		} catch (JRException e) {

@@ -177,8 +177,9 @@ public class DetalleVacacionRecurso {
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.obtenerVacacionesPorFiltros(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, nuevoIdUnidad, nuevoIdEstatus));
 	}
 	
-	@GET
+	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("generaReporte")	
 	@PermitAll
 	public Response generaReporte(@RequestParam String jsonDetalleVacacion) {

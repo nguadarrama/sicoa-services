@@ -28,6 +28,28 @@ public class JustificacionRepositoryImpl implements JustificacionRepository {
 	
 		StringBuilder qry = new StringBuilder();
         qry.append("SELECT clave, id_justificacion, justificacion, activo ");
+        qry.append("FROM c_justificacion ")
+        .append("WHERE activo = true ");
+        
+        List<Map<String, Object>> justificaciones = jdbcTemplate.queryForList(qry.toString());
+        List<JustificacionDto> listaJustificacion = new ArrayList<>();
+        
+        for (Map<String, Object> justificacion : justificaciones) {
+    		JustificacionDto justificacionDto = new JustificacionDto();
+    		justificacionDto.setClave((String)justificacion.get("clave"));
+    		justificacionDto.setIdJustificacion((Integer)justificacion.get("id_justificacion"));
+    		justificacionDto.setJustificacion((String)justificacion.get("justificacion"));
+    		justificacionDto.setActivo((Boolean)justificacion.get("activo"));
+    		listaJustificacion.add(justificacionDto);
+    	}
+     return listaJustificacion;
+	}
+	
+	@Override
+	public List<JustificacionDto> obtenerLista(){
+	
+		StringBuilder qry = new StringBuilder();
+        qry.append("SELECT clave, id_justificacion, justificacion, activo ");
         qry.append("FROM c_justificacion ");
         
         List<Map<String, Object>> justificaciones = jdbcTemplate.queryForList(qry.toString());

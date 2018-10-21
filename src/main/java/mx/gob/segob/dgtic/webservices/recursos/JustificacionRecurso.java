@@ -21,7 +21,7 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.JustificacionDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
-@Path("catalogo")
+@Path("justificacion")
 @Component
 public class JustificacionRecurso {
 	
@@ -34,6 +34,14 @@ public class JustificacionRecurso {
 	@PermitAll
 	public Response obtieneJustificacion(){
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, justificacionService.obtenerListaJustificaciones());
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("obtieneLista")
+	@PermitAll
+	public Response obtieneLista(){
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, justificacionService.obtenerLista());
 	}
 	
 	@GET

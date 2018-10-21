@@ -18,6 +18,10 @@ public class JustificacionRules {
 		return justificacionRepository.obtenerListaJustificaciones();
 	}
 	
+	public List<JustificacionDto> obtenerLista (){
+		return justificacionRepository.obtenerLista();
+	}
+	
 	
 	public JustificacionDto buscaJustificacion (Integer idJustificacion){
 		return justificacionRepository.buscaJustificacion(idJustificacion);

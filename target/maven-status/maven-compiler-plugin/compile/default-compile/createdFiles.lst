@@ -20,8 +20,8 @@ mx\gob\segob\dgtic\webservices\RestWSAplicacion.class
 mx\gob\segob\dgtic\comun\sicoa\dto\TipoDiaDto.class
 mx\gob\segob\dgtic\comun\sicoa\dto\EstatusDto.class
 mx\gob\segob\dgtic\business\service\impl\HorarioServiceImpl.class
-mx\gob\segob\dgtic\business\service\PerfilPermisoService.class
 mx\gob\segob\dgtic\persistence\repository\UsuarioPerfilRepository.class
+mx\gob\segob\dgtic\business\service\PerfilPermisoService.class
 mx\gob\segob\dgtic\persistence\repository\impl\CargaInicialRepositoryImpl.class
 mx\gob\segob\dgtic\business\service\impl\VacacionPeriodoServiceImpl.class
 mx\gob\segob\dgtic\persistence\repository\ConfiguracionRepository.class
@@ -46,8 +46,8 @@ mx\gob\segob\dgtic\comun\transport\dto\demo\DemoAnotacionesMapperDTO.class
 mx\gob\segob\dgtic\business\service\UsuarioPerfilService.class
 mx\gob\segob\dgtic\comun\sicoa\dto\UnidadAdministrativaDto.class
 mx\gob\segob\dgtic\persistence\repository\IncidenciaRepository.class
-mx\gob\segob\dgtic\persistence\repository\base\RepositoryBase.class
 mx\gob\segob\dgtic\persistence\repository\PerfilPermisoRepository.class
+mx\gob\segob\dgtic\persistence\repository\base\RepositoryBase.class
 mx\gob\segob\dgtic\business\rules\asistencia\UsuarioChecada.class
 mx\gob\segob\dgtic\business\service\impl\CargaInicialServiceImpl.class
 mx\gob\segob\dgtic\persistence\repository\impl\AsistenciaRepositoryImpl.class
@@ -121,8 +121,8 @@ mx\gob\segob\dgtic\business\rules\catalogo\UsuarioRules.class
 mx\gob\segob\dgtic\business\service\IncidenciaService.class
 mx\gob\segob\dgtic\comun\transport\dto\webservice\ResponseJSONDto.class
 mx\gob\segob\dgtic\persistence\repository\DetalleVacacionRepository.class
-mx\gob\segob\dgtic\comun\sicoa\dto\ArchivoDto.class
 mx\gob\segob\dgtic\webservices\aplicacionconfig\config\resteasy\annotations\Auditable.class
+mx\gob\segob\dgtic\comun\sicoa\dto\ArchivoDto.class
 mx\gob\segob\dgtic\comun\sicoa\dto\DetalleVacacionDto.class
 mx\gob\segob\dgtic\webservices\recursos\VacacionPeriodoRecurso.class
 mx\gob\segob\dgtic\business\rules\catalogo\PeriodoRules.class
@@ -203,8 +203,8 @@ mx\gob\segob\dgtic\webservices\recursos\UsuarioRecurso.class
 mx\gob\segob\dgtic\comun\sicoa\dto\UsuarioPerfilDto.class
 mx\gob\segob\dgtic\comun\util\resteasy\token\validator\TokenValidator.class
 mx\gob\segob\dgtic\webservices\aplicacionconfig\filter\CorsFilter.class
-mx\gob\segob\dgtic\business\service\impl\JustificacionServiceImpl.class
 mx\gob\segob\dgtic\persistence\repository\VacacionPeriodoRepository.class
+mx\gob\segob\dgtic\business\service\impl\JustificacionServiceImpl.class
 mx\gob\segob\dgtic\persistence\repository\impl\PermisoRepositoryImpl.class
 mx\gob\segob\dgtic\comun\util\resteasy\token\builder\TokenBuilder.class
 mx\gob\segob\dgtic\business\rules\autenticacion\AutenticacionRules.class

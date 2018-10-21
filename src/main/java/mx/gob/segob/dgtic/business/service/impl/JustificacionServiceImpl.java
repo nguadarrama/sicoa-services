@@ -20,6 +20,11 @@ public class JustificacionServiceImpl implements JustificacionService {
 	}
 
 	@Override
+	public List<JustificacionDto> obtenerLista(){
+		return justificacionRules.obtenerLista();
+	}
+	
+	@Override
 	public JustificacionDto buscaJustificacion(Integer id) {		
 		return justificacionRules.buscaJustificacion(id);
 	}

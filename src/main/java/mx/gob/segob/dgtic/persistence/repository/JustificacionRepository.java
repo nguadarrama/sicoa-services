@@ -23,4 +23,6 @@ public interface JustificacionRepository {
 
 	public void eliminaJustificacion(Integer idJustificacion);
 
+	public List<JustificacionDto> obtenerLista();
+
 }
