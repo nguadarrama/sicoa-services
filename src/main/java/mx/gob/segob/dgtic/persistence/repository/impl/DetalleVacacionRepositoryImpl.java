@@ -94,10 +94,10 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 	public DetalleVacacionDto buscaDetalleVacacion(Integer idDetalle) {
 		StringBuilder qry = new StringBuilder();
 		
-		qry.append("select detalle.id_detalle, detalle.fecha_registro, detalle.id_responsable, detalle.fecha_registro, detalle.id_usuario, detalle.id_vacacion, detalle.id_archivo, detalle.id_estatus, detalle.fecha_inicio, detalle.fecha_fin, detalle.dias ");
-        qry.append(",usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, usuario.rfc, usuario.id_puesto, usuario.fecha_ingreso, estatus.id_estatus, estatus.estatus,  periodo.descripcion ");
-		qry.append("from d_detalle_vacacion detalle, m_usuario usuario, m_estatus estatus, r_periodo periodo, m_vacacion_periodo vacacion_periodo ");
-        qry.append("where usuario.id_usuario=detalle.id_usuario and detalle.id_estatus=estatus.id_estatus and periodo.id_periodo=vacacion_periodo.id_periodo and vacacion_periodo.id_vacacion=detalle.id_vacacion and id_detalle = :idDetalle ");
+		qry.append("select detalle.id_detalle, detalle.fecha_registro, detalle.id_responsable, detalle.fecha_registro, detalle.id_usuario, detalle.id_vacacion, detalle.id_archivo, detalle.id_estatus, detalle.fecha_inicio, detalle.fecha_fin, detalle.dias, unidad.id_unidad, unidad.nombre nombre_unidad, ");
+        qry.append("usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, usuario.rfc, usuario.id_puesto, usuario.fecha_ingreso, estatus.id_estatus, estatus.estatus,  periodo.descripcion ");
+		qry.append("from d_detalle_vacacion detalle, m_usuario usuario, m_estatus estatus, r_periodo periodo, m_vacacion_periodo vacacion_periodo,c_unidad_administrativa unidad, usuario_unidad_administrativa relacion ");
+        qry.append("where usuario.id_usuario=detalle.id_usuario and detalle.id_estatus=estatus.id_estatus and periodo.id_periodo=vacacion_periodo.id_periodo and unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario and vacacion_periodo.id_vacacion=detalle.id_vacacion and id_detalle = :idDetalle ");
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
         parametros.addValue("idDetalle", idDetalle);
@@ -115,6 +115,8 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
         usuarioDto.setIdPuesto((String)informacionConsulta.get("id_puesto"));
         usuarioDto.setFechaIngreso((Date)informacionConsulta.get("fecha_ingreso"));
         usuarioDto.setRfc((String)informacionConsulta.get("rfc"));
+        usuarioDto.setIdUnidad((Integer)informacionConsulta.get("id_unidad"));
+        usuarioDto.setNombreUnidad((String)informacionConsulta.get("nombre_unidad"));
         detalleVacacionDto.setIdUsuario(usuarioDto);
         ArchivoDto archivoDto = new ArchivoDto();
         archivoDto.setIdArchivo((Integer)informacionConsulta.get("id_archivo"));
@@ -236,7 +238,7 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 //		if(idEstatus!=null){
 //		qry.append("and estatus.id_estatus = ? ");
 //		}
-		query+="SELECT detalle.id_detalle, usuario.id_usuario,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, detalle.id_vacacion, detalle.fecha_registro ,detalle.id_responsable, detalle.id_archivo, detalle.id_estatus, estatus.descripcion, detalle.fecha_inicio, detalle.fecha_fin, detalle.dias, unidad.id_unidad, unidad.nombre nombre_unidad ";
+		query+="SELECT detalle.id_detalle, usuario.id_usuario,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, detalle.id_vacacion, detalle.fecha_registro ,detalle.id_responsable, detalle.id_archivo, detalle.id_estatus, estatus.descripcion, detalle.fecha_inicio, detalle.fecha_fin, detalle.dias, unidad.id_unidad, unidad.nombre nombre_unidad, periodo.descripcion descripcion_periodo, periodo.id_periodo ";
         query+="FROM d_detalle_vacacion detalle, m_usuario usuario, m_estatus estatus, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion, m_vacacion_periodo vacacionPeriodo, r_periodo periodo ";
         query+="where usuario.id_usuario=detalle.id_usuario and estatus.id_estatus=detalle.id_estatus and unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario and detalle.id_vacacion=vacacionPeriodo.id_vacacion and vacacionPeriodo.id_periodo=periodo.id_periodo and usuario.cve_m_usuario='"+claveUsuario+"' ";
         if(idPeriodo!=null){
@@ -273,6 +275,11 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
         	detalleVacacionDto.setIdUsuario(usuarioDto);
         	VacacionPeriodoDto vacacionPeriodoDto = new VacacionPeriodoDto();
         	vacacionPeriodoDto.setIdVacacion((Integer)detalleVacacion.get("id_vacacion"));
+        	PeriodoDto periodoDto = new PeriodoDto();
+        	periodoDto.setIdPeriodo((Integer)detalleVacacion.get("id_periodo"));
+        	periodoDto.setDescripcion((String)detalleVacacion.get("descripcion_periodo"));
+        	vacacionPeriodoDto.setIdPeriodo(periodoDto);
+        	detalleVacacionDto.setIdVacacion(vacacionPeriodoDto);
         	detalleVacacionDto.setIdVacacion(vacacionPeriodoDto);
         	detalleVacacionDto.setIdResponsable((Integer)detalleVacacion.get("id_responsable"));
         	ArchivoDto archivoDto = new ArchivoDto();
@@ -316,7 +323,7 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 //		query+="SELECT detalle.id_detalle, usuario.id_usuario,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, detalle.id_vacacion, detalle.id_responsable, detalle.id_archivo, detalle.id_estatus, estatus.descripcion, detalle.fecha_inicio, detalle.fecha_fin, detalle.dias, unidad.id_unidad, unidad.nombre nombre_unidad ";
 //        query+="FROM d_detalle_vacacion detalle, m_usuario usuario, m_estatus estatus, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion ";
 //        query+="where usuario.id_usuario=detalle.id_usuario and estatus.id_estatus=detalle.id_estatus and unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario and usuario.cve_m_usuario='"+claveUsuario+"';";
-		query+="SELECT detalle.id_detalle, detalle.fecha_registro, usuario.id_usuario,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, detalle.id_vacacion, detalle.id_responsable, detalle.id_archivo, detalle.id_estatus, estatus.descripcion, detalle.fecha_inicio, detalle.fecha_fin, detalle.dias, unidad.id_unidad, unidad.nombre nombre_unidad, vacacionPeriodo.dias dias_disponibles ";
+		query+="SELECT detalle.id_detalle, detalle.fecha_registro, usuario.id_usuario,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, detalle.id_vacacion, detalle.id_responsable, detalle.id_archivo, detalle.id_estatus, estatus.descripcion, detalle.fecha_inicio, detalle.fecha_fin, detalle.dias, unidad.id_unidad, unidad.nombre nombre_unidad, vacacionPeriodo.dias dias_disponibles, periodo.descripcion descripcion_periodo, periodo.id_periodo ";
         query+="FROM d_detalle_vacacion detalle, m_usuario usuario, m_estatus estatus, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion, m_vacacion_periodo vacacionPeriodo, r_periodo periodo ";
         query+="where usuario.id_usuario=detalle.id_usuario and estatus.id_estatus=detalle.id_estatus and unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario and detalle.id_vacacion=vacacionPeriodo.id_vacacion and vacacionPeriodo.id_periodo=periodo.id_periodo ";
         if(claveUsuario!=null){
@@ -356,6 +363,10 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
         	VacacionPeriodoDto vacacionPeriodoDto = new VacacionPeriodoDto();
         	vacacionPeriodoDto.setIdVacacion((Integer)detalleVacacion.get("id_vacacion"));
         	vacacionPeriodoDto.setDias((Integer) detalleVacacion.get("dias_disponibles"));
+        	PeriodoDto periodoDto = new PeriodoDto();
+        	periodoDto.setIdPeriodo((Integer)detalleVacacion.get("id_periodo"));
+        	periodoDto.setDescripcion((String)detalleVacacion.get("descripcion_periodo"));
+        	vacacionPeriodoDto.setIdPeriodo(periodoDto);
         	detalleVacacionDto.setIdVacacion(vacacionPeriodoDto);
         	detalleVacacionDto.setIdResponsable((Integer)detalleVacacion.get("id_responsable"));
         	ArchivoDto archivoDto = new ArchivoDto();
@@ -365,6 +376,8 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
         	estatusDto.setIdEstatus((Integer)detalleVacacion.get("id_estatus"));
         	estatusDto.setDescripcion((String)detalleVacacion.get("descripcion"));
         	detalleVacacionDto.setIdEstatus(estatusDto);
+        	
+        	
         	System.out.println("Vacaciones recuperadas "+detalleVacacion.get("id_detalle"));
         	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 //        	System.out.println("fecha actual"+(Date)detalleVacacion.get("fecha_inicio"));

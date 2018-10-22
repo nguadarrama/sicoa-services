@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Vacaciones" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f165d569-c59e-418b-8f22-e606d38f4bc2">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="192"/>
+	<property name="ireport.y" value="458"/>
 	<parameter name="nombre" class="java.lang.String"/>
 	<parameter name="apellidoPaterno" class="java.lang.String"/>
 	<parameter name="apellidoMaterno" class="java.lang.String"/>
@@ -15,6 +15,9 @@
 	<parameter name="diasRestantes" class="java.lang.String"/>
 	<parameter name="responsable" class="java.lang.String"/>
 	<parameter name="diasVacaciones" class="java.lang.String"/>
+	<parameter name="fechaInicio" class="java.lang.String"/>
+	<parameter name="fechaFin" class="java.lang.String"/>
+	<parameter name="periodo" class="java.lang.String"/>
 	<field name="nombre" class="java.lang.String"/>
 	<field name="diasVacaciones" class="java.lang.String"/>
 	<field name="fechaActual" class="java.lang.String"/>
@@ -61,20 +64,7 @@
 		</band>
 	</title>
 	<pageHeader>
-		<band height="64" splitType="Stretch">
-			<staticText>
-				<reportElement x="433" y="0" width="122" height="20" uuid="e464a674-7b3b-4d63-b053-401dd48a7f85"/>
-				<text><![CDATA[PERIODO ESCALONADO]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="433" y="20" width="122" height="20" uuid="e62ea2ae-5022-49b1-9289-f62894241016"/>
-				<text><![CDATA[MODIFICACIÓN]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="433" y="40" width="122" height="20" uuid="adabd340-6023-4a1d-b896-ef20c0e7ef79"/>
-				<text><![CDATA[CANCELACIÓN]]></text>
-			</staticText>
-		</band>
+		<band height="46" splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
 		<band height="61" splitType="Stretch">
@@ -85,145 +75,166 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="347" splitType="Stretch">
+		<band height="391" splitType="Stretch">
+			<textField>
+				<reportElement x="215" y="11" width="127" height="20" uuid="1794238d-773a-4f16-b3f6-1531fa23b46c"/>
+				<textElement markup="none"/>
+				<textFieldExpression><![CDATA[$P{apellidoPaterno}]]></textFieldExpression>
+			</textField>
 			<staticText>
-				<reportElement x="20" y="20" width="134" height="20" uuid="c841d7ad-1944-4e79-9bdd-b6ec4914da89"/>
-				<textElement>
-					<font size="12"/>
-				</textElement>
-				<text><![CDATA[Nombre]]></text>
+				<reportElement x="10" y="273" width="268" height="20" uuid="3fc9db4c-0de5-4d18-8028-de769dec41d2"/>
+				<text><![CDATA[Número de días hábiles autorizados en el periodo:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="214" y="19" width="128" height="20" uuid="6b26025a-67e9-4c0d-8da8-369067b66988"/>
-				<textElement>
-					<font size="12"/>
-				</textElement>
-				<text><![CDATA[Apellido Paterno]]></text>
+				<reportElement x="280" y="223" width="19" height="20" uuid="0b1cc182-d555-45ad-90ea-f244abad134b"/>
+				<text><![CDATA[al:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="409" y="20" width="128" height="20" uuid="ea90cbfd-d7d3-4ca6-92ac-5a6cf38a3dc9"/>
+				<reportElement x="10" y="334" width="537" height="20" uuid="8c2b0af7-baa2-409b-bff2-608b35cea698"/>
 				<textElement>
-					<font size="12"/>
+					<font size="9"/>
 				</textElement>
-				<text><![CDATA[Apellido Materno]]></text>
+				<text><![CDATA[Lo anterior toda vez que me encuentro al corriente del cumplimiento de mis funciones y conforme al derecho que me aiste al]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="22" y="78" width="128" height="20" uuid="2d499189-af98-497a-b564-f6f983f3f319"/>
+				<reportElement x="333" y="253" width="100" height="20" uuid="e371c24b-d887-4d06-97e8-64d2a91527bc"/>
+				<textFieldExpression><![CDATA[$P{diasVacaciones}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="10" y="69" width="128" height="20" uuid="6c19bce6-bc06-457a-a8b0-f8b04208cecb"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{rfc}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="22" y="58" width="128" height="20" uuid="d5a82b02-5120-40f5-b33a-7aaa906c8868"/>
-				<textElement>
-					<font size="12"/>
-				</textElement>
-				<text><![CDATA[RFC]]></text>
-			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="216" y="78" width="140" height="20" uuid="afbfde95-c0d9-4333-9eee-1f0891b30492"/>
-				<textElement>
-					<font size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{numeroEmpleado}]]></textFieldExpression>
+				<reportElement x="419" y="11" width="127" height="20" uuid="1199b132-aae5-4ba9-b881-06b7bd4cec85"/>
+				<textFieldExpression><![CDATA[$P{apellidoMaterno}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="303" y="223" width="100" height="20" uuid="b1905793-cb5c-4bd9-b6f9-92ef0ed05120"/>
+				<textFieldExpression><![CDATA[$P{fechaFin}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="420" y="140" width="100" height="20" uuid="df9fa642-4144-4010-af9a-38b697b8425e"/>
+				<textFieldExpression><![CDATA[$P{puesto}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="216" y="58" width="140" height="20" uuid="b0d03185-edc6-4632-8e6c-f8f5bd5188cb"/>
-				<textElement>
-					<font size="12"/>
-				</textElement>
-				<text><![CDATA[NO. DE EMPLEADO]]></text>
+				<reportElement x="10" y="191" width="381" height="20" uuid="fd59de49-be41-4ab5-8c1a-ff56fe378589"/>
+				<text><![CDATA[Trabajadores al Servico del Estado, solicito disfrutar de vacaciones del periodo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="293" width="268" height="20" uuid="ba55ed1b-9851-419b-8305-493e9e5e4b8a"/>
+				<text><![CDATA[Motivo por el que no se pueden disfrutar:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="411" y="78" width="125" height="20" uuid="0d4b1281-a179-45db-b304-922c59a84c90"/>
+				<reportElement x="10" y="140" width="134" height="20" uuid="b65d1ea1-89d5-42ef-a030-442cbccd5381"/>
+				<textFieldExpression><![CDATA[$P{unidadAdministrativa}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="420" y="61" width="125" height="20" uuid="104f74c9-337a-46ef-b4e4-a2e36670558c"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{fechaIngreso}]]></textFieldExpression>
 			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="10" y="10" width="134" height="20" uuid="cb1aac78-a515-4015-ba4b-aa1cad318134"/>
+				<textFieldExpression><![CDATA[$P{nombre}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="216" y="68" width="140" height="20" uuid="9bb3c7ef-c441-4a68-8b8a-7d63032e608d"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{numeroEmpleado}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="333" y="273" width="100" height="20" uuid="940e5ffb-073d-440d-9012-a0b68d8035f8"/>
+				<textFieldExpression><![CDATA[$P{diasRestantes}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="332" y="304" width="204" height="1" uuid="50c69211-91dc-435f-8158-fe33d77d07ab"/>
+			</line>
 			<staticText>
-				<reportElement x="411" y="58" width="125" height="20" uuid="645ae978-ce92-459d-9c6c-e2301428e0cc"/>
+				<reportElement x="420" y="120" width="100" height="20" uuid="1ee2ec23-ff15-430a-bcec-5928d5ac916d"/>
+				<text><![CDATA[Puesto]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="157" y="223" width="117" height="20" uuid="d17f60a4-014d-4089-9b37-2b016a8ec00b"/>
+				<textFieldExpression><![CDATA[$P{fechaInicio}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="10" y="323" width="526" height="1" uuid="f91b1779-5936-4d80-829c-009aef1dde9a"/>
+			</line>
+			<staticText>
+				<reportElement x="130" y="223" width="23" height="20" uuid="99a8c612-67e6-4025-8bbd-c4c9ac1036ec"/>
+				<text><![CDATA[Del :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="253" width="268" height="20" uuid="2f00e3d6-426b-446c-b4a2-b7cbc728ed85"/>
+				<text><![CDATA[Número de días hábiles autorizados en el periodo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="216" y="89" width="140" height="20" uuid="5ff57f8d-7753-4ba4-ba87-e5e713edb342"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[NO. DE EMPLEADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="215" y="29" width="128" height="20" uuid="b5365dc4-f76f-40b3-a90d-48e7ea5f28f8"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[APELLIDO PATERNO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="171" width="381" height="20" uuid="d3114840-9c7b-4cb5-91f2-9432b3a7e990"/>
+				<text><![CDATA[De conformidad con las fracciones III y XIV del Apartado B del artículo 123 Constitucional y 30 de la Ley Federal de los ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="29" width="133" height="20" uuid="09d45d13-05a4-4dfd-a241-c6ec8780c7d8"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[NOMBRE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="120" width="268" height="20" uuid="ff6dd741-77e0-4bbb-bf2d-94b194bed661"/>
+				<text><![CDATA[UNIDAD  ADMINISTRATIVA Y ÁREA DE ADSCRIPCIÓN ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="88" width="128" height="20" uuid="6d8dae6c-3c34-4809-aabb-7a13a4c21e85"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[RFC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="419" y="30" width="128" height="20" uuid="2c04b05a-0ee2-41d9-bc5c-fb0815a51961"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[APELLIDO MATERNO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="420" y="81" width="125" height="20" uuid="55a72ca4-7c13-4691-a2a6-1f6640a7d2a4"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<text><![CDATA[FECHA DE INGRESO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="22" y="110" width="268" height="20" uuid="069d2616-535f-454c-8e2d-80608fa164b2"/>
-				<text><![CDATA[UNIDAD  ADMINISTRATIVA Y ÁREA DE ADSCRIPCIÓN ]]></text>
-			</staticText>
-			<textField isBlankWhenNull="true">
-				<reportElement x="80" y="130" width="134" height="20" uuid="c5ac20fd-ce58-4c3c-94ec-5ecc922b9c56"/>
-				<textFieldExpression><![CDATA[$P{unidadAdministrativa}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="360" y="110" width="100" height="20" uuid="c5cafcd6-71ed-4efe-8439-57e041061124"/>
-				<text><![CDATA[Puesto]]></text>
-			</staticText>
-			<textField isBlankWhenNull="true">
-				<reportElement x="360" y="130" width="100" height="20" uuid="62adc284-3979-4839-952c-0caf8d4394c0"/>
-				<textFieldExpression><![CDATA[$P{puesto}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="27" y="213" width="268" height="20" uuid="62f048ab-821e-462b-be0e-a4ebf311a130"/>
-				<text><![CDATA[Número de días hábiles autorizados en el periodo:]]></text>
-			</staticText>
-			<textField isBlankWhenNull="true">
-				<reportElement x="333" y="213" width="100" height="20" uuid="98fa4180-4e00-4e5b-a172-a06d07154820"/>
-				<textFieldExpression><![CDATA[$P{diasVacaciones}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="27" y="233" width="268" height="20" uuid="0dabb6d7-437b-478e-8d01-94bb0d33b55c"/>
-				<text><![CDATA[Número de días hábiles autorizados en el periodo:]]></text>
-			</staticText>
-			<textField isBlankWhenNull="true">
-				<reportElement x="333" y="233" width="100" height="20" uuid="34d76b8d-f0d0-4837-8207-fd215d306254"/>
-				<textFieldExpression><![CDATA[$P{diasRestantes}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="27" y="253" width="268" height="20" uuid="281c3b9c-9850-4f95-b04e-2c87c65c31c1"/>
-				<text><![CDATA[Motivo por el que no se pueden disfrutar:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="27" y="161" width="381" height="20" uuid="4c024916-3d23-4d73-86e2-799de7c8db55"/>
-				<text><![CDATA[De conformidad con las fracciones III y XIV del Apartado B del artículo 123 Constitucional y 30 de la Ley Federal de los ]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="36" y="181" width="381" height="20" uuid="76aba8aa-eb8d-4a4f-8a51-19dc9f9a1efd"/>
-				<text><![CDATA[Trabajadores al Servico del Estado, solicito disfrutar de vacaciones del periodo:]]></text>
-			</staticText>
-			<line>
-				<reportElement x="332" y="264" width="204" height="1" uuid="81910f1a-0eac-4392-9d88-ed3fb12b60d2"/>
-			</line>
-			<line>
-				<reportElement x="10" y="283" width="526" height="1" uuid="596b0aa3-98a0-4f29-8e9b-f80f870b27aa"/>
-			</line>
-			<staticText>
-				<reportElement x="10" y="294" width="537" height="20" uuid="7502a8f6-cefc-43ba-8b6b-ae596d72230b"/>
-				<textElement>
-					<font size="9"/>
-				</textElement>
-				<text><![CDATA[Lo anterior toda vez que me encuentro al corriente del cumplimiento de mis funciones y conforme al derecho que me aiste al]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="10" y="314" width="448" height="20" uuid="ce5616a5-3626-4d6b-b3e5-4b3fb9589ff5"/>
+				<reportElement x="10" y="354" width="448" height="20" uuid="64d5d2c7-0062-47a1-ace1-06b86b232222"/>
 				<textElement>
 					<font size="9"/>
 				</textElement>
 				<text><![CDATA[contar con más de seis meses de servicios ininterrumpidos en el desempeño de mi cargo.]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="20" y="0" width="134" height="20" uuid="51ec76c1-e848-4606-b20e-c6eaa89cb367"/>
-				<textFieldExpression><![CDATA[$P{nombre}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="215" y="1" width="127" height="20" uuid="0abca5c5-880b-4139-b906-a18595e6b063"/>
-				<textFieldExpression><![CDATA[$P{apellidoPaterno}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="409" y="1" width="127" height="20" uuid="112df805-c80b-4b01-8ff9-a7430af330a9"/>
-				<textFieldExpression><![CDATA[$P{apellidoMaterno}]]></textFieldExpression>
+				<reportElement x="397" y="191" width="100" height="20" uuid="af802633-c272-4f60-9809-1dd418db0207"/>
+				<textFieldExpression><![CDATA[$P{periodo}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

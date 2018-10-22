@@ -17,7 +17,8 @@ public class GeneraReporteArchivo {
 	private String fechaFin; 
 	private String dias; 
 	private String responsable;
-	public GeneraReporteArchivo(String idsolicitud,String idEstatus,String idPuesto,String unidadAdministrativa,String numeroEmpleado,String fechaIngreso,String rfc,String nombre,String apellidoPaterno,String apellidoMaterno, String fechaInicio, String fechaFin, String dias, String responsable){
+	private String idVacacion;
+	public GeneraReporteArchivo(String idsolicitud,String idEstatus,String idPuesto,String unidadAdministrativa,String numeroEmpleado,String fechaIngreso,String rfc,String nombre,String apellidoPaterno,String apellidoMaterno, String fechaInicio, String fechaFin, String dias, String responsable, String idVacacion){
 		super();
 		this.idsolicitud = idsolicitud;
 		this.idEstatus = idEstatus;
@@ -33,6 +34,7 @@ public class GeneraReporteArchivo {
 		this.dias=dias;
 		this.responsable=responsable;
 		this.fechaInicio=fechaInicio;
+		this.idVacacion=idVacacion;
 	}
 	public String getIdsolicitud() {
 		return idsolicitud;
@@ -117,5 +119,11 @@ public class GeneraReporteArchivo {
 	}
 	public void setResponsable(String responsable) {
 		this.responsable = responsable;
+	}
+	public String getIdVacacion() {
+		return idVacacion;
+	}
+	public void setIdVacacion(String idVacacion) {
+		this.idVacacion = idVacacion;
 	}
 }
