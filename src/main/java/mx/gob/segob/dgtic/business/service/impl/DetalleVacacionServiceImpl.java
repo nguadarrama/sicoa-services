@@ -133,7 +133,7 @@ public class DetalleVacacionServiceImpl implements DetalleVacacionService {
 		URI uri = null;
 		VacacionPeriodoDto vacacion= new VacacionPeriodoDto();
 		try {
-			System.out.println("idVacacion para el archivo "+generaReporteArchivo.getIdVacacion());
+			
 			if(generaReporteArchivo.getIdVacacion()!=null && !generaReporteArchivo.getIdVacacion().toString().isEmpty()){
 			Integer idVacacion=Integer.parseInt(generaReporteArchivo.getIdVacacion());
 			vacacion=periodoService.buscaVacacionPeriodo(idVacacion);
@@ -150,7 +150,7 @@ public class DetalleVacacionServiceImpl implements DetalleVacacionService {
 			System.out.println("ruta obtenida "+uri.toString());
 //			String relativeWebPath = "/images";
 //			String absoluteDiskPath = getServletContext().getRealPath(relativeWebPath);
-			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+			DateFormat df = new SimpleDateFormat("MMM dd, yyyy");
 			System.out.println("Datos "+generaReporteArchivo.getNombre());
 			String url = uri.toString().replace("vfs:/", "");
 			System.out.println("URL -------------" + url);
@@ -189,7 +189,9 @@ public class DetalleVacacionServiceImpl implements DetalleVacacionService {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			parametros.put("fechaIngreso", fechaIngresal);
+			fechaFinal= generaReporteArchivo.getFechaFin().substring(0, 12);
+			fechaInicial=generaReporteArchivo.getFechaInicio().substring(0, 12);
+			parametros.put("fechaIngreso", generaReporteArchivo.getFechaIngreso());
 			parametros.put("fechaInicio", fechaInicial);
 			parametros.put("fechaFin", fechaFinal);
 			parametros.put("responsable", generaReporteArchivo.getResponsable());
@@ -201,9 +203,11 @@ public class DetalleVacacionServiceImpl implements DetalleVacacionService {
 			String fechaActual= null;
 			Integer diasRestantes=0;
 			if(vacacion.getDias()!=null){
-				diasRestantes=vacacion.getDias();
-				parametros.put("diasRestantes", vacacion.getDias());
+				diasRestantes=vacacion.getDias()-Integer.parseInt(generaReporteArchivo.getDias());
+				parametros.put("diasRestantes",""+diasRestantes);
 			}
+			System.out.println("idVacacion para el archivo "+generaReporteArchivo.getIdVacacion()+" fechaInicio "+generaReporteArchivo.getFechaInicio()+ 
+					" fechaFin "+generaReporteArchivo.getFechaFin()+" periodo "+vacacion.getIdPeriodo().getDescripcion());
 			parametros.put("periodo", vacacion.getIdPeriodo().getDescripcion());
 			fechaActual=df.format(fecha);
 			parametros.put("fechaActual",fechaActual);

@@ -63,14 +63,30 @@ public class VacacionPeriodoRepositoryImpl implements VacacionPeriodoRepository{
 	public VacacionPeriodoDto buscaVacacionPeriodo(Integer idVacacion) {
 		System.out.println("idVacacion para la busqueda "+idVacacion);
 		StringBuilder qry = new StringBuilder();
-		qry.append("SELECT id_vacacion, id_usuario, id_periodo, id_estatus, fecha_inicio, dias, activo ");
-        qry.append("FROM m_vacacion_periodo ");
-        qry.append("WHERE id_vacacion = :idVacacion");
+		qry.append("SELECT vacacion.id_vacacion, vacacion.id_usuario, vacacion.id_periodo, vacacion.id_estatus, vacacion.fecha_inicio, vacacion.dias, vacacion.activo, periodo.id_periodo, periodo.descripcion ");
+        qry.append("FROM m_vacacion_periodo vacacion, r_periodo periodo ");
+        qry.append("WHERE vacacion.id_periodo=periodo.id_periodo and id_vacacion = :idVacacion");
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
         parametros.addValue("idVacacion", idVacacion);
-
-        return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<VacacionPeriodoDto>(VacacionPeriodoDto.class));
+        
+        Map<String, Object> informacionConsulta = nameParameterJdbcTemplate.queryForMap(qry.toString(), parametros);
+        VacacionPeriodoDto vacacion=new VacacionPeriodoDto();
+        PeriodoDto periodo= new PeriodoDto();
+        periodo.setIdPeriodo((Integer)informacionConsulta.get("id_periodo"));
+        periodo.setDescripcion((String)informacionConsulta.get("descripcion"));
+        vacacion.setIdPeriodo(periodo);
+        vacacion.setIdVacacion((Integer)informacionConsulta.get("id_vacacion"));
+        UsuarioDto usuario= new UsuarioDto();
+        usuario.setIdUsuario((Integer)informacionConsulta.get("id_usuario"));
+        EstatusDto estatus = new EstatusDto();
+        estatus.setIdEstatus((Integer)informacionConsulta.get("id_estatus"));
+        vacacion.setIdUsuario(usuario);
+        vacacion.setFechaInicio((Date)informacionConsulta.get("fecha_inicio"));
+        vacacion.setDias((Integer)informacionConsulta.get("dias"));
+        vacacion.setActivo((Boolean)informacionConsulta.get("activo"));
+        return vacacion;
+       // return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<VacacionPeriodoDto>(VacacionPeriodoDto.class));
 	}
 
 	@Override
@@ -80,7 +96,7 @@ public class VacacionPeriodoRepositoryImpl implements VacacionPeriodoRepository{
 		qry.append("WHERE id_vacacion = :idVacacion");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("idEstatus", vacacionPeriodoDto.getIdEstatus().getIdEstatus());
+		parametros.addValue("idEstatus", 1);
 		parametros.addValue("idVacacion", vacacionPeriodoDto.getIdVacacion());
 		parametros.addValue("fechaInicio", vacacionPeriodoDto.getFechaInicio());
 		parametros.addValue("dias", vacacionPeriodoDto.getDias());

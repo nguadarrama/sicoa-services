@@ -388,7 +388,7 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
         	try {
         		fechaInicio = sdf.parse(fechaIni);
         		fechaFinal = sdf.parse(fechaFin);
-        		fechaRegistro=sdf.parse(fechaRe);
+        		//fechaRegistro=sdf.parse(fechaRe);
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
