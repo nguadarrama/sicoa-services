@@ -163,14 +163,12 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 	public void modificaDetalleVacacion(DetalleVacacionDto detalleVacacionDto) {
 		
 		StringBuilder qry = new StringBuilder();
-		qry.append("UPDATE d_detalle_vacacion SET fecha_inicio= :fechaInicio, fecha_fin = :fechaFin, dias = :dias ");
+		qry.append("UPDATE d_detalle_vacacion SET id_archivo= :idArchivo ");
 		qry.append("WHERE id_detalle = :idDetalle");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idDetalle", detalleVacacionDto.getIdDetalle());
-		parametros.addValue("fechaInicio", detalleVacacionDto.getFechaInicio());
-		parametros.addValue("fechaFin", detalleVacacionDto.getFechaFin());
-		parametros.addValue("dias", detalleVacacionDto.getDias());
+		parametros.addValue("idArchivo", detalleVacacionDto.getIdArchivo().getIdArchivo());
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		
 	}

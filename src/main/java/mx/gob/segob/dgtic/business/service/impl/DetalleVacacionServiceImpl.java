@@ -136,8 +136,8 @@ public class DetalleVacacionServiceImpl implements DetalleVacacionService {
 			}else{
 				vacacion=null;
 			}
-			//URL fileLocation = getClass().getClassLoader().getResource("Vacaciones.jrxml");
-			//System.out.println("ruta obtenida "+fileLocation.toString());
+			URL fileLocation = getClass().getClassLoader().getResource("vacacion");
+			System.out.println("ruta obtenida "+fileLocation.toString());
 //			String relativeWebPath = "/images";
 //			String absoluteDiskPath = getServletContext().getRealPath(relativeWebPath);
 			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
