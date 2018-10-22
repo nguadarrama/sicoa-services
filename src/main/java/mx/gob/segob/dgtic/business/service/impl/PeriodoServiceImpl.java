@@ -99,7 +99,8 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 				System.out.println("fecha -6meses: "+parsedInicio);
 				String fecha = sdf.format(parsedInicio);
 				logger.info("periodo cs = "+c2);
-				int estatusPeriodo = 1; 
+				int estatusPeriodo = 4; 
+				int diasOtorgados = 10;
 				/************************************************************
 				* este estatus correspondera al que se obtenga al dar de alta
 				* el periodo de vacaciones en la tabla estatus
@@ -115,7 +116,7 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 					 * Aqui se agregan los periodos a todos los usuarios devueltos
 					 *************************************************************/
 					int idUltimo = top.getIdPeriodo();
-					vacacionRules.generarVacacionesTodos(user.getIdUsuario(), idUltimo , estatusPeriodo, sdf.format(fechaInicio), 10, periodoDto.getActivo());
+					vacacionRules.generarVacacionesTodos(user.getIdUsuario(), idUltimo , estatusPeriodo, sdf.format(fechaInicio), diasOtorgados, periodoDto.getActivo());
 					break;
 				}
 			}	
