@@ -1,6 +1,8 @@
 package mx.gob.segob.dgtic.business.service.impl;
 
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -12,6 +14,7 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import org.apache.lucene.store.IOContext.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -127,6 +130,7 @@ public class DetalleVacacionServiceImpl implements DetalleVacacionService {
 	public reporte generaReporteVacaciones(GeneraReporteArchivo generaReporteArchivo ) {
 		reporte repo = new reporte();
 		byte[] output= null;
+		URI uri = null;
 		VacacionPeriodoDto vacacion= new VacacionPeriodoDto();
 		try {
 			System.out.println("idVacacion para el archivo "+generaReporteArchivo.getIdVacacion());
@@ -136,15 +140,21 @@ public class DetalleVacacionServiceImpl implements DetalleVacacionService {
 			}else{
 				vacacion=null;
 			}
-			URL fileLocation = getClass().getClassLoader().getResource("vacacion");
-			System.out.println("ruta obtenida "+fileLocation.toString());
+			try {
+				uri = this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI();
+			} catch (URISyntaxException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+//			URL fileLocation = getClass().getClassLoader().getResource("vacacion");
+			System.out.println("ruta obtenida "+uri.toString());
 //			String relativeWebPath = "/images";
 //			String absoluteDiskPath = getServletContext().getRealPath(relativeWebPath);
 			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 			System.out.println("Datos "+generaReporteArchivo.getNombre());
-			InputStream inputstream = getClass().getClassLoader().getResourceAsStream("/resources/jasper/vacacion");
-			System.out.println("archivo "+inputstream);
-			JasperReport jasperReport=JasperCompileManager.compileReport(getClass().getClassLoader().getResourceAsStream("/resources/jasper/vacacion/Vacaciones.jrxml"));
+			String url = uri.toString().replace("vfs:/", "");
+			System.out.println("URL -------------" + url);
+			JasperReport jasperReport=JasperCompileManager.compileReport(url +"\\jasper\\vacacion\\Vacaciones.jrxml");
 			JRDataSource dataSource= new JREmptyDataSource();
 			Map<String,Object> parametros = new HashMap<String, Object>();
 			parametros.put("nombre", generaReporteArchivo.getNombre());
@@ -159,20 +169,26 @@ public class DetalleVacacionServiceImpl implements DetalleVacacionService {
 			Date fechaInicio = null;
 			Date fechaFin = null;
 			Date fechaIngreso=null;
-			String fechaInicial = null;
-			String fechaFinal= null;
-			String fechaIngresal=null;
+			String fechaInicial = "";
+			String fechaFinal= "";
+			String fechaIngresal="";
 			try {
-				fechaInicio= df.parse(generaReporteArchivo.getFechaInicio());
-				fechaFin= df.parse(generaReporteArchivo.getFechaFin());
-				fechaIngreso= df.parse(generaReporteArchivo.getFechaIngreso());
+				if(generaReporteArchivo.getFechaInicio()!= null){
+					fechaInicio= df.parse(generaReporteArchivo.getFechaInicio());
+					fechaInicial=df.format(fechaInicio);
+				}
+				if(generaReporteArchivo.getFechaFin()!= null){
+					fechaFin= df.parse(generaReporteArchivo.getFechaFin());
+					fechaFinal=df.format(fechaFin);
+				}
+				if(generaReporteArchivo.getFechaIngreso()!= null){
+					fechaIngreso= df.parse(generaReporteArchivo.getFechaIngreso());
+					fechaIngresal=df.format(fechaIngreso);
+				}
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			fechaInicial=df.format(fechaInicio);
-			fechaFinal=df.format(fechaFin);
-			fechaIngresal=df.format(fechaIngreso);
 			parametros.put("fechaIngreso", fechaIngresal);
 			parametros.put("fechaInicio", fechaInicial);
 			parametros.put("fechaFin", fechaFinal);
@@ -193,11 +209,6 @@ public class DetalleVacacionServiceImpl implements DetalleVacacionService {
 			parametros.put("fechaActual",fechaActual);
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
 			output = JasperExportManager.exportReportToPdf (jasperPrint); 
-			
-//			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
-//			//JasperViewer archivo= JasperViewer(jasperPrint,false);
-//			JasperExportManager.exportReportToPdfFile(jasperPrint,"");
-//			 output = JasperExportManager.exportReportToPdf (jasperPrint);
 			 repo.setNombre(output);
 			
 		} catch (JRException e) {
