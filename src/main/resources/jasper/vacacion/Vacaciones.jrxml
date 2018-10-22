@@ -57,10 +57,6 @@
 				<reportElement x="470" y="60" width="83" height="20" uuid="8d2468dd-947a-47ef-917a-487adb720c9f"/>
 				<textFieldExpression><![CDATA[$P{fechaActual}]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="0" y="0" width="310" height="59" uuid="d5991a3c-6590-43ba-b3e5-b7f5c858de05"/>
-				<imageExpression><![CDATA["pdf.jpg"]]></imageExpression>
-			</image>
 		</band>
 	</title>
 	<pageHeader>

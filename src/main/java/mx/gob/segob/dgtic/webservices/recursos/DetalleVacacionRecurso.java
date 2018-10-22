@@ -156,23 +156,27 @@ public class DetalleVacacionRecurso {
 	@Path("obtenerVacacionesPorFiltros")	
 	@PermitAll
 	public Response obtenerVacacionesPorFiltros(@QueryParam("claveUsuario") String claveUsuario, @QueryParam("nombre") String nombre, @QueryParam("apellidoPaterno") String apellidoPaterno, @QueryParam("apellidoMaterno") String apellidoMaterno, @QueryParam("idUnidad") String idUnidad, @QueryParam("idEstatus") String idEstatus) {
-		Integer nuevoIdUnidad;
-		Integer nuevoIdEstatus;
-		try{
-			nuevoIdUnidad=Integer.parseInt(idUnidad);
-			
-		}catch(Exception e){
-			e.printStackTrace();
-			nuevoIdUnidad=null;
-			
+		Integer nuevoIdUnidad=null;
+		Integer nuevoIdEstatus=null;
+		if(idUnidad!=null && !idUnidad.toString().isEmpty()){
+			try{
+				nuevoIdUnidad=Integer.parseInt(idUnidad);
+				
+			}catch(Exception e){
+				e.printStackTrace();
+				nuevoIdUnidad=null;
+				
+			}
 		}
-		try{
-			
-			nuevoIdEstatus=Integer.parseInt(idEstatus);
-		}catch(Exception e){
-			e.printStackTrace();
-			
-			nuevoIdEstatus=null;
+		if(idEstatus!=null && !idEstatus.toString().isEmpty()){
+			try{
+				
+				nuevoIdEstatus=Integer.parseInt(idEstatus);
+			}catch(Exception e){
+				e.printStackTrace();
+				
+				nuevoIdEstatus=null;
+			}
 		}
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.obtenerVacacionesPorFiltros(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, nuevoIdUnidad, nuevoIdEstatus));
 	}
