@@ -18,14 +18,14 @@ public interface AsistenciaRepository {
     		String materno, String nivel, String tipo, String estado, Date fechaInicial, Date fechaFinal, String unidadAdministrativa);
 	
 	public AsistenciaDto buscaAsistenciaPorId(Integer id);
-	public void creaIncidencia(IncidenciaDto incidencia);
-	public void creaDescuento(IncidenciaDto incidencia);
+	public Integer creaIncidencia(IncidenciaDto incidencia);
+	public Integer creaDescuento(IncidenciaDto incidencia);
 	public boolean existeIncidencia(Integer idAsistencia);
 	public boolean existeDescuento(Integer idAsistencia);
-	public void editaIncidencia(IncidenciaDto incidencia);
-	public void editaDescuento(IncidenciaDto incidencia);
-	public void dictaminaIncidencia(IncidenciaDto incidencia);
-	public void aplicaDescuento(IncidenciaDto incidencia);
-	public void agregaAsistencia(AsistenciaDto asistenciaDto);
+	public Integer editaIncidencia(IncidenciaDto incidencia);
+	public Integer editaDescuento(IncidenciaDto incidencia);
+	public Integer dictaminaIncidencia(IncidenciaDto incidencia);
+	public Integer aplicaDescuento(IncidenciaDto incidencia);
+	public Integer agregaAsistencia(AsistenciaDto asistenciaDto);
 	public List<String> obtieneListaEmpleadosDeVacacionesHoy();
 }

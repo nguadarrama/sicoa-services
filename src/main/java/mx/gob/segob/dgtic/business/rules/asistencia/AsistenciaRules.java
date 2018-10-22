@@ -70,32 +70,32 @@ public class AsistenciaRules {
 		return asistenciaRepository.buscaAsistenciaPorId(id);
 	}
 	
-	public void creaIncidencia(IncidenciaDto incidencia) {
+	public Integer creaIncidencia(IncidenciaDto incidencia) {
 
 		//si la justificación NO existe entonces la crea
 		if (!asistenciaRepository.existeIncidencia(incidencia.getIdAsistencia().getIdAsistencia())) { 
-			asistenciaRepository.creaIncidencia(incidencia);
+			return asistenciaRepository.creaIncidencia(incidencia);
 		} else {//si la justificación SÍ existe la edita
-			asistenciaRepository.editaIncidencia(incidencia);
+			return asistenciaRepository.editaIncidencia(incidencia);
 		}
 	}
 	
-	public void creaDescuento(IncidenciaDto incidencia) {
+	public Integer creaDescuento(IncidenciaDto incidencia) {
 
 		//si el descuento NO existe entonces la crea
 		if (!asistenciaRepository.existeDescuento(incidencia.getIdAsistencia().getIdAsistencia())) { 
-			asistenciaRepository.creaDescuento(incidencia);
+			return asistenciaRepository.creaDescuento(incidencia);
 		} else {//si la justificación SÍ existe la edita
-			asistenciaRepository.editaDescuento(incidencia);
+			return asistenciaRepository.editaDescuento(incidencia);
 		}
 	}
 	
-	public void dictaminaIncidencia(IncidenciaDto incidencia) {
-		asistenciaRepository.dictaminaIncidencia(incidencia);
+	public Integer dictaminaIncidencia(IncidenciaDto incidencia) {
+		return asistenciaRepository.dictaminaIncidencia(incidencia);
 	}
 	
-	public void aplicaDescuento(IncidenciaDto incidencia) {
-		asistenciaRepository.aplicaDescuento(incidencia);
+	public Integer aplicaDescuento(IncidenciaDto incidencia) {
+		return asistenciaRepository.aplicaDescuento(incidencia);
 	}
 	
 }

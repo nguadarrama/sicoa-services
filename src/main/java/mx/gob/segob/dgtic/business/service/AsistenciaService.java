@@ -21,10 +21,10 @@ public interface AsistenciaService {
     		String materno, String nivel, String tipo, String estado, String fechaInicial, String fechaFinal, String unidadAdministrativa);
 	
 	public AsistenciaDto buscaAsistenciaPorId(Integer id);
-	public void creaIncidencia(IncidenciaDto incidencia);
-	public void creaDescuento(IncidenciaDto incidencia);
-	public void dictaminaIncidencia(IncidenciaDto incidencia);
-	public void aplicaDescuento(IncidenciaDto incidencia);
+	public Integer creaIncidencia(IncidenciaDto incidencia);
+	public Integer creaDescuento(IncidenciaDto incidencia);
+	public Integer dictaminaIncidencia(IncidenciaDto incidencia);
+	public Integer aplicaDescuento(IncidenciaDto incidencia);
 	public reporte generaFormatoJustificacion(FormatoIncidencia generaReporteArchivo);
 	public reporte generaFormatoDescuento(FormatoIncidencia generaReporteArchivo);
 }

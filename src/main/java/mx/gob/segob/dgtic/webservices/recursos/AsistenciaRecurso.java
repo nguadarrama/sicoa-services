@@ -121,9 +121,7 @@ public class AsistenciaRecurso {
 		Gson gson = builder.create();
 		IncidenciaDto incidencia = gson.fromJson(jsonObject.get("incidencia"), IncidenciaDto.class);
 		
-		asistenciaService.creaIncidencia(incidencia);
-
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.creaIncidencia(incidencia));
 	}
 	
 	@PUT
@@ -139,9 +137,7 @@ public class AsistenciaRecurso {
 		Gson gson = builder.create();
 		IncidenciaDto descuento = gson.fromJson(jsonObject.get("incidencia"), IncidenciaDto.class);
 		
-		asistenciaService.creaDescuento(descuento);
-
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.creaDescuento(descuento));
 	}
 	
 	@PUT
@@ -157,9 +153,7 @@ public class AsistenciaRecurso {
 		Gson gson = builder.create();
 		IncidenciaDto incidencia = gson.fromJson(jsonObject.get("incidencia"), IncidenciaDto.class);
 		
-		asistenciaService.dictaminaIncidencia(incidencia);
-
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.dictaminaIncidencia(incidencia));
 	}
 	
 	@PUT
@@ -175,9 +169,7 @@ public class AsistenciaRecurso {
 		Gson gson = builder.create();
 		IncidenciaDto incidencia = gson.fromJson(jsonObject.get("incidencia"), IncidenciaDto.class);
 		
-		asistenciaService.aplicaDescuento(incidencia);
-
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.aplicaDescuento(incidencia));
 	}
 	
 	@PUT

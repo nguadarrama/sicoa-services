@@ -135,23 +135,23 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 	}
 	
 	@Override
-	public void creaIncidencia(IncidenciaDto incidencia) {
-		asistenciaRules.creaIncidencia(incidencia);
+	public Integer creaIncidencia(IncidenciaDto incidencia) {
+		return asistenciaRules.creaIncidencia(incidencia);
 	}
 	
 	@Override
-	public void creaDescuento(IncidenciaDto incidencia) {
-		asistenciaRules.creaDescuento(incidencia);
+	public Integer creaDescuento(IncidenciaDto incidencia) {
+		return asistenciaRules.creaDescuento(incidencia);
 	}
 	
 	@Override
-	public void dictaminaIncidencia(IncidenciaDto incidencia) {
-		asistenciaRules.dictaminaIncidencia(incidencia);
+	public Integer dictaminaIncidencia(IncidenciaDto incidencia) {
+		return asistenciaRules.dictaminaIncidencia(incidencia);
 	}
 	
 	@Override
-	public void aplicaDescuento(IncidenciaDto incidencia) {
-		asistenciaRules.aplicaDescuento(incidencia);
+	public Integer aplicaDescuento(IncidenciaDto incidencia) {
+		return asistenciaRules.aplicaDescuento(incidencia);
 	}
 
 	@Override

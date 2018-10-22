@@ -383,7 +383,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 	}
 
 	@Override
-	public void creaIncidencia(IncidenciaDto incidencia) {
+	public Integer creaIncidencia(IncidenciaDto incidencia) {
 		StringBuilder qry = new StringBuilder();
 		qry.append("INSERT INTO m_incidencia (id_asistencia, id_tipo_dia, id_archivo, id_estatus, id_responsable, descuento, observaciones, id_justificacion, nombre_autorizador) ");
 		qry.append("VALUES (:idAsistencia, :idTipoDia, :idArchivo, :idEstatus, null, null, null, :idJustificacion, :nombreAutorizador) ");
@@ -396,11 +396,11 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		parametros.addValue("idArchivo", incidencia.getIdArchivo().getIdArchivo());
 		parametros.addValue("nombreAutorizador", incidencia.getNombreAutorizador());
 
-		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		return nameParameterJdbcTemplate.update(qry.toString(), parametros);
 	}
 	
 	@Override
-	public void creaDescuento(IncidenciaDto incidencia) {
+	public Integer creaDescuento(IncidenciaDto incidencia) {
 		StringBuilder qry = new StringBuilder();
 		qry.append("INSERT INTO m_incidencia (id_asistencia, id_tipo_dia, id_archivo, id_estatus, id_responsable, descuento, observaciones, id_justificacion, nombre_autorizador) ");
 		qry.append("VALUES (:idAsistencia, :idTipoDia, :idArchivo, :idEstatus, null, :descuento, null, :idJustificacion, :nombreAutorizador) ");
@@ -414,7 +414,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		parametros.addValue("idArchivo", incidencia.getIdArchivo().getIdArchivo());
 		parametros.addValue("nombreAutorizador", incidencia.getNombreAutorizador());
 
-		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		return nameParameterJdbcTemplate.update(qry.toString(), parametros);
 	}
 
 	@Override
@@ -458,7 +458,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 	}
 
 	@Override
-	public void editaIncidencia(IncidenciaDto incidencia) {
+	public Integer editaIncidencia(IncidenciaDto incidencia) {
 		StringBuilder qry = new StringBuilder();
 		
 		qry.append("update m_incidencia ");
@@ -473,15 +473,16 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		parametros.addValue("descuento", incidencia.getDescuento());
 		
 		try {
-			nameParameterJdbcTemplate.update(qry.toString(), parametros);
+			return nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		} catch (Exception e) {
 			logger.error("Error al consultar la incidencia con número de asistencia: " + incidencia.getIdAsistencia().getIdAsistencia() + ". " + e.getMessage());
 		}
 		
+		return 0;
 	}
 	
 	@Override
-	public void editaDescuento(IncidenciaDto incidencia) {
+	public Integer editaDescuento(IncidenciaDto incidencia) {
 		StringBuilder qry = new StringBuilder();
 		
 		qry.append("update m_incidencia ");
@@ -496,15 +497,16 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		parametros.addValue("idArchivo", incidencia.getIdArchivo().getIdArchivo());
 		
 		try {
-			nameParameterJdbcTemplate.update(qry.toString(), parametros);
+			return nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		} catch (Exception e) {
 			logger.error("Error al consultar la incidencia con número de asistencia: " + incidencia.getIdAsistencia().getIdAsistencia() + ". " + e.getMessage());
 		}
 		
+		return 0;
 	}
 	
 	@Override
-	public void dictaminaIncidencia(IncidenciaDto incidencia) {
+	public Integer dictaminaIncidencia(IncidenciaDto incidencia) {
 		StringBuilder qry = new StringBuilder();
 		
 		qry.append("update m_incidencia ");
@@ -516,15 +518,16 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		parametros.addValue("idEstatus", incidencia.getEstatus().getIdEstatus());
 		
 		try {
-			nameParameterJdbcTemplate.update(qry.toString(), parametros);
+			return nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		} catch (Exception e) {
 			logger.error("Error al dictaminar la justificación, en la indicencia: " + incidencia.getIdAsistencia().getIdAsistencia() + " " + e.getMessage());
 		}
 		
+		return 0;
 	}
 	
 	@Override
-	public void aplicaDescuento(IncidenciaDto incidencia) {
+	public Integer aplicaDescuento(IncidenciaDto incidencia) {
 		StringBuilder qry = new StringBuilder();
 		
 		qry.append("update m_incidencia ");
@@ -537,15 +540,16 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		parametros.addValue("descuento", incidencia.getDescuento());
 		
 		try {
-			nameParameterJdbcTemplate.update(qry.toString(), parametros);
+			return nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		} catch (Exception e) {
 			logger.error("Error al aplicar descuento en la incidencia: " + incidencia.getIdAsistencia().getIdAsistencia() + " " + e.getMessage());
 		}
 		
+		return 0;
 	}
 
 	@Override
-	public void agregaAsistencia(AsistenciaDto asistenciaDto) {
+	public Integer agregaAsistencia(AsistenciaDto asistenciaDto) {
 		StringBuilder qry = new StringBuilder();
 		qry.append("insert into m_asistencia (id_usuario, id_tipo_dia, id_estatus, entrada, salida ) ");
 		qry.append("values (:idUsuario, :idTipoDia, :idEstatus, :entrada, :salida) ");
@@ -557,7 +561,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		parametros.addValue("entrada", asistenciaDto.getEntrada());
 		parametros.addValue("salida", asistenciaDto.getSalida());
 
-		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		return nameParameterJdbcTemplate.update(qry.toString(), parametros);
 	}
 
 	@Override
