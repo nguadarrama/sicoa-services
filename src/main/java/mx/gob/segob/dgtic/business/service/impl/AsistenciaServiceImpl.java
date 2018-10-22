@@ -1,8 +1,7 @@
 package mx.gob.segob.dgtic.business.service.impl;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -11,17 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import mx.gob.segob.dgtic.business.rules.asistencia.AsistenciaRules;
 import mx.gob.segob.dgtic.business.service.AsistenciaService;
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
-import mx.gob.segob.dgtic.comun.sicoa.dto.GeneraReporteArchivo;
 import mx.gob.segob.dgtic.comun.sicoa.dto.IncidenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.reporte;
 import mx.gob.segob.dgtic.comun.util.FormatoIncidencia;
@@ -35,7 +29,6 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.view.JasperViewer;
 
 @Service
 public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaService {
@@ -165,9 +158,13 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 	public reporte generaFormatoJustificacion(FormatoIncidencia generaReporteArchivo) {
 		reporte repo = new reporte();
 		byte[] output= null;
-
+		URI uri = null;
+		
 		try {
-			JasperReport jasperReport=JasperCompileManager.compileReport("C:\\asistencia\\justificacion\\justificacion_incidencias.jrxml");
+			uri = this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI();
+			String url = uri.toString().replace("vfs:/", "");
+			
+			JasperReport jasperReport=JasperCompileManager.compileReport(url + "\\jasper\\asistencia\\justificacion\\justificacion_incidencias.jrxml");
 			JRDataSource dataSource= new JREmptyDataSource();
 			Map<String,Object> parametros = new HashMap<String, Object>();
 			parametros.put("nombre", generaReporteArchivo.getNombre());
@@ -176,15 +173,10 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 			parametros.put("codigoIncidencia", generaReporteArchivo.getCodigoIncidencia());
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
 			output = JasperExportManager.exportReportToPdf (jasperPrint); 
+			repo.setNombre(output);
 			
-//			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
-//			//JasperViewer archivo= JasperViewer(jasperPrint,false);
-//			JasperExportManager.exportReportToPdfFile(jasperPrint,"");
-//			 output = JasperExportManager.exportReportToPdf (jasperPrint);
-			 repo.setNombre(output);
-			
-		} catch (JRException e) {
-			// TODO Auto-generated catch block
+		} catch (JRException | URISyntaxException e) {
+			logger.warn("Errora al generar formato justificación -> " + this.getClass());
 			e.printStackTrace();
 		}
 		return repo;
@@ -194,23 +186,24 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 	public reporte generaFormatoDescuento(FormatoIncidencia generaReporteArchivo) {
 		reporte repo = new reporte();
 		byte[] output= null;
-
+		URI uri = null;
+		
 		try {
-			JasperReport jasperReport=JasperCompileManager.compileReport("C:\\asistencia\\descuento\\descuento_incidencias.jrxml");
+			uri = this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI();
+			String url = uri.toString().replace("vfs:/", "");
+			
+			JasperReport jasperReport=JasperCompileManager.compileReport(url + "\\jasper\\asistencia\\descuento\\descuento_incidencias.jrxml");
 			JRDataSource dataSource= new JREmptyDataSource();
 			Map<String,Object> parametros = new HashMap<String, Object>();
+			parametros.put("nombre", generaReporteArchivo.getNombre());
 			parametros.put("fechaActual", generaReporteArchivo.getFechaActual());
+			parametros.put("cve_m_usuario", generaReporteArchivo.getCve_m_usuario());
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
 			output = JasperExportManager.exportReportToPdf (jasperPrint); 
+			repo.setNombre(output);
 			
-//			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
-//			//JasperViewer archivo= JasperViewer(jasperPrint,false);
-//			JasperExportManager.exportReportToPdfFile(jasperPrint,"");
-//			 output = JasperExportManager.exportReportToPdf (jasperPrint);
-			 repo.setNombre(output);
-			
-		} catch (JRException e) {
-			// TODO Auto-generated catch block
+		} catch (JRException | URISyntaxException e) {
+			logger.warn("Errora al generar formato descuento -> " + this.getClass());
 			e.printStackTrace();
 		}
 		return repo;
