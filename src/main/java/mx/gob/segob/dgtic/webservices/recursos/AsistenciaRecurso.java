@@ -2,6 +2,7 @@ package mx.gob.segob.dgtic.webservices.recursos;
 
 
 import javax.annotation.security.PermitAll;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -22,9 +23,11 @@ import com.google.gson.JsonParser;
 
 import mx.gob.segob.dgtic.business.service.AsistenciaService;
 import mx.gob.segob.dgtic.business.service.HorarioService;
+import mx.gob.segob.dgtic.comun.sicoa.dto.GeneraReporteArchivo;
 import mx.gob.segob.dgtic.comun.sicoa.dto.IncidenciaDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
 import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
+import mx.gob.segob.dgtic.comun.util.FormatoIncidencia;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
 @Path("asistencia")
@@ -175,6 +178,40 @@ public class AsistenciaRecurso {
 		asistenciaService.aplicaDescuento(incidencia);
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+	}
+	
+	@PUT
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("formatoJustificacion")	
+	@PermitAll
+	public Response formatoJustificacion(@RequestParam String jsonFormatoJustificacion) {
+		JsonObject jsonObject = new JsonParser().parse(jsonFormatoJustificacion).getAsJsonObject();
+		
+		GsonBuilder builder = new GsonBuilder();
+		Gson gson = builder.create();
+		FormatoIncidencia generaReporteArchivo = gson.fromJson(jsonObject.get("generaReporteArchivo"), FormatoIncidencia.class);
+		
+		
+
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,asistenciaService.generaFormatoJustificacion(generaReporteArchivo));
+	}
+	
+	@PUT
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("formatoDescuento")	
+	@PermitAll
+	public Response formatoDescuento(@RequestParam String jsonFormatoDescuento) {
+		JsonObject jsonObject = new JsonParser().parse(jsonFormatoDescuento).getAsJsonObject();
+		
+		GsonBuilder builder = new GsonBuilder();
+		Gson gson = builder.create();
+		FormatoIncidencia generaReporteArchivo = gson.fromJson(jsonObject.get("generaReporteArchivo"), FormatoIncidencia.class);
+		
+		
+
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,asistenciaService.generaFormatoDescuento(generaReporteArchivo));
 	}
 	
 }

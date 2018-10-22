@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="justificacion_incidencias" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="278501ae-7448-4c4b-9795-a8055ee58510">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fechaActual" class="java.lang.String"/>
+	<parameter name="nombre" class="java.lang.String"/>
+	<parameter name="unidad" class="java.lang.String"/>
+	<parameter name="codigoIncidencia" class="java.lang.String"/>
+	<field name="fechaActual" class="java.util.Date"/>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="unidad" class="java.lang.String"/>
+	<field name="codigoIncidencia" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="115" splitType="Stretch">
+			<rectangle>
+				<reportElement x="46" y="19" width="466" height="96" uuid="a64d1e30-5de9-46a8-a5a8-3c6171b81725"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="63" y="39" width="437" height="14" uuid="2046a91f-b570-434f-921b-3bc47b64b2b3"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[DIRECCIÓN GENERAL DE RECURSOS HUMANOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="63" y="53" width="437" height="14" uuid="4c3c2ae2-3367-4c5c-ae14-3567bb95098a"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[DIRECCIÓN DE ADMINISTRACIÓN DE PERSONAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="63" y="83" width="437" height="14" uuid="82eb07e6-6424-4003-b5e2-a6d19b66aad5"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[JUSTIFICACIÓN DE INCIDENCIAS]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="645" splitType="Stretch">
+			<rectangle>
+				<reportElement x="46" y="12" width="466" height="630" uuid="26ffff17-8c89-45e0-bb16-dcdad4e21808"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="356" y="196" width="156" height="299" uuid="32726b6c-5de2-408b-8bcd-38d5d1480d1e"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="233" y="196" width="123" height="299" uuid="615ba901-4cd4-4ee6-b148-460a710138d2"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="46" y="196" width="187" height="299" uuid="a9d76526-9286-4336-afa4-e8e0a3a93c75"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="56" y="34" width="336" height="15" uuid="3c9f59f8-4779-4831-852c-f1159e37ef56"/>
+				<text><![CDATA[AREA SOLICITANTE:   DIRECCIÓN GENERAL DE ADMINISTRACIÓN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="402" y="34" width="39" height="15" uuid="2b13212b-1edc-40e0-ae8e-c7441146af0f"/>
+				<text><![CDATA[FECHA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="112" y="93" width="100" height="35" uuid="f41ec717-8aee-4075-b475-ce90d17a7fc9"/>
+				<text><![CDATA[NOMBRE Y FIRMA DE AUTORIZACIÓN:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="334" y="91" width="127" height="20" uuid="85b39b12-d7fa-4c06-ac9c-1bcf6b9a83ec"/>
+				<text><![CDATA[SELLO DE RECEPCIÓN:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="70" y="156" width="180" height="1" uuid="3addda9e-e634-4f08-8435-028f19e861f5"/>
+			</line>
+			<line>
+				<reportElement x="302" y="155" width="180" height="1" uuid="2b51d3d6-d56a-485f-80f3-ca30c99b1460"/>
+			</line>
+			<staticText>
+				<reportElement x="163" y="50" width="112" height="15" uuid="2c850b2a-b0b8-4d3c-8769-5b85dd7095ac"/>
+				<text><![CDATA[Dirección de Personal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="58" y="196" width="175" height="20" uuid="d4ab2443-fcba-4dc3-a02f-43afe6015634"/>
+				<text><![CDATA[NOMBRE DEL SERVIDOR PÚBLICO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="261" y="196" width="75" height="20" uuid="7e113d60-1431-4629-b33c-8b22f2e94261"/>
+				<text><![CDATA[ADSCRIPCIÓN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="373" y="196" width="132" height="20" uuid="96a2e112-a5e2-4474-ad47-83883dcc8dee"/>
+				<text><![CDATA[CÓDIGO DE INCIDENCIA]]></text>
+			</staticText>
+			<line>
+				<reportElement x="46" y="224" width="466" height="1" uuid="562440f3-1591-4d9b-84f8-0310f30b8993"/>
+			</line>
+			<staticText>
+				<reportElement x="63" y="509" width="437" height="25" uuid="f00d3afa-0b6d-407c-84c6-88dbb1613c01"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[NOTA: PARA SER VÁLIDA ESTA JUSTIFICACIÓN DE INCIDENCIA, DEBERÁ VENIR ACOMPAÑADA DE SUS RESPECTIVOS SOPORTES DOCUMENTALES Y  SERÁ VÁLIDA ÚNICAMENTE PARA EL DÍA QUE AMPARA.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="64" y="552" width="124" height="18" uuid="b7bebf5f-2458-4890-8224-00c1cbed5e3b"/>
+				<text><![CDATA[ASIGNATURA/CÓDIGOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="68" y="570" width="120" height="15" uuid="7c366d97-a022-4216-83cf-56d5e006c9bd"/>
+				<text><![CDATA[O = Omisión de Entrada]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="68" y="600" width="120" height="15" uuid="4cd6b0b6-44fe-4bfd-8d69-03ea14619741"/>
+				<text><![CDATA[P = Permanencia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="68" y="585" width="120" height="15" uuid="6b9ab684-b9a0-4568-91ad-2984645b2ccd"/>
+				<text><![CDATA[E = Incapacidad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="69" y="615" width="142" height="15" uuid="73bd4c69-6b7c-4fe0-8a55-ec827889a38c"/>
+				<text><![CDATA[LM = Licencia de Maternidad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="282" y="570" width="120" height="15" uuid="1f6acc77-d599-4ede-b5cb-7d2577914b23"/>
+				<text><![CDATA[1/2 = Omisión de Salida]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="282" y="585" width="200" height="15" uuid="1105c3eb-d228-422a-b986-6b720f8e7687"/>
+				<text><![CDATA[CM = Constancia de Tiempo (ISSSTE)]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="447" y="34" width="81" height="15" uuid="cbdb2cc1-3d6d-42d2-8a7d-1eacf955a839"/>
+				<textFieldExpression><![CDATA[$P{fechaActual}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="54" y="240" width="169" height="15" uuid="85652f2e-a37d-482a-9da2-04a0922856b2"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{nombre}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="250" y="240" width="96" height="98" uuid="9cf0a370-4b7a-45a1-8e1c-f90e0a03ca93"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{unidad}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="371" y="240" width="127" height="15" uuid="b5d85940-e965-469e-a0ed-a7fbef21dd60"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{codigoIncidencia}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+</jasperReport>

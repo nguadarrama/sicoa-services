@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="descuento_incidencias" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2775dccf-cbaa-4bb1-974d-683ac5cf5e9d">
+	<property name="ireport.zoom" value="0.75"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="29"/>
+	<parameter name="fechaActual" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="727">
+			<rectangle>
+				<reportElement x="0" y="51" width="555" height="611" uuid="6784c00a-43a3-4cec-9c36-27a2c6851ae6"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="403" y="583" width="152" height="79" uuid="ce93da77-8523-469a-ab56-a41188f4ae3f"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="0" y="51" width="286" height="111" uuid="345a4ec8-f1d6-420f-afcc-ba37752a2ddd"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="286" y="51" width="269" height="111" uuid="4d55fe18-728e-40a2-9864-4d212acf84ec"/>
+			</rectangle>
+			<line>
+				<reportElement x="1" y="312" width="554" height="1" uuid="edce4abd-bc25-489c-99f6-3aff4ffabf54"/>
+			</line>
+			<rectangle>
+				<reportElement x="1" y="474" width="285" height="108" uuid="0fad0e28-35e1-4dd5-811b-03bd3a761220"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="286" y="474" width="269" height="109" uuid="4cb2af02-1e0d-4861-ba66-c569414bd1ee"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="1" y="583" width="166" height="79" uuid="c80668f4-2fa9-48bd-aff0-6d0452dbfe5b"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="167" y="583" width="236" height="79" uuid="4f51b8ff-5f70-4125-979e-509d0e1187d4"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="295" y="59" width="247" height="42" uuid="62d40b30-b65d-4e3a-9f38-249139f7fe70"/>
+				<text><![CDATA[UNIDAD RESPONSABLE             SECRETARIADO EJECUTIVO DEL SISTEMA NACIONAL DE  SEGURIDAD PÚBLICA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="295" y="122" width="40" height="14" uuid="e7629354-e795-4169-9894-b22f2e197054"/>
+				<text><![CDATA[FECHA: ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="347" y="122" width="100" height="20" uuid="29c9b098-af1c-4c4e-be59-fca2a9f97f3f"/>
+				<textFieldExpression><![CDATA[$P{fechaActual}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="172" width="554" height="20" uuid="51df58fe-41f5-4466-84c3-a76c7791a941"/>
+				<textElement textAlignment="Center">
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[AVISO DE APLICACIÓN DE LOS DESCUENTOS POR SERVICIOS NO DEVENGADOS]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="207" width="554" height="1" uuid="60b7b8a8-de2b-4eb7-80e4-bcf2a74673ad"/>
+			</line>
+			<line>
+				<reportElement x="341" y="144" width="121" height="1" uuid="981f8e6a-90de-45b5-877d-5840bab86b7b"/>
+			</line>
+			<staticText>
+				<reportElement x="16" y="223" width="13" height="20" uuid="a0ed4d9b-ab89-426e-aeb3-a8777ca9bc70"/>
+				<text><![CDATA[C.]]></text>
+			</staticText>
+			<line>
+				<reportElement x="29" y="237" width="286" height="1" uuid="d8687e4a-c552-48d3-b79f-ad25ed8c0c8e"/>
+			</line>
+			<staticText>
+				<reportElement x="16" y="271" width="86" height="20" uuid="3a3850f6-7b2b-4381-bc41-a95d260e8059"/>
+				<text><![CDATA[No. de Empleado:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="102" y="284" width="113" height="1" uuid="56677e7a-4f76-4f6a-9498-52473a794159"/>
+			</line>
+			<staticText>
+				<reportElement x="19" y="333" width="520" height="107" uuid="7468863d-bf26-4c55-a8e4-83759289809c"/>
+				<textElement textAlignment="Justified"/>
+				<text><![CDATA[Con fundamento en lo dispuesto por el numeral 71 Capítulo IV, Sección III, del Acuerdo por el que se emiten las Disposiciones en materia de Recursos Humanos y del Servicio Profesional de Carrera así como el Manual Administrativo de Aplicación General en dicha materia, emitido por la Secretaría de la Función Pública el 23 de agosto de 2013 y últimas actualizaciones, así como de los Lineamientos para el Registro y Control de Asistencia de los Trabajadores de la Secretaría de Gobernación, emitidos el 2 de mayo de 2014 por la Directora General de Recursos Humanos, en su numeral 4, incisos a, b y c, y tomando en consideración que usted no asistió a laborar y no presentó justificante alguno, le comunico que ese procederá a la retención del salario y demás prestaciones, del día _ del mes _ de 201_]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="36" y="485" width="199" height="39" uuid="8f60fcf9-4566-40c8-88cd-add89bfac9fb"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Nombre y firma del responsable de la Unidad Administrativa]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="315" y="486" width="199" height="39" uuid="40a2a9f3-8fd4-443b-b997-297b953f8161"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Nombre y firma de enterado del servidor público]]></text>
+			</staticText>
+			<line>
+				<reportElement x="36" y="568" width="199" height="1" uuid="7274c2eb-9c1a-416a-addc-2f5b237a0193"/>
+			</line>
+			<line>
+				<reportElement x="315" y="568" width="199" height="1" uuid="67759a12-77bc-4dbf-8cf6-a6ff5f4acfb8"/>
+			</line>
+			<staticText>
+				<reportElement x="18" y="604" width="129" height="41" uuid="f2ff18f2-2ab3-488d-aa6f-27304f619039"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PRIMER TANTO ÁREA DE ADSCRIPCIÓN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="186" y="604" width="198" height="41" uuid="50521121-c000-4db5-a2e2-a5564b2ff575"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SEGUNDO TANTO DIRECCIÓN DE PERSONAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="426" y="604" width="113" height="41" uuid="5282154c-2be1-446c-9059-cc2a91ce9b49"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TERCER TANTO SERVIDOR PÚBLICO]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

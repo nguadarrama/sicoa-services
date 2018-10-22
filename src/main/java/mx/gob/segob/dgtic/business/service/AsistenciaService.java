@@ -2,8 +2,13 @@ package mx.gob.segob.dgtic.business.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.GeneraReporteArchivo;
 import mx.gob.segob.dgtic.comun.sicoa.dto.IncidenciaDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.reporte;
+import mx.gob.segob.dgtic.comun.util.FormatoIncidencia;
 
 public interface AsistenciaService {
 	public List<AsistenciaDto> buscaAsistenciaEmpleadoMes(String claveEmpleado);
@@ -20,4 +25,6 @@ public interface AsistenciaService {
 	public void creaDescuento(IncidenciaDto incidencia);
 	public void dictaminaIncidencia(IncidenciaDto incidencia);
 	public void aplicaDescuento(IncidenciaDto incidencia);
+	public reporte generaFormatoJustificacion(FormatoIncidencia generaReporteArchivo);
+	public reporte generaFormatoDescuento(FormatoIncidencia generaReporteArchivo);
 }
