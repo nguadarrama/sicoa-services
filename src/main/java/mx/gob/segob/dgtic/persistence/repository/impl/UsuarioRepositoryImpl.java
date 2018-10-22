@@ -12,6 +12,9 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import mx.gob.segob.dgtic.business.service.HorarioService;
 import mx.gob.segob.dgtic.comun.sicoa.dto.PerfilDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
@@ -250,21 +253,25 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 
 	@Override
 	public List<UsuarioDto> obtenerListaUsuariosActivos(String fecha) {
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		System.out.println("fecha method-UsuarioRepoImpl: "+fecha);
+		
 		StringBuilder qry = new StringBuilder();
         qry.append("select id_usuario, id_area, cve_c_perfil, id_horario, id_puesto,"
         		+ " cve_m_usuario, nombre, apellido_paterno, apellido_materno, "
         		+ "fecha_ingreso, activo, nuevo, en_sesion, ultimo_acceso, numero_intentos,"
         		+ " bloqueado, fecha_bloqueo,  primera_vez, estatus ");
-        qry.append("from m_usuario ");
-        qry.append(" where activo = 1 ");
-        qry.append(" and fecha_ingreso <= :fecha");
+        qry.append(" from m_usuario ");
+        qry.append(" where estatus = 'A' ");
+        qry.append(" and fecha_ingreso <= '")
+        .append(fecha)
+        .append("' ");
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
         parametros.addValue("fecha", fecha);
-        
+        System.out.println(gson.toJson("parametros: "+parametros));
         List<Map<String, Object>> usuarios = jdbcTemplate.queryForList(qry.toString());
-        List<UsuarioDto> listaUsuario = new ArrayList<>();
-        
+        List<UsuarioDto> listaUsuario = new ArrayList<>();      
         for (Map<String, Object> usuario : usuarios) {
     		UsuarioDto usuarioDto = new UsuarioDto();
     		usuarioDto.setIdUsuario((Integer)usuario.get("id_usuario"));
@@ -291,10 +298,8 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
     		//usuarioDto.setRfc((String)usuario.get("rfc"));
     		//usuarioDto.setNivel((String)usuario.get("nivel"));
     		listaUsuario.add(usuarioDto);
-    	}
-        
-        logger.info(listaUsuario.size() + " usuarios encontrados.");
-        
+    	}        
+        logger.info(listaUsuario.size() + " usuarios encontrados method--UsuarioRepoImpl.");       
 		return listaUsuario;
 	}
 	
