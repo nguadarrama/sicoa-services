@@ -11,4 +11,5 @@ public interface UnidadAdministrativaService {
 	public void consultaRegistraUsuarioUnidadAdministrativa(UsuarioUnidadAdministrativaDto usuarioUnidadAdministrativaDto);
 	public List<UsuarioUnidadAdministrativaDto> consultaResponsable(String claveUsuario);
 	public List<UsuarioUnidadAdministrativaDto> obtenerUnidadesAdministrativas();
+	public List<UsuarioUnidadAdministrativaDto> consultasoloUnidades();
 }

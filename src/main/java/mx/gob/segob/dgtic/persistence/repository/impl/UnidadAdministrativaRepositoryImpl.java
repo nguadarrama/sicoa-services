@@ -41,14 +41,14 @@ public class UnidadAdministrativaRepositoryImpl implements UnidadAdministrativaR
         
         for (Map<String, Object> unidad : unidadesArdminsitrativas) {
         	UsuarioUnidadAdministrativaDto usuarioUnidadAdministrativaDto = new UsuarioUnidadAdministrativaDto();
-        	System.out.println("unidad "+unidad.get("nombre"));
+        	//System.out.println("unidad "+unidad.get("nombre"));
     		UnidadAdministrativaDto unidadAdministrativaDto = new UnidadAdministrativaDto();
     		unidadAdministrativaDto.setIdUnidad((Integer)unidad.get("id_unidad"));
     		unidadAdministrativaDto.setNombre((String)unidad.get("nombre"));
     		UsuarioDto usuarioDto = new UsuarioDto();
     		usuarioUnidadAdministrativaDto.setIdUnidad(unidadAdministrativaDto);
     		usuarioDto.setClaveUsuario((String)unidad.get("cve_m_usuario"));
-    		System.out.println("Datos "+unidad.get("cve_m_usuario")+" "+unidad.get("nombre"));
+    		//System.out.println("Datos "+unidad.get("cve_m_usuario")+" "+unidad.get("nombre"));
     		usuarioUnidadAdministrativaDto.setClaveUsuario(usuarioDto);
     		
     		listaUnidadAdministrativa.add(usuarioUnidadAdministrativaDto);
@@ -172,6 +172,27 @@ public class UnidadAdministrativaRepositoryImpl implements UnidadAdministrativaR
 	    		listaUnidadAdministrativa.add(usuarioUnidadAdministrativaDto);
 	    	}
 	     return listaUnidadAdministrativa;
+	}
+
+	@Override
+	public List<UsuarioUnidadAdministrativaDto> consultasoloUnidades() {
+		StringBuilder qry = new StringBuilder();
+        qry.append("select id_unidad, nombre ");
+        qry.append("from c_unidad_administrativa ");
+        //qry.append("where unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario ");
+        
+        List<Map<String, Object>> unidadesArdminsitrativas = jdbcTemplate.queryForList(qry.toString());
+        List<UsuarioUnidadAdministrativaDto> listaUnidadAdministrativa = new ArrayList<>();
+        
+        for (Map<String, Object> unidad : unidadesArdminsitrativas) {
+        	UsuarioUnidadAdministrativaDto usuarioUnidadAdministrativaDto = new UsuarioUnidadAdministrativaDto();
+        	//System.out.println("unidad "+unidad.get("nombre"));
+    		UnidadAdministrativaDto unidadAdministrativaDto = new UnidadAdministrativaDto();
+    		unidadAdministrativaDto.setIdUnidad((Integer)unidad.get("id_unidad"));
+    		unidadAdministrativaDto.setNombre((String)unidad.get("nombre"));
+    		listaUnidadAdministrativa.add(usuarioUnidadAdministrativaDto);
+    	}
+        return listaUnidadAdministrativa;
 	}
 
 }

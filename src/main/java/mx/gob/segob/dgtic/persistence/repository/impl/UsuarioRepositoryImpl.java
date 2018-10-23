@@ -91,7 +91,7 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
         StringBuilder qry = new StringBuilder();
         qry.append("select u.id_usuario, u.id_area, u.cve_c_perfil, u.id_horario, u.id_puesto, u.cve_m_usuario, ");
         qry.append("u.nombre, u.apellido_paterno, u.apellido_materno, u.fecha_ingreso, u.activo, u.nuevo, u.en_sesion, ");
-        qry.append("u.ultimo_acceso, u.numero_intentos, u.bloqueado, u.fecha_bloqueo, u.primera_vez, u.estatus, u.nivel, u.rfc, ");
+        qry.append("u.ultimo_acceso, u.numero_intentos, u.bloqueado, u.fecha_bloqueo, u.primera_vez, u.estatus estatus_usuario, u.nivel, u.rfc, ");
         qry.append("p.descripcion, p.estatus, unidad.id_unidad, unidad.nombre as nombre_unidad, ");
         qry.append("h.hora_entrada, h.hora_salida ");
         qry.append("from m_usuario u, c_perfil p, c_horario h, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion ");
@@ -134,7 +134,7 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
         usuario.setBloqueado((String) informacionConsulta.get("bloqueado"));
         usuario.setFechaBloqueo((Date) informacionConsulta.get("fecha_bloqueo"));
         usuario.setPrimeraVez((String) informacionConsulta.get("primera_vez"));
-        usuario.setEstatus((String) informacionConsulta.get("estatus"));
+        usuario.setEstatus((String) informacionConsulta.get("estatus_usuario"));
         usuario.setNivel((String) informacionConsulta.get("nivel"));
         usuario.setRfc((String) informacionConsulta.get("rfc"));
         usuario.setIdUnidad((Integer)informacionConsulta.get("id_unidad"));
@@ -147,14 +147,11 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 	public void modificaUsuario(UsuarioDto usuarioDto) {
 		
 		StringBuilder qry = new StringBuilder();
-		qry.append("update m_usuario set id_area = :idArea, id_horario = :idHorario, "
-				+ "password = :password, activo = :activo, "
-				+ "nuevo =: nuevo, en_sesion =: enSesion, ultimo_acceso =: ultimoAcceso, numero_intentos = :numeroIntentos, bloqueado = :bloqueado, "
-				+ "fecha_bloqueo = :fechaBloqueo, primera_vez = :primeraVez, estatus = :estatus ");
-		qry.append("WHERE cve_m_usuario = :claveUsuario");
+		qry.append("update m_usuario set id_horario = :idHorario, estatus = :estatus ");
+		qry.append("WHERE cve_m_usuario = :claveUsuario ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("idArea", usuarioDto.getIdArea());
+		//parametros.addValue("idArea", usuarioDto.getIdArea());
 		//parametros.addValue("clavePerfil", usuarioDto.getClavePerfil().getClavePerfil());
 		parametros.addValue("idHorario", usuarioDto.getIdHorario().getIdHorario());
 		//parametros.addValue("idPuesto", usuarioDto.getIdPuesto());
@@ -163,15 +160,15 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 		//parametros.addValue("apellidoPaterno", usuarioDto.getApellidoPaterno());
 		//parametros.addValue("apellidoMaterno", usuarioDto.getApellidoMaterno());
 		//parametros.addValue("fechaIngreso", usuarioDto.getFechaIngreso());
-		parametros.addValue("password", usuarioDto.getPassword());
-		parametros.addValue("activo", usuarioDto.getActivo());
-		parametros.addValue("nuevo", usuarioDto.getNuevo());
-		parametros.addValue("enSesion", usuarioDto.getEnSesion());
-		parametros.addValue("ultimoAcceso", usuarioDto.getUltimoAcceso());
-		parametros.addValue("NumeroIntentos", usuarioDto.getNumeroIntentos());
-		parametros.addValue("bloqueado", usuarioDto.getBloqueado());
-		parametros.addValue("fechaBloqueo", usuarioDto.getFechaBloqueo());
-		parametros.addValue("primeraVez", usuarioDto.getPrimeraVez());
+//		parametros.addValue("password", usuarioDto.getPassword());
+//		parametros.addValue("activo", usuarioDto.getActivo());
+//		parametros.addValue("nuevo", usuarioDto.getNuevo());
+//		parametros.addValue("enSesion", usuarioDto.getEnSesion());
+//		parametros.addValue("ultimoAcceso", usuarioDto.getUltimoAcceso());
+//		parametros.addValue("NumeroIntentos", usuarioDto.getNumeroIntentos());
+//		parametros.addValue("bloqueado", usuarioDto.getBloqueado());
+//		parametros.addValue("fechaBloqueo", usuarioDto.getFechaBloqueo());
+//		parametros.addValue("primeraVez", usuarioDto.getPrimeraVez());
 		parametros.addValue("estatus", usuarioDto.getEstatus());
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);	
 	}
@@ -356,7 +353,7 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
         usuario.setRfc((String) informacionConsulta.get("rfc"));
         usuario.setIdUnidad((Integer)informacionConsulta.get("id_unidad"));
         usuario.setNombreUnidad((String)informacionConsulta.get("nombre_unidad"));
-        System.out.println("uniddAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAd "+informacionConsulta.get("nombre_unidad"));
+        //System.out.println("uniddAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAd "+informacionConsulta.get("nombre_unidad"));
         
         
         return usuario;

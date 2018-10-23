@@ -33,12 +33,16 @@ public class UsuarioPerfilRules {
 		}
 		for(int i=0; i<arreglo.length;i++){
 			PerfilDto perfilDto = new PerfilDto();
-			perfilDto.setClavePerfil(""+arreglo[i]);
-			System.out.println("inserción "+arreglo[i]);
-			UsuarioPerfilDto usuarioPerfil = new UsuarioPerfilDto();
-			usuarioPerfil.setClavePerfil(perfilDto);
-			usuarioPerfil.setClaveUsuario(usuarioPerfilDto.getClaveUsuario());
-			usuarioPerfilRepository.agregaUsuarioPerfil(usuarioPerfil);
+			if(arreglo[i]!=null){
+					perfilDto.setClavePerfil(""+arreglo[i]);
+					System.out.println("inserción del perfil "+arreglo[i]);
+					UsuarioPerfilDto usuarioPerfil = new UsuarioPerfilDto();
+					usuarioPerfil.setClavePerfil(perfilDto);
+					usuarioPerfil.setClaveUsuario(usuarioPerfilDto.getClaveUsuario());
+					usuarioPerfilRepository.agregaUsuarioPerfil(usuarioPerfil);
+			}else{
+				System.out.println("no se puede insertar el perfil "+arreglo[i]);
+			}
 		}
 		
 //		for(int i=0; i<arreglo.length;i++){
