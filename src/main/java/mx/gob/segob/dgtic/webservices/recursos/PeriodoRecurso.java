@@ -44,7 +44,7 @@ public class PeriodoRecurso {
 		
 		@GET
 		@Produces(MediaType.APPLICATION_JSON)
-		@Path("buscaPeriodo")	
+		@Path("buscaPeriodo")
 		@PermitAll
 		public Response buscaPeriodo(@QueryParam("id") Integer id) {
 
@@ -62,10 +62,8 @@ public class PeriodoRecurso {
 			GsonBuilder builder = new GsonBuilder();
 			Gson gson = builder.create();
 			PeriodoDto periodoDto = gson.fromJson(jsonObject.get("periodo"), PeriodoDto.class);
-			
-			periodoService.modificaPeriodo(periodoDto);
 
-			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, periodoDto);
 		}
 		
 		@PUT
@@ -79,10 +77,8 @@ public class PeriodoRecurso {
 			GsonBuilder builder = new GsonBuilder();
 			Gson gson = builder.create();
 			PeriodoDto periodoDto = gson.fromJson(jsonObject.get("periodo"), PeriodoDto.class);
-			
-			periodoService.agregaPeriodo(periodoDto);
-
-			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+		
+			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, periodoService.agregaPeriodo(periodoDto));
 		}
 		
 		@GET
@@ -115,6 +111,22 @@ public class PeriodoRecurso {
 		public Response generaPeriodoVacacional(@RequestParam String inicio, @RequestParam String descripcion,@RequestParam boolean activo) {
 			System.out.println("datos recibidos: "+" fechhaInicio: "+inicio+" descripcion: "+descripcion+" activo: "+activo);
 			periodoService.generaPeriodoVacacional(inicio, descripcion, activo);
+			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+		}
+		
+		@PUT
+		@Produces(MediaType.APPLICATION_JSON)
+		@Consumes(MediaType.APPLICATION_JSON)
+		@Path("modificaEstatusPeriodo")	
+		@PermitAll
+		public Response modificaestatusPeriodo(@RequestParam String jsonPeriodo) {
+			JsonObject jsonObject = new JsonParser().parse(jsonPeriodo).getAsJsonObject();
+			
+			GsonBuilder builder = new GsonBuilder();
+			Gson gson = builder.create();
+			PeriodoDto periodoDto = gson.fromJson(jsonObject.get("periodo"), PeriodoDto.class);
+			System.out.println("periodoRecurso method-- idPeriodo: "+periodoDto.getIdPeriodo()+" +activo: "+periodoDto.getActivo() );
+			periodoService.cambiaEstatusPeriodo(periodoDto);
 			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 		}
 	

@@ -24,7 +24,7 @@ public class PeriodoRules {
 	}
 	
 	public void modificaPeriodo(PeriodoDto periodoDto){
-		periodoRepository.modificaPeriodo(periodoDto);
+		 periodoRepository.modificaPeriodo(periodoDto);
 	}
 	
 	public PeriodoDto agregaPeriodo(PeriodoDto periodoDto){

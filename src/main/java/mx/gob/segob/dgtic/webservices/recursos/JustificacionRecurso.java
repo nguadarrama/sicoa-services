@@ -21,7 +21,7 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.JustificacionDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
-@Path("justificacion")
+@Path("catalogo")
 @Component
 public class JustificacionRecurso {
 	
@@ -74,11 +74,9 @@ public class JustificacionRecurso {
 	@PermitAll
 	public Response agregaJustificacion(@RequestParam String jsonPermiso) {
 		JsonObject jsonObject = new JsonParser().parse(jsonPermiso).getAsJsonObject();
-		
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		JustificacionDto justificacionDto = gson.fromJson(jsonObject.get("justificacion"), JustificacionDto.class);
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, justificacionService.agregaJustificacion(justificacionDto));
 	}
 	

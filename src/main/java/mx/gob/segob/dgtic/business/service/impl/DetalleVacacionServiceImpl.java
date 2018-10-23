@@ -147,14 +147,14 @@ public class DetalleVacacionServiceImpl implements DetalleVacacionService {
 				e1.printStackTrace();
 			}
 //			URL fileLocation = getClass().getClassLoader().getResource("vacacion");
-			System.out.println("ruta obtenida "+uri.toString());
+			System.out.println("**************ruta obtenida "+uri.toString());
 //			String relativeWebPath = "/images";
 //			String absoluteDiskPath = getServletContext().getRealPath(relativeWebPath);
 			DateFormat df = new SimpleDateFormat("MMM dd, yyyy");
 			System.out.println("Datos "+generaReporteArchivo.getNombre());
 			String url = uri.toString().replace("vfs:/", "");
 			System.out.println("URL -------------" + url);
-			JasperReport jasperReport=JasperCompileManager.compileReport(url +"\\jasper\\vacacion\\Vacaciones.jrxml");
+			JasperReport jasperReport=JasperCompileManager.compileReport(url +"/jasper/vacacion/Vacaciones.jrxml");
 			JRDataSource dataSource= new JREmptyDataSource();
 			Map<String,Object> parametros = new HashMap<String, Object>();
 			parametros.put("nombre", generaReporteArchivo.getNombre());
