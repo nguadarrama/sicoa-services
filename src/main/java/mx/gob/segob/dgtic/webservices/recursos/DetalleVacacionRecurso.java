@@ -126,29 +126,29 @@ public class DetalleVacacionRecurso {
 	@Path("consultaVacacionesPropiasPorFiltros")	
 	@PermitAll
 	public Response consultaVacacionesPropiasPorFiltros(@QueryParam("claveUsuario") String claveUsuario, @QueryParam("idEstatus") String idEstatus, @QueryParam("idPeriodo") String idPeriodo, @QueryParam("fechaInicio") String fechaInicio, @QueryParam("fechaFin") String fechaFin) {
-		Integer nuevoIdPeriodo=null;
-		Integer nuevoIdEstatus=null;
-		if(idPeriodo!=null && !idPeriodo.toString().isEmpty()){
-				try{
-					nuevoIdPeriodo=Integer.parseInt(idPeriodo);
-					
-				}catch(Exception e){
-					e.printStackTrace();
-					nuevoIdPeriodo=null;
-					
-				}
-		}
-		if(idEstatus!=null && !idEstatus.toString().isEmpty()){
-			try{
-				
-				nuevoIdEstatus=Integer.parseInt(idEstatus);
-			}catch(Exception e){
-				e.printStackTrace();
-				
-				nuevoIdEstatus=null;
-			}
-		}
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.consultaVacacionesPropiasPorFiltros(claveUsuario, nuevoIdPeriodo, nuevoIdEstatus, fechaInicio, fechaFin));
+//		Integer nuevoIdPeriodo=null;
+//		Integer nuevoIdEstatus=null;
+//		if(idPeriodo!=null && !idPeriodo.toString().isEmpty()){
+//				try{
+//					nuevoIdPeriodo=Integer.parseInt(idPeriodo);
+//					
+//				}catch(Exception e){
+//					e.printStackTrace();
+//					nuevoIdPeriodo=null;
+//					
+//				}
+//		}
+//		if(idEstatus!=null && !idEstatus.toString().isEmpty()){
+//			try{
+//				
+//				nuevoIdEstatus=Integer.parseInt(idEstatus);
+//			}catch(Exception e){
+//				e.printStackTrace();
+//				
+//				nuevoIdEstatus=null;
+//			}
+//		}
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.consultaVacacionesPropiasPorFiltros(claveUsuario, idPeriodo, idEstatus, fechaInicio, fechaFin));
 	}
 	
 	@GET
@@ -156,29 +156,9 @@ public class DetalleVacacionRecurso {
 	@Path("obtenerVacacionesPorFiltros")	
 	@PermitAll
 	public Response obtenerVacacionesPorFiltros(@QueryParam("claveUsuario") String claveUsuario, @QueryParam("nombre") String nombre, @QueryParam("apellidoPaterno") String apellidoPaterno, @QueryParam("apellidoMaterno") String apellidoMaterno, @QueryParam("idUnidad") String idUnidad, @QueryParam("idEstatus") String idEstatus) {
-		Integer nuevoIdUnidad=null;
-		Integer nuevoIdEstatus=null;
-		if(idUnidad!=null && !idUnidad.toString().isEmpty()){
-			try{
-				nuevoIdUnidad=Integer.parseInt(idUnidad);
-				
-			}catch(Exception e){
-				e.printStackTrace();
-				nuevoIdUnidad=null;
-				
-			}
-		}
-		if(idEstatus!=null && !idEstatus.toString().isEmpty()){
-			try{
-				
-				nuevoIdEstatus=Integer.parseInt(idEstatus);
-			}catch(Exception e){
-				e.printStackTrace();
-				
-				nuevoIdEstatus=null;
-			}
-		}
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.obtenerVacacionesPorFiltros(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, nuevoIdUnidad, nuevoIdEstatus));
+
+		
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.obtenerVacacionesPorFiltros(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, idUnidad, idEstatus));
 	}
 	
 	@PUT

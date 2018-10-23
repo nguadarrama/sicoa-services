@@ -50,6 +50,9 @@ public class AutenticacionRules {
 	/**  Constante que representa USUARIO_SESSION_ACTIVA, Mensaje de respuesta en servicio de autenticaci&oacute;n. */
 	private static final String USUARIO_SESSION_ACTIVA = "Ya existe una session activa";
 	
+	/**  Constante que representa USUARIO_SESSION_ACTIVA, Mensaje de respuesta en servicio de autenticaci&oacute;n. */
+	private static final String USUARIO_SESSION_INACTIVA = "La seisión ha caducado por incatividad, por favor ingresa de nuevo";
+	
 	/**  Constante que representa CONFIGURACION_AUTENTICACION_MINUTOS_BLOQUEADO, variable de las propiedades de configuraci&oacute;n de la aplicaci&oacute;n ({@code aplicacion.properties} : {@code autenticacion.minutos_bloqueo} ) . */
 	private static final String CONFIGURACION_AUTENTICACION_MINUTOS_BLOQUEADO = "autenticacion.minutos_bloqueo";
 	

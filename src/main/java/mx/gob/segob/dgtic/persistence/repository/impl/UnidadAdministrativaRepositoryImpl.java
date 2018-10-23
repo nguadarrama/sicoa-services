@@ -34,7 +34,7 @@ public class UnidadAdministrativaRepositoryImpl implements UnidadAdministrativaR
 		StringBuilder qry = new StringBuilder();
         qry.append("select unidad.id_unidad,unidad.nombre,usuario.cve_m_usuario ");
         qry.append("from c_unidad_administrativa unidad, usuario_unidad_administrativa relacion, m_usuario usuario ");
-        qry.append("where unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario and relacion.encargado=true");
+        qry.append("where unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario ");
         
         List<Map<String, Object>> unidadesArdminsitrativas = jdbcTemplate.queryForList(qry.toString());
         List<UsuarioUnidadAdministrativaDto> listaUnidadAdministrativa = new ArrayList<>();

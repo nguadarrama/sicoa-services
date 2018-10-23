@@ -43,4 +43,11 @@ public class LicenciaMedicaServiceImpl implements LicenciaMedicaService {
 		licenciaMedicaRules.eliminaLicenciaMedica(idLicencia);
 		
 	}
+
+	@Override
+	public List<LicenciaMedicaDto> obtenerListaLicenciaMedicaPorFiltros(String claveUsuario, String fechaInicio,
+			String fechaFin, String idEstatus) {
+		
+		return licenciaMedicaRules.obtenerListaLicenciaMedicaPorFiltros(claveUsuario, fechaInicio, fechaFin, idEstatus);
+	}
 }

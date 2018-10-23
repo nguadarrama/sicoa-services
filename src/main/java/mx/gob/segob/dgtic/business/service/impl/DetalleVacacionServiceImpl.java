@@ -116,13 +116,13 @@ public class DetalleVacacionServiceImpl implements DetalleVacacionService {
 
 	@Override
 	public List<DetalleVacacionDto> obtenerVacacionesPorFiltros(String claveUsuario, String nombre,
-			String apellidoPaterno, String apellidoMaterno, Integer idUnidad, Integer idEstatus) {
+			String apellidoPaterno, String apellidoMaterno, String idUnidad, String idEstatus) {
 		return detalleVacacionRules.obtenerVacacionesPorFiltros(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, idUnidad, idEstatus);
 	}
 
 	@Override
-	public List<DetalleVacacionDto> consultaVacacionesPropiasPorFiltros(String claveUsuario, Integer idPeriodo,
-			Integer idEstatus, String pfechaInicio, String pfechaFin) {
+	public List<DetalleVacacionDto> consultaVacacionesPropiasPorFiltros(String claveUsuario, String idPeriodo,
+			String idEstatus, String pfechaInicio, String pfechaFin) {
 		return detalleVacacionRules.consultaVacacionesPropiasPorFiltros(claveUsuario, idPeriodo, idEstatus, pfechaInicio, pfechaFin);
 	}
 	

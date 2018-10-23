@@ -28,7 +28,7 @@ public class EstatusRepositoryImpl implements EstatusRepository{
 		
 		 StringBuilder qry = new StringBuilder();
 	        qry.append("SELECT id_estatus, estatus, descripcion ");
-	        qry.append("FROM m_estatus ");
+	        qry.append("FROM m_estatus where descripcion='vacaciones'");
 	        
 	        List<Map<String, Object>> listaestatus = jdbcTemplate.queryForList(qry.toString());
 	        List<EstatusDto> listaEstatus = new ArrayList<>();

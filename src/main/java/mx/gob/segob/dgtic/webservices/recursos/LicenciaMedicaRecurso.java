@@ -24,7 +24,7 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.LicenciaMedicaDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
-@Path("catalogo")
+@Path("licencia")
 @Component
 public class LicenciaMedicaRecurso {
 	
@@ -92,6 +92,16 @@ public class LicenciaMedicaRecurso {
 		licenciaMedicaService.eliminaLicenciaMedica(id);
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("obtieneListaLicenciaMedicaPorFiltros")	
+	@PermitAll
+	public Response obtieneListaLicenciaMedicaPorFiltros(@QueryParam("claveUsuario") String claveUsuario,@QueryParam("idEstatus") String idEstatus, 
+			@QueryParam("fechaInicio") String fechaInicio, @QueryParam("fechaFin") String fechaFin) {
+
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, licenciaMedicaService.obtenerListaLicenciaMedicaPorFiltros(claveUsuario, fechaInicio, fechaFin, idEstatus));
 	}
 
 }

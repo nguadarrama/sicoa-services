@@ -33,4 +33,7 @@ public class LicenciaMedicaRules {
 	public void eliminaLicenciaMedica(Integer idLicencia){
 		licenciaMedicaRepository.eliminaLicenciaMedica(idLicencia);
 	}
+	public List<LicenciaMedicaDto> obtenerListaLicenciaMedicaPorFiltros(String claveUsuario, String fechaInicio, String fechaFin, String idEstatus) {
+		return licenciaMedicaRepository.obtenerListaLicenciaMedicaPorFiltros(claveUsuario, fechaInicio, fechaFin, idEstatus);
+	}
 }
