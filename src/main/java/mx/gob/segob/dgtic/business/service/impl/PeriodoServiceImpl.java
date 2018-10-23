@@ -117,7 +117,6 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 					 *************************************************************/
 					int idUltimo = top.getIdPeriodo();
 					vacacionRules.generarVacacionesTodos(user.getIdUsuario(), idUltimo , estatusPeriodo, sdf.format(fechaInicio), diasOtorgados, periodoDto.getActivo());
-					break;
 				}
 			}	
 			} // fin de else
