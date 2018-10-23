@@ -14,6 +14,7 @@ mx\gob\segob\dgtic\webservices\recursos\DetalleVacacionRecurso.class
 mx\gob\segob\dgtic\comun\util\excel\bean\FormatoFuenteBean.class
 mx\gob\segob\dgtic\comun\sicoa\dto\JustificacionDto.class
 mx\gob\segob\dgtic\business\rules\catalogo\PerfilRules.class
+mx\gob\segob\dgtic\comun\sicoa\dto\reporte.class
 mx\gob\segob\dgtic\persistence\repository\EstatusRepository.class
 mx\gob\segob\dgtic\webservices\recursos\ArchivoRecurso.class
 mx\gob\segob\dgtic\webservices\RestWSAplicacion.class
@@ -22,14 +23,17 @@ mx\gob\segob\dgtic\comun\sicoa\dto\EstatusDto.class
 mx\gob\segob\dgtic\business\service\impl\HorarioServiceImpl.class
 mx\gob\segob\dgtic\persistence\repository\UsuarioPerfilRepository.class
 mx\gob\segob\dgtic\business\service\PerfilPermisoService.class
+mx\gob\segob\dgtic\comun\util\FormatoIncidencia.class
 mx\gob\segob\dgtic\persistence\repository\impl\CargaInicialRepositoryImpl.class
 mx\gob\segob\dgtic\business\service\impl\VacacionPeriodoServiceImpl.class
 mx\gob\segob\dgtic\persistence\repository\ConfiguracionRepository.class
 mx\gob\segob\dgtic\webservices\recursos\JustificacionRecurso.class
+mx\gob\segob\dgtic\comun\sicoa\dto\DiaFestivoDto.class
 mx\gob\segob\dgtic\comun\util\CurpUtil.class
 mx\gob\segob\dgtic\webservices\aplicacionconfig\filter\EncodingFilter.class
 mx\gob\segob\dgtic\persistence\repository\impl\LicenciaMedicaRepositoryImpl.class
 mx\gob\segob\dgtic\webservices\aplicacionconfig\config\resteasy\provider\exception\ErrorRecursoMapperProvider.class
+mx\gob\segob\dgtic\business\service\DiaFestivoService.class
 mx\gob\segob\dgtic\webservices\aplicacionconfig\filter\AntiSqlFilter.class
 mx\gob\segob\dgtic\business\service\base\ServiceBase.class
 mx\gob\segob\dgtic\business\service\impl\AsistenciaServiceImpl.class
@@ -73,6 +77,7 @@ mx\gob\segob\dgtic\business\rules\catalogo\LicenciaMedicaRules.class
 mx\gob\segob\dgtic\comun\util\jasper\JasperUtil.class
 mx\gob\segob\dgtic\persistence\repository\AuditoriaRepository.class
 mx\gob\segob\dgtic\comun\sicoa\dto\IncidenciaDto.class
+mx\gob\segob\dgtic\webservices\recursos\DiaFestivoRecurso.class
 mx\gob\segob\dgtic\comun\util\UUIDUtil.class
 mx\gob\segob\dgtic\business\rules\catalogo\ComisionRules.class
 mx\gob\segob\dgtic\business\rules\catalogo\PerfilPermisoRules.class
@@ -116,6 +121,7 @@ mx\gob\segob\dgtic\persistence\repository\impl\UsuarioRepositoryImpl.class
 mx\gob\segob\dgtic\comun\sicoa\dto\UsuarioUnidadAdministrativaDto.class
 mx\gob\segob\dgtic\business\rules\catalogo\PermisoRules.class
 mx\gob\segob\dgtic\persistence\repository\PeriodoRepository.class
+mx\gob\segob\dgtic\comun\sicoa\dto\VacacionesAux.class
 mx\gob\segob\dgtic\persistence\repository\PermisoRepository.class
 mx\gob\segob\dgtic\business\rules\catalogo\UsuarioRules.class
 mx\gob\segob\dgtic\business\service\IncidenciaService.class
@@ -133,6 +139,7 @@ mx\gob\segob\dgtic\persistence\repository\impl\ConfiguracionRepositoryImpl.class
 mx\gob\segob\dgtic\business\service\impl\UnidadAdministrativaServiceImpl.class
 mx\gob\segob\dgtic\webservices\recursos\ComisionRecurso.class
 mx\gob\segob\dgtic\business\rules\catalogo\JustificacionRules.class
+mx\gob\segob\dgtic\persistence\repository\impl\DiaFestivoRepositoryImpl.class
 mx\gob\segob\dgtic\business\service\impl\AuditoriaServiceImpl.class
 mx\gob\segob\dgtic\persistence\repository\UsuarioRepository.class
 mx\gob\segob\dgtic\comun\sicoa\dto\PerfilDto.class
@@ -142,6 +149,7 @@ mx\gob\segob\dgtic\business\service\impl\PerfilPermisoServiceImpl.class
 mx\gob\segob\dgtic\business\rules\catalogo\UsuarioPerfilRules.class
 mx\gob\segob\dgtic\business\service\ComisionService.class
 mx\gob\segob\dgtic\comun\transport\constants\DecisionEnum.class
+mx\gob\segob\dgtic\business\service\impl\DiaFestivoServiceImpl.class
 mx\gob\segob\dgtic\webservices\recursos\base\RecursoBase.class
 mx\gob\segob\dgtic\business\rules\catalogo\UnidadAdministrativaRules.class
 mx\gob\segob\dgtic\comun\sicoa\dto\ComisionDto.class
@@ -156,6 +164,7 @@ mx\gob\segob\dgtic\comun\transport\constants\StatusResponse.class
 mx\gob\segob\dgtic\webservices\recursos\DemoRecurso.class
 mx\gob\segob\dgtic\webservices\aplicacionconfig\config\resteasy\provider\interceptor\AuditoriaInterceptor.class
 mx\gob\segob\dgtic\business\rules\asistencia\CargaAsistenciaRules.class
+mx\gob\segob\dgtic\persistence\repository\DiaFestivoRepository.class
 mx\gob\segob\dgtic\persistence\repository\LicenciaMedicaRepository.class
 mx\gob\segob\dgtic\business\service\AsistenciaService.class
 mx\gob\segob\dgtic\persistence\repository\PerfilRepository.class
@@ -166,6 +175,7 @@ mx\gob\segob\dgtic\comun\util\excel\bean\FormatoCeldaBean$ComponenteExcel.class
 mx\gob\segob\dgtic\comun\util\resteasy\token\builder\TokenAutenticacionBuilder.class
 mx\gob\segob\dgtic\business\service\UsuarioService.class
 mx\gob\segob\dgtic\business\service\PerfilService.class
+mx\gob\segob\dgtic\webservices\recursos\UsuarioPerfilRecurso.class
 mx\gob\segob\dgtic\comun\util\resteasy\token\constant\SubjectTokenEnum.class
 mx\gob\segob\dgtic\business\rules\catalogo\DetalleVacacionRules.class
 mx\gob\segob\dgtic\comun\util\config\AplicacionPropertiesUtil.class
@@ -185,11 +195,14 @@ mx\gob\segob\dgtic\business\rules\catalogo\IncidenciaRules.class
 mx\gob\segob\dgtic\comun\transport\dto\asistencia\Asistencia.class
 mx\gob\segob\dgtic\webservices\recursos\LicenciaMedicaRecurso.class
 mx\gob\segob\dgtic\comun\util\excel\bean\EstiloCeldaBean.class
+mx\gob\segob\dgtic\webservices\recursos\DiaFeriadoRecurso.class
 mx\gob\segob\dgtic\comun\transport\dto\webservice\MetadataDto.class
 mx\gob\segob\dgtic\comun\util\mapper\annotations\MapeaColumna.class
 mx\gob\segob\dgtic\persistence\repository\impl\CargaAsistenciaRepositoryImpl.class
 mx\gob\segob\dgtic\business\service\impl\ComisionServiceImpl.class
 mx\gob\segob\dgtic\persistence\repository\impl\CargaAsistenciaRepositoryImpl$1.class
+mx\gob\segob\dgtic\business\rules\catalogo\DiaFestivoRules.class
+mx\gob\segob\dgtic\comun\sicoa\dto\GeneraReporteArchivo.class
 mx\gob\segob\dgtic\business\service\impl\PermisoServiceImpl.class
 mx\gob\segob\dgtic\business\service\DemoService.class
 mx\gob\segob\dgtic\comun\transport\constants\EstatusEnum.class
