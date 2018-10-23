@@ -27,8 +27,10 @@ public class PeriodoRules {
 		periodoRepository.modificaPeriodo(periodoDto);
 	}
 	
-	public void agregaPeriodo(PeriodoDto periodoDto){
-		periodoRepository.agregaPeriodo(periodoDto);
+	public PeriodoDto agregaPeriodo(PeriodoDto periodoDto){
+		PeriodoDto periodo = new PeriodoDto();
+		periodo = periodoRepository.agregaPeriodo(periodoDto);
+		return periodo;
 	}
 	
 	public void eliminaPeriodo(Integer idPeriodo){
@@ -39,16 +41,17 @@ public class PeriodoRules {
 		return periodoRepository.buscaPeriodoPorClaveUsuario(claveUsuario);
 	}
 	
-	public int generaPeriodoVacacional(String inicio, String fin, String descripcion, boolean activo) {
-		return periodoRepository.generaPeriodoVacacional(inicio, fin, descripcion, activo);
+	public PeriodoDto generaPeriodoVacacional(PeriodoDto periodo) {
+		return periodoRepository.agregaPeriodo(periodo);
 	}
 	
 	public List<PeriodoDto> topPeriodo (){
 		return periodoRepository.topPeriodo();
 	}
 	
-	public void cambioEstatusPeriodo (Integer id, boolean activo) {
-		periodoRepository.cambioEstatusPeriodo(id, activo);
+	public PeriodoDto cambioEstatusPeriodo (PeriodoDto periodo) {
+		periodo = periodoRepository.cambioEstatusPeriodo(periodo);
+		return periodo;
 	}
 	
 	public void modificaEstatustPeridoEmpleados(Integer id, boolean activo) {

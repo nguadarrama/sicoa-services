@@ -11,6 +11,8 @@ import mx.gob.segob.dgtic.comun.util.mapper.annotations.MapeaColumna;
 
 import java.util.Date;
 
+import javax.persistence.Transient;
+
 public class PeriodoDto {
 	
 		/**
@@ -37,6 +39,9 @@ public class PeriodoDto {
 	    * El dato activo.
 	    */
 	   @MapeaColumna(columna = "activo") private Boolean activo;
+	   
+	   @Transient
+	   private String mensaje;
 	   
 	   /**
 	    * El id periodo.
@@ -114,5 +119,14 @@ public class PeriodoDto {
 		public void setActivo(Boolean activo) {
 			this.activo = activo;
 		}
+
+		public String getMensaje() {
+			return mensaje;
+		}
+
+		public void setMensaje(String mensaje) {
+			this.mensaje = mensaje;
+		}
+		
 
 }

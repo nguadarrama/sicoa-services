@@ -9,10 +9,10 @@ public interface PeriodoService {
 	public List<PeriodoDto> obtenerListaPeriodos();
 	public PeriodoDto buscaPeriodo(Integer idPeriodo);
 	public void modificaPeriodo(PeriodoDto periodoDto);
-	public void agregaPeriodo(PeriodoDto periodoDto);
+	public PeriodoDto agregaPeriodo(PeriodoDto periodoDto);
 	public void eliminaPeriodo(Integer idPeriodo);
 	public PeriodoDto buscaPeriodoPorClaveUsuario(String claveUsuario);
 	
 	public void generaPeriodoVacacional (String inicio, String descripcion, boolean activo);
-	public void cambiaEstatusPeriodo(Integer id, boolean activo);
+	public PeriodoDto cambiaEstatusPeriodo(PeriodoDto periodo);
 }

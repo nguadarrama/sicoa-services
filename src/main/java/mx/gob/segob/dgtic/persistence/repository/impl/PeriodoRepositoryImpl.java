@@ -87,8 +87,9 @@ public class PeriodoRepositoryImpl implements PeriodoRepository{
 		
 	}
 
+	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_COMMITTED)
 	@Override
-	public void agregaPeriodo(PeriodoDto periodoDto) {
+	public PeriodoDto agregaPeriodo(PeriodoDto periodoDto) {
 		
 		StringBuilder qry = new StringBuilder();
 		qry.append("insert into r_periodo (fecha_inicio, fecha_fin, descripcion, activo) ");
@@ -100,8 +101,20 @@ public class PeriodoRepositoryImpl implements PeriodoRepository{
 		parametros.addValue("descripcion", periodoDto.getDescripcion());
 		parametros.addValue("activo", periodoDto.getActivo());
 
-		nameParameterJdbcTemplate.update(qry.toString(), parametros);
-		
+		try {
+			Integer exitoso = nameParameterJdbcTemplate.update(qry.toString(), parametros);
+			if(exitoso == 1) {
+				periodoDto.setMensaje("El nuevo periodo vacacional se ha registrado correctamente. ");
+			} else {
+				periodoDto.setMensaje("Se ha generado un error con la solicitud, verifique la información. ");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			periodoDto.setMensaje("El periodo con fecha de inicio: "+periodoDto.getFechaInicio()+" ya existe. ");
+		}
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		System.out.println("PeriodoRepoImpl-- method--agregaPeriodo: "+gson.toJson(periodoDto));
+		return periodoDto;
 	}
 
 	@Override
@@ -181,14 +194,26 @@ public class PeriodoRepositoryImpl implements PeriodoRepository{
 
 	@Transactional(propagation = Propagation.MANDATORY, isolation = Isolation.READ_COMMITTED)
 	@Override
-	public void cambioEstatusPeriodo(Integer id, boolean activo) {
+	public PeriodoDto cambioEstatusPeriodo(PeriodoDto periodo) {
 		StringBuilder qry = new StringBuilder();
 		qry.append("update r_periodo set activo = :activo ");
 		qry.append("where id_periodo = :idPeriodo");
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("activo", activo);
-		parametros.addValue("idPeriodo", id);
-		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		parametros.addValue("activo", periodo.getActivo());
+		parametros.addValue("idPeriodo", periodo.getIdPeriodo());
+		try {
+			Integer exitoso = nameParameterJdbcTemplate.update(qry.toString(), parametros);
+			if(exitoso == 1) {
+				periodo.setMensaje("Se modifico el periodo correctamente. ");
+			} else {
+				periodo.setMensaje("Error al modificar el horario, verifique la información. ");
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		System.out.println("periodoRepoImpl--method--cambioEstatusPeriodo: "+gson.toJson(periodo));
+		return periodo;
 	}
 
 	@Transactional(propagation = Propagation.MANDATORY, isolation = Isolation.READ_COMMITTED)
