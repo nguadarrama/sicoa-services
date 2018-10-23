@@ -37,4 +37,7 @@ public class UnidadAdministrativaRules {
 		return unidadAdministrativaRepository.obtenerUnidadesAdministrativas();
 	}
 
+	public List<UsuarioUnidadAdministrativaDto> consultasoloUnidades(){
+		return unidadAdministrativaRepository.consultasoloUnidades();
+	}
 }

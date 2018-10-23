@@ -13,5 +13,6 @@ public interface UnidadAdministrativaRepository {
 	public void actualizaUsuarioUnidadAdministrativa(UsuarioUnidadAdministrativaDto usuarioUnidadAdministrativaDto);
 	public List<UsuarioUnidadAdministrativaDto> consultaResponsable(String claveUsuario);
 	public List<UsuarioUnidadAdministrativaDto> obtenerUnidadesAdministrativas();
+	public List<UsuarioUnidadAdministrativaDto> consultasoloUnidades();
 	
 }
