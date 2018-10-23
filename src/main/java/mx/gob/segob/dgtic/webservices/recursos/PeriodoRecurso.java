@@ -117,5 +117,21 @@ public class PeriodoRecurso {
 			periodoService.generaPeriodoVacacional(inicio, descripcion, activo);
 			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 		}
+		
+		@PUT
+		@Produces(MediaType.APPLICATION_JSON)
+		@Consumes(MediaType.APPLICATION_JSON)
+		@Path("modificaEstatusPeriodo")	
+		@PermitAll
+		public Response modificaestatusPeriodo(@RequestParam String jsonPeriodo) {
+			JsonObject jsonObject = new JsonParser().parse(jsonPeriodo).getAsJsonObject();
+			
+			GsonBuilder builder = new GsonBuilder();
+			Gson gson = builder.create();
+			PeriodoDto periodoDto = gson.fromJson(jsonObject.get("periodo"), PeriodoDto.class);
+			System.out.println("periodoRecurso method-- idPeriodo: "+periodoDto.getIdPeriodo()+" +activo: "+periodoDto.getActivo() );
+			periodoService.cambiaEstatusPeriodo(periodoDto);
+			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+		}
 	
 }
