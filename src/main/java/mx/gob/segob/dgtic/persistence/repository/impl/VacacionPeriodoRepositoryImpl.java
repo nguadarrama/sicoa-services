@@ -10,6 +10,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -150,6 +153,7 @@ public class VacacionPeriodoRepositoryImpl implements VacacionPeriodoRepository{
         return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<VacacionPeriodoDto>(VacacionPeriodoDto.class));
 	}
 	
+	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_COMMITTED)
 	@Override
 	public void generarVacacionPeriodotodos(int idUsuario, int idPeriodo, int estatus, String inicio, int dias, boolean activo) {
 		System.out.println("valores recibidos vacacionesPeriodoRepoImpl: "
@@ -170,6 +174,7 @@ public class VacacionPeriodoRepositoryImpl implements VacacionPeriodoRepository{
 //		System.out.println("parametros method--VacacionPeriodoRepoImpl: "+gson.toJson(parametros));
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);	
 	}
+
 
 	@Override
 	public List<VacacionPeriodoDto> obtenerUsuariosConVacacionesPorFiltros(String claveUsuario, String nombre,
