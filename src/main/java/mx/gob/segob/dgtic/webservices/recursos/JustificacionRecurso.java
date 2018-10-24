@@ -56,7 +56,7 @@ public class JustificacionRecurso {
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("modificaJustificacion")	
+	@Path("modificaJust")	
 	@PermitAll
 	public Response modificaJustificacion(@RequestParam String jsonJustificacion) {
 		
@@ -64,16 +64,18 @@ public class JustificacionRecurso {
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		JustificacionDto justificacionDto = gson.fromJson(jsonObject.get("justificacion"), JustificacionDto.class);
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, justificacionService.modificaJustificacion(justificacionDto));
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, justificacionService.agregaJustificacion(justificacionDto));
+		
 	}
+	
 	
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("agregaJustificacion")	
+	@Path("agregaJust")	
 	@PermitAll
-	public Response agregaJustificacion(@RequestParam String jsonPermiso) {
-		JsonObject jsonObject = new JsonParser().parse(jsonPermiso).getAsJsonObject();
+	public Response agregaJustificacion(@RequestParam String jsonJustificacion) {
+		JsonObject jsonObject = new JsonParser().parse(jsonJustificacion).getAsJsonObject();
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		JustificacionDto justificacionDto = gson.fromJson(jsonObject.get("justificacion"), JustificacionDto.class);

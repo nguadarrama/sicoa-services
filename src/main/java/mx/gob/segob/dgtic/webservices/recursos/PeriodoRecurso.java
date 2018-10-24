@@ -44,7 +44,7 @@ public class PeriodoRecurso {
 		
 		@GET
 		@Produces(MediaType.APPLICATION_JSON)
-		@Path("buscaPeriodo")
+		@Path("buscaPeriodo")	
 		@PermitAll
 		public Response buscaPeriodo(@QueryParam("id") Integer id) {
 
@@ -62,8 +62,10 @@ public class PeriodoRecurso {
 			GsonBuilder builder = new GsonBuilder();
 			Gson gson = builder.create();
 			PeriodoDto periodoDto = gson.fromJson(jsonObject.get("periodo"), PeriodoDto.class);
+			
+			periodoService.modificaPeriodo(periodoDto);
 
-			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, periodoDto);
+			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 		}
 		
 		@PUT
@@ -77,8 +79,10 @@ public class PeriodoRecurso {
 			GsonBuilder builder = new GsonBuilder();
 			Gson gson = builder.create();
 			PeriodoDto periodoDto = gson.fromJson(jsonObject.get("periodo"), PeriodoDto.class);
-		
-			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, periodoService.agregaPeriodo(periodoDto));
+			
+			periodoService.agregaPeriodo(periodoDto);
+
+			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, periodoDto);
 		}
 		
 		@GET
@@ -125,9 +129,9 @@ public class PeriodoRecurso {
 			GsonBuilder builder = new GsonBuilder();
 			Gson gson = builder.create();
 			PeriodoDto periodoDto = gson.fromJson(jsonObject.get("periodo"), PeriodoDto.class);
-			System.out.println("periodoRecurso method-- idPeriodo: "+periodoDto.getIdPeriodo()+" +activo: "+periodoDto.getActivo() );
+			System.out.println("periodoRecurso method--modificaestatusPeriodo-- idPeriodo: "+periodoDto.getIdPeriodo()+" +activo: "+periodoDto.getActivo() );
 			periodoService.cambiaEstatusPeriodo(periodoDto);
-			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, periodoDto);
 		}
 	
 }
