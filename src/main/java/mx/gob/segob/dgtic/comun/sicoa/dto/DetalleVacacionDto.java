@@ -12,8 +12,18 @@ import mx.gob.segob.dgtic.comun.util.mapper.annotations.MapeaColumnasInternas;
 
 import java.util.Date;
 
+import javax.persistence.Transient;
+
 public class DetalleVacacionDto {
 	
+	public String getMensaje() {
+		return mensaje;
+	}
+
+	public void setMensaje(String mensaje) {
+		this.mensaje = mensaje;
+	}
+
 	/**
      * El id detalle vacaci&oacute;n.
      */
@@ -61,6 +71,9 @@ public class DetalleVacacionDto {
     @MapeaColumna(columna = "dias") private Integer dias;
     
     @MapeaColumna(columna = "fecha_registro") private Date fechaRegistro;
+    
+    @Transient
+	   private String mensaje;
     
     /**
      * El id detalle vacaci&oacute;n.
@@ -223,6 +236,7 @@ public class DetalleVacacionDto {
 		this.fechaInicio = fechaInicio;
 	}
     
+	
 	
 
 }

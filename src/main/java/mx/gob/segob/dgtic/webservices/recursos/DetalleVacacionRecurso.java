@@ -88,9 +88,9 @@ public class DetalleVacacionRecurso {
 		VacacionesAux detalleVacacionDto = gson.fromJson(jsonObject.get("detalleVacacion"), VacacionesAux.class);
 		System.out.println("Datos para idVacacion en recurso "+detalleVacacionDto.getIdVacacion()+" fechaInicio "+detalleVacacionDto.getFechaInicio()+
 				" fechaFin "+detalleVacacionDto.getFechaFin());
-		detalleVacacionService.agregaDetalleVacacion(detalleVacacionDto);
+		
 
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.agregaDetalleVacacion(detalleVacacionDto));
 	}
 	
 	@GET

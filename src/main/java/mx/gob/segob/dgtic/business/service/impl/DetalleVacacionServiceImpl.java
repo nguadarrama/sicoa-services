@@ -61,14 +61,14 @@ public class DetalleVacacionServiceImpl implements DetalleVacacionService {
 	}
 
 	@Override
-	public void modificaDetalleVacacion(DetalleVacacionDto detalleVacacionDto) {
+	public DetalleVacacionDto modificaDetalleVacacion(DetalleVacacionDto detalleVacacionDto) {
 		
-		detalleVacacionRules.modificaDetalleVacacion(detalleVacacionDto);
+		 return detalleVacacionRules.modificaDetalleVacacion(detalleVacacionDto);
 		
 	}
 
 	@Override
-	public void agregaDetalleVacacion (VacacionesAux detalleVacacionDto) {
+	public DetalleVacacionDto agregaDetalleVacacion (VacacionesAux detalleVacacionDto) {
 		
 		DetalleVacacionDto vacacion= new DetalleVacacionDto();
 		EstatusDto estatusDto = new EstatusDto();
@@ -98,7 +98,7 @@ public class DetalleVacacionServiceImpl implements DetalleVacacionService {
     	vacacion.setFechaInicio(fechaInicial);
     	vacacion.setFechaFin(fechaFinal);
     	
-		detalleVacacionRules.agregaDetalleVacacion(vacacion);
+		return  detalleVacacionRules.agregaDetalleVacacion(vacacion);
 		
 	}
 
@@ -109,8 +109,8 @@ public class DetalleVacacionServiceImpl implements DetalleVacacionService {
 	}
 
 	@Override
-	public void aceptaORechazaDetalleVacacion(DetalleVacacionDto detalleVacacionDto) {
-		detalleVacacionRules.aceptaORechazaDetalleVacacion(detalleVacacionDto);
+	public DetalleVacacionDto aceptaORechazaDetalleVacacion(DetalleVacacionDto detalleVacacionDto) {
+		 return detalleVacacionRules.aceptaORechazaDetalleVacacion(detalleVacacionDto);
 		
 	}
 

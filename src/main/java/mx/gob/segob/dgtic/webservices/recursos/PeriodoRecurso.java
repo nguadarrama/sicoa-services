@@ -103,7 +103,6 @@ public class PeriodoRecurso {
 		public Response buscaPeriodoPorClaveUsuario(@QueryParam("claveUsuario") String claveUsuario) {
 			
 			PeriodoDto periodo=periodoService.buscaPeriodoPorClaveUsuario(claveUsuario);
-			System.out.println("usuario "+claveUsuario+" tu puto periodo "+periodo.getIdPeriodo());
 			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,periodo );
 		}
 		
