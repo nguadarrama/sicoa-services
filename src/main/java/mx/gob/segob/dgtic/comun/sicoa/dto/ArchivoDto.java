@@ -9,6 +9,8 @@ package mx.gob.segob.dgtic.comun.sicoa.dto;
 
 import java.io.InputStream;
 
+import javax.persistence.Transient;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import mx.gob.segob.dgtic.comun.util.mapper.annotations.MapeaColumna;
@@ -46,7 +48,18 @@ public class ArchivoDto {
 	   
 	   private String claveUsuario;
 	   
-	   /**
+	   @Transient
+	   private String mensaje;
+	   
+	   public String getMensaje() {
+		return mensaje;
+	}
+
+	public void setMensaje(String mensaje) {
+		this.mensaje = mensaje;
+	}
+
+	/**
 		 * Obtener el id archivo.
 		 *
 		 * @return idArchivo

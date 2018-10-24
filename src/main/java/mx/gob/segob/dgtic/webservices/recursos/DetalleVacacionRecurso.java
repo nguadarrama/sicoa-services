@@ -70,9 +70,9 @@ public class DetalleVacacionRecurso {
 		Gson gson = builder.create();
 		DetalleVacacionDto detalleVacacionDto = gson.fromJson(jsonObject.get("detalleVacacion"), DetalleVacacionDto.class);
 		
-		detalleVacacionService.modificaDetalleVacacion(detalleVacacionDto);
+		
 
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.modificaDetalleVacacion(detalleVacacionDto));
 	}
 	
 	@PUT
@@ -116,9 +116,7 @@ public class DetalleVacacionRecurso {
 		Gson gson = builder.create();
 		DetalleVacacionDto detalleVacacionDto = gson.fromJson(jsonObject.get("detalleVacacion"), DetalleVacacionDto.class);
 		System.out.println("Valor de idUsuario "+detalleVacacionDto.getIdUsuario().getIdUsuario());
-		detalleVacacionService.aceptaORechazaDetalleVacacion(detalleVacacionDto);
-
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.aceptaORechazaDetalleVacacion(detalleVacacionDto));
 	}
 	
 	@GET

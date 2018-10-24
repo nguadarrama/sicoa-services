@@ -192,8 +192,9 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String fechaIni=sdf.format(detalleVacacionDto.getFechaInicio());
 		String fechaF=sdf.format(detalleVacacionDto.getFechaFin());
-		String query="select id_detalle from d_detalle_vacacion where fecha_inicio between '"+fechaIni+"' and'"+fechaF+"' "
-				+ "or fecha_fin between '"+fechaIni+"' and '"+fechaIni+"' and id_usuario='"+detalleVacacionDto.getIdUsuario().getIdUsuario()+"' ";
+		//select id_detalle from d_detalle_vacacion where ((fecha_inicio between '2018-10-25' and'2018-10-26') or (fecha_fin between '2018-10-25' and '2018-10-26')) and id_usuario='936'
+		String query="select id_detalle from d_detalle_vacacion where ((fecha_inicio between '"+fechaIni+"' and '"+fechaF+"') "
+				+ "or (fecha_fin between '"+fechaIni+"' and '"+fechaF+"' )) and id_usuario='"+detalleVacacionDto.getIdUsuario().getIdUsuario()+"' ";
 		System.out.println("query "+query);
         List<Map<String, Object>> detalleVacaciones = jdbcTemplate.queryForList(query);
         System.out.println("Datos de la consulta "+detalleVacaciones.size());
