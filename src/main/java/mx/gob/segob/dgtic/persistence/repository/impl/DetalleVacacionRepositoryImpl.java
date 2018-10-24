@@ -188,6 +188,7 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 
 	@Override
 	public DetalleVacacionDto agregaDetalleVacacion(DetalleVacacionDto detalleVacacionDto) {
+		Integer i = 0;
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String fechaIni=sdf.format(detalleVacacionDto.getFechaInicio());
 		String fechaF=sdf.format(detalleVacacionDto.getFechaFin());
@@ -195,7 +196,8 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 				+ "or fecha_fin between '"+fechaIni+"' and '"+fechaIni+"' and id_usuario='"+detalleVacacionDto.getIdUsuario().getIdUsuario()+"' ";
 		System.out.println("query "+query);
         List<Map<String, Object>> detalleVacaciones = jdbcTemplate.queryForList(query);
-        if(!detalleVacaciones.isEmpty() && detalleVacaciones.size()>0){
+        System.out.println("Datos de la consulta "+detalleVacaciones.size());
+        if(detalleVacaciones.size()==0 || detalleVacaciones==null){
         	
 			Date fechaActual = new Date();
 			System.out.println("Fecha actual "+fechaActual);
@@ -215,17 +217,15 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 			parametros.addValue("fechaRegistro", detalleVacacionDto.getFechaRegistro());
 			
 			try{
-				Integer i= nameParameterJdbcTemplate.update(qry.toString(), parametros);
-				if(i == 1){
-					detalleVacacionDto.setMensaje("El registro de vacaciones se realizó correctamente.");
-				}else{
-					detalleVacacionDto.setMensaje("Se ha generado un error al guardar vacaciones, revise la información");
-				}
-				
+				i= nameParameterJdbcTemplate.update(qry.toString(), parametros);
 			}catch(Exception e){
 				e.printStackTrace();
 			}
         }
+        if(i == 1)
+			detalleVacacionDto.setMensaje("El registro de vacaciones se realizó correctamente.");
+		else
+			detalleVacacionDto.setMensaje("Se ha generado un error al guardar vacaciones, revise la información");
 		return detalleVacacionDto;
 		
 	}

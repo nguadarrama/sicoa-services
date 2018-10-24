@@ -67,11 +67,13 @@ public class DetalleVacacionRules {
 	    System.out.println("Dias del periodo "+vacacionPeriodoDto.getDias()+" dias pedidos "+ detalleVacacionDto.getDias());
 	    Integer resta=vacacionPeriodoDto.getDias()-detalleVacacionDto.getDias();
 	    //setea el nueo numero de dias disponibles
-	    vacacionPeriodoDto.setDias(resta);
-	    //modificamos el numero de vacaciones en la tabla vacacion_periodo
-	    vacacionPeriodoRepository.modificaVacacionPeriodo(vacacionPeriodoDto);
+	    vacacionPeriodoDto.setDias(resta);	    
 	    //insertamos en la tabla detalle_vacacion
-	    return detalleVacacionRepository.agregaDetalleVacacion(detalleVacacionDto);
+	    detalleVacacionDto = detalleVacacionRepository.agregaDetalleVacacion(detalleVacacionDto);
+	    if(detalleVacacionDto.getMensaje().contains("correctamente"))
+	    	//modificamos el numero de vacaciones en la tabla vacacion_periodo
+		    vacacionPeriodoRepository.modificaVacacionPeriodo(vacacionPeriodoDto);
+	    return detalleVacacionDto;
 	    
 	    
 	}
