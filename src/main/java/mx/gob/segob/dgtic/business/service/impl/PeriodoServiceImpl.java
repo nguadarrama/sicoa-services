@@ -87,6 +87,7 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 			existe = periodoRules.existePeriodo(sdf.format(fechaInicio));
 			if(existe) {
 				System.out.println("El periodo ya existe");
+				periodo.setMensaje("El periodo ya existe, verifique la información. ");
 			}
 			else {
 				periodoDto.setFechaInicio(fechaInicio);
@@ -125,7 +126,7 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 		} catch (ParseException e) {
 			logger.warn("Error al convertir la fecha en búsqueda de asistencia: " + e.getMessage());
 		}	
-		System.out.println("reutn periodoServiceImpl-- method--agregaPeriodo: "+periodo);
+		System.out.println("return periodoServiceImpl-- method--agregaPeriodo: "+gson.toJson(periodo));
 		return periodo;
 	}
 
