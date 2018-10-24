@@ -13,10 +13,10 @@ public interface DetalleVacacionService {
 
 	public List<DetalleVacacionDto> obtenerListaDetalleVacaciones();
 	public DetalleVacacionDto buscaDetalleVacacion(Integer idDetalle);
-	public void modificaDetalleVacacion(DetalleVacacionDto detalleVacacionDto);
-	public void agregaDetalleVacacion(VacacionesAux detalleVacacionDto);
+	public DetalleVacacionDto modificaDetalleVacacion(DetalleVacacionDto detalleVacacionDto);
+	public DetalleVacacionDto agregaDetalleVacacion(VacacionesAux detalleVacacionDto);
 	public void eliminaDetalleVacacion(Integer idDetalle);
-	public void aceptaORechazaDetalleVacacion(DetalleVacacionDto detalleVacacionDto);
+	public DetalleVacacionDto aceptaORechazaDetalleVacacion(DetalleVacacionDto detalleVacacionDto);
 	public List<DetalleVacacionDto> obtenerVacacionesPorFiltros(String claveUsuario, String nombre, String apellidoPaterno, String apellidoMaterno, String idUnidad, String idEstatus);
 	public List<DetalleVacacionDto> consultaVacacionesPropiasPorFiltros(String claveUsuario, String idPeriodo, String idEstatus, String pfechaInicio, String pfechaFin );
 	public reporte generaReporteVacaciones(GeneraReporteArchivo generaReporteArchivo);

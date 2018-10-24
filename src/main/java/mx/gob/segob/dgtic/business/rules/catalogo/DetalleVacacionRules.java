@@ -47,11 +47,11 @@ public class DetalleVacacionRules {
 		return detalleVacacionRepository.buscaDetalleVacacion(idDetalle);
 	}
 	
-	public void modificaDetalleVacacion(DetalleVacacionDto detalleVacacionDto){
-		detalleVacacionRepository.modificaDetalleVacacion(detalleVacacionDto);
+	public DetalleVacacionDto modificaDetalleVacacion(DetalleVacacionDto detalleVacacionDto){
+		return detalleVacacionRepository.modificaDetalleVacacion(detalleVacacionDto);
 	}
 	
-	public void agregaDetalleVacacion(DetalleVacacionDto detalleVacacionDto){
+	public DetalleVacacionDto agregaDetalleVacacion(DetalleVacacionDto detalleVacacionDto){
 		//detalleVacacionRepository.agregaDetalleVacacion(detalleVacacionDto);
 		System.out.println("idVacacion en rules "+detalleVacacionDto.getIdVacacion().getIdVacacion());
 	    //ArchivoDto archivoDto = new ArchivoDto();
@@ -71,7 +71,7 @@ public class DetalleVacacionRules {
 	    //modificamos el numero de vacaciones en la tabla vacacion_periodo
 	    vacacionPeriodoRepository.modificaVacacionPeriodo(vacacionPeriodoDto);
 	    //insertamos en la tabla detalle_vacacion
-	    detalleVacacionRepository.agregaDetalleVacacion(detalleVacacionDto);
+	    return detalleVacacionRepository.agregaDetalleVacacion(detalleVacacionDto);
 	    
 	    
 	}
@@ -80,7 +80,8 @@ public class DetalleVacacionRules {
 		detalleVacacionRepository.eliminaDetalleVacacion(idDetalle);
 	}
 	
-	public void aceptaORechazaDetalleVacacion(DetalleVacacionDto detalleVacacionDto){
+	public DetalleVacacionDto aceptaORechazaDetalleVacacion(DetalleVacacionDto detalleVacacionDto){
+		DetalleVacacionDto aux= new DetalleVacacionDto();
 		System.out.println("idDetalle en el rules "+detalleVacacionDto.getIdDetalle());
 		DetalleVacacionDto detalleAux= new DetalleVacacionDto();
 		detalleAux=detalleVacacionRepository.buscaDetalleVacacion(detalleVacacionDto.getIdDetalle());
@@ -116,10 +117,10 @@ public class DetalleVacacionRules {
 		        asistenciaRepository.agregaAsistencia(asistenciaDto);
 		        System.out.println("Fecha "+date+" registro insertado");  
 		    }
-		    detalleVacacionRepository.aceptaORechazaDetalleVacacion(detalleVacacionDto); 
+		    aux= detalleVacacionRepository.aceptaORechazaDetalleVacacion(detalleVacacionDto); 
 		}else if(detalleVacacionDto.getIdEstatus().getIdEstatus()==3){
 			//detalleVacacionRepository.eliminaDetalleVacacion(detalleVacacionDto.getIdDetalle());
-			detalleVacacionRepository.aceptaORechazaDetalleVacacion(detalleVacacionDto);
+			aux = detalleVacacionRepository.aceptaORechazaDetalleVacacion(detalleVacacionDto);
 			VacacionPeriodoDto vacacionPeriodoDto= new VacacionPeriodoDto();
 		    //se obtienen los datos de la tabla vacacion_periodo
 		    vacacionPeriodoDto=vacacionPeriodoRepository.buscaVacacionPeriodo(detalleVacacionDto.getIdVacacion().getIdVacacion());
@@ -130,6 +131,7 @@ public class DetalleVacacionRules {
 		    //modificamos el numero de vacaciones en la tabla vacacion_periodo
 		    vacacionPeriodoRepository.modificaVacacionPeriodo(vacacionPeriodoDto);
 		}
+		return aux;
 	}
 	
 	public List<DetalleVacacionDto> obtenerVacacionesPorFiltros(String claveUsuario, String nombre, String apellidoPaterno, String apellidoMaterno, String idUnidad, String idEstatus){

@@ -1,5 +1,6 @@
 package mx.gob.segob.dgtic.persistence.repository.impl;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -160,7 +161,7 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 	}
 
 	@Override
-	public void modificaDetalleVacacion(DetalleVacacionDto detalleVacacionDto) {
+	public DetalleVacacionDto modificaDetalleVacacion(DetalleVacacionDto detalleVacacionDto) {
 		
 		StringBuilder qry = new StringBuilder();
 		qry.append("UPDATE d_detalle_vacacion SET id_archivo= :idArchivo ");
@@ -169,29 +170,63 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idDetalle", detalleVacacionDto.getIdDetalle());
 		parametros.addValue("idArchivo", detalleVacacionDto.getIdArchivo().getIdArchivo());
-		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		try{
+			Integer i= nameParameterJdbcTemplate.update(qry.toString(), parametros);
+			if(i == 1){
+				detalleVacacionDto.setMensaje("El registro de vacaciones se actualizó correctamente.");
+			}else{
+				detalleVacacionDto.setMensaje("Se ha generado un error al actualizar vacaciones, revise la información");
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return detalleVacacionDto;
+		
 		
 	}
 
 	@Override
-	public void agregaDetalleVacacion(DetalleVacacionDto detalleVacacionDto) {
-		Date fechaActual = new Date();
-		System.out.println("Fecha actual "+fechaActual);
-		detalleVacacionDto.setFechaRegistro(fechaActual);
-		StringBuilder qry = new StringBuilder();
-		qry.append("INSERT INTO d_detalle_vacacion (id_usuario, id_vacacion, id_responsable, id_estatus, fecha_inicio,fecha_fin, dias, fecha_registro ) ");
-		qry.append("VALUES (:idUsuario, :idVacacion, :idResponsable, :idEstatus, :fechaInicio, :fechaFin, :dias, :fechaRegistro) ");
-		
-		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("idUsuario", detalleVacacionDto.getIdUsuario().getIdUsuario());
-		parametros.addValue("idVacacion", detalleVacacionDto.getIdVacacion().getIdVacacion());
-		parametros.addValue("idResponsable", detalleVacacionDto.getIdResponsable());
-		parametros.addValue("idEstatus", detalleVacacionDto.getIdEstatus().getIdEstatus());
-		parametros.addValue("fechaInicio", detalleVacacionDto.getFechaInicio());
-		parametros.addValue("fechaFin", detalleVacacionDto.getFechaFin());
-		parametros.addValue("dias", detalleVacacionDto.getDias());
-		parametros.addValue("fechaRegistro", detalleVacacionDto.getFechaRegistro());
-		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+	public DetalleVacacionDto agregaDetalleVacacion(DetalleVacacionDto detalleVacacionDto) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String fechaIni=sdf.format(detalleVacacionDto.getFechaInicio());
+		String fechaF=sdf.format(detalleVacacionDto.getFechaFin());
+		String query="select id_detalle from d_detalle_vacacion where fecha_inicio between '"+fechaIni+"' and'"+fechaF+"' "
+				+ "or fecha_fin between '"+fechaIni+"' and '"+fechaIni+"' and id_usuario='"+detalleVacacionDto.getIdUsuario().getIdUsuario()+"' ";
+		System.out.println("query "+query);
+        List<Map<String, Object>> detalleVacaciones = jdbcTemplate.queryForList(query);
+        if(!detalleVacaciones.isEmpty() && detalleVacaciones.size()>0){
+        	
+			Date fechaActual = new Date();
+			System.out.println("Fecha actual "+fechaActual);
+			detalleVacacionDto.setFechaRegistro(fechaActual);
+			StringBuilder qry = new StringBuilder();
+			qry.append("INSERT INTO d_detalle_vacacion (id_usuario, id_vacacion, id_responsable, id_estatus, fecha_inicio,fecha_fin, dias, fecha_registro ) ");
+			qry.append("VALUES (:idUsuario, :idVacacion, :idResponsable, :idEstatus, :fechaInicio, :fechaFin, :dias, :fechaRegistro) ");
+			
+			MapSqlParameterSource parametros = new MapSqlParameterSource();
+			parametros.addValue("idUsuario", detalleVacacionDto.getIdUsuario().getIdUsuario());
+			parametros.addValue("idVacacion", detalleVacacionDto.getIdVacacion().getIdVacacion());
+			parametros.addValue("idResponsable", detalleVacacionDto.getIdResponsable());
+			parametros.addValue("idEstatus", detalleVacacionDto.getIdEstatus().getIdEstatus());
+			parametros.addValue("fechaInicio", detalleVacacionDto.getFechaInicio());
+			parametros.addValue("fechaFin", detalleVacacionDto.getFechaFin());
+			parametros.addValue("dias", detalleVacacionDto.getDias());
+			parametros.addValue("fechaRegistro", detalleVacacionDto.getFechaRegistro());
+			
+			try{
+				Integer i= nameParameterJdbcTemplate.update(qry.toString(), parametros);
+				if(i == 1){
+					detalleVacacionDto.setMensaje("El registro de vacaciones se realizó correctamente.");
+				}else{
+					detalleVacacionDto.setMensaje("Se ha generado un error al guardar vacaciones, revise la información");
+				}
+				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+        }
+		return detalleVacacionDto;
 		
 	}
 
@@ -208,7 +243,7 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 	}
 
 	@Override
-	public void aceptaORechazaDetalleVacacion(DetalleVacacionDto detalleVacacionDto) {
+	public DetalleVacacionDto aceptaORechazaDetalleVacacion(DetalleVacacionDto detalleVacacionDto) {
 		StringBuilder qry = new StringBuilder();
 		qry.append("UPDATE d_detalle_vacacion SET id_estatus= :idEstatus ");
 		qry.append("WHERE id_detalle = :idDetalle");
@@ -216,7 +251,19 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idEstatus", detalleVacacionDto.getIdEstatus().getIdEstatus());
 		parametros.addValue("idDetalle", detalleVacacionDto.getIdDetalle());
-		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		
+		try{
+			Integer i= nameParameterJdbcTemplate.update(qry.toString(), parametros);
+			if(i == 1){
+				detalleVacacionDto.setMensaje("El cambio en vacciones se realizó correctamente.");
+			}else{
+				detalleVacacionDto.setMensaje("Se ha generado un error al administrar vacaciones, revise la información");
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return detalleVacacionDto;
 		
 	}
 
