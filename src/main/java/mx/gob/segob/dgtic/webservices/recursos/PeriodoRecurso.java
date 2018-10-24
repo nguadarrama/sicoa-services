@@ -75,13 +75,10 @@ public class PeriodoRecurso {
 		@PermitAll
 		public Response agregaPeriodo(@RequestParam String jsonPeriodo) {
 			JsonObject jsonObject = new JsonParser().parse(jsonPeriodo).getAsJsonObject();
-			
 			GsonBuilder builder = new GsonBuilder();
 			Gson gson = builder.create();
 			PeriodoDto periodoDto = gson.fromJson(jsonObject.get("periodo"), PeriodoDto.class);
-			
-			periodoService.agregaPeriodo(periodoDto);
-
+			periodoDto = periodoService.agregaPeriodo(periodoDto);
 			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, periodoDto);
 		}
 		
@@ -124,12 +121,11 @@ public class PeriodoRecurso {
 		@PermitAll
 		public Response modificaestatusPeriodo(@RequestParam String jsonPeriodo) {
 			JsonObject jsonObject = new JsonParser().parse(jsonPeriodo).getAsJsonObject();
-			
 			GsonBuilder builder = new GsonBuilder();
 			Gson gson = builder.create();
 			PeriodoDto periodoDto = gson.fromJson(jsonObject.get("periodo"), PeriodoDto.class);
 			System.out.println("periodoRecurso method--modificaestatusPeriodo-- idPeriodo: "+periodoDto.getIdPeriodo()+" +activo: "+periodoDto.getActivo() );
-			periodoService.cambiaEstatusPeriodo(periodoDto);
+			periodoDto = periodoService.cambiaEstatusPeriodo(periodoDto);
 			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, periodoDto);
 		}
 	

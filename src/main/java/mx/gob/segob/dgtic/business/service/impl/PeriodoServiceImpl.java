@@ -73,12 +73,7 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 		// se suman 1.5 años a la fecha fin para incluirla en la fecha de termino de vacaciones
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar c = Calendar.getInstance();
-
-//			c.setTime(fechaFin);
-//			c.add(Calendar.MONTH, 18);
-//			fechaFin.setTime(c.getTimeInMillis());
 		logger.info("fechaFin= "+fechaFin);
-		
 		/**
 		 * Verificando que no exista el periodo a dar de alta
 		 */
@@ -110,14 +105,14 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 			* ***********************************************************/
 			List<UsuarioDto> usuarios = usuarioRules.obtenerListaUsuariosActivos(fecha);
 			
-			System.out.println("usuarios devueltos PeriodoService: "+gson.toJson(usuarios));
+//			System.out.println("usuarios devueltos PeriodoService: "+gson.toJson(usuarios));
 			List<PeriodoDto> periodos = periodoRules.topPeriodo();
 			for(UsuarioDto user :usuarios) {
 				/*************************************************************
 				 * Aqui se agregan los periodos a todos los usuarios devueltos
 				 *************************************************************/
 				int idUltimo = periodos.get(0).getIdPeriodo();
-				System.out.println("ultimoIdPeriodo: "+idUltimo);
+//				System.out.println("ultimoIdPeriodo: "+idUltimo);
 				vacacionRules.generarVacacionesTodos(user.getIdUsuario(), idUltimo , estatusPeriodo, sdf.format(fechaInicio), 10, periodoDto.getActivo());
 			}
 		} // fin de else	
