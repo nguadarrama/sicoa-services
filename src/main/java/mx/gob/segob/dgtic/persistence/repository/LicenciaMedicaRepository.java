@@ -12,4 +12,6 @@ public interface LicenciaMedicaRepository {
 	public void agregaLicenciaMedica(LicenciaMedicaDto licenciaMedicaDto);
 	public void eliminaLicenciaMedica(Integer idLicencia);
 	public List<LicenciaMedicaDto> obtenerListaLicenciaMedicaPorFiltros(String claveUsuario, String fechaInicio, String fechaFin, String idEstatus);
+	public List<LicenciaMedicaDto> obtenerListaLicenciaMedicaEmpleados(String claveUsuario ,String nombre,String apellidoPaterno, String apellidoMaterno, 
+			String idEstatus,String idUnidad);
 }
