@@ -52,35 +52,7 @@ public class JustificacionRecurso {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, justificacionService.buscaJustificacion(id));
 	}
-	
-	@PUT
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("modificaJust")	
-	@PermitAll
-	public Response modificaJustificacion(@RequestParam String jsonJustificacion) {
-		
-		JsonObject jsonObject = new JsonParser().parse(jsonJustificacion).getAsJsonObject();
-		GsonBuilder builder = new GsonBuilder();
-		Gson gson = builder.create();
-		JustificacionDto justificacionDto = gson.fromJson(jsonObject.get("justificacion"), JustificacionDto.class);
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, justificacionService.agregaJustificacion(justificacionDto));
-		
-	}
-	
-	
-	@PUT
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("agregaJust")	
-	@PermitAll
-	public Response agregaJustificacion(@RequestParam String jsonJustificacion) {
-		JsonObject jsonObject = new JsonParser().parse(jsonJustificacion).getAsJsonObject();
-		GsonBuilder builder = new GsonBuilder();
-		Gson gson = builder.create();
-		JustificacionDto justificacionDto = gson.fromJson(jsonObject.get("justificacion"), JustificacionDto.class);
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, justificacionService.agregaJustificacion(justificacionDto));
-	}
+
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

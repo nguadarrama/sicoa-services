@@ -113,7 +113,7 @@ public class JustificacionRepositoryImpl implements JustificacionRepository {
 		qry.append("VALUES (:clave, :justificacion, :activo ) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("clave", justificacionDto.getIdJustificacion());
+		parametros.addValue("clave", justificacionDto.getClave());
 		parametros.addValue("justificacion", justificacionDto.getJustificacion());
 		parametros.addValue("activo", justificacionDto.isActivo());
 		try{

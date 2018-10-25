@@ -96,7 +96,7 @@ public class ArchivoRepositoryImpl extends RecursoBase implements ArchivoReposit
 		}
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idArchivo", archivoDto.getIdArchivo());
-		parametros.addValue("nombre", archivoDto.getNombre());
+		parametros.addValue("nombre", +archivoDto.getIdArchivo()+archivoDto.getNombre());
 		parametros.addValue("size", archivoDto.getSize());
 		parametros.addValue("activo", archivoDto.getActivo());
 		parametros.addValue("url", archivoDto.getUrl());

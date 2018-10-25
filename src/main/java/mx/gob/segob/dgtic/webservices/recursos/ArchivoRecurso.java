@@ -20,7 +20,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import mx.gob.segob.dgtic.business.service.ArchivoService;
+import mx.gob.segob.dgtic.business.service.JustificacionService;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.JustificacionDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
@@ -30,6 +32,11 @@ public class ArchivoRecurso {
 
 	@Autowired
 	private ArchivoService archivoService;
+	
+	
+	@Autowired 
+	private JustificacionService justificacionService;
+	
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -96,5 +103,34 @@ public class ArchivoRecurso {
 		archivoService.eliminaArchivo(id);
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+	}
+	
+	@PUT
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("modificaJust")	
+	@PermitAll
+	public Response modificaJustificacion(@RequestParam String jsonJustificacion) {
+		
+		JsonObject jsonObject = new JsonParser().parse(jsonJustificacion).getAsJsonObject();
+		GsonBuilder builder = new GsonBuilder();
+		Gson gson = builder.create();
+		JustificacionDto justificacionDto = gson.fromJson(jsonObject.get("justificacion"), JustificacionDto.class);
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, justificacionService.modificaJustificacion(justificacionDto));
+		
+	}
+	
+	
+	@PUT
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("agregaJust")	
+	@PermitAll
+	public Response agregaJustificacion(@RequestParam String jsonJustificacion) {
+		JsonObject jsonObject = new JsonParser().parse(jsonJustificacion).getAsJsonObject();
+		GsonBuilder builder = new GsonBuilder();
+		Gson gson = builder.create();
+		JustificacionDto justificacionDto = gson.fromJson(jsonObject.get("justificacion"), JustificacionDto.class);
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, justificacionService.agregaJustificacion(justificacionDto));
 	}
 }
