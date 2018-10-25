@@ -86,13 +86,17 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         qry.append("inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ");
         qry.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia ");
         qry.append("left join m_estatus e on e.id_estatus = i.id_estatus ");
-        qry.append("WHERE id_usuario = ? ");
-        qry.append("and a.id_tipo_dia = t.id_tipo_dia ");
-        qry.append("and entrada >= ? ");
-        qry.append("and entrada < ? ");
-        qry.append("order by entrada");
+        qry.append("WHERE id_usuario = " + claveEmpleado);
+        qry.append(" and a.id_tipo_dia = t.id_tipo_dia");
+        
+        if (fechaInicio != null && fechaFin != null) {
+        	qry.append(" and entrada >= '" + fechaInicio + "'");
+        	qry.append(" and entrada < '" + fechaFin + "'");
+        }
+        
+        qry.append(" order by entrada");
 
-        List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString(), claveEmpleado, fechaInicio, fechaFin);
+        List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString());
         List<AsistenciaDto> listaAsistencia = new ArrayList<>();
         
         UsuarioDto usuario = usuarioRepository.buscaUsuario(claveEmpleado);
@@ -145,9 +149,12 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         qry.append("inner join m_usuario u on u.cve_m_usuario = a.id_usuario ");
         qry.append("inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ");
         qry.append("inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ");
-        qry.append("where entrada >= '" + fechaInicial + "'");
-        qry.append(" and entrada < '" + fechaFinal  + "'");
-        qry.append(" and uua.id_unidad = " + idUnidadCoordinador);
+        qry.append("where uua.id_unidad = " + idUnidadCoordinador);
+        
+        if (fechaInicial != null && fechaFinal != null) {
+        	qry.append(" and entrada >= '" + fechaInicial + "'");
+        	qry.append(" and entrada < '" + fechaFinal  + "'");
+        }
         
         if (!cve_m_usuario.isEmpty()) {
         	qry.append(" and a.id_usuario = " + cve_m_usuario);
@@ -225,6 +232,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 			String unidadAdministrativa) {
 			
 		StringBuilder qry = new StringBuilder();
+		Boolean usuarioFueAgregadoAQuery = false;
 	       
         qry.append("SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus, ");
         qry.append("i.id_estatus, i.descuento ");
@@ -235,11 +243,21 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         qry.append("inner join m_usuario u on u.cve_m_usuario = a.id_usuario ");
         qry.append("inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ");
         qry.append("inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ");
-        qry.append("where entrada >= '" + fechaInicial + "'");
-        qry.append(" and entrada < '" + fechaFinal  + "'");
         
-        if (!cve_m_usuario.isEmpty()) {
-        	qry.append(" and a.id_usuario = " + cve_m_usuario);
+        if (fechaInicial != null && fechaFinal != null) {
+        	qry.append("where entrada >= '" + fechaInicial + "'");
+        	qry.append(" and entrada < '" + fechaFinal  + "'");
+        } else {
+        	if (!cve_m_usuario.isEmpty()) {
+            	qry.append("where a.id_usuario = " + cve_m_usuario);
+            	usuarioFueAgregadoAQuery = true;
+            }
+        }
+        
+        if (!usuarioFueAgregadoAQuery) { //si usuario ya fue agregado a la query, entonces ya no agrega esta sección
+        	if (!cve_m_usuario.isEmpty()) {
+        		qry.append(" and a.id_usuario = " + cve_m_usuario);
+        	}
         }
         
         if (!nombre.isEmpty()) {
