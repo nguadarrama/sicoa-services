@@ -81,6 +81,7 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 		existe = periodoRules.existePeriodo(sdf.format(fechaInicio));
 		if(existe) {
 			System.out.println("El periodo ya existe");
+			periodo.setMensaje("El periodo ya se encuentra registrado, verifique por favor. ");
 		}
 		else {
 			periodoDto.setFechaInicio(fechaInicio);
