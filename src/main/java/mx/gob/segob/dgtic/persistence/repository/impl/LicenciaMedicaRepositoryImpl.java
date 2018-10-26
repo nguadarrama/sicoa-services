@@ -61,14 +61,47 @@ public class LicenciaMedicaRepositoryImpl implements LicenciaMedicaRepository{
 	@Override
 	public LicenciaMedicaDto buscaLicenciaMedica(Integer idLicencia) {
 		StringBuilder qry = new StringBuilder();
-		qry.append("SELECT id_licencia, id_usuario, id_responsable, id_archivo, id_estatus, fecha_inicio, fecha_fin, dias, padecimiento ");
-        qry.append("FROM m_licencia_medica ");
-        qry.append("WHERE id_licencia = :idLicencia");
+		qry.append("select licencia.id_licencia, licencia.fecha_inicio, licencia.id_responsable, licencia.fecha_fin, licencia.dias, licencia.padecimiento, licencia.fecha_registro, usuario.id_usuario, usuario.nombre, ");
+        qry.append("usuario.cve_m_usuario, usuario.apellido_paterno, usuario.apellido_materno, usuario.fecha_ingreso, usuario.rfc, usuario.id_puesto, unidad.id_unidad, unidad.nombre nombre_unidad, estatus.id_estatus, ");
+        qry.append("estatus.estatus, archivo.id_archivo, archivo.url, archivo.nombre nombre_archivo ");
+        qry.append("from m_licencia_medica licencia left join m_usuario usuario on usuario.id_usuario=licencia.id_usuario left join m_estatus estatus on ");
+        qry.append("estatus.id_estatus=licencia.id_estatus left join m_archivo archivo on archivo.id_archivo=licencia.id_archivo left join usuario_unidad_administrativa relacion ");
+        qry.append("on usuario.cve_m_usuario=relacion.cve_m_usuario left join c_unidad_administrativa unidad on unidad.id_unidad=relacion.id_unidad ");
+        qry.append("where licencia.id_licencia = :idLicencia");
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
         parametros.addValue("idLicencia", idLicencia);
-
-        return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<LicenciaMedicaDto>(LicenciaMedicaDto.class));
+        Map<String, Object> informacionConsulta = nameParameterJdbcTemplate.queryForMap(qry.toString(), parametros);
+        LicenciaMedicaDto licencia=new LicenciaMedicaDto();
+        licencia.setIdLicencia((Integer)informacionConsulta.get("id_licencia"));
+        licencia.setFechaInicio((Date)informacionConsulta.get("fecha_inicio"));
+        licencia.setFechaFin((Date)informacionConsulta.get("fecha_fin"));
+        licencia.setDias((Integer)informacionConsulta.get("dias"));
+        licencia.setFechaRegistro((Date)informacionConsulta.get("fecha_registro"));
+        System.out.println("Datos de usuario fec "+informacionConsulta.get("fecha_registro"));
+        UsuarioDto usuarioDto= new UsuarioDto();
+        usuarioDto.setIdUsuario((Integer)informacionConsulta.get("id_usuario"));
+        usuarioDto.setClaveUsuario((String)informacionConsulta.get("cve_m_usuario"));
+        System.out.println("claveUsuario "+informacionConsulta.get("cve_m_usuario"));
+        usuarioDto.setNombre((String)informacionConsulta.get("nombre"));
+        usuarioDto.setApellidoPaterno((String)informacionConsulta.get("apellido_paterno"));
+        usuarioDto.setApellidoMaterno((String)informacionConsulta.get("apellido_materno"));
+        usuarioDto.setIdPuesto((String)informacionConsulta.get("id_puesto"));
+        usuarioDto.setFechaIngreso((Date)informacionConsulta.get("fecha_ingreso"));
+        usuarioDto.setRfc((String)informacionConsulta.get("rfc"));
+        usuarioDto.setIdUnidad((Integer)informacionConsulta.get("id_unidad"));
+        usuarioDto.setNombreUnidad((String)informacionConsulta.get("nombre_unidad"));
+        licencia.setIdUsuario(usuarioDto);
+        ArchivoDto archivoDto = new ArchivoDto();
+        archivoDto.setIdArchivo((Integer)informacionConsulta.get("id_archivo"));
+        licencia.setIdArchivo(archivoDto);
+        EstatusDto estatusDto= new EstatusDto();
+        estatusDto.setIdEstatus((Integer)informacionConsulta.get("id_estatus"));
+        System.out.println("Id Estatussssssssssssssssssssssss "+informacionConsulta.get("id_estatus"));
+        estatusDto.setEstatus((String)informacionConsulta.get("estatus"));
+        licencia.setIdEstatus(estatusDto);
+        return licencia;
+        //return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<LicenciaMedicaDto>(LicenciaMedicaDto.class));
 	}
 
 	@Override
@@ -91,18 +124,18 @@ public class LicenciaMedicaRepositoryImpl implements LicenciaMedicaRepository{
 	@Override
 	public void agregaLicenciaMedica(LicenciaMedicaDto licenciaMedicaDto) {
 		StringBuilder qry = new StringBuilder();
-		qry.append("INSERT INTO m_licencia_medica (id_usuario, id_reponsable, id_archivo, id_estatus, fecha_inicio, fecha_fin, dias, padecimiento ) ");
-		qry.append("VALUES (:idUsuario, :idResponsable, :idArchivo, :idEstatus, :fechaInicio, :fechaFin, :dias, :padecimiento) ");
+		qry.append("INSERT INTO m_licencia_medica (id_usuario, id_reponsable, id_estatus, fecha_inicio, fecha_fin, dias, padecimiento, fecha_registro ) ");
+		qry.append("VALUES (:idUsuario, :idResponsable, :idEstatus, :fechaInicio, :fechaFin, :dias, :padecimiento, :fechaRegistro) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idUsuario", licenciaMedicaDto.getIdUsuario().getIdUsuario());
 		parametros.addValue("idResponsable", licenciaMedicaDto.getIdResponsable());
-		parametros.addValue("idArchivo", licenciaMedicaDto.getIdArchivo().getIdArchivo());
 		parametros.addValue("idEstatus", licenciaMedicaDto.getIdEstatus().getIdEstatus());
 		parametros.addValue("fechaInicio", licenciaMedicaDto.getFechaInicio());
 		parametros.addValue("fechaFin", licenciaMedicaDto.getFechaFin());
 		parametros.addValue("dias", licenciaMedicaDto.getDias());
 		parametros.addValue("padecimiento", licenciaMedicaDto.getPadecimiento());
+		parametros.addValue("fechaRegistro", licenciaMedicaDto.getFechaRegistro());
 
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		
@@ -179,7 +212,7 @@ public class LicenciaMedicaRepositoryImpl implements LicenciaMedicaRepository{
 
 	@Override
 	public List<LicenciaMedicaDto> obtenerListaLicenciaMedicaEmpleados(String claveUsuario, String nombre,
-			String apellidoPaterno, String apellidoMaterno, String idEstatus, String idUnidad) {
+		String apellidoPaterno, String apellidoMaterno, String idEstatus, String idUnidad) {
 		String qry="select usuario.id_usuario, usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, licencia.id_licencia, ";
 		qry+="licencia.id_responsable, archivo.id_archivo, archivo.nombre, archivo.url, estatus.id_estatus, estatus.estatus, licencia.fecha_inicio, ";
 		qry+="licencia.fecha_fin, licencia.dias, licencia.padecimiento, licencia.dias ";

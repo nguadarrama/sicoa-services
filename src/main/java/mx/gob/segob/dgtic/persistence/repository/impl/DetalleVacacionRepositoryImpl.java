@@ -110,6 +110,7 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
         UsuarioDto usuarioDto= new UsuarioDto();
         usuarioDto.setIdUsuario((Integer)informacionConsulta.get("id_usuario"));
         usuarioDto.setClaveUsuario((String)informacionConsulta.get("cve_m_usuario"));
+        System.out.println("claveUsuario "+informacionConsulta.get("cve_m_usuario"));
         usuarioDto.setNombre((String)informacionConsulta.get("nombre"));
         usuarioDto.setApellidoPaterno((String)informacionConsulta.get("apellido_paterno"));
         usuarioDto.setApellidoMaterno((String)informacionConsulta.get("apellido_materno"));
@@ -194,7 +195,9 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 		String fechaF=sdf.format(detalleVacacionDto.getFechaFin());
 		//select id_detalle from d_detalle_vacacion where ((fecha_inicio between '2018-10-25' and'2018-10-26') or (fecha_fin between '2018-10-25' and '2018-10-26')) and id_usuario='936'
 		String query="select id_detalle from d_detalle_vacacion where ((fecha_inicio between '"+fechaIni+"' and '"+fechaF+"') "
-				+ "or (fecha_fin between '"+fechaIni+"' and '"+fechaF+"' )) and id_usuario='"+detalleVacacionDto.getIdUsuario().getIdUsuario()+"' ";
+				+ "or (fecha_fin between '"+fechaIni+"' and '"+fechaF+"' )) "+
+				" or('"+fechaIni+"'>fecha_inicio and fecha_inicio<'"+fechaF+"' and fecha_fin>'"+fechaF+"')"
+						+ "and id_usuario='"+detalleVacacionDto.getIdUsuario().getIdUsuario()+"' ";
 		System.out.println("query "+query);
         List<Map<String, Object>> detalleVacaciones = jdbcTemplate.queryForList(query);
         System.out.println("Datos de la consulta "+detalleVacaciones.size());

@@ -52,7 +52,17 @@ public class LicenciaMedicaDto {
 			   */
 			  @MapeaColumna(columna = "padecimiento") private String padecimiento;
 			
-			  /**
+			  @MapeaColumna(columna = "fecha_registro") private Date fechaRegistro;
+			  
+			  public Date getFechaRegistro() {
+				return fechaRegistro;
+			}
+
+			public void setFechaRegistro(Date fechaRegistro) {
+				this.fechaRegistro = fechaRegistro;
+			}
+
+			/**
 			    * El id licencia.
 			    * @return idLicencia
 			    */
