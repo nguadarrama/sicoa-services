@@ -74,4 +74,12 @@ public class UnidadAdministrativaRecurso {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, unidadAdministrativaService.obtenerUnidadesAdministrativas());
 	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("obtieneUnidades")	
+	@PermitAll
+	public Response obtieneUnidades() {
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, unidadAdministrativaService.obtieneUnidades());
+	}
 }

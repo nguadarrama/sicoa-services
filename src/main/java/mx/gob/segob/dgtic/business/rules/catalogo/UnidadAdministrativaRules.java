@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import mx.gob.segob.dgtic.comun.sicoa.dto.UnidadAdministrativaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioUnidadAdministrativaDto;
 import mx.gob.segob.dgtic.persistence.repository.UnidadAdministrativaRepository;
 
@@ -40,4 +41,8 @@ public class UnidadAdministrativaRules {
 	public List<UsuarioUnidadAdministrativaDto> consultasoloUnidades(){
 		return unidadAdministrativaRepository.consultasoloUnidades();
 	}
+	
+	 public List<UnidadAdministrativaDto> obtenerUnidades(){
+			return unidadAdministrativaRepository.obtenerUnidades();
+		}
 }

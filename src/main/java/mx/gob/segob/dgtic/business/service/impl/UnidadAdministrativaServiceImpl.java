@@ -42,5 +42,10 @@ public class UnidadAdministrativaServiceImpl implements UnidadAdministrativaServ
 	public List<UsuarioUnidadAdministrativaDto> consultasoloUnidades() {
 		return unidadAdministrativaRules.consultasoloUnidades();
 	}
+	
+	@Override
+	public List<UnidadAdministrativaDto> obtieneUnidades() {
+		return unidadAdministrativaRules.obtenerUnidades();
+	}
 
 }

@@ -195,4 +195,24 @@ public class UnidadAdministrativaRepositoryImpl implements UnidadAdministrativaR
         return listaUnidadAdministrativa;
 	}
 
+	
+	@Override
+	public List<UnidadAdministrativaDto> obtenerUnidades() {
+		StringBuilder qry = new StringBuilder();
+        qry.append("select id_unidad, nombre ");
+        qry.append("from c_unidad_administrativa ");
+        
+        List<Map<String, Object>> unidadesArdminsitrativas = jdbcTemplate.queryForList(qry.toString());
+        List<UnidadAdministrativaDto> listaUnidades = new ArrayList<>();
+        
+        for (Map<String, Object> unidad : unidadesArdminsitrativas) {
+        	
+    		UnidadAdministrativaDto unidadAdministrativaDto = new UnidadAdministrativaDto();
+    		unidadAdministrativaDto.setIdUnidad((Integer)unidad.get("id_unidad"));
+    		unidadAdministrativaDto.setNombre((String)unidad.get("nombre"));
+    		
+    		listaUnidades.add(unidadAdministrativaDto);
+    	}
+     return listaUnidades;
+	}
 }

@@ -15,4 +15,6 @@ public interface UnidadAdministrativaRepository {
 	public List<UsuarioUnidadAdministrativaDto> obtenerUnidadesAdministrativas();
 	public List<UsuarioUnidadAdministrativaDto> consultasoloUnidades();
 	
+	public List<UnidadAdministrativaDto> obtenerUnidades();
+	
 }
