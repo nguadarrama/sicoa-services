@@ -112,6 +112,7 @@ public class AutenticacionRules {
 				errores.add(CREDENCIALES_INCORRECTAS);
 			} else if(esUsuarioInactivo(usuario)){
 				errores.add(USUARIO_INACTIVO);
+				errores.add(USUARIO_SESSION_INACTIVA);
 			}  else if(!permitirAutenticacionMultisesion(usuario)){
 				errores.add(USUARIO_SESSION_ACTIVA);
 			}			
