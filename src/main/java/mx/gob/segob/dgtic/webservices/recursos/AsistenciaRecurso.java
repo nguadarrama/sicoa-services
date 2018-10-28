@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -200,10 +201,51 @@ public class AsistenciaRecurso {
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		FormatoIncidencia generaReporteArchivo = gson.fromJson(jsonObject.get("generaReporteArchivo"), FormatoIncidencia.class);
-		
-		
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,asistenciaService.generaFormatoDescuento(generaReporteArchivo));
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("reporteCoordinador")	
+	@PermitAll
+	public Response reporteCoordinador(
+			@QueryParam("claveEmpleado") String claveEmpleado,
+			@QueryParam("nombre") String nombre,
+			@QueryParam("paterno") String paterno,
+			@QueryParam("materno") String materno,
+			@QueryParam("nivel") String nivel,
+			@QueryParam("tipo") String tipo,
+			@QueryParam("estado") String estado, 
+			@QueryParam("inicio") String inicio, 
+			@QueryParam("fin") String fin,
+			@QueryParam("unidad") String unidadAdministrativa, 
+			@QueryParam("cveCoordinador") String cveCoordinador,
+			@QueryParam("permisos") String permisos) {
+
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.reporteCoordinador(claveEmpleado, nombre, 
+				paterno, materno, nivel, tipo, estado, inicio, fin, unidadAdministrativa, cveCoordinador, permisos));
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("reporteDireccion")	
+	@PermitAll
+	public Response reporteDireccion(
+			@QueryParam("claveEmpleado") String claveEmpleado,
+			@QueryParam("nombre") String nombre,
+			@QueryParam("paterno") String paterno,
+			@QueryParam("materno") String materno,
+			@QueryParam("nivel") String nivel,
+			@QueryParam("tipo") String tipo,
+			@QueryParam("estado") String estado, 
+			@QueryParam("inicio") String inicio, 
+			@QueryParam("fin") String fin,
+			@QueryParam("unidad") String unidadAdministrativa,
+			@QueryParam("permisos") String permisos) {
+		
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.reporteDireccion(claveEmpleado, nombre, 
+				paterno, materno, nivel, tipo, estado, inicio, fin, unidadAdministrativa, permisos));
 	}
 	
 }

@@ -27,4 +27,10 @@ public interface AsistenciaService {
 	public Integer aplicaDescuento(IncidenciaDto incidencia);
 	public reporte generaFormatoJustificacion(FormatoIncidencia generaReporteArchivo);
 	public reporte generaFormatoDescuento(FormatoIncidencia generaReporteArchivo);
+	
+	public List<AsistenciaDto> reporteDireccion(String cve_m_usuario, String nombre, String paterno, 
+    		String materno, String nivel, String tipo, String estado, String fechaInicial, String fechaFinal, String unidadAdministrativa, String permisos);
+	
+	public List<AsistenciaDto> reporteCoordinador(String cve_m_usuario, String nombre, String paterno, 
+    		String materno, String nivel, String tipo, String estado, String fechaInicial, String fechaFinal, String unidadAdministrativa, String cveCoordinador, String permisos);
 }

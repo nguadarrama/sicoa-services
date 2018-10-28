@@ -2,6 +2,7 @@ package mx.gob.segob.dgtic.comun.sicoa.dto;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 import mx.gob.segob.dgtic.comun.util.mapper.annotations.MapeaColumna;
 import mx.gob.segob.dgtic.comun.util.mapper.annotations.MapeaColumnasInternas;

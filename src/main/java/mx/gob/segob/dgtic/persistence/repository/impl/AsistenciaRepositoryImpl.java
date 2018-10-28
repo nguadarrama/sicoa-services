@@ -3,6 +3,7 @@ package mx.gob.segob.dgtic.persistence.repository.impl;
 import java.util.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -600,6 +601,307 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
     	}
         
         return listaEmpleados;
+	}
+
+	@Override
+	public List<AsistenciaDto> reporteDireccion(String cve_m_usuario, String nombre, String paterno, String materno,
+			String nivel, String tipo, String estado, Date fechaInicial, Date fechaFinal, String unidadAdministrativa,
+			String p) {
+
+		StringBuilder qry = new StringBuilder();
+		Boolean usuarioFueAgregadoAQuery = false;
+	       
+        qry.append("SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus, ");
+        qry.append("i.id_estatus, i.descuento ");
+        qry.append("FROM m_asistencia a ");
+        qry.append("inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ");
+        qry.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia ");
+        qry.append("left join m_estatus e on e.id_estatus = i.id_estatus ");
+        qry.append("inner join m_usuario u on u.cve_m_usuario = a.id_usuario ");
+        qry.append("inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ");
+        qry.append("inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ");
+        
+        if (fechaInicial != null && fechaFinal != null) {
+        	qry.append("where entrada >= '" + fechaInicial + "'");
+        	qry.append(" and entrada < '" + fechaFinal  + "'");
+        } else {
+        	if (!cve_m_usuario.isEmpty()) {
+            	qry.append("where a.id_usuario = " + cve_m_usuario);
+            	usuarioFueAgregadoAQuery = true;
+            }
+        }
+        
+        if (!usuarioFueAgregadoAQuery) { //si usuario ya fue agregado a la query, entonces ya no agrega esta sección
+        	if (!cve_m_usuario.isEmpty()) {
+        		qry.append(" and a.id_usuario = " + cve_m_usuario);
+        	}
+        }
+        
+        if (!nombre.isEmpty()) {
+        	qry.append(" and u.nombre like '%" + nombre + "%' ");
+        }
+        
+        if (!paterno.isEmpty()) {
+        	qry.append(" and u.apellido_paterno like '%" + paterno + "%' ");
+        }
+        
+        if (!materno.isEmpty()) {
+        	qry.append(" and u.apellido_materno like '%" + materno + "%' ");
+        }
+        
+        if (!unidadAdministrativa.isEmpty()) {
+        	qry.append(" and ua.nombre like '%" + unidadAdministrativa + "%' ");
+        }
+        
+        if (!nivel.isEmpty()) {
+        	qry.append(" and u.nivel like '%" + nivel + "%' ");
+        }
+        
+        if (!tipo.isEmpty()) {
+        	qry.append(" and t.nombre like '%" + tipo + "%' ");
+        }
+        
+        if (!estado.isEmpty()) {
+        	qry.append(" and e.estatus like '%" + estado + "%' ");
+        }
+        
+        //reglas para condiciones de permisos 
+        if (p != null && !p.isEmpty()) {
+        	String[] arrayPermisos = p.split(",");
+            List<String> listaPermisos = new ArrayList<String>(Arrays.asList(arrayPermisos));
+            String condicionVacacion = "or";
+            String condicionComision = "or";
+            String condicionLicencia = "or";
+            String condicionDescuento = "or";
+            
+            //verificando que permisos hay para definir que el primero no llevará 'or' y los demás sí
+            for (String permiso : listaPermisos) {
+	        	if (permiso.contains("vacacion")) {
+	        		condicionVacacion = "";
+	        		break;
+	        	} 
+	        	
+	        	if (permiso.contains("comision")) {
+	        		condicionComision = "";
+	        		break;
+	        	}
+	        	
+	        	if (permiso.contains("licencia")) {
+	        		condicionLicencia = "";
+	        		break;
+	        	} 
+	        	
+	        	if (permiso.contains("descuento")) {
+	        		condicionDescuento = "";
+	        		break;
+	        	} 
+        	}
+        	
+        	//se arma la sentencia de la consulta
+        	qry.append( " and (");
+        	
+    		if (listaPermisos.contains("vacacion")) {
+    			qry.append(condicionVacacion + " a.id_tipo_dia = 5 ");
+    		}
+    		
+    		if (listaPermisos.contains("comision")) {
+    			qry.append(condicionComision + " a.id_tipo_dia = 7 ");
+    		}
+    		
+    		if (listaPermisos.contains("licencia")) {
+    			qry.append(condicionLicencia + " a.id_tipo_dia = 8 ");
+    		}
+    		
+    		//descuento: validada y la bandera descuento
+    		if (listaPermisos.contains("descuento")) {
+    			qry.append(condicionDescuento + " (e.id_estatus = 2 and i.descuento = 1)");
+    		}
+        	
+        	qry.append(")");
+        }
+        
+        List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString());
+        List<AsistenciaDto> listaAsistencia = new ArrayList<>();
+        
+        for (Map<String, Object> a : asistencias) {
+        	UsuarioDto usuario = usuarioRepository.buscaUsuario((String) a.get("id_usuario"));
+        	
+        	TipoDiaDto tipoDia = new TipoDiaDto();
+        	tipoDia.setIdTipoDia((Integer) a.get("id_tipo_dia"));
+        	tipoDia.setNombre((String) a.get("nombre"));
+        	
+        	EstatusDto estatus = new EstatusDto();
+        	estatus.setEstatus((String) a.get("estatus"));
+        	
+        	IncidenciaDto incidencia = new IncidenciaDto();
+        	incidencia.setEstatus(estatus);
+        	
+        	if ((Boolean) a.get("descuento") != null) {
+        		incidencia.setDescuento((Boolean) a.get("descuento"));
+        	} else {
+        		incidencia.setDescuento(false);
+        	}
+        	
+        	AsistenciaDto asistencia = new AsistenciaDto();
+        	asistencia.setIdAsistencia((Integer) a.get("id_asistencia"));
+    		asistencia.setUsuarioDto(usuario);
+    		asistencia.setIdTipoDia(tipoDia);
+    		asistencia.setEntrada((Timestamp) a.get("entrada"));
+    		asistencia.setSalida((Timestamp) a.get("salida"));
+    		asistencia.setIdEstatus(estatus);
+    		asistencia.setIncidencia(incidencia);
+    		
+    		listaAsistencia.add(asistencia);
+    	}
+        
+        return listaAsistencia;
+	}
+
+	@Override
+	public List<AsistenciaDto> reporteCoordinador(String cve_m_usuario, String nombre, String paterno, String materno,
+			String nivel, String tipo, String estado, Date fechaInicial, Date fechaFinal, String unidadAdministrativa, Integer idUnidadCoordinador,
+			String p) {
+
+		StringBuilder qry = new StringBuilder();
+	       
+        qry.append("SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus, ");
+        qry.append("i.id_estatus, i.descuento ");
+        qry.append("FROM m_asistencia a ");
+        qry.append("inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ");
+        qry.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia ");
+        qry.append("left join m_estatus e on e.id_estatus = i.id_estatus ");
+        qry.append("inner join m_usuario u on u.cve_m_usuario = a.id_usuario ");
+        qry.append("inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ");
+        qry.append("inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ");
+        qry.append("where uua.id_unidad = " + idUnidadCoordinador);
+        
+        if (fechaInicial != null && fechaFinal != null) {
+        	qry.append(" and entrada >= '" + fechaInicial + "'");
+        	qry.append(" and entrada < '" + fechaFinal  + "'");
+        } 
+        
+    	if (!cve_m_usuario.isEmpty()) {
+    		qry.append(" and a.id_usuario = " + cve_m_usuario);
+    	}
+        
+        if (!nombre.isEmpty()) {
+        	qry.append(" and u.nombre like '%" + nombre + "%' ");
+        }
+        
+        if (!paterno.isEmpty()) {
+        	qry.append(" and u.apellido_paterno like '%" + paterno + "%' ");
+        }
+        
+        if (!materno.isEmpty()) {
+        	qry.append(" and u.apellido_materno like '%" + materno + "%' ");
+        }
+        
+        if (!unidadAdministrativa.isEmpty()) {
+        	qry.append(" and ua.nombre like '%" + unidadAdministrativa + "%' ");
+        }
+        
+        if (!nivel.isEmpty()) {
+        	qry.append(" and u.nivel like '%" + nivel + "%' ");
+        }
+        
+        if (!tipo.isEmpty()) {
+        	qry.append(" and t.nombre like '%" + tipo + "%' ");
+        }
+        
+        if (!estado.isEmpty()) {
+        	qry.append(" and e.estatus like '%" + estado + "%' ");
+        }
+        
+        //reglas para condiciones de permisos 
+        if (p != null && !p.isEmpty()) {
+        	String[] arrayPermisos = p.split(",");
+            List<String> listaPermisos = new ArrayList<String>(Arrays.asList(arrayPermisos));
+            String condicionVacacion = "or";
+            String condicionComision = "or";
+            String condicionLicencia = "or";
+            String condicionDescuento = "or";
+            
+            //verificando que permisos hay para definir que el primero no llevará 'or' y los demás sí
+            for (String permiso : listaPermisos) {
+	        	if (permiso.contains("vacacion")) {
+	        		condicionVacacion = "";
+	        		break;
+	        	} 
+	        	
+	        	if (permiso.contains("comision")) {
+	        		condicionComision = "";
+	        		break;
+	        	}
+	        	
+	        	if (permiso.contains("licencia")) {
+	        		condicionLicencia = "";
+	        		break;
+	        	} 
+	        	
+	        	if (permiso.contains("descuento")) {
+	        		condicionDescuento = "";
+	        		break;
+	        	} 
+        	}
+        	
+        	//se arma la sentencia de la consulta
+        	qry.append( " and (");
+        	
+    		if (listaPermisos.contains("vacacion")) {
+    			qry.append(condicionVacacion + " a.id_tipo_dia = 5 ");
+    		}
+    		
+    		if (listaPermisos.contains("comision")) {
+    			qry.append(condicionComision + " a.id_tipo_dia = 7 ");
+    		}
+    		
+    		if (listaPermisos.contains("licencia")) {
+    			qry.append(condicionLicencia + " a.id_tipo_dia = 8 ");
+    		}
+    		
+    		//descuento: validada y la bandera descuento
+    		if (listaPermisos.contains("descuento")) {
+    			qry.append(condicionDescuento + " (e.id_estatus = 2 and i.descuento = 1)");
+    		}
+        	
+        	qry.append(")");
+        }
+        
+        List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString());
+        List<AsistenciaDto> listaAsistencia = new ArrayList<>();
+        
+        for (Map<String, Object> a : asistencias) {
+        	UsuarioDto usuario = usuarioRepository.buscaUsuario((String) a.get("id_usuario"));
+        	
+        	TipoDiaDto tipoDia = new TipoDiaDto();
+        	tipoDia.setIdTipoDia((Integer) a.get("id_tipo_dia"));
+        	tipoDia.setNombre((String) a.get("nombre"));
+        	
+        	EstatusDto estatus = new EstatusDto();
+        	estatus.setEstatus((String) a.get("estatus"));
+        	
+        	IncidenciaDto incidencia = new IncidenciaDto();
+        	incidencia.setEstatus(estatus);
+        	
+        	if ((Boolean) a.get("descuento") != null) {
+        		incidencia.setDescuento((Boolean) a.get("descuento"));
+        	} else {
+        		incidencia.setDescuento(false);
+        	}
+        	
+        	AsistenciaDto asistencia = new AsistenciaDto();
+        	asistencia.setIdAsistencia((Integer) a.get("id_asistencia"));
+    		asistencia.setUsuarioDto(usuario);
+    		asistencia.setIdTipoDia(tipoDia);
+    		asistencia.setEntrada((Timestamp) a.get("entrada"));
+    		asistencia.setSalida((Timestamp) a.get("salida"));
+    		asistencia.setIdEstatus(estatus);
+    		asistencia.setIncidencia(incidencia);
+    		
+    		listaAsistencia.add(asistencia);
+    	}
+        
+        return listaAsistencia;
 	}
 
 }

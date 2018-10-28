@@ -98,4 +98,27 @@ public class AsistenciaRules {
 		return asistenciaRepository.aplicaDescuento(incidencia);
 	}
 	
+	public List<AsistenciaDto> reporteDireccion(String cve_m_usuario, String nombre, String paterno,
+			String materno, String nivel, String tipo, String estado, Date fechaInicial, Date fechaFinal,
+			String unidadAdministrativa, String permisos) {
+		
+		List<AsistenciaDto> listaAsistencia = asistenciaRepository.reporteDireccion(cve_m_usuario, nombre, 
+				paterno, materno, nivel, tipo, estado, fechaInicial, fechaFinal, unidadAdministrativa, permisos);
+		
+		return listaAsistencia;
+	}
+	
+	public List<AsistenciaDto> reporteCoordinador(String cve_m_usuario, String nombre, String paterno,
+			String materno, String nivel, String tipo, String estado, Date fechaInicial, Date fechaFinal,
+			String unidadAdministrativa, String cveCoordinador, String permisos) {
+		
+		//se obtiene la unidad administrativa del coordinador
+		UsuarioDto coordinador = usuarioRepository.buscaUsuario(cveCoordinador);
+		
+		List<AsistenciaDto> listaAsistencia = asistenciaRepository.reporteCoordinador(cve_m_usuario, nombre, 
+				paterno, materno, nivel, tipo, estado, fechaInicial, fechaFinal, unidadAdministrativa, coordinador.getIdUnidad(), permisos);
+		
+		return listaAsistencia;
+	}
+	
 }
