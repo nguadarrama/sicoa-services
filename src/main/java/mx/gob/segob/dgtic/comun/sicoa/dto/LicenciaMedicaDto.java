@@ -54,7 +54,44 @@ public class LicenciaMedicaDto {
 			
 			  @MapeaColumna(columna = "fecha_registro") private Date fechaRegistro;
 			  
-			  public Date getFechaRegistro() {
+			  String fechaInicioAux;
+			  String fechaFinAux;
+			  String totalLicencias;
+			  String diasTotales;
+			  
+			  public String getDiasTotales() {
+				return diasTotales;
+			}
+
+			public void setDiasTotales(String diasTotales) {
+				this.diasTotales = diasTotales;
+			}
+
+			public String getTotalLicencias() {
+				return totalLicencias;
+			}
+
+			public void setTotalLicencias(String totalLicencias) {
+				this.totalLicencias = totalLicencias;
+			}
+
+			public String getFechaInicioAux() {
+				return fechaInicioAux;
+			}
+
+			public void setFechaInicioAux(String fechaInicioAux) {
+				this.fechaInicioAux = fechaInicioAux;
+			}
+
+			public String getFechaFinAux() {
+				return fechaFinAux;
+			}
+
+			public void setFechaFinAux(String fechaFinAux) {
+				this.fechaFinAux = fechaFinAux;
+			}
+
+			public Date getFechaRegistro() {
 				return fechaRegistro;
 			}
 

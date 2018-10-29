@@ -21,6 +21,7 @@ import com.google.gson.JsonParser;
 
 import mx.gob.segob.dgtic.business.service.LicenciaMedicaService;
 import mx.gob.segob.dgtic.comun.sicoa.dto.LicenciaMedicaDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.LicenciaMedicaDtoAux;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
@@ -59,7 +60,7 @@ public class LicenciaMedicaRecurso {
 		
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
-		LicenciaMedicaDto licenciaMedicaDto = gson.fromJson(jsonObject.get("licenciaMedica"), LicenciaMedicaDto.class);
+		LicenciaMedicaDtoAux licenciaMedicaDto = gson.fromJson(jsonObject.get("licenciaMedica"), LicenciaMedicaDtoAux.class);
 		
 		licenciaMedicaService.modificaLicenciaMedica(licenciaMedicaDto);
 
@@ -76,7 +77,7 @@ public class LicenciaMedicaRecurso {
 		
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
-		LicenciaMedicaDto licenciaMedicaDto = gson.fromJson(jsonObject.get("licenciaMedica"), LicenciaMedicaDto.class);
+		LicenciaMedicaDtoAux licenciaMedicaDto = gson.fromJson(jsonObject.get("licenciaMedica"), LicenciaMedicaDtoAux.class);
 		
 		licenciaMedicaService.agregaLicenciaMedica(licenciaMedicaDto);
 
@@ -113,6 +114,16 @@ public class LicenciaMedicaRecurso {
 			@QueryParam("idUnidad") String idUnidad) {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, licenciaMedicaService.obtenerListaLicenciaMedicaEmpleados(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, idEstatus, idUnidad));
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("obtieneLicenciasPorUnidad")	
+	@PermitAll
+	public Response obtieneLicenciasPorUnidad(@QueryParam("idUnidad") String idUnidad, @QueryParam("claveUsuario") String claveUsuario,
+			@QueryParam("nombre") String nombre, @QueryParam("apellidoPaterno") String apellidoPaterno, @QueryParam("apellidoMaterno")String apellidoMaterno) {
+
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, licenciaMedicaService.obtenerLicenciasPorUnidad(idUnidad, claveUsuario, nombre, apellidoPaterno, apellidoMaterno));
 	}
 
 }

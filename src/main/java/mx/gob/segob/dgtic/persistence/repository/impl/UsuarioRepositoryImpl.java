@@ -378,4 +378,5 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
         return listaUsuarios;
 	}
 	
+	
 }

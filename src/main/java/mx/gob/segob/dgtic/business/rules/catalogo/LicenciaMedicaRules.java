@@ -41,4 +41,9 @@ public class LicenciaMedicaRules {
 			String idEstatus,String idUnidad){
 		return licenciaMedicaRepository.obtenerListaLicenciaMedicaEmpleados(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, idEstatus, idUnidad);
 	}
+	
+	public List<LicenciaMedicaDto> obtenerLicenciasPorUnidad(String idUnidad,String claveUsuario, String nombre,
+			String apellidoPaterno, String apellidoMaterno) {
+		return licenciaMedicaRepository.obtenerLicenciasPorUnidad(idUnidad, claveUsuario, nombre, apellidoPaterno, apellidoMaterno);
+	}
 }

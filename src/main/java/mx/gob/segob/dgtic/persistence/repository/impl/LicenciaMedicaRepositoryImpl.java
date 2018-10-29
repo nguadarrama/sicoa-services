@@ -74,6 +74,7 @@ public class LicenciaMedicaRepositoryImpl implements LicenciaMedicaRepository{
         Map<String, Object> informacionConsulta = nameParameterJdbcTemplate.queryForMap(qry.toString(), parametros);
         LicenciaMedicaDto licencia=new LicenciaMedicaDto();
         licencia.setIdLicencia((Integer)informacionConsulta.get("id_licencia"));
+        licencia.setPadecimiento((String)informacionConsulta.get("padecimiento"));
         licencia.setFechaInicio((Date)informacionConsulta.get("fecha_inicio"));
         licencia.setFechaFin((Date)informacionConsulta.get("fecha_fin"));
         licencia.setDias((Integer)informacionConsulta.get("dias"));
@@ -107,16 +108,14 @@ public class LicenciaMedicaRepositoryImpl implements LicenciaMedicaRepository{
 	@Override
 	public void modificaLicenciaMedica(LicenciaMedicaDto licenciaMedicaDto) {
 		StringBuilder qry = new StringBuilder();
-		qry.append("UPDATE m_licencia_medica SET id_estatus= :idEstatus, fecha_inicio = :fechaInicio, fecha_fin = :fechaFin, dias = :dias, padecimiento = :padecimiento ");
+		System.out.println("Peticion a actualizar licencia "+licenciaMedicaDto.getIdLicencia()+" archivo "+licenciaMedicaDto.getIdArchivo().getIdArchivo()+" estatus "+licenciaMedicaDto.getIdEstatus().getIdEstatus());
+		qry.append("UPDATE m_licencia_medica SET id_estatus= :idEstatus, id_archivo= :idArchivo ");
 		qry.append("WHERE id_licencia = :idLicencia");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idLicencia", licenciaMedicaDto.getIdLicencia());
 		parametros.addValue("idEstatus", licenciaMedicaDto.getIdEstatus().getIdEstatus());
-		parametros.addValue("fechaInicio", licenciaMedicaDto.getFechaInicio());
-		parametros.addValue("fechaFin", licenciaMedicaDto.getFechaFin());
-		parametros.addValue("dias", licenciaMedicaDto.getDias());
-		parametros.addValue("padecimiento", licenciaMedicaDto.getPadecimiento());
+		parametros.addValue("idArchivo", licenciaMedicaDto.getIdArchivo().getIdArchivo());
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		
 	}
@@ -124,12 +123,15 @@ public class LicenciaMedicaRepositoryImpl implements LicenciaMedicaRepository{
 	@Override
 	public void agregaLicenciaMedica(LicenciaMedicaDto licenciaMedicaDto) {
 		StringBuilder qry = new StringBuilder();
-		qry.append("INSERT INTO m_licencia_medica (id_usuario, id_reponsable, id_estatus, fecha_inicio, fecha_fin, dias, padecimiento, fecha_registro ) ");
-		qry.append("VALUES (:idUsuario, :idResponsable, :idEstatus, :fechaInicio, :fechaFin, :dias, :padecimiento, :fechaRegistro) ");
+		Date fechaActual = new Date();
+		System.out.println("Fecha actual "+fechaActual+" idUsuario "+licenciaMedicaDto.getIdUsuario().getIdUsuario());
+		licenciaMedicaDto.setFechaRegistro(fechaActual);
+		qry.append("INSERT INTO m_licencia_medica (id_usuario, id_estatus, fecha_inicio, fecha_fin, dias, padecimiento, fecha_registro ) ");
+		qry.append("VALUES (:idUsuario, :idEstatus, :fechaInicio, :fechaFin, :dias, :padecimiento, :fechaRegistro) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idUsuario", licenciaMedicaDto.getIdUsuario().getIdUsuario());
-		parametros.addValue("idResponsable", licenciaMedicaDto.getIdResponsable());
+		//parametros.addValue("idResponsable", licenciaMedicaDto.getIdResponsable());
 		parametros.addValue("idEstatus", licenciaMedicaDto.getIdEstatus().getIdEstatus());
 		parametros.addValue("fechaInicio", licenciaMedicaDto.getFechaInicio());
 		parametros.addValue("fechaFin", licenciaMedicaDto.getFechaFin());
@@ -156,10 +158,10 @@ public class LicenciaMedicaRepositoryImpl implements LicenciaMedicaRepository{
 	@Override
 	public List<LicenciaMedicaDto> obtenerListaLicenciaMedicaPorFiltros(String claveUsuario, String fechaInicio, String fechaFin, String idEstatus) {
 		String qry="select usuario.id_usuario, usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, licencia.id_licencia, ";
-		qry+="licencia.id_responsable, archivo.id_archivo, archivo.nombre, archivo.url, estatus.id_estatus, estatus.estatus, licencia.fecha_inicio, ";
+		qry+="licencia.id_responsable, estatus.id_estatus, estatus.estatus, licencia.fecha_inicio, ";
 		qry+="licencia.fecha_fin, licencia.dias, licencia.padecimiento, licencia.dias ";
-		qry+="from m_usuario usuario, m_licencia_medica licencia, m_estatus estatus, m_archivo archivo ";
-		qry+="where usuario.id_usuario=licencia.id_usuario and estatus.id_estatus=licencia.id_estatus and archivo.id_archivo=licencia.id_archivo ";
+		qry+="from m_usuario usuario, m_licencia_medica licencia, m_estatus estatus ";
+		qry+="where usuario.id_usuario=licencia.id_usuario and estatus.id_estatus=licencia.id_estatus and usuario.cve_m_usuario='"+claveUsuario+"'";
 
 		if(idEstatus!=null && !idEstatus.trim().isEmpty()){
 			qry+="and estatus.id_estatus = +'"+idEstatus+"' ";
@@ -214,10 +216,10 @@ public class LicenciaMedicaRepositoryImpl implements LicenciaMedicaRepository{
 	public List<LicenciaMedicaDto> obtenerListaLicenciaMedicaEmpleados(String claveUsuario, String nombre,
 		String apellidoPaterno, String apellidoMaterno, String idEstatus, String idUnidad) {
 		String qry="select usuario.id_usuario, usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, licencia.id_licencia, ";
-		qry+="licencia.id_responsable, archivo.id_archivo, archivo.nombre, archivo.url, estatus.id_estatus, estatus.estatus, licencia.fecha_inicio, ";
+		qry+="licencia.id_responsable, estatus.id_estatus, estatus.estatus, licencia.fecha_inicio, ";
 		qry+="licencia.fecha_fin, licencia.dias, licencia.padecimiento, licencia.dias ";
-		qry+="from m_usuario usuario, m_licencia_medica licencia, m_estatus estatus, m_archivo archivo ";
-		qry+="where usuario.id_usuario=licencia.id_usuario and estatus.id_estatus=licencia.id_estatus and archivo.id_archivo=licencia.id_archivo ";
+		qry+="from m_usuario usuario, m_licencia_medica licencia, m_estatus estatus ";
+		qry+="where usuario.id_usuario=licencia.id_usuario and estatus.id_estatus=licencia.id_estatus ";
 		if(claveUsuario!=null && !claveUsuario.trim().isEmpty()){
 			qry+="and usuario.cve_m_usuario like '%"+claveUsuario+"%' ";
 	    }
@@ -269,5 +271,57 @@ public class LicenciaMedicaRepositoryImpl implements LicenciaMedicaRepository{
         	listaLicencias.add(licencia);
         }
         return listaLicencias;
+	}
+
+	@Override
+	public List<LicenciaMedicaDto> obtenerLicenciasPorUnidad(String idUnidad,String claveUsuario, String nombre,
+			String apellidoPaterno, String apellidoMaterno) {
+		//StringBuilder qry = new StringBuilder();
+		String qry="";
+		qry+="select sum(licencia.dias) suma_dias, count(licencia.id_licencia) total_licencias, usuario.id_usuario ,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno ";
+		qry+="from m_licencia_medica licencia right join m_usuario usuario on usuario.id_usuario=licencia.id_usuario ";
+		qry+="left join usuario_unidad_administrativa relacion on usuario.cve_m_usuario=relacion.cve_m_usuario ";
+		qry+="left join c_unidad_administrativa unidad on unidad.id_unidad=relacion.id_unidad ";
+		qry+="where unidad.id_unidad ='"+idUnidad+"' group by usuario.id_usuario ";
+		//MapSqlParameterSource parametros = new MapSqlParameterSource();
+		//parametros.addValue("idUnidad", idUnidad);
+		if(claveUsuario!=null && !claveUsuario.trim().isEmpty()){
+			qry+="and usuario.cve_m_usuario like '%"+claveUsuario+"%' ";
+	    }
+	    if(nombre!=null && !nombre.trim().isEmpty()){
+	    	qry+="and usuario.nombre like '%"+nombre+"%' ";
+	    }
+	    if(apellidoPaterno!=null && !apellidoPaterno.trim().isEmpty()){
+	    	qry+="and usuario.apellido_paterno like '%"+apellidoPaterno+"%' ";
+	    }
+	    if(apellidoMaterno!=null && !apellidoMaterno.trim().isEmpty()){
+	    	qry+="and usuario.apellido_materno like '%"+apellidoMaterno+"%' ";
+	    }
+		System.out.println("sqy "+qry);
+		 List<Map<String, Object>> consulta = jdbcTemplate.queryForList(qry);
+	        List<LicenciaMedicaDto> listaLicencias = new ArrayList<>();
+	        
+	        for (Map<String, Object> licencias : consulta) {
+	        	LicenciaMedicaDto licenciaMedicaDto= new LicenciaMedicaDto();
+	        	String diasRecuperados=null;
+	        	if(licencias.get("suma_dias")==null){
+	        		diasRecuperados="0";
+	        	}else{
+	        	diasRecuperados=""+licencias.get("suma_dias");
+	        	}
+	        	licenciaMedicaDto.setDiasTotales(diasRecuperados);
+	        	String diasTotales=""+licencias.get("total_licencias");
+	        	licenciaMedicaDto.setTotalLicencias((String)diasTotales);
+	        	UsuarioDto usuarioDto = new UsuarioDto();
+	        	usuarioDto.setIdUsuario((Integer)licencias.get("id_usuario"));
+	        	usuarioDto.setClaveUsuario((String)licencias.get("cve_m_usuario"));
+	        	usuarioDto.setNombre((String)licencias.get("nombre"));
+	        	usuarioDto.setApellidoPaterno((String)licencias.get("apellido_paterno"));
+	        	usuarioDto.setApellidoMaterno((String)licencias.get("apellido_materno"));
+	        	licenciaMedicaDto.setIdUsuario(usuarioDto);
+	        	listaLicencias.add(licenciaMedicaDto);
+	        }
+	        System.out.println("Numero de registros recuperados "+listaLicencias.size());
+	        return listaLicencias;  
 	}
 }
