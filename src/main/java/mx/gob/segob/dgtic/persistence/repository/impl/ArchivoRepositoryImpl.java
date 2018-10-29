@@ -83,7 +83,8 @@ public class ArchivoRepositoryImpl extends RecursoBase implements ArchivoReposit
 			byte[] bite=archivoDto.getArchivo();
 			System.out.println("datos del archivo "+bite);
 			Path path= Paths.get(archivoDto.getUrl());
-			Path pathNombre= Paths.get(archivoDto.getUrl()+archivoDto.getIdArchivo()+archivoDto.getNombre());
+			Path pathNombre= Paths.get(archivoDto.getUrl()+archivoDto.getNombre()+archivoDto.getIdArchivo()+".pdf");
+			archivoDto.setNombre(archivoDto.getNombre()+archivoDto.getIdArchivo()+".pdf");
 			if (!Files.exists(path)){
 			    Files.createDirectories(path);
 			}
@@ -96,7 +97,7 @@ public class ArchivoRepositoryImpl extends RecursoBase implements ArchivoReposit
 		}
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idArchivo", archivoDto.getIdArchivo());
-		parametros.addValue("nombre", +archivoDto.getIdArchivo()+archivoDto.getNombre());
+		parametros.addValue("nombre", archivoDto.getNombre());
 		parametros.addValue("size", archivoDto.getSize());
 		parametros.addValue("activo", archivoDto.getActivo());
 		parametros.addValue("url", archivoDto.getUrl());
@@ -111,7 +112,7 @@ public class ArchivoRepositoryImpl extends RecursoBase implements ArchivoReposit
 		Map<String, Object> id1 = jdbcTemplate.queryForMap(qry.toString());
         Integer id = ((Integer) id1.get("id_archivo"))+1;
 		//String ruta="C:/Sicoa/"+archivoDto.getClaveUsuario()+"/"+archivoDto.getAccion();
-        archivoDto.setNombre(id+archivoDto.getNombre());
+        archivoDto.setNombre(archivoDto.getNombre()+id+".pdf");
 		if(archivoDto.getArchivo()!=null){
 			try {
 				System.out.println("Guardando archivo");
