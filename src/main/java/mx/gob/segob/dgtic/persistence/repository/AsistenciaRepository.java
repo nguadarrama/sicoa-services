@@ -28,6 +28,8 @@ public interface AsistenciaRepository {
 	public Integer aplicaDescuento(IncidenciaDto incidencia);
 	public Integer agregaAsistencia(AsistenciaDto asistenciaDto);
 	public List<String> obtieneListaEmpleadosDeVacacionesHoy();
+	public List<String> obtieneListaEmpleadosDeComisionHoy();
+	public List<String> obtieneListaEmpleadosDeLicenciaHoy();
 
 	public List<AsistenciaDto> reporteDireccion(String cve_m_usuario, String nombre, String paterno, 
     		String materno, String nivel, String tipo, String estado, Date fechaInicial, Date fechaFinal, String unidadAdministrativa, String permisos);

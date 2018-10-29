@@ -291,9 +291,27 @@ public class CargaAsistenciaRules extends RecursoBase {
 		//calculo de inasistencias. son aquellas usurios que no tienen registro en el sistema de asistencias
 		logger.info(listaAsistencia.size() + " calculando y creando inasistencias...");
 		
-		//se obtienen los usuarios que están de vacaciones hoy
+		//se obtienen los usuarios que están de vacaciones, licencias, comisiones. Hoy
 		List<String> listaEmpleadosDeVacacionesHoy = asistenciaRepository.obtieneListaEmpleadosDeVacacionesHoy();
+		List<String> listaEmpleadosDeComisionHoy = asistenciaRepository.obtieneListaEmpleadosDeComisionHoy();
+		List<String> listaEmpleadosDeLicenciaHoy = asistenciaRepository.obtieneListaEmpleadosDeLicenciaHoy();
 		logger.info(asistenciaRepository.obtieneListaEmpleadosDeVacacionesHoy().size() + " empleados de vacaciones (" + new Date()  + ")");
+		logger.info(asistenciaRepository.obtieneListaEmpleadosDeComisionHoy().size() + " empleados de comision (" + new Date()  + ")");
+		logger.info(asistenciaRepository.obtieneListaEmpleadosDeLicenciaHoy().size() + " empleados de licencia (" + new Date()  + ")");
+		List<String> listaEmpleadosConPermiso = new ArrayList<>();
+		
+		//los usuarios en vacaciones, comisión y licencia se agrupan en una sola lista
+		for (String permiso : listaEmpleadosDeVacacionesHoy) {
+			listaEmpleadosConPermiso.add(permiso);
+		}
+		
+		for (String permiso : listaEmpleadosDeComisionHoy) {
+			listaEmpleadosConPermiso.add(permiso);
+		}
+		
+		for (String permiso : listaEmpleadosDeLicenciaHoy) {
+			listaEmpleadosConPermiso.add(permiso);
+		}
 		
 		for (UsuarioDto usuario : listaUsuarios) {
 			if (!listaClaveUsuariosEnAsistencia.contains(usuario.getClaveUsuario())) {
@@ -313,10 +331,12 @@ public class CargaAsistenciaRules extends RecursoBase {
 		        c.set(Calendar.SECOND, 0);
 				hoy.setTime(c.getTimeInMillis());
 				
-				if (listaEmpleadosDeVacacionesHoy.size() > 0) {
-					
-					if (!listaEmpleadosDeVacacionesHoy.contains(usuario.getClaveUsuario())) {
-						//el empleado no está en la lista de vacaciones, entonces se genera la inasistencia
+				//si existen empleados que faltaron justificadamente
+				if (listaEmpleadosConPermiso.size() > 0) {
+
+					//si el usuario no está de vacación, comision ó licencia se le genera inasistencia
+					if (!listaEmpleadosConPermiso.contains(usuario.getClaveUsuario())) {
+
 						asistencia.setEntrada(hoy);
 						asistencia.setUsuarioDto(usuario);
 						asistencia.setIdTipoDia(tipoDia);
@@ -324,11 +344,11 @@ public class CargaAsistenciaRules extends RecursoBase {
 						listaAsistencia.add(asistencia);
 					} else {
 						//cuando el empleado que faltó sí se encuentra de vacaciones no se requiere ninguna acción
-						logger.info("* " + usuario.getClaveUsuario() + ": el empleado se encuentra de vacaciones");
+						logger.info("* " + usuario.getClaveUsuario() + ": el empleado se encuentra con permiso");
 					}
-
+					
 				} else {
-					//hoy no epleados de vacaciones, se genera la inasistencia
+					//si no hay ningún usuario que esté de vacación, de comisión ó licencia, entonces directo se genera la inasistencia
 					asistencia.setEntrada(hoy);
 					asistencia.setUsuarioDto(usuario);
 					asistencia.setIdTipoDia(tipoDia);

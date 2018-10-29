@@ -589,9 +589,49 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 	       
         qry.append("SELECT id_usuario ");
         qry.append("FROM m_asistencia ");
-        qry.append("where entrada > date_Add(curdate(), interval -1 day) "); //interesa el día de ayer
+        qry.append("where entrada >= date_Add(curdate(), interval -1 day) "); //interesa el día de ayer
         qry.append("and entrada < curdate() ");
         qry.append("and id_tipo_dia = 5"); //vacación
+
+        List<Map<String, Object>> empleados = jdbcTemplate.queryForList(qry.toString());
+        List<String> listaEmpleados = new ArrayList<>();
+        
+        for (Map<String, Object> a : empleados) {
+    		listaEmpleados.add((String) a.get("id_usuario"));
+    	}
+        
+        return listaEmpleados;
+	}
+	
+	@Override
+	public List<String> obtieneListaEmpleadosDeComisionHoy() {
+		StringBuilder qry = new StringBuilder();
+	       
+        qry.append("SELECT id_usuario ");
+        qry.append("FROM m_asistencia ");
+        qry.append("where entrada >= date_Add(curdate(), interval -1 day) "); //interesa el día de ayer
+        qry.append("and entrada < curdate() ");
+        qry.append("and id_tipo_dia = 7"); //vac
+
+        List<Map<String, Object>> empleados = jdbcTemplate.queryForList(qry.toString());
+        List<String> listaEmpleados = new ArrayList<>();
+        
+        for (Map<String, Object> a : empleados) {
+    		listaEmpleados.add((String) a.get("id_usuario"));
+    	}
+        
+        return listaEmpleados;
+	}
+	
+	@Override
+	public List<String> obtieneListaEmpleadosDeLicenciaHoy() {
+		StringBuilder qry = new StringBuilder();
+	       
+        qry.append("SELECT id_usuario ");
+        qry.append("FROM m_asistencia ");
+        qry.append("where entrada >= date_Add(curdate(), interval -1 day) "); //interesa el día de ayer
+        qry.append("and entrada < curdate() ");
+        qry.append("and id_tipo_dia = 8"); //vacación
 
         List<Map<String, Object>> empleados = jdbcTemplate.queryForList(qry.toString());
         List<String> listaEmpleados = new ArrayList<>();
