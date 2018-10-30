@@ -162,7 +162,7 @@ public class LicenciaMedicaRepositoryImpl implements LicenciaMedicaRepository{
 		qry+="licencia.fecha_fin, licencia.dias, licencia.padecimiento, licencia.dias ";
 		qry+="from m_usuario usuario, m_licencia_medica licencia, m_estatus estatus ";
 		qry+="where usuario.id_usuario=licencia.id_usuario and estatus.id_estatus=licencia.id_estatus and usuario.cve_m_usuario='"+claveUsuario+"'";
-
+		System.out.println("Fechas para la consulta fechaInicio "+fechaInicio+" fechaFin "+fechaFin);
 		if(idEstatus!=null && !idEstatus.trim().isEmpty()){
 			qry+="and estatus.id_estatus = +'"+idEstatus+"' ";
 //        	query+="and estat.id_periodo='"+idPeriodo+"' ";
@@ -279,14 +279,14 @@ public class LicenciaMedicaRepositoryImpl implements LicenciaMedicaRepository{
 		//StringBuilder qry = new StringBuilder();
 		String qry="";
 		qry+="select sum(licencia.dias) suma_dias, count(licencia.id_licencia) total_licencias, usuario.id_usuario ,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno ";
-		qry+="from m_licencia_medica licencia right join m_usuario usuario on usuario.id_usuario=licencia.id_usuario ";
-		qry+="left join usuario_unidad_administrativa relacion on usuario.cve_m_usuario=relacion.cve_m_usuario ";
-		qry+="left join c_unidad_administrativa unidad on unidad.id_unidad=relacion.id_unidad ";
-		qry+="where unidad.id_unidad ='"+idUnidad+"' group by usuario.id_usuario ";
+		qry+="from m_licencia_medica licencia right join m_usuario usuario on usuario.id_usuario=licencia.id_usuario, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion ";
+		//qry+="left join usuario_unidad_administrativa relacion on usuario.cve_m_usuario=relacion.cve_m_usuario ";
+		//qry+="left join c_unidad_administrativa unidad on unidad.id_unidad=relacion.id_unidad ";
+		qry+="where usuario.cve_m_usuario=relacion.cve_m_usuario and unidad.id_unidad=relacion.id_unidad and unidad.id_unidad ='"+idUnidad+"' ";
 		//MapSqlParameterSource parametros = new MapSqlParameterSource();
 		//parametros.addValue("idUnidad", idUnidad);
 		if(claveUsuario!=null && !claveUsuario.trim().isEmpty()){
-			qry+="and usuario.cve_m_usuario like '%"+claveUsuario+"%' ";
+			qry+="and usuario.cve_m_usuario = '"+claveUsuario+"' ";
 	    }
 	    if(nombre!=null && !nombre.trim().isEmpty()){
 	    	qry+="and usuario.nombre like '%"+nombre+"%' ";
@@ -297,6 +297,7 @@ public class LicenciaMedicaRepositoryImpl implements LicenciaMedicaRepository{
 	    if(apellidoMaterno!=null && !apellidoMaterno.trim().isEmpty()){
 	    	qry+="and usuario.apellido_materno like '%"+apellidoMaterno+"%' ";
 	    }
+	    qry+="group by usuario.id_usuario ";
 		System.out.println("sqy "+qry);
 		 List<Map<String, Object>> consulta = jdbcTemplate.queryForList(qry);
 	        List<LicenciaMedicaDto> listaLicencias = new ArrayList<>();

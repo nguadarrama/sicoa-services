@@ -143,8 +143,8 @@ public class DetalleVacacionServiceImpl implements DetalleVacacionService {
 			}
 			InputStream template = null;
 			try {
-				ClassLoader classLoader = getClass().getClassLoader();
-				File file = new File(classLoader.getResource("jasper/vacacion/Vacaciones.jrxml").getFile());
+				//ClassLoader classLoader = getClass().getClassLoader();
+				File file = new File("/documentos/sicoa/jasper/vacacion/Vacaciones.jrxml");
 				template = new FileInputStream(file);
 			} catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block

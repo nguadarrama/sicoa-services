@@ -1,5 +1,9 @@
 package mx.gob.segob.dgtic.business.service.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
@@ -171,8 +175,16 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 		try {
 			uri = this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI();
 			String url = uri.toString().replace("vfs:/", "");
-			
-			JasperReport jasperReport=JasperCompileManager.compileReport(url + "\\jasper\\asistencia\\justificacion\\justificacion_incidencias.jrxml");
+			InputStream template = null;
+			try {
+				//ClassLoader classLoader = getClass().getClassLoader();
+				File file = new File("/documentos/sicoa/jasper/asistencia/justificacion/justificacion_incidencias.jrxml");
+				template = new FileInputStream(file);
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			JasperReport jasperReport=JasperCompileManager.compileReport(template);
 			JRDataSource dataSource= new JREmptyDataSource();
 			Map<String,Object> parametros = new HashMap<String, Object>();
 			parametros.put("nombre", generaReporteArchivo.getNombre());
@@ -197,10 +209,18 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 		URI uri = null;
 		
 		try {
-			uri = this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI();
-			String url = uri.toString().replace("vfs:/", "");
-			
-			JasperReport jasperReport=JasperCompileManager.compileReport(url + "\\jasper\\asistencia\\descuento\\descuento_incidencias.jrxml");
+			//uri = this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI();
+			//String url = uri.toString().replace("vfs:/", "");
+			InputStream template = null;
+			try {
+				//ClassLoader classLoader = getClass().getClassLoader();
+				File file = new File("/documentos/sicoa/jasper/asistencia/descuento/descuento_incidencias.jrxml");
+				template = new FileInputStream(file);
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			JasperReport jasperReport=JasperCompileManager.compileReport(template);
 			JRDataSource dataSource= new JREmptyDataSource();
 			Map<String,Object> parametros = new HashMap<String, Object>();
 			parametros.put("nombre", generaReporteArchivo.getNombre());
@@ -210,7 +230,7 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 			output = JasperExportManager.exportReportToPdf (jasperPrint); 
 			repo.setNombre(output);
 			
-		} catch (JRException | URISyntaxException e) {
+		} catch (JRException e) {
 			logger.warn("Errora al generar formato descuento -> " + this.getClass());
 			e.printStackTrace();
 		}

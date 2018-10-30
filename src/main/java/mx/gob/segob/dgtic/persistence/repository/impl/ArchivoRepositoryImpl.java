@@ -109,9 +109,18 @@ public class ArchivoRepositoryImpl extends RecursoBase implements ArchivoReposit
 		StringBuilder qry = new StringBuilder();
 		qry.append("select max(id_archivo) as id_archivo ");
 		qry.append("from m_archivo");
+		 Integer id=0;
+		try{
 		Map<String, Object> id1 = jdbcTemplate.queryForMap(qry.toString());
-        Integer id = ((Integer) id1.get("id_archivo"))+1;
-		//String ruta="C:/Sicoa/"+archivoDto.getClaveUsuario()+"/"+archivoDto.getAccion();
+        id = ((Integer) id1.get("id_archivo"));
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		if(id==null){
+			id=1;
+			}else{
+				id++;
+			}
         archivoDto.setNombre(archivoDto.getNombre()+id+".pdf");
 		if(archivoDto.getArchivo()!=null){
 			try {
