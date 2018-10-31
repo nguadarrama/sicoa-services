@@ -35,7 +35,7 @@ public class LicenciaMedicaServiceImpl implements LicenciaMedicaService {
 	}
 
 	@Override
-	public void modificaLicenciaMedica(LicenciaMedicaDtoAux licenciaMedicaDto) {
+	public LicenciaMedicaDto modificaLicenciaMedica(LicenciaMedicaDtoAux licenciaMedicaDto) {
 		LicenciaMedicaDto licencia= new LicenciaMedicaDto();
 		EstatusDto estatus= new EstatusDto();
 		estatus.setIdEstatus(licenciaMedicaDto.getIdEstatus());
@@ -47,12 +47,12 @@ public class LicenciaMedicaServiceImpl implements LicenciaMedicaService {
 		archivo.setIdArchivo(licenciaMedicaDto.getIdArchivo());
 		licencia.setIdArchivo(archivo);
 		licencia.setIdLicencia(licenciaMedicaDto.getIdLicencia());
-		licenciaMedicaRules.modificaLicenciaMedica(licencia);
+		return licenciaMedicaRules.modificaLicenciaMedica(licencia);
 		
 	}
 
 	@Override
-	public void agregaLicenciaMedica(LicenciaMedicaDtoAux licenciaMedicaDto) {
+	public LicenciaMedicaDto agregaLicenciaMedica(LicenciaMedicaDtoAux licenciaMedicaDto) {
 		
 		LicenciaMedicaDto licencia= new LicenciaMedicaDto();
 		Date fechaInicial = new Date();
@@ -77,7 +77,7 @@ public class LicenciaMedicaServiceImpl implements LicenciaMedicaService {
     	licencia.setPadecimiento(licenciaMedicaDto.getPadecimiento());
     	licencia.setFechaFin(fechaFinal);
     	licencia.setFechaInicio(fechaInicial);
-    	licenciaMedicaRules.agregaLicenciaMedica(licencia);
+    	return licenciaMedicaRules.agregaLicenciaMedica(licencia);
 	}
 
 	@Override

@@ -62,9 +62,9 @@ public class LicenciaMedicaRecurso {
 		Gson gson = builder.create();
 		LicenciaMedicaDtoAux licenciaMedicaDto = gson.fromJson(jsonObject.get("licenciaMedica"), LicenciaMedicaDtoAux.class);
 		
-		licenciaMedicaService.modificaLicenciaMedica(licenciaMedicaDto);
+		
 
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,licenciaMedicaService.modificaLicenciaMedica(licenciaMedicaDto));
 	}
 	
 	@PUT
@@ -79,9 +79,9 @@ public class LicenciaMedicaRecurso {
 		Gson gson = builder.create();
 		LicenciaMedicaDtoAux licenciaMedicaDto = gson.fromJson(jsonObject.get("licenciaMedica"), LicenciaMedicaDtoAux.class);
 		
-		licenciaMedicaService.agregaLicenciaMedica(licenciaMedicaDto);
+		
 
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,licenciaMedicaService.agregaLicenciaMedica(licenciaMedicaDto));
 	}
 	
 	@GET

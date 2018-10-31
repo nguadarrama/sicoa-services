@@ -229,7 +229,7 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
         if(i == 1)
 			detalleVacacionDto.setMensaje("El registro de vacaciones se realizó correctamente.");
 		else
-			detalleVacacionDto.setMensaje("Se ha generado un error al guardar vacaciones, revise la información");
+			detalleVacacionDto.setMensaje("Se ha generado un error al guardar vacaciones, revise que los datos sean correctos");
 		return detalleVacacionDto;
 		
 	}

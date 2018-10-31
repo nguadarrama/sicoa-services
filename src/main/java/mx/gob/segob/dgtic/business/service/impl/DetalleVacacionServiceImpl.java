@@ -209,7 +209,7 @@ public class DetalleVacacionServiceImpl implements DetalleVacacionService {
 				String fechaActual= null;
 				Integer diasRestantes=0;
 				if(vacacion.getDias()!=null){
-					diasRestantes=vacacion.getDias()-Integer.parseInt(generaReporteArchivo.getDias());
+					diasRestantes=vacacion.getDias();
 					parametros.put("diasRestantes",""+diasRestantes);
 				}
 				System.out.println("idVacacion para el archivo "+generaReporteArchivo.getIdVacacion()+" fechaInicio "+generaReporteArchivo.getFechaInicio()+ 

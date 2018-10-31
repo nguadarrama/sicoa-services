@@ -2,6 +2,8 @@ package mx.gob.segob.dgtic.comun.sicoa.dto;
 
 import java.util.Date;
 
+import javax.persistence.Transient;
+
 import mx.gob.segob.dgtic.comun.util.mapper.annotations.MapeaColumna;
 import mx.gob.segob.dgtic.comun.util.mapper.annotations.MapeaColumnasInternas;
 
@@ -59,7 +61,18 @@ public class LicenciaMedicaDto {
 			  String totalLicencias;
 			  String diasTotales;
 			  
-			  public String getDiasTotales() {
+			  @Transient
+			   private String mensaje;
+			  
+			  public String getMensaje() {
+				return mensaje;
+			}
+
+			public void setMensaje(String mensaje) {
+				this.mensaje = mensaje;
+			}
+
+			public String getDiasTotales() {
 				return diasTotales;
 			}
 

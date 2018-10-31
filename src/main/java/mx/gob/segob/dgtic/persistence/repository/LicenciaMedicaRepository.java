@@ -8,8 +8,8 @@ public interface LicenciaMedicaRepository {
 
 	public List<LicenciaMedicaDto> obtenerListaLicenciaMedica();
 	public LicenciaMedicaDto buscaLicenciaMedica(Integer idLicencia);
-	public void modificaLicenciaMedica(LicenciaMedicaDto licenciaMedicaDto);
-	public void agregaLicenciaMedica(LicenciaMedicaDto licenciaMedicaDto);
+	public LicenciaMedicaDto modificaLicenciaMedica(LicenciaMedicaDto licenciaMedicaDto);
+	public LicenciaMedicaDto agregaLicenciaMedica(LicenciaMedicaDto licenciaMedicaDto);
 	public void eliminaLicenciaMedica(Integer idLicencia);
 	public List<LicenciaMedicaDto> obtenerListaLicenciaMedicaPorFiltros(String claveUsuario, String fechaInicio, String fechaFin, String idEstatus);
 	public List<LicenciaMedicaDto> obtenerListaLicenciaMedicaEmpleados(String claveUsuario ,String nombre,String apellidoPaterno, String apellidoMaterno, 

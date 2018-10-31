@@ -1,5 +1,6 @@
 package mx.gob.segob.dgtic.persistence.repository.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -106,40 +107,74 @@ public class LicenciaMedicaRepositoryImpl implements LicenciaMedicaRepository{
 	}
 
 	@Override
-	public void modificaLicenciaMedica(LicenciaMedicaDto licenciaMedicaDto) {
+	public LicenciaMedicaDto modificaLicenciaMedica(LicenciaMedicaDto licenciaMedicaDto) {
 		StringBuilder qry = new StringBuilder();
 		System.out.println("Peticion a actualizar licencia "+licenciaMedicaDto.getIdLicencia()+" archivo "+licenciaMedicaDto.getIdArchivo().getIdArchivo()+" estatus "+licenciaMedicaDto.getIdEstatus().getIdEstatus());
 		qry.append("UPDATE m_licencia_medica SET id_estatus= :idEstatus, id_archivo= :idArchivo ");
 		qry.append("WHERE id_licencia = :idLicencia");
-		
+		Integer i=0;
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idLicencia", licenciaMedicaDto.getIdLicencia());
 		parametros.addValue("idEstatus", licenciaMedicaDto.getIdEstatus().getIdEstatus());
 		parametros.addValue("idArchivo", licenciaMedicaDto.getIdArchivo().getIdArchivo());
-		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		try{
+			i= nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		if(i == 1){
+        	licenciaMedicaDto.setMensaje("El registro de licencia medica se actualizó correctamente.");
+        }else{
+        	licenciaMedicaDto.setMensaje("Se ha generado un error al actualizar licencia medica, revise la información");
+        }
+		
+		return licenciaMedicaDto;
 		
 	}
 
 	@Override
-	public void agregaLicenciaMedica(LicenciaMedicaDto licenciaMedicaDto) {
-		StringBuilder qry = new StringBuilder();
-		Date fechaActual = new Date();
-		System.out.println("Fecha actual "+fechaActual+" idUsuario "+licenciaMedicaDto.getIdUsuario().getIdUsuario());
-		licenciaMedicaDto.setFechaRegistro(fechaActual);
-		qry.append("INSERT INTO m_licencia_medica (id_usuario, id_estatus, fecha_inicio, fecha_fin, dias, padecimiento, fecha_registro ) ");
-		qry.append("VALUES (:idUsuario, :idEstatus, :fechaInicio, :fechaFin, :dias, :padecimiento, :fechaRegistro) ");
-		
-		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("idUsuario", licenciaMedicaDto.getIdUsuario().getIdUsuario());
-		//parametros.addValue("idResponsable", licenciaMedicaDto.getIdResponsable());
-		parametros.addValue("idEstatus", licenciaMedicaDto.getIdEstatus().getIdEstatus());
-		parametros.addValue("fechaInicio", licenciaMedicaDto.getFechaInicio());
-		parametros.addValue("fechaFin", licenciaMedicaDto.getFechaFin());
-		parametros.addValue("dias", licenciaMedicaDto.getDias());
-		parametros.addValue("padecimiento", licenciaMedicaDto.getPadecimiento());
-		parametros.addValue("fechaRegistro", licenciaMedicaDto.getFechaRegistro());
-
-		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+	public LicenciaMedicaDto agregaLicenciaMedica(LicenciaMedicaDto licenciaMedicaDto) {
+		Integer i=0;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String fechaIni=sdf.format(licenciaMedicaDto.getFechaInicio());
+		String fechaF=sdf.format(licenciaMedicaDto.getFechaFin());
+		String query="select id_licencia from m_licencia_medica where (((fecha_inicio between '"+fechaIni+"' and '"+fechaF+"') "
+				+ "or (fecha_fin between '"+fechaIni+"' and '"+fechaF+"' )) "+
+				" or('"+fechaIni+"'>fecha_inicio and fecha_inicio<'"+fechaF+"' and fecha_fin>'"+fechaF+"'))"
+						+ "and id_usuario='"+licenciaMedicaDto.getIdUsuario().getIdUsuario()+"' ";
+		System.out.println("query "+query);
+        List<Map<String, Object>> detalleLicencia = jdbcTemplate.queryForList(query);
+        System.out.println("Datos de la consulta "+detalleLicencia.size());
+        if(detalleLicencia.size()==0 || detalleLicencia==null){
+			StringBuilder qry = new StringBuilder();
+			Date fechaActual = new Date();
+			System.out.println("Fecha actual "+fechaActual+" idUsuario "+licenciaMedicaDto.getIdUsuario().getIdUsuario());
+			licenciaMedicaDto.setFechaRegistro(fechaActual);
+			qry.append("INSERT INTO m_licencia_medica (id_usuario, id_estatus, fecha_inicio, fecha_fin, dias, padecimiento, fecha_registro ) ");
+			qry.append("VALUES (:idUsuario, :idEstatus, :fechaInicio, :fechaFin, :dias, :padecimiento, :fechaRegistro) ");
+			
+			MapSqlParameterSource parametros = new MapSqlParameterSource();
+			parametros.addValue("idUsuario", licenciaMedicaDto.getIdUsuario().getIdUsuario());
+			//parametros.addValue("idResponsable", licenciaMedicaDto.getIdResponsable());
+			parametros.addValue("idEstatus", licenciaMedicaDto.getIdEstatus().getIdEstatus());
+			parametros.addValue("fechaInicio", licenciaMedicaDto.getFechaInicio());
+			parametros.addValue("fechaFin", licenciaMedicaDto.getFechaFin());
+			parametros.addValue("dias", licenciaMedicaDto.getDias());
+			parametros.addValue("padecimiento", licenciaMedicaDto.getPadecimiento());
+			parametros.addValue("fechaRegistro", licenciaMedicaDto.getFechaRegistro());
+	
+			try{
+				i= nameParameterJdbcTemplate.update(qry.toString(), parametros);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+        }
+        if(i == 1){
+        	licenciaMedicaDto.setMensaje("El registro de licencia medica se realizó correctamente.");
+        }else{
+        	licenciaMedicaDto.setMensaje("Se ha generado un error al guardar licencia medica, revise la información");
+        }
+        return licenciaMedicaDto;
 		
 	}
 

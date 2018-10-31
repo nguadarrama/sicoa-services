@@ -19,10 +19,12 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DetalleVacacionDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.TipoDiaDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionPeriodoDto;
 import mx.gob.segob.dgtic.persistence.repository.ArchivoRepository;
 import mx.gob.segob.dgtic.persistence.repository.AsistenciaRepository;
 import mx.gob.segob.dgtic.persistence.repository.DetalleVacacionRepository;
+import mx.gob.segob.dgtic.persistence.repository.UsuarioRepository;
 import mx.gob.segob.dgtic.persistence.repository.VacacionPeriodoRepository;
 @Component
 public class DetalleVacacionRules {
@@ -38,6 +40,8 @@ public class DetalleVacacionRules {
 	
 	@Autowired 
 	ArchivoRepository archivoRepository;
+	
+	@Autowired UsuarioRepository usuarioRepository;
 	
 	public List<DetalleVacacionDto> obtenerListaDetalleVacaciones() {
 			return detalleVacacionRepository.obtenerListaDetalleVacaciones();
@@ -104,16 +108,18 @@ public class DetalleVacacionRules {
 		        c1.add(Calendar.DAY_OF_MONTH, 1);
 		    }
 		    EstatusDto estatusDto = new EstatusDto();
-		    estatusDto.setIdEstatus(1);
+		    estatusDto.setIdEstatus(2);
 		    TipoDiaDto tipoDiaDto = new TipoDiaDto();
 		    tipoDiaDto.setIdTipoDia(5);
+		    UsuarioDto usuarioDto= new UsuarioDto();
+		    usuarioDto=usuarioRepository.buscaUsuarioPorId(detalleVacacionDto.getIdUsuario().getIdUsuario());
 		    for (Iterator<Date> it = listaFechas.iterator(); it.hasNext();) {
 		        Date date = it.next();
 		        AsistenciaDto asistenciaDto = new AsistenciaDto(); 
 		        asistenciaDto.setEntrada(new Timestamp(date.getTime()));
 		        asistenciaDto.setSalida(new Timestamp(date.getTime()));
 		        System.out.println("detalleVacacionDto.getIdUsuario().getIdUsuario() "+detalleVacacionDto.getIdUsuario().getIdUsuario());
-		        asistenciaDto.setUsuarioDto(detalleVacacionDto.getIdUsuario());
+		        asistenciaDto.setUsuarioDto(usuarioDto);
 		        asistenciaDto.setIdEstatus(estatusDto);
 		        asistenciaDto.setIdTipoDia(tipoDiaDto);
 		        asistenciaRepository.agregaAsistencia(asistenciaDto);
