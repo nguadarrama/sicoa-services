@@ -94,4 +94,12 @@ public class EstatusRecurso {
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 	}
 
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("obtieneListaCompletaEstatus")	
+	@PermitAll
+	public Response obtieneListaCompletaEstatus() {
+
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, estatusService.obtenerListaCompletaEstatus());
+	}
 }

@@ -34,4 +34,8 @@ public class EstatusRules {
 	public void eliminaEstatus(Integer idEstatus){
 		estatusRepository.eliminaEstatus(idEstatus);
 	}
+	
+	public List<EstatusDto> obtenerListaCompletaEstatus() {
+		return estatusRepository.obtenerListaCompletaEstatus();
+	}
 }

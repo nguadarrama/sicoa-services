@@ -11,4 +11,5 @@ public interface EstatusRepository {
 	public void modificaEstatus(EstatusDto estatusDto);
 	public void agregaEstatus(EstatusDto estatusDto);
 	public void eliminaEstatus(Integer idEstatus);
+	public List<EstatusDto> obtenerListaCompletaEstatus();
 }

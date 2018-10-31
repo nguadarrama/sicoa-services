@@ -100,4 +100,24 @@ public class EstatusRepositoryImpl implements EstatusRepository{
 
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 	}
+	
+	@Override
+	public List<EstatusDto> obtenerListaCompletaEstatus(){
+		
+		 StringBuilder qry = new StringBuilder();
+	        qry.append("SELECT id_estatus, estatus, descripcion ");
+	        qry.append("FROM m_estatus");
+	        
+	        List<Map<String, Object>> listaestatus = jdbcTemplate.queryForList(qry.toString());
+	        List<EstatusDto> listaEstatus = new ArrayList<>();
+	        
+	        for (Map<String, Object> estatus : listaestatus) {
+	    		EstatusDto estatusDto = new EstatusDto();
+	    		estatusDto.setIdEstatus((Integer)estatus.get("id_estatus"));
+	    		estatusDto.setDescripcion((String)estatus.get("descripcion"));
+	    		estatusDto.setEstatus((String)estatus.get("estatus"));
+	    		listaEstatus.add(estatusDto);
+	    	}
+	     return listaEstatus;	
+	}
 }

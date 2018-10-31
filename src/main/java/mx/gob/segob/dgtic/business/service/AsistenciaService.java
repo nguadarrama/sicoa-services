@@ -15,10 +15,10 @@ public interface AsistenciaService {
 	public List<AsistenciaDto> buscaAsistenciaEmpleadoRango(String claveEmpleado, String fechaInicio, String fechaFin);
 	
 	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(String cve_m_usuario, String nombre, String paterno, 
-    		String materno, String nivel, Integer tipo, String estado, String fechaInicial, String fechaFinal, String unidadAdministrativa, String cveCoordinador);
+    		String materno, String nivel, Integer tipo, Integer estado, String fechaInicial, String fechaFinal, String unidadAdministrativa, String cveCoordinador);
 	
 	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoDireccion(String cve_m_usuario, String nombre, String paterno, 
-    		String materno, String nivel, Integer tipo, String estado, String fechaInicial, String fechaFinal, String unidadAdministrativa);
+    		String materno, String nivel, Integer tipo, Integer estado, String fechaInicial, String fechaFinal, String unidadAdministrativa);
 	
 	public AsistenciaDto buscaAsistenciaPorId(Integer id);
 	public Integer creaIncidencia(IncidenciaDto incidencia);
@@ -29,8 +29,8 @@ public interface AsistenciaService {
 	public reporte generaFormatoDescuento(FormatoIncidencia generaReporteArchivo);
 	
 	public List<AsistenciaDto> reporteDireccion(String cve_m_usuario, String nombre, String paterno, 
-    		String materno, String nivel, Integer tipo, String estado, String fechaInicial, String fechaFinal, String unidadAdministrativa, String permisos);
+    		String materno, String nivel, Integer tipo, Integer estado, String fechaInicial, String fechaFinal, String unidadAdministrativa, String permisos);
 	
 	public List<AsistenciaDto> reporteCoordinador(String cve_m_usuario, String nombre, String paterno, 
-    		String materno, String nivel, Integer tipo, String estado, String fechaInicial, String fechaFinal, String unidadAdministrativa, String cveCoordinador, String permisos);
+    		String materno, String nivel, Integer tipo, Integer estado, String fechaInicial, String fechaFinal, String unidadAdministrativa, String cveCoordinador, String permisos);
 }

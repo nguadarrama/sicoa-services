@@ -77,7 +77,7 @@ public class AsistenciaRecurso {
 			@QueryParam("cveCoordinador") String cveCoordinador) {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistenciaEmpleadoRangoCoordinador(claveEmpleado, nombre, 
-				paterno, materno, nivel, !tipo.equals("null") ? Integer.parseInt(tipo) : 0, estado, inicio, fin, unidadAdministrativa, cveCoordinador));
+				paterno, materno, nivel, !tipo.equals("null") ? Integer.parseInt(tipo) : 0, !estado.equals("null") ? Integer.parseInt(estado) : 0, inicio, fin, unidadAdministrativa, cveCoordinador));
 	}
 	
 	@GET
@@ -97,7 +97,7 @@ public class AsistenciaRecurso {
 			@QueryParam("unidad") String unidadAdministrativa) {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistenciaEmpleadoRangoDireccion(claveEmpleado, nombre, 
-				paterno, materno, nivel, !tipo.equals("null") ? Integer.parseInt(tipo) : 0, estado, inicio, fin, unidadAdministrativa));
+				paterno, materno, nivel, !tipo.equals("null") ? Integer.parseInt(tipo) : 0, !estado.equals("null") ? Integer.parseInt(estado) : 0, inicio, fin, unidadAdministrativa));
 	}
 	
 	@GET
@@ -184,8 +184,6 @@ public class AsistenciaRecurso {
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		FormatoIncidencia generaReporteArchivo = gson.fromJson(jsonObject.get("generaReporteArchivo"), FormatoIncidencia.class);
-		
-		
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,asistenciaService.generaFormatoJustificacion(generaReporteArchivo));
 	}
@@ -224,7 +222,7 @@ public class AsistenciaRecurso {
 			@QueryParam("permisos") String permisos) {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.reporteCoordinador(claveEmpleado, nombre, 
-				paterno, materno, nivel, !tipo.equals("null") ? Integer.parseInt(tipo) : 0, estado, inicio, 
+				paterno, materno, nivel, !tipo.equals("null") ? Integer.parseInt(tipo) : 0, !estado.equals("null") ? Integer.parseInt(estado) : 0, inicio, 
 						fin, unidadAdministrativa, cveCoordinador, permisos));
 	}
 	
@@ -246,7 +244,7 @@ public class AsistenciaRecurso {
 			@QueryParam("permisos") String permisos) {
 		
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.reporteDireccion(claveEmpleado, nombre, 
-				paterno, materno, nivel, !tipo.equals("null") ? Integer.parseInt(tipo) : 0, estado, inicio, fin, unidadAdministrativa, permisos));
+				paterno, materno, nivel, !tipo.equals("null") ? Integer.parseInt(tipo) : 0, !estado.equals("null") ? Integer.parseInt(estado) : 0, inicio, fin, unidadAdministrativa, permisos));
 	}
 	
 }

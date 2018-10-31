@@ -39,4 +39,9 @@ public class EstatusServiceImpl implements EstatusService{
 	public void eliminaEstatus(Integer idEstatus){
 		estatusRules.eliminaEstatus(idEstatus);
 	}
+	
+	@Override
+	public List<EstatusDto> obtenerListaCompletaEstatus() {
+		return estatusRules.obtenerListaCompletaEstatus();
+	}
 }

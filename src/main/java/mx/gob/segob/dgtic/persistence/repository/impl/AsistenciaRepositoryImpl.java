@@ -136,7 +136,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 	
 	@Override
 	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(String cve_m_usuario, String nombre, String paterno,
-			String materno, String nivel, Integer tipo, String estado, Date fechaInicial, Date fechaFinal,
+			String materno, String nivel, Integer tipo, Integer estado, Date fechaInicial, Date fechaFinal,
 			String unidadAdministrativa, Integer idUnidadCoordinador) {
 			
 		StringBuilder qry = new StringBuilder();
@@ -185,8 +185,8 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         	qry.append(" and t.id_tipo_dia = " + tipo);
         }
         
-        if (!estado.isEmpty()) {
-        	qry.append(" and e.estatus like '%" + estado + "%' ");
+        if (estado > 0) {
+        	qry.append(" and e.id_estatus = " + estado);
         }
         
         List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString());
@@ -229,7 +229,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 	
 	@Override
 	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoDireccion(String cve_m_usuario, String nombre, String paterno,
-			String materno, String nivel, Integer tipo, String estado, Date fechaInicial, Date fechaFinal,
+			String materno, String nivel, Integer tipo, Integer estado, Date fechaInicial, Date fechaFinal,
 			String unidadAdministrativa) {
 			
 		StringBuilder qry = new StringBuilder();
@@ -285,8 +285,8 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         	qry.append(" and t.id_tipo_dia = " + tipo);
         }
         
-        if (!estado.isEmpty()) {
-        	qry.append(" and e.estatus like '%" + estado + "%' ");
+        if (estado > 0) {
+        	qry.append(" and e.id_estatus = " + estado);
         }
         
         List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString());
@@ -645,7 +645,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 
 	@Override
 	public List<AsistenciaDto> reporteDireccion(String cve_m_usuario, String nombre, String paterno, String materno,
-			String nivel, Integer tipo, String estado, Date fechaInicial, Date fechaFinal, String unidadAdministrativa,
+			String nivel, Integer tipo, Integer estado, Date fechaInicial, Date fechaFinal, String unidadAdministrativa,
 			String p) {
 
 		StringBuilder qry = new StringBuilder();
@@ -701,8 +701,8 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         	qry.append(" and t.id_tipo_dia = " + tipo);
         }
         
-        if (!estado.isEmpty()) {
-        	qry.append(" and e.estatus like '%" + estado + "%' ");
+        if (estado > 0) {
+        	qry.append(" and e.id_estatus = " + estado);
         }
         
         //reglas para condiciones de permisos 
@@ -799,7 +799,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 
 	@Override
 	public List<AsistenciaDto> reporteCoordinador(String cve_m_usuario, String nombre, String paterno, String materno,
-			String nivel, Integer tipo, String estado, Date fechaInicial, Date fechaFinal, String unidadAdministrativa, Integer idUnidadCoordinador,
+			String nivel, Integer tipo, Integer estado, Date fechaInicial, Date fechaFinal, String unidadAdministrativa, Integer idUnidadCoordinador,
 			String p) {
 
 		StringBuilder qry = new StringBuilder();
@@ -848,8 +848,8 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         	qry.append(" and t.id_tipo_dia = " + tipo);
         }
         
-        if (!estado.isEmpty()) {
-        	qry.append(" and e.estatus like '%" + estado + "%' ");
+        if (estado > 0) {
+        	qry.append(" and e.id_estatus = " + estado);
         }
         
         //reglas para condiciones de permisos 

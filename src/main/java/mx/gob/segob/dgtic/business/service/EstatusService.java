@@ -11,4 +11,5 @@ public interface EstatusService {
 	public void modificaEstatus(EstatusDto estatusDto);
 	public void agregaEstatus(EstatusDto estatusDto);
 	public void eliminaEstatus(Integer idEstatus);
+	public List<EstatusDto> obtenerListaCompletaEstatus();
 }
