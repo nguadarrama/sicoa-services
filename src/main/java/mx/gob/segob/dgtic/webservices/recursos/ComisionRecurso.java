@@ -20,77 +20,129 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import mx.gob.segob.dgtic.business.service.ComisionService;
+import mx.gob.segob.dgtic.comun.sicoa.dto.ComisionAux;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ComisionDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.GeneraReporteArchivo;
+import mx.gob.segob.dgtic.comun.sicoa.dto.GenerarReporteArchivoComision;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
-@Path("catalogo")
+@Path("comisiones")
 @Component
 public class ComisionRecurso {
 
-	@Autowired
-	private ComisionService comisionService;
-	
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("obtieneComisiones")	
-	@PermitAll
-	public Response obtieneComisiones() {
+  @Autowired
+  private ComisionService comisionService;
 
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, comisionService.obtenerListacomisiones());
-	}
-	
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("buscaComision")	
-	@PermitAll
-	public Response buscaComision(@QueryParam("id") Integer id) {
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("obtieneComisiones")
+  @PermitAll
+  public Response obtieneComisiones() {
 
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, comisionService.buscaComision(id));
-	}
-	
-	@PUT
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("modificaComision")	
-	@PermitAll
-	public Response modificaComision(@RequestParam String jsonComision) {
-		JsonObject jsonObject = new JsonParser().parse(jsonComision).getAsJsonObject();
-		
-		GsonBuilder builder = new GsonBuilder();
-		Gson gson = builder.create();
-		ComisionDto comisionDto = gson.fromJson(jsonObject.get("comision"), ComisionDto.class);
-		
-		comisionService.modificaComision(comisionDto);
+    return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,
+        comisionService.obtenerListacomisiones());
+  }
 
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
-	}
-	
-	@PUT
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("agregaComision")	
-	@PermitAll
-	public Response agregaComision(@RequestParam String jsonComision) {
-		JsonObject jsonObject = new JsonParser().parse(jsonComision).getAsJsonObject();
-		
-		GsonBuilder builder = new GsonBuilder();
-		Gson gson = builder.create();
-		ComisionDto comisionDto = gson.fromJson(jsonObject.get("comision"), ComisionDto.class);
-		
-		comisionService.agregaComision(comisionDto);
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("buscaComision")
+  @PermitAll
+  public Response buscaComision(@QueryParam("id") Integer id) {
 
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
-	}
-	
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("eliminaComision")	
-	@PermitAll
-	public Response eliminaComision(@QueryParam("id") Integer id) {
-		
-		comisionService.eliminaComision(id);
+    return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,
+        comisionService.buscaComision(id));
+  }
 
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
-	}
+  @PUT
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("modificaComision")
+  @PermitAll
+  public Response modificaComision(@RequestParam String jsonComision) {
+    JsonObject jsonObject = new JsonParser().parse(jsonComision).getAsJsonObject();
+
+    GsonBuilder builder = new GsonBuilder();
+    Gson gson = builder.create();
+    ComisionAux comisionDto = gson.fromJson(jsonObject.get("comision"), ComisionAux.class);
+
+    comisionService.modificaComision(comisionDto);
+
+    return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+  }
+
+  @PUT
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("agregaComision")
+  @PermitAll
+  public Response agregaComision(@RequestParam String jsonComision) {
+    JsonObject jsonObject = new JsonParser().parse(jsonComision).getAsJsonObject();
+
+    GsonBuilder builder = new GsonBuilder();
+    Gson gson = builder.create();
+    ComisionAux comisionAux = gson.fromJson(jsonObject.get("comision"), ComisionAux.class);
+    System.out.println("Datos para comision en recurso " + " fechaInicio "+comisionAux.getFechaInicio()+
+        " fechaFin "+comisionAux.getFechaFin());
+    comisionService.agregaComision(comisionAux);
+
+    return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+  }
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("eliminaComision")
+  @PermitAll
+  public Response eliminaComision(@QueryParam("id") Integer id) {
+
+    comisionService.eliminaComision(id);
+
+    return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+  }
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("obtieneListaComisionPorFiltros")
+  @PermitAll
+  public Response obtieneListaComisionPorFiltros(@QueryParam("claveUsuario") String claveUsuario,
+      @QueryParam("idEstatus") String idEstatus, @QueryParam("fechaInicio") String fechaInicio,
+      @QueryParam("fechaFin") String fechaFin) {
+
+    return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, comisionService
+        .obtenerListaComisionPorFiltros(claveUsuario, fechaInicio, fechaFin, idEstatus));
+  }
+  
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("obtieneListaComisionPorFiltrosEmpleados")    
+  @PermitAll
+  public Response obtieneListaComisionEmpleados(@QueryParam("claveUsuario") String claveUsuario,@QueryParam("idEstatus") String idEstatus, 
+          @QueryParam("nombre") String nombre, @QueryParam("apellidoPaterno") String apellidoPaterno, @QueryParam("apellidoMaterno") String apellidoMaterno,
+          @QueryParam("idUnidad") String idUnidad) {
+
+      return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, comisionService.obtenerListaComisionEmpleados(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, idEstatus, idUnidad));
+  }
+  
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("obtieneComisionesPorUnidad")  
+  @PermitAll
+  public Response obtieneComisionesPorUnidad(@QueryParam("idUnidad") String idUnidad, @QueryParam("claveUsuario") String claveUsuario,
+          @QueryParam("nombre") String nombre, @QueryParam("apellidoPaterno") String apellidoPaterno, @QueryParam("apellidoMaterno")String apellidoMaterno) {
+
+      return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, comisionService.obtenerComisionesPorUnidad(idUnidad, claveUsuario, nombre, apellidoPaterno, apellidoMaterno));
+  }
+  
+  @PUT
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("generarReporte")  
+  @PermitAll
+  public Response generarReporte(@RequestParam String jsonDetalleVacacion) {
+      JsonObject jsonObject = new JsonParser().parse(jsonDetalleVacacion).getAsJsonObject();
+      GsonBuilder builder = new GsonBuilder();
+      Gson gson = builder.create();
+      GenerarReporteArchivoComision generaReporteArchivo = gson.fromJson(jsonObject.get("generaReporteArchivo"), GenerarReporteArchivoComision.class);
+      return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,comisionService.generaReporteComisiones(generaReporteArchivo));
+  }
 }

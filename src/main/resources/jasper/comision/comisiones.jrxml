@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="justificacion_incidencias" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="278501ae-7448-4c4b-9795-a8055ee58510">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="52"/>
+	<property name="ireport.y" value="528"/>
+	<parameter name="nombre" class="java.lang.String"/>
+	<parameter name="unidad" class="java.lang.String"/>
+	<parameter name="comision" class="java.lang.String"/>
+	<parameter name="horario" class="java.lang.String"/>
+	<parameter name="fechaInicio" class="java.util.Date"/>
+	<parameter name="fechaFinal" class="java.util.Date"/>
+	<field name="fechaActual" class="java.util.Date"/>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="unidad" class="java.lang.String"/>
+	<field name="comision" class="java.lang.String"/>
+	<field name="fechaInicio" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="115" splitType="Stretch">
+			<staticText>
+				<reportElement x="63" y="39" width="437" height="14" uuid="2046a91f-b570-434f-921b-3bc47b64b2b3"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[DIRECCIÓN GENERAL DE RECURSOS HUMANOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="63" y="53" width="437" height="14" uuid="4c3c2ae2-3367-4c5c-ae14-3567bb95098a"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[DIRECCIÓN DE ADMINISTRACIÓN DE PERSONAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="63" y="83" width="437" height="14" uuid="82eb07e6-6424-4003-b5e2-a6d19b66aad5"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[AVISO DE COMISIÓN OFICIAL]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="645" splitType="Stretch">
+			<staticText>
+				<reportElement x="63" y="51" width="336" height="15" uuid="aa102556-c5ef-4a37-a529-b6d54fb38d7f"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PRESENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="62" y="36" width="336" height="15" uuid="3c9f59f8-4779-4831-852c-f1159e37ef56"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[COORDINADOR ADMINISTRATIVO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="63" y="97" width="420" height="59" uuid="5c389b29-8d42-4b93-9e2e-c45ab0e0cdf8"/>
+				<textElement textAlignment="Justified" markup="none"/>
+				<text><![CDATA[A efecto de dar cumplimiento a lo establecido en el Oficio Circular No.  DGRH/810/00018/2014, de fecha 2 de mayo de 2014, me permito solicitarle, gire sus apreciables instrucciones a quien corresponda, para que se realice en el control de asistencia el registro de la comisión que a continuación se señala.  ]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="211" y="186" width="270" height="15" uuid="85652f2e-a37d-482a-9da2-04a0922856b2"/>
+				<textFieldExpression><![CDATA[$P{nombre}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="212" y="212" width="269" height="15" uuid="9cf0a370-4b7a-45a1-8e1c-f90e0a03ca93"/>
+				<textFieldExpression><![CDATA[$P{unidad}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="212" y="239" width="269" height="15" uuid="b5d85940-e965-469e-a0ed-a7fbef21dd60"/>
+				<textFieldExpression><![CDATA[$P{comision}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="212" y="269" width="68" height="15" uuid="cbdb2cc1-3d6d-42d2-8a7d-1eacf955a839"/>
+				<textFieldExpression><![CDATA[$P{fechaInicio}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="280" y="269" width="14" height="15" uuid="a4804a1a-fe2e-43aa-9357-c0863a7ce864"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[-]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="294" y="269" width="81" height="15" uuid="72cca2e3-9e1d-4f1a-a9f4-1a1c35c0fe18"/>
+				<textFieldExpression><![CDATA[$P{fechaFinal}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="212" y="297" width="269" height="15" uuid="9d805d2c-8a8e-4c1c-be0f-dfc3ad1c958a"/>
+				<textFieldExpression><![CDATA[$P{horario}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="63" y="184" width="148" height="18" uuid="b7bebf5f-2458-4890-8224-00c1cbed5e3b"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[PERSONAL COMISIONADO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="63" y="209" width="148" height="18" uuid="cc83d719-b2b6-46a5-bea3-8bbcdce979bf"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[AREA DE ADSCRIPCIÓN:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="63" y="237" width="148" height="18" uuid="0f16760b-dcd0-45c2-8866-f2835c0494a1"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[MOTIVO DE LA COMISIÓN:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="63" y="266" width="148" height="18" uuid="2e4be4c1-bd16-4ea7-b733-b184faaa3ade"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[FECHA O PERIODO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="63" y="295" width="148" height="18" uuid="45a1f704-b7f9-4a08-94f7-0ad639d40e84"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[HORARIO:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="212" y="202" width="270" height="1" uuid="6cc6aff5-2d97-4672-95d2-f71db6bf730f"/>
+			</line>
+			<line>
+				<reportElement x="211" y="227" width="270" height="1" uuid="01852332-f303-456d-98fa-18c2ac9c7197"/>
+			</line>
+			<line>
+				<reportElement x="212" y="254" width="270" height="1" uuid="71a2eb05-4c53-4f82-9a2c-ee833dc1a948"/>
+			</line>
+			<line>
+				<reportElement x="211" y="283" width="270" height="1" uuid="764a6189-b165-4d5e-974a-8c50f22dfbe8"/>
+			</line>
+			<line>
+				<reportElement x="212" y="312" width="270" height="1" uuid="cc4d93ed-661d-43e0-9d44-64e9988afb4a"/>
+			</line>
+			<staticText>
+				<reportElement x="62" y="353" width="426" height="15" uuid="c663945f-3142-4f34-8226-70d0e7dd72e9"/>
+				<text><![CDATA[Sin otro en particular, le envió un cordial saludo.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="94" y="405" width="148" height="18" uuid="c5380cb1-85ca-44aa-88be-62c6d88bcee3"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[A U T O R I Z O:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="62" y="539" width="180" height="1" uuid="3addda9e-e634-4f08-8435-028f19e861f5"/>
+			</line>
+			<line>
+				<reportElement x="294" y="538" width="180" height="1" uuid="2b51d3d6-d56a-485f-80f3-ca30c99b1460"/>
+			</line>
+			<staticText>
+				<reportElement x="63" y="540" width="179" height="15" uuid="714fe4a0-fb83-46cf-b2fa-f86f8b1cbc01"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Nombre y firma del Director de Área.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="294" y="538" width="179" height="15" uuid="ff8ba277-281c-4c6a-a359-2c33f92e9582"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Firma del servidor público comisionado.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="60" y="580" width="437" height="44" uuid="f00d3afa-0b6d-407c-84c6-88dbb1613c01"/>
+				<textElement textAlignment="Justified">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[*Este formato exonera al servidor público de su registro de entrada y salida en los controles determinados para tal fin dentro del periodo que se le haya autorizado, por lo que deberá hacerse acompañar de los soportes documentales necesarios para su justificación.]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+</jasperReport>

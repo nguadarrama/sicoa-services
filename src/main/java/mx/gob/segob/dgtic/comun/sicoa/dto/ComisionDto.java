@@ -1,7 +1,7 @@
 package mx.gob.segob.dgtic.comun.sicoa.dto;
 
 import java.util.Date;
-
+import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
 import mx.gob.segob.dgtic.comun.util.mapper.annotations.MapeaColumna;
 import mx.gob.segob.dgtic.comun.util.mapper.annotations.MapeaColumnasInternas;
 
@@ -51,6 +51,16 @@ public class ComisionDto {
 	     * La descripci&oacute;n de la comisi&oacute;n.
 	     */
 	    @MapeaColumna(columna = "comision") private String comision;
+	    
+	    /**
+         * La descripci&oacute;n de la comisi&oacute;n.
+         */
+        @MapeaColumna(columna = "fecha_registro") private Date fechaRegistro;
+        
+        /**
+         * La descripci&oacute;n de la comisi&oacute;n.
+         */
+        @MapeaColumna(columna = "id_horario") private Horario idHorario;
 	    
 	    /**
 		    * El id comisi&oacute;n.
@@ -195,4 +205,26 @@ public class ComisionDto {
 			this.comision = comision;
 		}
 
+    /**
+     * @return the fechaRegistro
+     */
+    public Date getFechaRegistro() {
+      return fechaRegistro;
+    }
+
+    /**
+     * @param fechaRegistro the fechaRegistro to set
+     */
+    public void setFechaRegistro(Date fechaRegistro) {
+      this.fechaRegistro = fechaRegistro;
+    }
+
+    public Horario getIdHorario() {
+      return idHorario;
+    }
+
+    public void setIdHorario(Horario idHorario) {
+      this.idHorario = idHorario;
+    }
+    
 }
