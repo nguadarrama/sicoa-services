@@ -28,7 +28,7 @@ public class NivelOrganizacionalServiceImpl implements NivelOrganizacionalServic
 		 * Verificando que no exista el horario en el nivel organizacional a dar de alta
 		 ********************************************************************************/
 		boolean existe = false;
-		existe = nivelOrganizacionalRules.existeNivel(nivelDto.getIdHorario());
+		//existe = nivelOrganizacionalRules.existeNivel(nivelDto.getIdHorario());
 		Horario horario = new Horario();
 		horario = buscaHorario(nivelDto.getIdHorario());
 		System.out.println("horario devuelto: Hora Entrada "+horario.getHoraEntrada().toString()+" -  Hora Salida "+horario.getHoraSalida().toString());

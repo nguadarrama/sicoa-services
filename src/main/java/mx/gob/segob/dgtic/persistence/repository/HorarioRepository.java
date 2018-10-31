@@ -11,5 +11,6 @@ public interface HorarioRepository {
 	public Horario modificaHorario(Horario horario);
 	public Horario agregaHorario(Horario horaorio);
 	public void eliminaHorario(Integer id);
+	public List<Horario> obtenerListaHorariosCatalogo();
 		
 }

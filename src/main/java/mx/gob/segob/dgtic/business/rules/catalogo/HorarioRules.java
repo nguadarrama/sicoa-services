@@ -19,6 +19,11 @@ public class HorarioRules {
 		return horarioRepository.obtenerListaHorarios();
 	}
 	
+	public List<Horario> obtenerListaHorariosCatalogo() {
+		
+		return horarioRepository.obtenerListaHorariosCatalogo();
+	}
+	
 	public Horario buscaHorario(int id) {
 		
 		return horarioRepository.buscaHorario(id);

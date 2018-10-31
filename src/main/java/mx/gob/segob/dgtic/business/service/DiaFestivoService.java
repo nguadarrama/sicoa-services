@@ -6,6 +6,8 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.DiaFestivoDto;
 public interface DiaFestivoService {
 	
 	public List<DiaFestivoDto> obtenerListaDiasFestivos();
+	
+	public List<DiaFestivoDto> obtenerListaDiasFestivosCatalogo();
 
 	public DiaFestivoDto buscaDiaFestivo(Integer id_festivo);
 

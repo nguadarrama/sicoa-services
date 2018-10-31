@@ -13,8 +13,14 @@ public class HorarioServiceImpl implements HorarioService {
 	@Autowired
 	private HorarioRules horarioRules;
 	
+	@Override
 	public List<Horario> obtenerListaHorarios() {
 
+		return horarioRules.obtenerListaHorarios();
+	}
+	
+	@Override
+	public List<Horario> obtenerListaHorariosCatalogo() {
 		return horarioRules.obtenerListaHorarios();
 	}
 

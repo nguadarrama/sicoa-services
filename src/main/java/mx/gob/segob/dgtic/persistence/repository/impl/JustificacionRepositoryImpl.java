@@ -95,7 +95,7 @@ public class JustificacionRepositoryImpl implements JustificacionRepository {
 		try{
 		Integer i = nameParameterJdbcTemplate.update(qry.toString(), parametros);
 			if(i == 1)
-				justificacionDto.setMensaje("La justificación se ha registrado correctamente.");
+				justificacionDto.setMensaje("La justificación se ha actualizado correctamente.");
 			else
 				justificacionDto.setMensaje("Se ha generado un error al guardar, revise la información");
 		}catch(Exception e){

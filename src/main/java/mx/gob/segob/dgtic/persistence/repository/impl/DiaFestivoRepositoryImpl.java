@@ -28,6 +28,27 @@ public class DiaFestivoRepositoryImpl implements DiaFestivoRepository {
 	
 		StringBuilder qry = new StringBuilder();
         qry.append("SELECT id_festivo, nombre, fecha, activo ");
+        qry.append("FROM c_dia_festivo where activo = true ");
+        
+        List<Map<String, Object>> diasFestivos = jdbcTemplate.queryForList(qry.toString());
+        List<DiaFestivoDto> listaDiasFestivos = new ArrayList<>();
+        
+        for (Map<String, Object> diaFestivo : diasFestivos) {
+        	DiaFestivoDto diaFestivoDTO = new DiaFestivoDto();
+        	diaFestivoDTO.setIdDiaFestivo((Integer)diaFestivo.get("id_festivo"));
+        	diaFestivoDTO.setNombre((String)diaFestivo.get("nombre"));
+        	diaFestivoDTO.setFecha((Date)diaFestivo.get("fecha"));
+        	diaFestivoDTO.setActivo((Boolean)diaFestivo.get("activo"));
+        	listaDiasFestivos.add(diaFestivoDTO);
+    	}
+     return listaDiasFestivos;
+	}
+	
+	@Override
+	public List<DiaFestivoDto> obtenerListaDiasCatalogo(){
+	
+		StringBuilder qry = new StringBuilder();
+        qry.append("SELECT id_festivo, nombre, fecha, activo ");
         qry.append("FROM c_dia_festivo ");
         
         List<Map<String, Object>> diasFestivos = jdbcTemplate.queryForList(qry.toString());

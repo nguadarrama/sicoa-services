@@ -26,9 +26,6 @@ import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 @Path("catalogo")
 @Component
 public class PeriodoRecurso {
-
-	
-	
 		
 		@Autowired
 		private PeriodoService periodoService;
@@ -40,6 +37,15 @@ public class PeriodoRecurso {
 		public Response obtienePeriodos() {
 
 			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, periodoService.obtenerListaPeriodos());
+		}
+		
+		@GET
+		@Produces(MediaType.APPLICATION_JSON)
+		@Path("obtienePeriodosCat")	
+		@PermitAll
+		public Response obtienePeriodosCat() {
+
+			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, periodoService.obtenerListaPeriodosCatalogo());
 		}
 		
 		@GET

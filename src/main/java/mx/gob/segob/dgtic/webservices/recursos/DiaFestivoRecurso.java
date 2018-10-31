@@ -35,9 +35,15 @@ public class DiaFestivoRecurso {
 	@Path("obtiene")	
 	@PermitAll
 	public Response obtieneDiasFestivos() {
-		
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, diaFestivoService.obtenerListaDiasFestivos());
-		
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("obtieneCat")	
+	@PermitAll
+	public Response obtieneDiasFestivosCat() {
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, diaFestivoService.obtenerListaDiasFestivosCatalogo());
 	}
 	
 	@GET

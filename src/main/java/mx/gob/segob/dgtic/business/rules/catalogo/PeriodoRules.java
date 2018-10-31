@@ -19,6 +19,11 @@ public class PeriodoRules {
 			return periodoRepository.obtenerListaPeriodos();
 	}
 	
+	public List<PeriodoDto> obtenerListaPeriodosCatalogo() {
+		
+		return periodoRepository.obtenerListaPeriodosCatalogo();
+}
+	
 	public PeriodoDto buscaPeriodo (Integer idPeriodo){
 		return periodoRepository.buscaPeriodo(idPeriodo);
 	}

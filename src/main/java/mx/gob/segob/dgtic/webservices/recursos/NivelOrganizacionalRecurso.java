@@ -21,7 +21,7 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.NivelOrganizacionalDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
-@Path("catalogo")
+@Path("nivel")
 @Component
 public class NivelOrganizacionalRecurso {
 	
@@ -30,7 +30,7 @@ public class NivelOrganizacionalRecurso {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("obtieneNiveles")	
+	@Path("obtiene")	
 	@PermitAll
 	public Response obtenerListaNiveles() {
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, nivelOrganizacionalService.obtenerListaNiveles());
@@ -47,7 +47,7 @@ public class NivelOrganizacionalRecurso {
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("agregaNivel")	
+	@Path("agrega")	
 	@PermitAll
 	public Response agregaPeriodo(@RequestParam String jsonNivelOrganizacional) {
 		JsonObject jsonObject = new JsonParser().parse(jsonNivelOrganizacional).getAsJsonObject();
@@ -60,7 +60,7 @@ public class NivelOrganizacionalRecurso {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("buscaNivel")	
+	@Path("busca")	
 	@PermitAll
 	public Response buscaPeriodo(@QueryParam ("idNivel") Integer idNivel) {
 		System.out.println("llego a nivelRecurso: idNivel: "+idNivel);
@@ -70,7 +70,7 @@ public class NivelOrganizacionalRecurso {
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("modificaNivel")	
+	@Path("modifica")	
 	@PermitAll
 	public Response modificaNivel(@RequestParam String jsonNivel) {
 		JsonObject jsonObject = new JsonParser().parse(jsonNivel).getAsJsonObject();

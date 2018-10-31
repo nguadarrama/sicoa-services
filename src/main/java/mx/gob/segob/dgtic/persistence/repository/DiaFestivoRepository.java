@@ -15,4 +15,6 @@ public interface DiaFestivoRepository {
 
 	public void eliminaDiaFestivo(Integer idDia);
 
+	public List<DiaFestivoDto> obtenerListaDiasCatalogo();
+
 }

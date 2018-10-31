@@ -15,4 +15,5 @@ public interface PeriodoService {
 	
 	public void generaPeriodoVacacional (String inicio, String descripcion, boolean activo);
 	public PeriodoDto cambiaEstatusPeriodo(PeriodoDto periodo);
+	public List<PeriodoDto> obtenerListaPeriodosCatalogo();
 }

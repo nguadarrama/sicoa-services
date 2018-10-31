@@ -49,6 +49,7 @@ public class NivelOrganizacionalRepositoryImpl implements NivelOrganizacionalRep
      return listaNiveles;
 	}
 
+	@SuppressWarnings("null")
 	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_COMMITTED)
 	@Override
 	public NivelOrganizacionalDto buscaNivel(Integer idNivel) {
@@ -64,7 +65,7 @@ public class NivelOrganizacionalRepositoryImpl implements NivelOrganizacionalRep
         try {
 			nivelDto = nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<NivelOrganizacionalDto>(NivelOrganizacionalDto.class));
 			if(nivelDto != null) {
-				nivelDto.setMensaje("Se muestra correctamente la información solicitada. ");
+				nivelDto.setMensaje("");
 			} else {
 				nivelDto.setMensaje("Error al obtener la consulta. ");
 			}
@@ -120,9 +121,9 @@ public class NivelOrganizacionalRepositoryImpl implements NivelOrganizacionalRep
 		try {
 			Integer exitoso = nameParameterJdbcTemplate.update(qry.toString(), map);
 			if(exitoso == 1) {
-				nivelDto.setMensaje("Se ha asignado horario laboral a nivel de empleado correctamente. ");
+				nivelDto.setMensaje("Se ha asignado horario laboral al nivel de empleado correctamente. ");
 			} else {
-				nivelDto.setMensaje("Error al asignar el horario laboral,debe seleccionar un horario laboral verifique por favor. ");
+				nivelDto.setMensaje("Error al asignar el horario laboral, verifique la información. ");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

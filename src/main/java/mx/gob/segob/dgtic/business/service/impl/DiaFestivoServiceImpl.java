@@ -19,6 +19,12 @@ public class DiaFestivoServiceImpl implements DiaFestivoService {
 		return diaFestivoRules.obtenerListaDiasFestivos();
 		
 	}
+	
+	public List<DiaFestivoDto> obtenerListaDiasFestivosCatalogo(){
+		
+		return diaFestivoRules.obtenerListaDiasCatalogo();
+		
+	}
 
 	public DiaFestivoDto buscaDiaFestivo(Integer id_festivo){
 		

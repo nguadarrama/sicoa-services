@@ -26,14 +26,11 @@ public class HorarioRepositoryImpl implements HorarioRepository {
 	
 	@Override
     public List<Horario> obtenerListaHorarios() {
-
         StringBuilder qry = new StringBuilder();
         qry.append("SELECT nombre, id_horario, hora_entrada, hora_salida, activo ");
-        qry.append("FROM c_horario ");
-        
+        qry.append("FROM c_horario where activo = true ");
         List<Map<String, Object>> horarios = jdbcTemplate.queryForList(qry.toString());
         List<Horario> listaHorario = new ArrayList<>();
-        
         for (Map<String, Object> h : horarios) {
     		Horario horario = new Horario();
     		horario.setNombre((String) h.get("nombre"));
@@ -44,8 +41,26 @@ public class HorarioRepositoryImpl implements HorarioRepository {
     		
     		listaHorario.add(horario);
     	}
-
-        
+        return listaHorario;
+    }
+	
+	@Override
+    public List<Horario> obtenerListaHorariosCatalogo() {
+        StringBuilder qry = new StringBuilder();
+        qry.append("SELECT nombre, id_horario, hora_entrada, hora_salida, activo ");
+        qry.append("FROM c_horario ");
+        List<Map<String, Object>> horarios = jdbcTemplate.queryForList(qry.toString());
+        List<Horario> listaHorario = new ArrayList<>();
+        for (Map<String, Object> h : horarios) {
+    		Horario horario = new Horario();
+    		horario.setNombre((String) h.get("nombre"));
+    		horario.setIdHorario((int) h.get("id_horario"));
+    		horario.setHoraEntrada((Time) h.get("hora_entrada"));
+    		horario.setHoraSalida((Time) h.get("hora_salida"));
+    		horario.setActivo((boolean) h.get("activo"));
+    		
+    		listaHorario.add(horario);
+    	}
         return listaHorario;
     }
 

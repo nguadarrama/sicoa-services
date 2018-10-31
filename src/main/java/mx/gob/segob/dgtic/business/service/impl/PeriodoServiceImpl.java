@@ -1,6 +1,5 @@
 package mx.gob.segob.dgtic.business.service.impl;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -43,6 +42,11 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 	}
 
 	@Override
+	public List<PeriodoDto> obtenerListaPeriodosCatalogo() {
+		return periodoRules.obtenerListaPeriodosCatalogo();
+	}
+	
+	@Override
 	public PeriodoDto buscaPeriodo(Integer idPeriodo) {
 		// PeriodoDto periodoDto=null;
 		// periodoDto= periodoRules.buscaPeriodo(idPeriodo);
@@ -61,8 +65,6 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 	@Override
 	public PeriodoDto agregaPeriodo(PeriodoDto periodoDto) {
 		PeriodoDto periodo = new PeriodoDto();
-		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-		String fin = formatter.format(periodoDto.getFechaInicio());
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		Date parsedInicio = periodoDto.getFechaInicio();
 		Date parsedFin =  periodoDto.getFechaFin();
@@ -72,7 +74,6 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 
 		// se suman 1.5 años a la fecha fin para incluirla en la fecha de termino de vacaciones
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Calendar c = Calendar.getInstance();
 		logger.info("fechaFin= "+fechaFin);
 		/**
 		 * Verificando que no exista el periodo a dar de alta

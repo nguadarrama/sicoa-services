@@ -34,9 +34,15 @@ public class HorarioRecurso {
 	@Path("obtieneHorarios")	
 	@PermitAll
 	public Response obtieneHorarios() {
-		//asistenciaService.procesaAsistencia();
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, horarioService.obtenerListaHorarios());
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("obtieneHorariosCat")	
+	@PermitAll
+	public Response obtieneHorariosCat() {
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, horarioService.obtenerListaHorariosCatalogo());
 	}
 	
 	@GET

@@ -18,6 +18,12 @@ public class DiaFestivoRules {
 		return diaFestivoRepository.obtenerListaDiasFestivos();
 		
 	}
+	
+	public List<DiaFestivoDto> obtenerListaDiasCatalogo(){
+		
+		return diaFestivoRepository.obtenerListaDiasCatalogo();
+		
+	}
 
 	public DiaFestivoDto buscaDiaFestivo(Integer id_festivo){
 		

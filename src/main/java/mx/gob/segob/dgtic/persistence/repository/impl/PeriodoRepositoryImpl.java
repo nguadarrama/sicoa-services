@@ -31,12 +31,11 @@ public class PeriodoRepositoryImpl implements PeriodoRepository{
 	@Autowired
     private NamedParameterJdbcTemplate nameParameterJdbcTemplate;
 
-	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_COMMITTED)
 	@Override
 	public List<PeriodoDto> obtenerListaPeriodos() {
 		StringBuilder qry = new StringBuilder();
         qry.append("select id_periodo, fecha_inicio, fecha_fin, descripcion, activo ");
-        qry.append("from r_periodo ");
+        qry.append("from r_periodo where activo = true ");
         
         List<Map<String, Object>> periodos = jdbcTemplate.queryForList(qry.toString());
         List<PeriodoDto> listaPeriodo = new ArrayList<>();
@@ -55,6 +54,30 @@ public class PeriodoRepositoryImpl implements PeriodoRepository{
      return listaPeriodo;	
 	}
 
+
+	@Override
+	public List<PeriodoDto> obtenerListaPeriodosCatalogo() {
+		StringBuilder qry = new StringBuilder();
+        qry.append("select id_periodo, fecha_inicio, fecha_fin, descripcion, activo ");
+        qry.append("from r_periodo  ");
+        
+        List<Map<String, Object>> periodos = jdbcTemplate.queryForList(qry.toString());
+        List<PeriodoDto> listaPeriodo = new ArrayList<>();
+        
+        for (Map<String, Object> periodo : periodos) {
+    		PeriodoDto periodoDto = new PeriodoDto();
+    		periodoDto.setIdPeriodo((Integer)periodo.get("id_periodo"));
+    		periodoDto.setFechaInicio((Date)periodo.get("fecha_inicio"));
+    		periodoDto.setFechaFin((Date)periodo.get("fecha_fin"));
+    		periodoDto.setDescripcion((String) periodo.get("descripcion"));
+    		periodoDto.setActivo((Boolean)periodo.get("activo"));
+    		listaPeriodo.add(periodoDto);
+    	}
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        System.out.println("listaPeriodo: "+gson.toJson(listaPeriodo));
+     return listaPeriodo;	
+	}
+	
 	@Override
 	public PeriodoDto buscaPeriodo(Integer idPeriodo) {
 		
@@ -156,7 +179,6 @@ public class PeriodoRepositoryImpl implements PeriodoRepository{
 	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_COMMITTED)
 	@Override
 	public int generaPeriodoVacacional(String inicio, String fin, String descripcion, boolean activo) {
-		int periodo = 0;
 		StringBuilder qry = new StringBuilder();
 		qry.append("insert into r_periodo (fecha_inicio, fecha_fin, descripcion, activo) ");
 		qry.append("values (:fechaInicio, :fechaFin, :descripcion, :activo) ");
@@ -167,7 +189,7 @@ public class PeriodoRepositoryImpl implements PeriodoRepository{
 		parametros.addValue("descripcion", descripcion);
 		parametros.addValue("activo", activo);
 
-		return periodo = nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		return nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		
 	}
 
