@@ -44,7 +44,7 @@ public class AsistenciaRules {
 	}
 	
 	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(String cve_m_usuario, String nombre, String paterno,
-			String materno, String nivel, String tipo, String estado, Date fechaInicial, Date fechaFinal,
+			String materno, String nivel, Integer tipo, String estado, Date fechaInicial, Date fechaFinal,
 			String unidadAdministrativa, String cveCoordinador) {
 		
 		//se obtiene la unidad administrativa del coordinador
@@ -57,7 +57,7 @@ public class AsistenciaRules {
 	}
 	
 	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoDireccion(String cve_m_usuario, String nombre, String paterno,
-			String materno, String nivel, String tipo, String estado, Date fechaInicial, Date fechaFinal,
+			String materno, String nivel, Integer tipo, String estado, Date fechaInicial, Date fechaFinal,
 			String unidadAdministrativa) {
 		
 		List<AsistenciaDto> listaAsistencia = asistenciaRepository.buscaAsistenciaEmpleadoRangoDireccion(cve_m_usuario, nombre, 
@@ -99,7 +99,7 @@ public class AsistenciaRules {
 	}
 	
 	public List<AsistenciaDto> reporteDireccion(String cve_m_usuario, String nombre, String paterno,
-			String materno, String nivel, String tipo, String estado, Date fechaInicial, Date fechaFinal,
+			String materno, String nivel, Integer tipo, String estado, Date fechaInicial, Date fechaFinal,
 			String unidadAdministrativa, String permisos) {
 		
 		List<AsistenciaDto> listaAsistencia = asistenciaRepository.reporteDireccion(cve_m_usuario, nombre, 
@@ -109,7 +109,7 @@ public class AsistenciaRules {
 	}
 	
 	public List<AsistenciaDto> reporteCoordinador(String cve_m_usuario, String nombre, String paterno,
-			String materno, String nivel, String tipo, String estado, Date fechaInicial, Date fechaFinal,
+			String materno, String nivel, Integer tipo, String estado, Date fechaInicial, Date fechaFinal,
 			String unidadAdministrativa, String cveCoordinador, String permisos) {
 		
 		//se obtiene la unidad administrativa del coordinador

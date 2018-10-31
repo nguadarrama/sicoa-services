@@ -12,10 +12,10 @@ public interface AsistenciaRepository {
 	public List<AsistenciaDto> buscaAsistenciaEmpleadoRango(String claveEmpleado, Date fechaInicio, Date fechaFin);
 	
 	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(String cve_m_usuario, String nombre, String paterno, 
-    		String materno, String nivel, String tipo, String estado, Date fechaInicial, Date fechaFinal, String unidadAdministrativa, Integer idUnidadCoordinador);
+    		String materno, String nivel, Integer tipo, String estado, Date fechaInicial, Date fechaFinal, String unidadAdministrativa, Integer idUnidadCoordinador);
 	
 	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoDireccion(String cve_m_usuario, String nombre, String paterno, 
-    		String materno, String nivel, String tipo, String estado, Date fechaInicial, Date fechaFinal, String unidadAdministrativa);
+    		String materno, String nivel, Integer tipo, String estado, Date fechaInicial, Date fechaFinal, String unidadAdministrativa);
 	
 	public AsistenciaDto buscaAsistenciaPorId(Integer id);
 	public Integer creaIncidencia(IncidenciaDto incidencia);
@@ -32,9 +32,9 @@ public interface AsistenciaRepository {
 	public List<String> obtieneListaEmpleadosDeLicenciaHoy();
 
 	public List<AsistenciaDto> reporteDireccion(String cve_m_usuario, String nombre, String paterno, 
-    		String materno, String nivel, String tipo, String estado, Date fechaInicial, Date fechaFinal, String unidadAdministrativa, String permisos);
+    		String materno, String nivel, Integer tipo, String estado, Date fechaInicial, Date fechaFinal, String unidadAdministrativa, String permisos);
 	
 	public List<AsistenciaDto> reporteCoordinador(String cve_m_usuario, String nombre, String paterno, 
-    		String materno, String nivel, String tipo, String estado, Date fechaInicial, Date fechaFinal, String unidadAdministrativa, Integer idUnidadCoordinador, String Permisos);
+    		String materno, String nivel, Integer tipo, String estado, Date fechaInicial, Date fechaFinal, String unidadAdministrativa, Integer idUnidadCoordinador, String Permisos);
 	
 }

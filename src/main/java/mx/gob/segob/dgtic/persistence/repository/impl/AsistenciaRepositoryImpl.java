@@ -136,7 +136,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 	
 	@Override
 	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(String cve_m_usuario, String nombre, String paterno,
-			String materno, String nivel, String tipo, String estado, Date fechaInicial, Date fechaFinal,
+			String materno, String nivel, Integer tipo, String estado, Date fechaInicial, Date fechaFinal,
 			String unidadAdministrativa, Integer idUnidadCoordinador) {
 			
 		StringBuilder qry = new StringBuilder();
@@ -181,8 +181,8 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         	qry.append(" and u.nivel like '%" + nivel + "%' ");
         }
         
-        if (!tipo.isEmpty()) {
-        	qry.append(" and t.nombre like '%" + tipo + "%' ");
+        if (tipo > 0) {
+        	qry.append(" and t.id_tipo_dia = " + tipo);
         }
         
         if (!estado.isEmpty()) {
@@ -229,7 +229,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 	
 	@Override
 	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoDireccion(String cve_m_usuario, String nombre, String paterno,
-			String materno, String nivel, String tipo, String estado, Date fechaInicial, Date fechaFinal,
+			String materno, String nivel, Integer tipo, String estado, Date fechaInicial, Date fechaFinal,
 			String unidadAdministrativa) {
 			
 		StringBuilder qry = new StringBuilder();
@@ -281,8 +281,8 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         	qry.append(" and u.nivel like '%" + nivel + "%' ");
         }
         
-        if (!tipo.isEmpty()) {
-        	qry.append(" and t.nombre like '%" + tipo + "%' ");
+        if (tipo > 0) {
+        	qry.append(" and t.id_tipo_dia = " + tipo);
         }
         
         if (!estado.isEmpty()) {
@@ -645,7 +645,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 
 	@Override
 	public List<AsistenciaDto> reporteDireccion(String cve_m_usuario, String nombre, String paterno, String materno,
-			String nivel, String tipo, String estado, Date fechaInicial, Date fechaFinal, String unidadAdministrativa,
+			String nivel, Integer tipo, String estado, Date fechaInicial, Date fechaFinal, String unidadAdministrativa,
 			String p) {
 
 		StringBuilder qry = new StringBuilder();
@@ -697,8 +697,8 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         	qry.append(" and u.nivel like '%" + nivel + "%' ");
         }
         
-        if (!tipo.isEmpty()) {
-        	qry.append(" and t.nombre like '%" + tipo + "%' ");
+        if (tipo > 0) {
+        	qry.append(" and t.id_tipo_dia = " + tipo);
         }
         
         if (!estado.isEmpty()) {
@@ -706,7 +706,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         }
         
         //reglas para condiciones de permisos 
-        if (p != null && !p.isEmpty()) {
+        if (p != null) {
         	String[] arrayPermisos = p.split(",");
             List<String> listaPermisos = new ArrayList<String>(Arrays.asList(arrayPermisos));
             String condicionVacacion = "or";
@@ -799,7 +799,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 
 	@Override
 	public List<AsistenciaDto> reporteCoordinador(String cve_m_usuario, String nombre, String paterno, String materno,
-			String nivel, String tipo, String estado, Date fechaInicial, Date fechaFinal, String unidadAdministrativa, Integer idUnidadCoordinador,
+			String nivel, Integer tipo, String estado, Date fechaInicial, Date fechaFinal, String unidadAdministrativa, Integer idUnidadCoordinador,
 			String p) {
 
 		StringBuilder qry = new StringBuilder();
@@ -844,8 +844,8 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         	qry.append(" and u.nivel like '%" + nivel + "%' ");
         }
         
-        if (!tipo.isEmpty()) {
-        	qry.append(" and t.nombre like '%" + tipo + "%' ");
+        if (tipo > 0) {
+        	qry.append(" and t.id_tipo_dia = " + tipo);
         }
         
         if (!estado.isEmpty()) {
@@ -853,7 +853,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         }
         
         //reglas para condiciones de permisos 
-        if (p != null && !p.isEmpty()) {
+        if (p != null) {
         	String[] arrayPermisos = p.split(",");
             List<String> listaPermisos = new ArrayList<String>(Arrays.asList(arrayPermisos));
             String condicionVacacion = "or";

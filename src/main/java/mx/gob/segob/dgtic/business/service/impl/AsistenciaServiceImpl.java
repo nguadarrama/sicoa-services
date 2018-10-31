@@ -75,7 +75,7 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 	
 	@Override
 	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(String cve_m_usuario, String nombre, String paterno,
-			String materno, String nivel, String tipo, String estado, String fechaInicial, String fechaFinal,
+			String materno, String nivel, Integer tipo, String estado, String fechaInicial, String fechaFinal,
 			String unidadAdministrativa, String cveCoordinador) {
 		
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
@@ -107,7 +107,7 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 	
 	@Override
 	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoDireccion(String cve_m_usuario, String nombre, String paterno,
-			String materno, String nivel, String tipo, String estado, String fechaInicial, String fechaFinal,
+			String materno, String nivel, Integer tipo, String estado, String fechaInicial, String fechaFinal,
 			String unidadAdministrativa) {
 		
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
@@ -219,7 +219,7 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 
 	@Override
 	public List<AsistenciaDto> reporteDireccion(String cve_m_usuario, String nombre, String paterno, String materno,
-			String nivel, String tipo, String estado, String fechaInicial, String fechaFinal,
+			String nivel, Integer tipo, String estado, String fechaInicial, String fechaFinal,
 			String unidadAdministrativa, String permisos) {
 
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
@@ -251,7 +251,7 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 
 	@Override
 	public List<AsistenciaDto> reporteCoordinador(String cve_m_usuario, String nombre, String paterno, String materno,
-			String nivel, String tipo, String estado, String fechaInicial, String fechaFinal,
+			String nivel, Integer tipo, String estado, String fechaInicial, String fechaFinal,
 			String unidadAdministrativa, String cveCoordinador, String permisos) {
 
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
