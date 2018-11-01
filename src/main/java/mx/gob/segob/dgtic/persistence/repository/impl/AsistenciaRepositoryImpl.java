@@ -653,7 +653,6 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 	       
         qry.append("SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus, ");
         qry.append("i.id_estatus, i.descuento, ");
-        qry.append("l.fecha_inicio as lic_inicio, l.fecha_fin as lic_fin, c.fecha_inicio as com_inicio, c.fecha_fin as com_fin, v.fecha_inicio as vac_inicio, v.fecha_fin as vac_fin ");
         qry.append("FROM m_asistencia a ");
         qry.append("inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ");
         qry.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia ");
@@ -791,49 +790,6 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         	asistencia.setIdAsistencia((Integer) a.get("id_asistencia"));
     		asistencia.setUsuarioDto(usuario);
     		asistencia.setIdTipoDia(tipoDia);
-    		
-    		if (tipoDia.getIdTipoDia() == 5) { 	
-    			String inicio = "" + a.get("vac_inicio");
-            	String fin = "" + a.get("vac_fin");
-            	
-    			try {
-            		Date fechaInicio = sdf.parse(inicio);
-            		Date fechaFin = sdf.parse(fin);
-            		
-            		asistencia.setFechaInicio(fechaInicio);
-        			asistencia.setFechaFin(fechaFin);
-    			} catch (ParseException e) {
-    				e.printStackTrace();
-    			}
-    			
-    		} else if (tipoDia.getIdTipoDia() == 6) { 	//licencia médica
-    			String inicio = (String) a.get("lic_inicio");
-            	String fin = (String) a.get("lic_fin");
-            	
-    			try {
-            		Date fechaInicio = sdf.parse(inicio);
-            		Date fechaFin = sdf.parse(fin);
-            		
-            		asistencia.setFechaInicio(fechaInicio);
-        			asistencia.setFechaFin(fechaFin);
-    			} catch (ParseException e) {
-    				e.printStackTrace();
-    			}
-    		} else if (tipoDia.getIdTipoDia() == 7) {   //Comisión
-    			String inicio = (String) a.get("com_inicio");
-            	String fin = (String) a.get("com_fin");
-            	
-    			try {
-            		Date fechaInicio = sdf.parse(inicio);
-            		Date fechaFin = sdf.parse(fin);
-            		
-            		asistencia.setFechaInicio(fechaInicio);
-        			asistencia.setFechaFin(fechaFin);
-    			} catch (ParseException e) {
-    				e.printStackTrace();
-    			}
-    		}
-    		
     		asistencia.setEntrada((Timestamp) a.get("entrada"));
     		asistencia.setSalida((Timestamp) a.get("salida"));
     		asistencia.setIdEstatus(estatus);
@@ -853,8 +809,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		StringBuilder qry = new StringBuilder();
 	       
         qry.append("SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus, ");
-        qry.append("i.id_estatus, i.descuento, ");
-        qry.append("l.fecha_inicio as lic_inicio, l.fecha_fin as lic_fin, c.fecha_inicio as com_inicio, c.fecha_fin as com_fin, v.fecha_inicio as vac_inicio, v.fecha_fin as vac_fin ");
+        qry.append("i.id_estatus, i.descuento ");
         qry.append("FROM m_asistencia a ");
         qry.append("inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ");
         qry.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia ");
@@ -986,49 +941,6 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         	asistencia.setIdAsistencia((Integer) a.get("id_asistencia"));
     		asistencia.setUsuarioDto(usuario);
     		asistencia.setIdTipoDia(tipoDia);
-    		
-    		if (tipoDia.getIdTipoDia() == 5) { 	
-    			String inicio = "" + a.get("vac_inicio");
-            	String fin = "" + a.get("vac_fin");
-            	
-    			try {
-            		Date fechaInicio = sdf.parse(inicio);
-            		Date fechaFin = sdf.parse(fin);
-            		
-            		asistencia.setFechaInicio(fechaInicio);
-        			asistencia.setFechaFin(fechaFin);
-    			} catch (ParseException e) {
-    				e.printStackTrace();
-    			}
-    			
-    		} else if (tipoDia.getIdTipoDia() == 6) { 	//licencia médica
-    			String inicio = (String) a.get("lic_inicio");
-            	String fin = (String) a.get("lic_fin");
-            	
-    			try {
-            		Date fechaInicio = sdf.parse(inicio);
-            		Date fechaFin = sdf.parse(fin);
-            		
-            		asistencia.setFechaInicio(fechaInicio);
-        			asistencia.setFechaFin(fechaFin);
-    			} catch (ParseException e) {
-    				e.printStackTrace();
-    			}
-    		} else if (tipoDia.getIdTipoDia() == 7) {   //Comisión
-    			String inicio = (String) a.get("com_inicio");
-            	String fin = (String) a.get("com_fin");
-            	
-    			try {
-            		Date fechaInicio = sdf.parse(inicio);
-            		Date fechaFin = sdf.parse(fin);
-            		
-            		asistencia.setFechaInicio(fechaInicio);
-        			asistencia.setFechaFin(fechaFin);
-    			} catch (ParseException e) {
-    				e.printStackTrace();
-    			}
-    		}
-    		
     		asistencia.setEntrada((Timestamp) a.get("entrada"));
     		asistencia.setSalida((Timestamp) a.get("salida"));
     		asistencia.setIdEstatus(estatus);
