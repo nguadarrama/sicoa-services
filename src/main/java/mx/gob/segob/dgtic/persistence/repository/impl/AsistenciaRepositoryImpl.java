@@ -2,6 +2,8 @@ package mx.gob.segob.dgtic.persistence.repository.impl;
 
 import java.util.Date;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -652,7 +654,8 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		Boolean usuarioFueAgregadoAQuery = false;
 	       
         qry.append("SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus, ");
-        qry.append("i.id_estatus, i.descuento ");
+        qry.append("i.id_estatus, i.descuento, ");
+        qry.append("l.fecha_inicio as lic_inicio, l.fecha_fin as lic_fin, c.fecha_inicio as com_inicio, c.fecha_fin as com_fin, v.fecha_inicio as vac_inicio, v.fecha_fin as vac_fin ");
         qry.append("FROM m_asistencia a ");
         qry.append("inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ");
         qry.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia ");
@@ -660,6 +663,9 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         qry.append("inner join m_usuario u on u.cve_m_usuario = a.id_usuario ");
         qry.append("inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ");
         qry.append("inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ");
+        qry.append("left join m_licencia_medica l on l.id_usuario = u.id_usuario ");
+        qry.append("left join m_comision c on c.id_usuario = u.id_usuario ");
+        qry.append("left join d_detalle_vacacion v on v.id_usuario = u.id_usuario ");
         
         if (fechaInicial != null && fechaFinal != null) {
         	qry.append("where entrada >= '" + fechaInicial + "'");
@@ -762,6 +768,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         
         List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString());
         List<AsistenciaDto> listaAsistencia = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         
         for (Map<String, Object> a : asistencias) {
         	UsuarioDto usuario = usuarioRepository.buscaUsuario((String) a.get("id_usuario"));
@@ -786,6 +793,49 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         	asistencia.setIdAsistencia((Integer) a.get("id_asistencia"));
     		asistencia.setUsuarioDto(usuario);
     		asistencia.setIdTipoDia(tipoDia);
+    		
+    		if (tipoDia.getIdTipoDia() == 5) { 	
+    			String inicio = "" + a.get("vac_inicio");
+            	String fin = "" + a.get("vac_fin");
+            	
+    			try {
+            		Date fechaInicio = sdf.parse(inicio);
+            		Date fechaFin = sdf.parse(fin);
+            		
+            		asistencia.setFechaInicio(fechaInicio);
+        			asistencia.setFechaFin(fechaFin);
+    			} catch (ParseException e) {
+    				e.printStackTrace();
+    			}
+    			
+    		} else if (tipoDia.getIdTipoDia() == 6) { 	//licencia médica
+    			String inicio = (String) a.get("lic_inicio");
+            	String fin = (String) a.get("lic_fin");
+            	
+    			try {
+            		Date fechaInicio = sdf.parse(inicio);
+            		Date fechaFin = sdf.parse(fin);
+            		
+            		asistencia.setFechaInicio(fechaInicio);
+        			asistencia.setFechaFin(fechaFin);
+    			} catch (ParseException e) {
+    				e.printStackTrace();
+    			}
+    		} else if (tipoDia.getIdTipoDia() == 7) {   //Comisión
+    			String inicio = (String) a.get("com_inicio");
+            	String fin = (String) a.get("com_fin");
+            	
+    			try {
+            		Date fechaInicio = sdf.parse(inicio);
+            		Date fechaFin = sdf.parse(fin);
+            		
+            		asistencia.setFechaInicio(fechaInicio);
+        			asistencia.setFechaFin(fechaFin);
+    			} catch (ParseException e) {
+    				e.printStackTrace();
+    			}
+    		}
+    		
     		asistencia.setEntrada((Timestamp) a.get("entrada"));
     		asistencia.setSalida((Timestamp) a.get("salida"));
     		asistencia.setIdEstatus(estatus);
@@ -805,7 +855,8 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		StringBuilder qry = new StringBuilder();
 	       
         qry.append("SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus, ");
-        qry.append("i.id_estatus, i.descuento ");
+        qry.append("i.id_estatus, i.descuento, ");
+        qry.append("l.fecha_inicio as lic_inicio, l.fecha_fin as lic_fin, c.fecha_inicio as com_inicio, c.fecha_fin as com_fin, v.fecha_inicio as vac_inicio, v.fecha_fin as vac_fin ");
         qry.append("FROM m_asistencia a ");
         qry.append("inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ");
         qry.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia ");
@@ -813,6 +864,9 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         qry.append("inner join m_usuario u on u.cve_m_usuario = a.id_usuario ");
         qry.append("inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ");
         qry.append("inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ");
+        qry.append("left join m_licencia_medica l on l.id_usuario = u.id_usuario ");
+        qry.append("left join m_comision c on c.id_usuario = u.id_usuario ");
+        qry.append("left join d_detalle_vacacion v on v.id_usuario = u.id_usuario ");
         qry.append("where uua.id_unidad = " + idUnidadCoordinador);
         
         if (fechaInicial != null && fechaFinal != null) {
@@ -909,6 +963,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         
         List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString());
         List<AsistenciaDto> listaAsistencia = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         
         for (Map<String, Object> a : asistencias) {
         	UsuarioDto usuario = usuarioRepository.buscaUsuario((String) a.get("id_usuario"));
@@ -933,6 +988,49 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         	asistencia.setIdAsistencia((Integer) a.get("id_asistencia"));
     		asistencia.setUsuarioDto(usuario);
     		asistencia.setIdTipoDia(tipoDia);
+    		
+    		if (tipoDia.getIdTipoDia() == 5) { 	
+    			String inicio = "" + a.get("vac_inicio");
+            	String fin = "" + a.get("vac_fin");
+            	
+    			try {
+            		Date fechaInicio = sdf.parse(inicio);
+            		Date fechaFin = sdf.parse(fin);
+            		
+            		asistencia.setFechaInicio(fechaInicio);
+        			asistencia.setFechaFin(fechaFin);
+    			} catch (ParseException e) {
+    				e.printStackTrace();
+    			}
+    			
+    		} else if (tipoDia.getIdTipoDia() == 6) { 	//licencia médica
+    			String inicio = (String) a.get("lic_inicio");
+            	String fin = (String) a.get("lic_fin");
+            	
+    			try {
+            		Date fechaInicio = sdf.parse(inicio);
+            		Date fechaFin = sdf.parse(fin);
+            		
+            		asistencia.setFechaInicio(fechaInicio);
+        			asistencia.setFechaFin(fechaFin);
+    			} catch (ParseException e) {
+    				e.printStackTrace();
+    			}
+    		} else if (tipoDia.getIdTipoDia() == 7) {   //Comisión
+    			String inicio = (String) a.get("com_inicio");
+            	String fin = (String) a.get("com_fin");
+            	
+    			try {
+            		Date fechaInicio = sdf.parse(inicio);
+            		Date fechaFin = sdf.parse(fin);
+            		
+            		asistencia.setFechaInicio(fechaInicio);
+        			asistencia.setFechaFin(fechaFin);
+    			} catch (ParseException e) {
+    				e.printStackTrace();
+    			}
+    		}
+    		
     		asistencia.setEntrada((Timestamp) a.get("entrada"));
     		asistencia.setSalida((Timestamp) a.get("salida"));
     		asistencia.setIdEstatus(estatus);
