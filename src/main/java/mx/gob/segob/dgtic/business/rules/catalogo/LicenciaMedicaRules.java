@@ -103,4 +103,8 @@ public class LicenciaMedicaRules {
 			String apellidoPaterno, String apellidoMaterno) {
 		return licenciaMedicaRepository.obtenerLicenciasPorUnidad(idUnidad, claveUsuario, nombre, apellidoPaterno, apellidoMaterno);
 	}
+	
+	public LicenciaMedicaDto consultaDiasLicenciaMedica(String claveUsuario){
+		return licenciaMedicaRepository.consultaDiasLicenciaMedica(claveUsuario);
+	}
 }

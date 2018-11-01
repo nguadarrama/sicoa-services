@@ -16,4 +16,5 @@ public interface LicenciaMedicaService {
 	public List<LicenciaMedicaDto> obtenerListaLicenciaMedicaEmpleados(String claveUsuario ,String nombre,String apellidoPaterno, String apellidoMaterno, 
 			String idEstatus,String idUnidad);
 	public List<LicenciaMedicaDto> obtenerLicenciasPorUnidad(String idUnidad,String claveUsuario ,String nombre,String apellidoPaterno, String apellidoMaterno);
+	public LicenciaMedicaDto consultaDiasLicenciaMedica(String claveUsuario);
 }

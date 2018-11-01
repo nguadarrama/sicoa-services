@@ -72,6 +72,10 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{fechaActual}]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement x="0" y="0" width="206" height="70" uuid="b09010ba-9086-43b2-9b35-d74c90596428"/>
+				<imageExpression><![CDATA["/documentos/sicoa/jasper/vacacion/pdf.jpg"]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>

@@ -67,10 +67,7 @@ public class ArchivoRecurso {
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		ArchivoDto archivoDto = gson.fromJson(jsonObject.get("archivo"), ArchivoDto.class);
-		
-		archivoService.modificaArchivo(archivoDto);
-
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, archivoService.modificaArchivo(archivoDto));
 	}
 	
 	@PUT
@@ -85,13 +82,8 @@ public class ArchivoRecurso {
 		Gson gson = builder.create();
 		ArchivoDto archivoDto = gson.fromJson(jsonObject.get("archivo"), ArchivoDto.class);
 		System.out.println("archivo en recurso "+archivoDto.getArchivo());
-		
-		Integer idArchivo = archivoService.agregaArhivo(archivoDto);
-		
-		ArchivoDto archivo = new ArchivoDto();
-		archivo.setIdArchivo(idArchivo);
 
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, archivo);
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, archivoService.agregaArhivo(archivoDto));
 	}
 	
 	@GET

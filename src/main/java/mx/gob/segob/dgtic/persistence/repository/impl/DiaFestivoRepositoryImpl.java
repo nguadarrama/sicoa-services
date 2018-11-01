@@ -143,5 +143,26 @@ public class DiaFestivoRepositoryImpl implements DiaFestivoRepository {
 
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 	}
+
+	@Override
+	public List<DiaFestivoDto> obtenerDiasFestivosActivos() {
+		StringBuilder qry = new StringBuilder();
+        qry.append("select id_festivo, nombre, fecha, activo ");
+        qry.append("from c_dia_festivo ");
+        qry.append("where activo=true ");
+        
+        List<Map<String, Object>> diasFestivos = jdbcTemplate.queryForList(qry.toString());
+        List<DiaFestivoDto> listaDiasFestivos = new ArrayList<>();
+        
+        for (Map<String, Object> diaFestivo : diasFestivos) {
+        	DiaFestivoDto diaFestivoDTO = new DiaFestivoDto();
+        	diaFestivoDTO.setIdDiaFestivo((Integer)diaFestivo.get("id_festivo"));
+        	diaFestivoDTO.setNombre((String)diaFestivo.get("nombre"));
+        	diaFestivoDTO.setFecha((Date)diaFestivo.get("fecha"));
+        	diaFestivoDTO.setActivo((Boolean)diaFestivo.get("activo"));
+        	listaDiasFestivos.add(diaFestivoDTO);
+    	}
+     return listaDiasFestivos;
+	}
 	
 }

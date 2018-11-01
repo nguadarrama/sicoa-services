@@ -22,11 +22,11 @@ public class ArchivoRules {
 		return archivoRepository.buscaArchivo(idArchivo);
 	}
 	
-	public void modificaArchivo(ArchivoDto archivoDto){
-		archivoRepository.modificaArchivo(archivoDto);
+	public ArchivoDto modificaArchivo(ArchivoDto archivoDto){
+		return archivoRepository.modificaArchivo(archivoDto);
 	}
 	
-	public Integer agregaArchivo(ArchivoDto archivoDto){
+	public ArchivoDto agregaArchivo(ArchivoDto archivoDto){
 		return archivoRepository.agregaArchivo(archivoDto);
 	}
 	

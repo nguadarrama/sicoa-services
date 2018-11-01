@@ -49,4 +49,8 @@ public class DiaFestivoRules {
 		
 	}
 	
+	public List<DiaFestivoDto> obtenerDiasFestivosActivos(){
+		return diaFestivoRepository.obtenerDiasFestivosActivos();
+	}
+	
 }

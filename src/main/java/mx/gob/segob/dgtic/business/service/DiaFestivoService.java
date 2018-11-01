@@ -16,4 +16,6 @@ public interface DiaFestivoService {
 	public DiaFestivoDto agregaDiaFestivo(DiaFestivoDto diaFestivo);
 
 	public void eliminaDiaFestivo(Integer idDia);
+	
+	public List<DiaFestivoDto> obtenerDiasFestivosActivos();
 }

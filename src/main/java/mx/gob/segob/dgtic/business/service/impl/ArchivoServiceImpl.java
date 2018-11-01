@@ -28,14 +28,14 @@ public class ArchivoServiceImpl implements ArchivoService{
 	}
 
 	@Override
-	public void modificaArchivo(ArchivoDto archivoDto) {
+	public ArchivoDto modificaArchivo(ArchivoDto archivoDto) {
 		
-		archivoRules.modificaArchivo(archivoDto);
+		return archivoRules.modificaArchivo(archivoDto);
 		
 	}
 
 	@Override
-	public Integer agregaArhivo(ArchivoDto archivoDto) {
+	public ArchivoDto agregaArhivo(ArchivoDto archivoDto) {
 		
 		return archivoRules.agregaArchivo(archivoDto);
 		

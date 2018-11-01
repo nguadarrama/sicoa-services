@@ -8,7 +8,7 @@ public interface ArchivoService {
 
 	public List<ArchivoDto> obtenerListaArchivos();
 	public ArchivoDto buscaArchivo(Integer idArchivo);
-	public void modificaArchivo(ArchivoDto archivoDto);
-	public Integer agregaArhivo(ArchivoDto archivoDto);
+	public ArchivoDto modificaArchivo(ArchivoDto archivoDto);
+	public ArchivoDto agregaArhivo(ArchivoDto archivoDto);
 	public void eliminaArchivo(Integer idArchivo);
 }

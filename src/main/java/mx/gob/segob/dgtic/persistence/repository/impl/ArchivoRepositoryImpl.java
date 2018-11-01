@@ -72,7 +72,7 @@ public class ArchivoRepositoryImpl extends RecursoBase implements ArchivoReposit
 	}
 	
 	@Override
-	public void modificaArchivo(ArchivoDto archivoDto){
+	public ArchivoDto modificaArchivo(ArchivoDto archivoDto){
 		
 		StringBuilder qry = new StringBuilder();
 		qry.append("UPDATE m_archivo SET nombre= :nombre, url = :url, size = :size, activo = :activo ");
@@ -101,11 +101,23 @@ public class ArchivoRepositoryImpl extends RecursoBase implements ArchivoReposit
 		parametros.addValue("size", archivoDto.getSize());
 		parametros.addValue("activo", archivoDto.getActivo());
 		parametros.addValue("url", archivoDto.getUrl());
-		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		Integer i=0;
+		try{
+			i= nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		if(i == 1){
+			archivoDto.setMensaje("El archivo se actualizó correctamente.");
+        }else{
+        	archivoDto.setMensaje("Se ha generado un error al actualizar archivo, revise la información");
+        }
+		
+		return archivoDto;
 	}
 	
 	@Override
-	public Integer agregaArchivo (ArchivoDto archivoDto){
+	public ArchivoDto agregaArchivo (ArchivoDto archivoDto){
 		StringBuilder qry = new StringBuilder();
 		qry.append("select max(id_archivo) as id_archivo ");
 		qry.append("from m_archivo");
@@ -154,15 +166,27 @@ public class ArchivoRepositoryImpl extends RecursoBase implements ArchivoReposit
 		parametros.addValue("url", archivoDto.getUrl());
 		parametros.addValue("size", archivoDto.getSize());
 		parametros.addValue("activo", archivoDto.getActivo());
-
-		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		Integer i=0;
+		try{
+			i= nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+        
+		if(i == 1){
+			archivoDto.setMensaje("El archivo se guardó correctamente.");
+        }else{
+        	archivoDto.setMensaje("Se ha generado un error al guardar archivo, revise la información");
+        }
 		//Obtenemos el d del archivo que se acaba de insertar
 		qry = new StringBuilder();
 		qry.append("select max(id_archivo) as id_archivo ");
 		qry.append("from m_archivo");
 		Map<String, Object> archivo = jdbcTemplate.queryForMap(qry.toString());
-        Integer idArchivo = (Integer) archivo.get("id_archivo");
-        return idArchivo;
+		Integer idArchivo = (Integer) archivo.get("id_archivo");
+		archivoDto.setIdArchivo(idArchivo);
+		return archivoDto;
 	}
 	
 	@Override 

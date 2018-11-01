@@ -105,4 +105,9 @@ public class LicenciaMedicaServiceImpl implements LicenciaMedicaService {
 			String apellidoPaterno, String apellidoMaterno) {
 		return licenciaMedicaRules.obtenerLicenciasPorUnidad(idUnidad, claveUsuario, nombre, apellidoPaterno, apellidoMaterno);
 	}
+
+	@Override
+	public LicenciaMedicaDto consultaDiasLicenciaMedica(String claveUsuario) {
+		return licenciaMedicaRules.consultaDiasLicenciaMedica(claveUsuario);
+	}
 }

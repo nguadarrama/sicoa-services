@@ -125,5 +125,14 @@ public class LicenciaMedicaRecurso {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, licenciaMedicaService.obtenerLicenciasPorUnidad(idUnidad, claveUsuario, nombre, apellidoPaterno, apellidoMaterno));
 	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("buscaDiasLicenciaMedica")	
+	@PermitAll
+	public Response buscaDiasLicenciaMedica(@QueryParam("claveUsuario") String claveUsuario) {
+
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, licenciaMedicaService.consultaDiasLicenciaMedica(claveUsuario));
+	}
 
 }

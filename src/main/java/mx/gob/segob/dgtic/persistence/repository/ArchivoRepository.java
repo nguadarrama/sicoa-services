@@ -10,7 +10,7 @@ public interface ArchivoRepository {
 
 	public List<ArchivoDto> obtenerListaArchivos();
 	public ArchivoDto buscaArchivo(Integer idArchivo);
-	public void modificaArchivo(ArchivoDto archivoDto);
-	public Integer agregaArchivo(ArchivoDto archivoDto);
+	public ArchivoDto modificaArchivo(ArchivoDto archivoDto);
+	public ArchivoDto agregaArchivo(ArchivoDto archivoDto);
 	public void eliminaArchivo(Integer idArchivo);
 }

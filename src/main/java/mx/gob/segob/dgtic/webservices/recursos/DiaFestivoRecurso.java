@@ -97,4 +97,12 @@ public class DiaFestivoRecurso {
 		
 	}
 	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("obtieneDiasActivos")	
+	@PermitAll
+	public Response obtieneDiasFestivosActivos() {
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, diaFestivoService.obtenerDiasFestivosActivos());
+	}
+	
 }

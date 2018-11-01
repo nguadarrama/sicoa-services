@@ -49,4 +49,9 @@ public class DiaFestivoServiceImpl implements DiaFestivoService {
 		diaFestivoRules.eliminaDiaFestivo(idDia);
 		
 	}
+
+	@Override
+	public List<DiaFestivoDto> obtenerDiasFestivosActivos() {
+		return diaFestivoRules.obtenerDiasFestivosActivos();
+	}
 }

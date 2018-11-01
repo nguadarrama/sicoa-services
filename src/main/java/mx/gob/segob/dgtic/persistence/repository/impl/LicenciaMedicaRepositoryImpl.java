@@ -360,4 +360,27 @@ public class LicenciaMedicaRepositoryImpl implements LicenciaMedicaRepository{
 	        System.out.println("Numero de registros recuperados "+listaLicencias.size());
 	        return listaLicencias;  
 	}
+
+	@Override
+	public LicenciaMedicaDto consultaDiasLicenciaMedica(String claveUsuario) {
+		StringBuilder qry = new StringBuilder();
+		qry.append("select sum(licencia.dias) suma_dias, count(licencia.id_licencia) total_licencias ");
+        qry.append("from m_licencia_medica licencia right join m_usuario usuario on usuario.id_usuario=licencia.id_usuario ");
+        qry.append("where usuario.cve_m_usuario = :claveUsuario");
+        MapSqlParameterSource parametros = new MapSqlParameterSource();
+		parametros.addValue("claveUsuario", claveUsuario);
+		Map<String, Object> informacionConsulta = nameParameterJdbcTemplate.queryForMap(qry.toString(), parametros);
+        LicenciaMedicaDto licencia=new LicenciaMedicaDto();
+        String diasRecuperados=null;
+    	if(informacionConsulta.get("suma_dias")==null){
+    		diasRecuperados="0";
+    	}else{
+    	diasRecuperados=""+informacionConsulta.get("suma_dias");
+    	}
+    	licencia.setDiasTotales(diasRecuperados);
+    	String diasTotales=""+informacionConsulta.get("total_licencias");
+    	licencia.setTotalLicencias((String)diasTotales);
+    	return licencia;
+		
+	}
 }
