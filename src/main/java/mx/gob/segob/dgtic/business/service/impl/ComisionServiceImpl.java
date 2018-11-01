@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import mx.gob.segob.dgtic.business.rules.catalogo.ComisionRules;
@@ -53,33 +54,56 @@ public class ComisionServiceImpl implements ComisionService {
 
   @Override
   public void modificaComision(ComisionAux comisionAux) {
+    System.out.println("ComisionAux service back " + ReflectionToStringBuilder.toString(comisionAux));
     ComisionDto comisionDto = new ComisionDto();
     Date fechaInicial = new Date();
     Date fechaFinal = new Date();
     DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
-    try {
-      fechaInicial = df.parse(comisionAux.getFechaInicio());
-      fechaFinal=df.parse(comisionAux.getFechaFin());
-      System.out.println("fechaInicio " + fechaInicial);
-    } catch (ParseException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+    if (comisionAux.getFechaInicio() != null && !comisionAux.getFechaInicio().isEmpty()
+        && comisionAux.getFechaFin() != null && !comisionAux.getFechaFin().isEmpty()) {
+      try {
+        fechaInicial = df.parse(comisionAux.getFechaInicio());
+        fechaFinal = df.parse(comisionAux.getFechaFin());
+        System.out.println("fechaInicio " + fechaInicial);
+      } catch (ParseException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      comisionDto.setFechaInicio(fechaInicial);
+      comisionDto.setFechaFin(fechaFinal);
     }
-    comisionDto.setIdComision(comisionAux.getIdComision());
-    comisionDto.setFechaInicio(fechaInicial);
-    comisionDto.setFechaFin(fechaFinal);
-    comisionDto.setComision(comisionAux.getComision());
-    comisionDto.setDias(comisionAux.getDias());
-    Horario horario = new Horario();
-    horario.setIdHorario(comisionAux.getIdHorario());
+    if (comisionAux.getDias() != null && comisionAux.getIdHorario() != null) {
+      comisionDto.setDias(comisionAux.getDias());
+      Horario horario = new Horario();
+      horario.setIdHorario(comisionAux.getIdHorario());
+    }
+    if (comisionAux.getComision() != null && !comisionAux.getComision().isEmpty()) {
+      comisionDto.setComision(comisionAux.getComision());
+    }
+    if (comisionAux.getIdEstatus() != null) {
+      EstatusDto estatus = new EstatusDto();
+      estatus.setIdEstatus(comisionAux.getIdEstatus());
+      comisionDto.setIdEstatus(estatus);
+    }
 
+    if (comisionAux.getIdComision() != null) {
+      comisionDto.setIdComision(comisionAux.getIdComision());
+    }
+    if (comisionAux.getIdArchivo() != null) {
+      ArchivoDto archivo = new ArchivoDto();
+      archivo.setIdArchivo(comisionAux.getIdArchivo());
+      comisionDto.setIdArchivo(archivo);
+    }
+
+    
+    System.out.println("ComisionDTO service back envio" + ReflectionToStringBuilder.toString(comisionDto));
     comisionRules.modificaComision(comisionDto);
 
   }
 
   @Override
-  public void agregaComision(ComisionAux comisionAux) {
+  public ComisionDto agregaComision(ComisionAux comisionAux) {
     ComisionDto comisionDto = new ComisionDto();
     
     UsuarioDto usuarioDto = new UsuarioDto();
@@ -118,7 +142,7 @@ public class ComisionServiceImpl implements ComisionService {
     horario.setIdHorario(comisionAux.getIdHorario());
     comisionDto.setIdHorario(horario);
     System.out.println("Enviar a rules ");
-    comisionRules.agregaComision(comisionDto);
+    return comisionRules.agregaComision(comisionDto);
 
   }
 
@@ -156,7 +180,7 @@ public class ComisionServiceImpl implements ComisionService {
       InputStream template = null;
       try {
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("/documentos/sicoa/jasper/comision/comisiones.jrxml").getFile());
+        File file = new File(classLoader.getResource("/jasper/comision/comisiones.jrxml").getFile());
         template = new FileInputStream(file);
       } catch (FileNotFoundException e1) {
         // TODO Auto-generated catch block
@@ -205,6 +229,22 @@ public class ComisionServiceImpl implements ComisionService {
 
     return repo;
 
+  }
+
+  @Override
+  public ComisionDto modificaComisionEstatusArchivo(ComisionAux comisionAuxDto) {
+    ComisionDto comisionDto = new ComisionDto();
+    EstatusDto estatus= new EstatusDto();
+    estatus.setIdEstatus(comisionAuxDto.getIdEstatus());
+    comisionDto.setIdEstatus(estatus);
+    UsuarioDto usuario= new UsuarioDto(); 
+    usuario.setIdUsuario(comisionAuxDto.getIdUsuario());
+    comisionDto.setIdUsuario(usuario);
+    ArchivoDto archivo= new ArchivoDto();
+    archivo.setIdArchivo(comisionAuxDto.getIdArchivo());
+    comisionDto.setIdArchivo(archivo);
+    comisionDto.setIdComision(comisionAuxDto.getIdComision());
+    return comisionRules.modificaComisionEstatusArchivo(comisionDto);
   }
 
 }
