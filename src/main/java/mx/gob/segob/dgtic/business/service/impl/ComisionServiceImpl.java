@@ -180,7 +180,7 @@ public class ComisionServiceImpl implements ComisionService {
       InputStream template = null;
       try {
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("/jasper/comision/comisiones.jrxml").getFile());
+        File file = new File(classLoader.getResource("/documentos/sicoa/jasper/comision/comisiones.jrxml").getFile());
         template = new FileInputStream(file);
       } catch (FileNotFoundException e1) {
         // TODO Auto-generated catch block
