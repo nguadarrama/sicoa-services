@@ -23,8 +23,6 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.JustificacionDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.PerfilDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.TipoDiaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
-import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
-import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.persistence.repository.AsistenciaRepository;
 import mx.gob.segob.dgtic.persistence.repository.UsuarioRepository;
 import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
@@ -613,7 +611,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         qry.append("FROM m_asistencia ");
         qry.append("where entrada >= date_Add(curdate(), interval -1 day) "); //interesa el día de ayer
         qry.append("and entrada < curdate() ");
-        qry.append("and id_tipo_dia = 7"); //vac
+        qry.append("and id_tipo_dia = 7"); //comisión
 
         List<Map<String, Object>> empleados = jdbcTemplate.queryForList(qry.toString());
         List<String> listaEmpleados = new ArrayList<>();
@@ -633,7 +631,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         qry.append("FROM m_asistencia ");
         qry.append("where entrada >= date_Add(curdate(), interval -1 day) "); //interesa el día de ayer
         qry.append("and entrada < curdate() ");
-        qry.append("and id_tipo_dia = 8"); //vacación
+        qry.append("and id_tipo_dia = 6"); //licencia
 
         List<Map<String, Object>> empleados = jdbcTemplate.queryForList(qry.toString());
         List<String> listaEmpleados = new ArrayList<>();
@@ -755,7 +753,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
     		}
     		
     		if (listaPermisos.contains("licencia")) {
-    			qry.append(condicionLicencia + " a.id_tipo_dia = 8 ");
+    			qry.append(condicionLicencia + " a.id_tipo_dia = 6 ");
     		}
     		
     		//descuento: validada y la bandera descuento
@@ -950,7 +948,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
     		}
     		
     		if (listaPermisos.contains("licencia")) {
-    			qry.append(condicionLicencia + " a.id_tipo_dia = 8 ");
+    			qry.append(condicionLicencia + " a.id_tipo_dia = 6 ");
     		}
     		
     		//descuento: validada y la bandera descuento
