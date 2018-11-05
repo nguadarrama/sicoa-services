@@ -259,7 +259,7 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 		try{
 			Integer i= nameParameterJdbcTemplate.update(qry.toString(), parametros);
 			if(i == 1){
-				detalleVacacionDto.setMensaje("El cambio en vacciones se realizó correctamente.");
+				detalleVacacionDto.setMensaje("El cambio en vacaciones se realizó correctamente.");
 			}else{
 				detalleVacacionDto.setMensaje("Se ha generado un error al administrar vacaciones, revise la información");
 			}
