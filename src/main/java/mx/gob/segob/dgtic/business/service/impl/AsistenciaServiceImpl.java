@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -24,7 +22,6 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.IncidenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.reporte;
 import mx.gob.segob.dgtic.comun.util.FormatoIncidencia;
 import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
-
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
@@ -170,14 +167,10 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 	public reporte generaFormatoJustificacion(FormatoIncidencia generaReporteArchivo) {
 		reporte repo = new reporte();
 		byte[] output= null;
-		URI uri = null;
-		
 		try {
-			uri = this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI();
-			String url = uri.toString().replace("vfs:/", "");
+
 			InputStream template = null;
 			try {
-				//ClassLoader classLoader = getClass().getClassLoader();
 				File file = new File("/documentos/sicoa/jasper/asistencia/justificacion/justificacion_incidencias.jrxml");
 				template = new FileInputStream(file);
 			} catch (FileNotFoundException e1) {
@@ -195,7 +188,7 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 			output = JasperExportManager.exportReportToPdf (jasperPrint); 
 			repo.setNombre(output);
 			
-		} catch (JRException | URISyntaxException e) {
+		} catch (JRException e) {
 			logger.warn("Errora al generar formato justificación -> " + this.getClass());
 			e.printStackTrace();
 		}
@@ -206,14 +199,9 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 	public reporte generaFormatoDescuento(FormatoIncidencia generaReporteArchivo) {
 		reporte repo = new reporte();
 		byte[] output= null;
-		URI uri = null;
-		
 		try {
-			//uri = this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI();
-			//String url = uri.toString().replace("vfs:/", "");
 			InputStream template = null;
 			try {
-				//ClassLoader classLoader = getClass().getClassLoader();
 				File file = new File("/documentos/sicoa/jasper/asistencia/descuento/descuento_incidencias.jrxml");
 				template = new FileInputStream(file);
 			} catch (FileNotFoundException e1) {

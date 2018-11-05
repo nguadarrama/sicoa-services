@@ -21,10 +21,7 @@ import com.google.gson.JsonParser;
 
 import mx.gob.segob.dgtic.business.service.ComisionService;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ComisionAux;
-import mx.gob.segob.dgtic.comun.sicoa.dto.ComisionDto;
-import mx.gob.segob.dgtic.comun.sicoa.dto.GeneraReporteArchivo;
 import mx.gob.segob.dgtic.comun.sicoa.dto.GenerarReporteArchivoComision;
-import mx.gob.segob.dgtic.comun.sicoa.dto.LicenciaMedicaDtoAux;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
