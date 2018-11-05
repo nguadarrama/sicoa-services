@@ -26,13 +26,13 @@ public class ComisionRules {
 
   @Autowired
   private ComisionRepository comisionRepository;
-  
-  @Autowired 
+
+  @Autowired
   private UsuarioRepository usuarioRepository;
-  
-  @Autowired 
+
+  @Autowired
   private AsistenciaRepository asistenciaRepository;
-  
+
   @Autowired
   private DiaFestivoRepository diaFestivoRepository;
 
@@ -112,7 +112,7 @@ public class ComisionRules {
     }
     return comisionAux;
   }
-  
+
   public void modificaComision(ComisionDto comisionDto) {
     comisionRepository.modificaComision(comisionDto);
   }
@@ -137,9 +137,10 @@ public class ComisionRules {
     return comisionRepository.obtenerListaComisionPorFiltrosEmpleados(claveUsuario, nombre,
         apellidoPaterno, apellidoMaterno, idEstatus, idUnidad);
   }
-  
-  public List<ComisionDto> obtenerComisionesPorUnidad(String idUnidad,String claveUsuario, String nombre,
-      String apellidoPaterno, String apellidoMaterno) {
-  return comisionRepository.obtenerComisionesPorUnidad(idUnidad, claveUsuario, nombre, apellidoPaterno, apellidoMaterno);
-}
+
+  public List<ComisionDto> obtenerComisionesPorUnidad(String idUnidad, String claveUsuario,
+      String nombre, String apellidoPaterno, String apellidoMaterno) {
+    return comisionRepository.obtenerComisionesPorUnidad(idUnidad, claveUsuario, nombre,
+        apellidoPaterno, apellidoMaterno);
+  }
 }
