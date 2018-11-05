@@ -6,6 +6,7 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.ComisionDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.GeneraReporteArchivo;
 import mx.gob.segob.dgtic.comun.sicoa.dto.GenerarReporteArchivoComision;
 import mx.gob.segob.dgtic.comun.sicoa.dto.LicenciaMedicaDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.LicenciaMedicaDtoAux;
 import mx.gob.segob.dgtic.comun.sicoa.dto.reporte;
 
 public interface ComisionService {
@@ -15,8 +16,10 @@ public interface ComisionService {
   public ComisionDto buscaComision(Integer idComision);
 
   public void modificaComision(ComisionAux comision);
+  
+  public ComisionDto modificaComisionEstatusArchivo(ComisionAux comisionAuxDto);
 
-  public void agregaComision(ComisionAux comisionDto);
+  public ComisionDto agregaComision(ComisionAux comisionDto);
 
   public void eliminaComision(Integer idComision);
 

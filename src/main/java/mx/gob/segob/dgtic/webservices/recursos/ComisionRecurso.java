@@ -24,6 +24,7 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.ComisionAux;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ComisionDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.GeneraReporteArchivo;
 import mx.gob.segob.dgtic.comun.sicoa.dto.GenerarReporteArchivoComision;
+import mx.gob.segob.dgtic.comun.sicoa.dto.LicenciaMedicaDtoAux;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
@@ -84,9 +85,9 @@ public class ComisionRecurso {
     ComisionAux comisionAux = gson.fromJson(jsonObject.get("comision"), ComisionAux.class);
     System.out.println("Datos para comision en recurso " + " fechaInicio "+comisionAux.getFechaInicio()+
         " fechaFin "+comisionAux.getFechaFin());
-    comisionService.agregaComision(comisionAux);
+    
 
-    return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+    return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, comisionService.agregaComision(comisionAux));
   }
 
   @GET
@@ -144,5 +145,20 @@ public class ComisionRecurso {
       Gson gson = builder.create();
       GenerarReporteArchivoComision generaReporteArchivo = gson.fromJson(jsonObject.get("generaReporteArchivo"), GenerarReporteArchivoComision.class);
       return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,comisionService.generaReporteComisiones(generaReporteArchivo));
+  }
+  
+  @PUT
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("modificaComisionEstatusArchivo") 
+  @PermitAll
+  public Response modificaComisionEstatusArchivo(@RequestParam String jsonLicenciaMedica) {
+      JsonObject jsonObject = new JsonParser().parse(jsonLicenciaMedica).getAsJsonObject();
+      
+      GsonBuilder builder = new GsonBuilder();
+      Gson gson = builder.create();
+      ComisionAux comisionDto = gson.fromJson(jsonObject.get("comision"), ComisionAux.class);
+      
+      return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,comisionService.modificaComisionEstatusArchivo(comisionDto));
   }
 }

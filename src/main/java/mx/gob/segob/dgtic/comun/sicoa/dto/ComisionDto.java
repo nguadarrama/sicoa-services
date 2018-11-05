@@ -1,6 +1,7 @@
 package mx.gob.segob.dgtic.comun.sicoa.dto;
 
 import java.util.Date;
+import javax.persistence.Transient;
 import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
 import mx.gob.segob.dgtic.comun.util.mapper.annotations.MapeaColumna;
 import mx.gob.segob.dgtic.comun.util.mapper.annotations.MapeaColumnasInternas;
@@ -62,6 +63,16 @@ public class ComisionDto {
          */
         @MapeaColumna(columna = "id_horario") private Horario idHorario;
 	    
+  @Transient
+  private String mensaje;
+
+  public String getMensaje() {
+    return mensaje;
+  }
+
+  public void setMensaje(String mensaje) {
+    this.mensaje = mensaje;
+  }
 	    /**
 		    * El id comisi&oacute;n.
 		    * @return idComision

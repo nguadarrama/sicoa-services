@@ -162,33 +162,76 @@ public class ComisionRepositoryImpl implements ComisionRepository{
     parametros.addValue("dias", comisionDto.getDias());
     parametros.addValue("comision", comisionDto.getComision());
     parametros.addValue("idHorario", comisionDto.getIdHorario().getIdHorario());
+
     nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		
 	}
+	
+  @Override
+  public ComisionDto modificaComisionEstatusArchivo(ComisionDto comisionDto) {
+    StringBuilder qry = new StringBuilder();
+    qry.append("UPDATE m_comision SET id_estatus= :idEstatus, id_archivo= :idArchivo ");
+    qry.append("WHERE id_comision = :idComision");
+    Integer i = 0;
+    MapSqlParameterSource parametros = new MapSqlParameterSource();
+    parametros.addValue("idComision", comisionDto.getIdComision());
+    parametros.addValue("idEstatus", comisionDto.getIdEstatus().getIdEstatus());
+    parametros.addValue("idArchivo", comisionDto.getIdArchivo().getIdArchivo());
 
-	@Override
-	public void agregaComision(ComisionDto comisionDto) {
-	    System.out.println("Insertando en repository");
-	    System.out.println("id usuario: " + comisionDto.getIdUsuario().getIdUsuario());
-		StringBuilder qry = new StringBuilder();
-		qry.append("INSERT INTO m_comision (id_usuario, id_responsable, id_archivo, id_estatus, fecha_inicio,fecha_fin, dias, comision, fecha_registro, id_horario) ");
-		qry.append("VALUES (:idUsuario, :idResponsable, :idArchivo, :idEstatus, :fechaInicio, :fechaFin, :dias, :comision, :fechaRegistro, :idHorario) ");
-		
-		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("idUsuario", comisionDto.getIdUsuario().getIdUsuario());
-		parametros.addValue("idResponsable", comisionDto.getIdResponsable());
-		parametros.addValue("idArchivo", comisionDto.getIdArchivo().getIdArchivo());
-		parametros.addValue("idEstatus", comisionDto.getIdEstatus().getIdEstatus());
-		parametros.addValue("fechaInicio", comisionDto.getFechaInicio());
-		parametros.addValue("fechaFin", comisionDto.getFechaFin());
-		parametros.addValue("dias", comisionDto.getDias());
-		parametros.addValue("comision", comisionDto.getComision());
-		parametros.addValue("fechaRegistro", comisionDto.getFechaRegistro());
-		parametros.addValue("idHorario", comisionDto.getIdHorario().getIdHorario());
+    try {
+      i = nameParameterJdbcTemplate.update(qry.toString(), parametros);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    if (i == 1) {
+      comisionDto.setMensaje("El registro de comisión se actualizó correctamente.");
+    } else {
+      comisionDto.setMensaje(
+          "Se ha generado un error al actualizar comisión, revise la información");
+    }
 
-		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+    return comisionDto;
+  }
+	
+
+  @Override
+  public ComisionDto agregaComision(ComisionDto comisionDto) {
+    Integer i = 0;
+    System.out.println("Insertando en repository");
+    System.out.println("id usuario: " + comisionDto.getIdUsuario().getIdUsuario());
+    StringBuilder qry = new StringBuilder();
+    qry.append(
+        "INSERT INTO m_comision (id_usuario, id_responsable, id_archivo, id_estatus, fecha_inicio,fecha_fin, dias, comision, fecha_registro, id_horario) ");
+    qry.append(
+        "VALUES (:idUsuario, :idResponsable, :idArchivo, :idEstatus, :fechaInicio, :fechaFin, :dias, :comision, :fechaRegistro, :idHorario) ");
+
+    MapSqlParameterSource parametros = new MapSqlParameterSource();
+    parametros.addValue("idUsuario", comisionDto.getIdUsuario().getIdUsuario());
+    parametros.addValue("idResponsable", comisionDto.getIdResponsable());
+    parametros.addValue("idArchivo", comisionDto.getIdArchivo().getIdArchivo());
+    parametros.addValue("idEstatus", comisionDto.getIdEstatus().getIdEstatus());
+    parametros.addValue("fechaInicio", comisionDto.getFechaInicio());
+    parametros.addValue("fechaFin", comisionDto.getFechaFin());
+    parametros.addValue("dias", comisionDto.getDias());
+    parametros.addValue("comision", comisionDto.getComision());
+    parametros.addValue("fechaRegistro", comisionDto.getFechaRegistro());
+    parametros.addValue("idHorario", comisionDto.getIdHorario().getIdHorario());
+    try {
+      i = nameParameterJdbcTemplate.update(qry.toString(), parametros);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    if (i == 1)
+      comisionDto.setMensaje("El registro de comisiones se realizó correctamente.");
+    else
+      comisionDto.setMensaje(
+          "Se ha generado un error al guardar vacaciones, revise que los datos sean correctos");
+    return comisionDto;
+  }
+
 		
-	}
+	
+
 
 	@Override
 	public void eliminaComision(Integer idComision) {

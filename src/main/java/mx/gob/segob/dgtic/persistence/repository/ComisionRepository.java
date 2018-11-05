@@ -13,8 +13,10 @@ public interface ComisionRepository {
   public ComisionDto buscaComision(Integer idComision);
 
   public void modificaComision(ComisionDto comisionDto);
+  
+  public ComisionDto modificaComisionEstatusArchivo(ComisionDto comisionDto);
 
-  public void agregaComision(ComisionDto comisionDto);
+  public ComisionDto agregaComision(ComisionDto comisionDto);
 
   public void eliminaComision(Integer idComision);
 
