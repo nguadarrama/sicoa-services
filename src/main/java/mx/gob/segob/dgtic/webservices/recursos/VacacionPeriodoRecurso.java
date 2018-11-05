@@ -23,10 +23,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import mx.gob.segob.dgtic.business.service.VacacionPeriodoService;
-import mx.gob.segob.dgtic.comun.sicoa.dto.PeriodoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionPeriodoDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
-import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
 @Path("catalogo")

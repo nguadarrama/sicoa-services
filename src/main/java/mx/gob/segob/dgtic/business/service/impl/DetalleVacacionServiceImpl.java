@@ -143,7 +143,6 @@ public class DetalleVacacionServiceImpl implements DetalleVacacionService {
 			}
 			InputStream template = null;
 			try {
-				//ClassLoader classLoader = getClass().getClassLoader();
 				File file = new File("/documentos/sicoa/jasper/vacacion/Vacaciones.jrxml");
 				template = new FileInputStream(file);
 			} catch (FileNotFoundException e1) {
@@ -152,15 +151,8 @@ public class DetalleVacacionServiceImpl implements DetalleVacacionService {
 			}
 			if(template != null){
 			   JasperReport jasperReport=JasperCompileManager.compileReport(template);
-	//			URL fileLocation = this.getClass().getResource("/jasper/vacacion/Vacaciones.jrxml");
-	//			System.out.println("**************ruta obtenida "+fileLocation);
-	//			String relativeWebPath = "/images";
-	//			String absoluteDiskPath = getServletContext().getRealPath(relativeWebPath);
 				DateFormat df = new SimpleDateFormat("MMM dd, yyyy");
 				System.out.println("Datos "+generaReporteArchivo.getNombre());
-	//			String url = fileLocation.toString().replace("vfs:/", "");
-	//			System.out.println("URL -------------" + url);
-				//JasperReport jasperReport=JasperCompileManager.compileReport(url);
 				JRDataSource dataSource= new JREmptyDataSource();
 				Map<String,Object> parametros = new HashMap<String, Object>();
 				parametros.put("nombre", generaReporteArchivo.getNombre());

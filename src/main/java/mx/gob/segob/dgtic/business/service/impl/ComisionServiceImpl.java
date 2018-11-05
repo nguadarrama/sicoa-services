@@ -11,9 +11,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import mx.gob.segob.dgtic.business.rules.catalogo.ComisionRules;
 import mx.gob.segob.dgtic.business.service.ComisionService;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
@@ -22,7 +24,6 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.ComisionDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.GenerarReporteArchivoComision;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
-import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionPeriodoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.reporte;
 import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
 import net.sf.jasperreports.engine.JRDataSource;
@@ -179,8 +180,7 @@ public class ComisionServiceImpl implements ComisionService {
     try {
       InputStream template = null;
       try {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("/documentos/sicoa/jasper/comision/comisiones.jrxml").getFile());
+		File file = new File("/documentos/sicoa/jasper/comision/comisiones.jrxml");
         template = new FileInputStream(file);
       } catch (FileNotFoundException e1) {
         // TODO Auto-generated catch block

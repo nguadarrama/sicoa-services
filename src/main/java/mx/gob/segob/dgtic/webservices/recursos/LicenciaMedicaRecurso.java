@@ -20,7 +20,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import mx.gob.segob.dgtic.business.service.LicenciaMedicaService;
-import mx.gob.segob.dgtic.comun.sicoa.dto.LicenciaMedicaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.LicenciaMedicaDtoAux;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;

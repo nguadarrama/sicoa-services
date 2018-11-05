@@ -41,6 +41,9 @@ public class LicenciaMedicaRules {
 	public LicenciaMedicaDto modificaLicenciaMedica(LicenciaMedicaDto licenciaMedicaDto){
 		LicenciaMedicaDto licenciaAux= new LicenciaMedicaDto();
 		licenciaAux=buscaLicenciaMedica(licenciaMedicaDto.getIdLicencia());
+		if(licenciaMedicaDto.getIdEstatus().getIdEstatus()==1){
+			licenciaAux=licenciaMedicaRepository.modificaLicenciaMedica(licenciaMedicaDto);
+		}
 		
 		if(licenciaMedicaDto.getIdEstatus().getIdEstatus()==2){
 			licenciaMedicaDto.setFechaInicio(licenciaAux.getFechaInicio());
