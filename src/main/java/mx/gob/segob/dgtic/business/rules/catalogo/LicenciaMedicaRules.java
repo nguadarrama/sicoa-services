@@ -11,11 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.DiaFestivoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.LicenciaMedicaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.TipoDiaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.persistence.repository.AsistenciaRepository;
+import mx.gob.segob.dgtic.persistence.repository.DiaFestivoRepository;
 import mx.gob.segob.dgtic.persistence.repository.LicenciaMedicaRepository;
 import mx.gob.segob.dgtic.persistence.repository.UsuarioRepository;
 
@@ -28,7 +30,11 @@ public class LicenciaMedicaRules {
 	@Autowired 
 	private UsuarioRepository usuarioRepository;
 	
-	@Autowired AsistenciaRepository asistenciaRepository;
+	@Autowired 
+	private AsistenciaRepository asistenciaRepository;
+	
+	@Autowired 
+	private DiaFestivoRepository diaFestivoRepository;
 	
 	public List<LicenciaMedicaDto> obtenerListaLicenciaMedica() {
 		return licenciaMedicaRepository.obtenerListaLicenciaMedica();
@@ -46,6 +52,8 @@ public class LicenciaMedicaRules {
 		}
 		
 		if(licenciaMedicaDto.getIdEstatus().getIdEstatus()==2){
+			List<DiaFestivoDto> listaDias= new ArrayList<>();
+			listaDias=diaFestivoRepository.obtenerDiasFestivosActivos();
 			licenciaMedicaDto.setFechaInicio(licenciaAux.getFechaInicio());
 			licenciaMedicaDto.setFechaFin(licenciaAux.getFechaFin());
 			Date fechaInicio=licenciaMedicaDto.getFechaInicio();
@@ -57,9 +65,25 @@ public class LicenciaMedicaRules {
 		    c2.setTime(fechaFin);
 		    List<Date> listaFechas = new ArrayList<Date>();
 		    while (!c1.after(c2)) {
-		        listaFechas.add(c1.getTime());
-		        c1.add(Calendar.DAY_OF_MONTH, 1);
+		    	if((c1.get(Calendar.DAY_OF_WEEK)==Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY)){
+		        	System.out.println("Datos dentro de la comparación ");
+		        	
+		        	c1.add(Calendar.DAY_OF_MONTH, 1);
+		        }else{
+		        	listaFechas.add(c1.getTime());
+		        	c1.add(Calendar.DAY_OF_MONTH, 1);
+		        }
 		    }
+		    
+		    for(DiaFestivoDto diaFestivo : listaDias){
+	        	for(Date lista: listaFechas){
+		        	if(diaFestivo.getFecha().equals(lista)){
+		        		listaFechas.remove(lista);
+		        	}
+	        	}
+	        	
+	        }
+		    
 		    EstatusDto estatusDto = new EstatusDto();
 		    estatusDto.setIdEstatus(2);
 		    TipoDiaDto tipoDiaDto = new TipoDiaDto();

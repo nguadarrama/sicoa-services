@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DetalleVacacionDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.DiaFestivoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.TipoDiaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
@@ -24,6 +25,7 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionPeriodoDto;
 import mx.gob.segob.dgtic.persistence.repository.ArchivoRepository;
 import mx.gob.segob.dgtic.persistence.repository.AsistenciaRepository;
 import mx.gob.segob.dgtic.persistence.repository.DetalleVacacionRepository;
+import mx.gob.segob.dgtic.persistence.repository.DiaFestivoRepository;
 import mx.gob.segob.dgtic.persistence.repository.UsuarioRepository;
 import mx.gob.segob.dgtic.persistence.repository.VacacionPeriodoRepository;
 @Component
@@ -42,6 +44,8 @@ public class DetalleVacacionRules {
 	ArchivoRepository archivoRepository;
 	
 	@Autowired UsuarioRepository usuarioRepository;
+	
+	@Autowired DiaFestivoRepository diaFestivoRepository;
 	
 	public List<DetalleVacacionDto> obtenerListaDetalleVacaciones() {
 			return detalleVacacionRepository.obtenerListaDetalleVacaciones();
@@ -93,7 +97,10 @@ public class DetalleVacacionRules {
 		detalleAux=detalleVacacionRepository.buscaDetalleVacacion(detalleVacacionDto.getIdDetalle());
 		detalleVacacionDto.setFechaInicio(detalleAux.getFechaInicio());
 		detalleVacacionDto.setFechaFin(detalleAux.getFechaFin());
+		
 		if(detalleVacacionDto.getIdEstatus().getIdEstatus()==2){
+			List<DiaFestivoDto> listaDiaFestivo = new ArrayList<>();
+			listaDiaFestivo=diaFestivoRepository.obtenerDiasFestivosActivos();
 			Date fechaInicio=detalleVacacionDto.getFechaInicio();
 			Date fechaFin=detalleVacacionDto.getFechaFin();
 			
@@ -104,9 +111,26 @@ public class DetalleVacacionRules {
 		    c2.setTime(fechaFin);
 		    List<Date> listaFechas = new ArrayList<Date>();
 		    while (!c1.after(c2)) {
-		        listaFechas.add(c1.getTime());
-		        c1.add(Calendar.DAY_OF_MONTH, 1);
+		        System.out.println("Fecha para registrar asistencia "+c1.get(Calendar.DAY_OF_WEEK));
+		        if((c1.get(Calendar.DAY_OF_WEEK)==Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY)){
+		        	System.out.println("Datos dentro de la comparación ");
+		        	
+		        	c1.add(Calendar.DAY_OF_MONTH, 1);
+		        }else{
+		        	listaFechas.add(c1.getTime());
+		        	c1.add(Calendar.DAY_OF_MONTH, 1);
+		        }
+		        
 		    }
+		  
+	        for(DiaFestivoDto diaFestivo : listaDiaFestivo){
+	        	for(Date lista: listaFechas){
+		        	if(diaFestivo.getFecha().equals(lista)){
+		        		listaFechas.remove(lista);
+		        	}
+	        	}
+	        	
+	        }
 		    EstatusDto estatusDto = new EstatusDto();
 		    estatusDto.setIdEstatus(2);
 		    TipoDiaDto tipoDiaDto = new TipoDiaDto();
@@ -115,15 +139,16 @@ public class DetalleVacacionRules {
 		    usuarioDto=usuarioRepository.buscaUsuarioPorId(detalleVacacionDto.getIdUsuario().getIdUsuario());
 		    for (Iterator<Date> it = listaFechas.iterator(); it.hasNext();) {
 		        Date date = it.next();
-		        AsistenciaDto asistenciaDto = new AsistenciaDto(); 
-		        asistenciaDto.setEntrada(new Timestamp(date.getTime()));
-		        asistenciaDto.setSalida(new Timestamp(date.getTime()));
-		        System.out.println("detalleVacacionDto.getIdUsuario().getIdUsuario() "+detalleVacacionDto.getIdUsuario().getIdUsuario());
-		        asistenciaDto.setUsuarioDto(usuarioDto);
-		        asistenciaDto.setIdEstatus(estatusDto);
-		        asistenciaDto.setIdTipoDia(tipoDiaDto);
-		        asistenciaRepository.agregaAsistencia(asistenciaDto);
-		        System.out.println("Fecha "+date+" registro insertado");  
+			        AsistenciaDto asistenciaDto = new AsistenciaDto(); 
+			        asistenciaDto.setEntrada(new Timestamp(date.getTime()));
+			        asistenciaDto.setSalida(new Timestamp(date.getTime()));
+			        System.out.println("detalleVacacionDto.getIdUsuario().getIdUsuario() "+detalleVacacionDto.getIdUsuario().getIdUsuario());
+			        asistenciaDto.setUsuarioDto(usuarioDto);
+			        asistenciaDto.setIdEstatus(estatusDto);
+			        asistenciaDto.setIdTipoDia(tipoDiaDto);
+			        asistenciaRepository.agregaAsistencia(asistenciaDto);
+			        System.out.println("Fecha "+date+" registro insertado");
+		        
 		    }
 		    aux= detalleVacacionRepository.aceptaORechazaDetalleVacacion(detalleVacacionDto); 
 		}else if(detalleVacacionDto.getIdEstatus().getIdEstatus()==3){
