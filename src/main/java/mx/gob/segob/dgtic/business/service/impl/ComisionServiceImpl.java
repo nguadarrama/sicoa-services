@@ -26,6 +26,7 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.GenerarReporteArchivoComision;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.reporte;
 import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
+import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
@@ -36,7 +37,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 
 @Service
-public class ComisionServiceImpl implements ComisionService {
+public class ComisionServiceImpl extends RecursoBase implements ComisionService {
 
   @Autowired
   private ComisionRules comisionRules;
@@ -54,12 +55,12 @@ public class ComisionServiceImpl implements ComisionService {
   }
 
   @Override
-  public void modificaComision(ComisionAux comisionAux) {
-    System.out.println("ComisionAux service back " + ReflectionToStringBuilder.toString(comisionAux));
+  public ComisionDto modificaComision(ComisionAux comisionAux) {
+    logger.info("ComisionAux service back: {}", gson.toJson(comisionAux));
     ComisionDto comisionDto = new ComisionDto();
-    Date fechaInicial = new Date();
-    Date fechaFinal = new Date();
-    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    Date fechaInicial = null;
+    Date fechaFinal = null;
+    DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 
     if (comisionAux.getFechaInicio() != null && !comisionAux.getFechaInicio().isEmpty()
         && comisionAux.getFechaFin() != null && !comisionAux.getFechaFin().isEmpty()) {
@@ -74,32 +75,17 @@ public class ComisionServiceImpl implements ComisionService {
       comisionDto.setFechaInicio(fechaInicial);
       comisionDto.setFechaFin(fechaFinal);
     }
-    if (comisionAux.getDias() != null && comisionAux.getIdHorario() != null) {
-      comisionDto.setDias(comisionAux.getDias());
-      Horario horario = new Horario();
-      horario.setIdHorario(comisionAux.getIdHorario());
-    }
     if (comisionAux.getComision() != null && !comisionAux.getComision().isEmpty()) {
       comisionDto.setComision(comisionAux.getComision());
     }
-    if (comisionAux.getIdEstatus() != null) {
-      EstatusDto estatus = new EstatusDto();
-      estatus.setIdEstatus(comisionAux.getIdEstatus());
-      comisionDto.setIdEstatus(estatus);
-    }
+    comisionDto.setDias(comisionAux.getDias());
+    Horario horario = new Horario();
+    horario.setIdHorario(comisionAux.getIdHorario());
+    comisionDto.setIdHorario(horario);
+    comisionDto.setIdComision(comisionAux.getIdComision());
 
-    if (comisionAux.getIdComision() != null) {
-      comisionDto.setIdComision(comisionAux.getIdComision());
-    }
-    if (comisionAux.getIdArchivo() != null) {
-      ArchivoDto archivo = new ArchivoDto();
-      archivo.setIdArchivo(comisionAux.getIdArchivo());
-      comisionDto.setIdArchivo(archivo);
-    }
-
-    
-    System.out.println("ComisionDTO service back envio" + ReflectionToStringBuilder.toString(comisionDto));
-    comisionRules.modificaComision(comisionDto);
+    logger.info("ComisionDto Envio: {}", gson.toJson(comisionDto));
+    return comisionRules.modificaComision(comisionDto);
 
   }
 

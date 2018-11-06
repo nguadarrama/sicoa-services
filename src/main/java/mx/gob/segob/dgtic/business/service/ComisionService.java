@@ -15,7 +15,7 @@ public interface ComisionService {
 
   public ComisionDto buscaComision(Integer idComision);
 
-  public void modificaComision(ComisionAux comision);
+  public ComisionDto modificaComision(ComisionAux comision);
   
   public ComisionDto modificaComisionEstatusArchivo(ComisionAux comisionAuxDto);
 

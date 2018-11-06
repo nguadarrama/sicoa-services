@@ -113,8 +113,8 @@ public class ComisionRules {
     return comisionAux;
   }
 
-  public void modificaComision(ComisionDto comisionDto) {
-    comisionRepository.modificaComision(comisionDto);
+  public ComisionDto modificaComision(ComisionDto comisionDto) {
+    return comisionRepository.modificaComision(comisionDto);
   }
 
   public ComisionDto agregaComision(ComisionDto comisionDto) {

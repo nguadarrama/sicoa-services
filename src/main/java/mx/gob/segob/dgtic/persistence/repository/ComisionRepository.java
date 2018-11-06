@@ -12,7 +12,7 @@ public interface ComisionRepository {
 
   public ComisionDto buscaComision(Integer idComision);
 
-  public void modificaComision(ComisionDto comisionDto);
+  public ComisionDto modificaComision(ComisionDto comisionDto);
   
   public ComisionDto modificaComisionEstatusArchivo(ComisionDto comisionDto);
 

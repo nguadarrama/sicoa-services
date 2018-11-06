@@ -150,12 +150,14 @@ public class ComisionRepositoryImpl implements ComisionRepository{
 		
 	}
 
-	@Override
-	public void modificaComision(ComisionDto comisionDto) {
-		StringBuilder qry = new StringBuilder();
-		qry.append("UPDATE m_comision SET fecha_inicio= :fechaInicio, fecha_fin = :fechaFin, dias = :dias, comision = :comision, id_horario = :idHorario ");
-		qry.append("WHERE id_comision = :idComision");
-		
+  @Override
+  public ComisionDto modificaComision(ComisionDto comisionDto) {
+    StringBuilder qry = new StringBuilder();
+    Integer i = 0;
+    qry.append(
+        "UPDATE m_comision SET fecha_inicio= :fechaInicio, fecha_fin = :fechaFin, dias = :dias, comision = :comision, id_horario = :idHorario ");
+    qry.append("WHERE id_comision = :idComision");
+
     MapSqlParameterSource parametros = new MapSqlParameterSource();
     parametros.addValue("idComision", comisionDto.getIdComision());
     parametros.addValue("fechaInicio", comisionDto.getFechaInicio());
@@ -164,9 +166,21 @@ public class ComisionRepositoryImpl implements ComisionRepository{
     parametros.addValue("comision", comisionDto.getComision());
     parametros.addValue("idHorario", comisionDto.getIdHorario().getIdHorario());
 
-    nameParameterJdbcTemplate.update(qry.toString(), parametros);
-		
-	}
+    try {
+      i = nameParameterJdbcTemplate.update(qry.toString(), parametros);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    if (i == 1) {
+      comisionDto.setMensaje("El registro de comisión se actualizó correctamente.");
+    } else {
+      comisionDto
+          .setMensaje("Se ha generado un error al actualizar comisión, revise la información");
+    }
+
+    return comisionDto;
+
+  }
 	
   @Override
   public ComisionDto modificaComisionEstatusArchivo(ComisionDto comisionDto) {

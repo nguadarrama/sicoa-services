@@ -64,9 +64,8 @@ public class ComisionRecurso {
     Gson gson = builder.create();
     ComisionAux comisionDto = gson.fromJson(jsonObject.get("comision"), ComisionAux.class);
 
-    comisionService.modificaComision(comisionDto);
-
-    return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+    return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,
+        comisionService.modificaComision(comisionDto));
   }
 
   @PUT

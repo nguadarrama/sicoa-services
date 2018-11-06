@@ -7,6 +7,8 @@
 */
 package mx.gob.segob.dgtic.webservices.recursos.base;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +23,8 @@ public abstract class RecursoBase {
      * Intancia para realizar log.
      */
     protected final Logger logger = LoggerFactory.getLogger(ServiceBase.class);
+    
+    protected final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 	public void generaPeriodoVacacional(String inicio, String descripcion, boolean activo) {
 		// TODO Auto-generated method stub
