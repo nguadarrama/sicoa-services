@@ -105,6 +105,7 @@ public class ComisionRepositoryImpl implements ComisionRepository{
         usuarioDto.setApellidoMaterno((String)informacionConsulta.get("apellido_materno"));
         usuarioDto.setIdPuesto((String)informacionConsulta.get("id_puesto"));
         usuarioDto.setFechaIngreso((Date)informacionConsulta.get("fecha_ingreso"));
+        System.out.println("Fecha ingreso usuario "+ usuarioDto.getFechaIngreso());
         usuarioDto.setRfc((String)informacionConsulta.get("rfc"));
         usuarioDto.setIdUnidad((Integer)informacionConsulta.get("id_unidad"));
         usuarioDto.setNombreUnidad((String)informacionConsulta.get("nombre_unidad"));
@@ -133,7 +134,7 @@ public class ComisionRepositoryImpl implements ComisionRepository{
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        System.out.println("informacionConsulta.get "+fechaInicio+" "+fechaFin);
+        System.out.println("FechaInicio: "+fechaInicio+" FechaFin: "+fechaFinal + " FechaRegistro: " + fechaRegistro);
         comisionDto.setFechaInicio(fechaInicio);
         comisionDto.setFechaFin(fechaFinal);
         comisionDto.setFechaRegistro(fechaRegistro);
