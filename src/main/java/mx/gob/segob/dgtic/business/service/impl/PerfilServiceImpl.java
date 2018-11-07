@@ -1,16 +1,15 @@
 package mx.gob.segob.dgtic.business.service.impl;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import mx.gob.segob.dgtic.business.rules.catalogo.PerfilRules;
 import mx.gob.segob.dgtic.business.service.PerfilService;
+import mx.gob.segob.dgtic.business.service.base.ServiceBase;
 import mx.gob.segob.dgtic.comun.sicoa.dto.PerfilDto;
 
 @Service
-public class PerfilServiceImpl implements PerfilService{
+public class PerfilServiceImpl extends ServiceBase implements PerfilService{
 
 	@Autowired
 	private PerfilRules perfilRules;
@@ -25,9 +24,7 @@ public class PerfilServiceImpl implements PerfilService{
 	public PerfilDto buscaPerfil (String idPerfil){
 		PerfilDto perfilDto=null;
 		perfilDto= perfilRules.buscaPerfil(idPerfil);
-		
-		System.out.println("perfil "+perfilDto.getDescripcion());
-		
+		logger.info("perfil: {} ",perfilDto.getDescripcion());
 		return perfilDto;
 	}
 	

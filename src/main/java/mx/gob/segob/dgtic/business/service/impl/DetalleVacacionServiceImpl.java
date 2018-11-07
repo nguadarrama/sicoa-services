@@ -4,9 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,16 +12,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-
-import org.apache.lucene.store.IOContext.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import mx.gob.segob.dgtic.business.rules.catalogo.DetalleVacacionRules;
 import mx.gob.segob.dgtic.business.service.DetalleVacacionService;
 import mx.gob.segob.dgtic.business.service.VacacionPeriodoService;
-import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
+import mx.gob.segob.dgtic.business.service.base.ServiceBase;
+import mx.gob.segob.dgtic.business.service.constants.ServiceConstants;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DetalleVacacionDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.GeneraReporteArchivo;
@@ -32,18 +27,17 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionPeriodoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionesAux;
 import mx.gob.segob.dgtic.comun.sicoa.dto.reporte;
-import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.view.JasperViewer;
+import net.sf.jasperreports.engine.JasperReport;
 
 @Service
-public class DetalleVacacionServiceImpl implements DetalleVacacionService {
+public class DetalleVacacionServiceImpl extends ServiceBase implements DetalleVacacionService {
 
 	@Autowired
 	private DetalleVacacionRules detalleVacacionRules;
@@ -83,7 +77,7 @@ public class DetalleVacacionServiceImpl implements DetalleVacacionService {
 		vacacion.setIdUsuario(usuarioDto);
 		vacacion.setIdVacacion(vacacionPeriodoDto);
 		vacacion.setIdEstatus(estatusDto);
-		System.out.println("idResponsable "+detalleVacacionDto.getIdResponsable());
+		logger.info("idResponsable: {} ",detalleVacacionDto.getIdResponsable());
 		vacacion.setIdResponsable(detalleVacacionDto.getIdResponsable());
 		vacacion.setDias(detalleVacacionDto.getDias());
 		Date fechaInicial = new Date();
@@ -93,10 +87,9 @@ public class DetalleVacacionServiceImpl implements DetalleVacacionService {
     	try {
     		fechaInicial = df.parse(detalleVacacionDto.getFechaInicio());
     		fechaFinal=df.parse(detalleVacacionDto.getFechaFin());
-			System.out.println("fechaInicio "+fechaInicial);
+			logger.info("fechaInicio: {} ",fechaInicial);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("error: {}", e);
 		}
     	vacacion.setFechaInicio(fechaInicial);
     	vacacion.setFechaFin(fechaFinal);
@@ -130,93 +123,84 @@ public class DetalleVacacionServiceImpl implements DetalleVacacionService {
 	}
 	
 	@Override
-	public reporte generaReporteVacaciones(GeneraReporteArchivo generaReporteArchivo ) {
+	public reporte generaReporteVacaciones(GeneraReporteArchivo generaReporteArchivo ) throws FileNotFoundException, ParseException, JRException {
 		reporte repo = new reporte();
-		byte[] output= null;
-		VacacionPeriodoDto vacacion= new VacacionPeriodoDto();
-		try {
-			if(generaReporteArchivo.getIdVacacion()!=null && !generaReporteArchivo.getIdVacacion().toString().isEmpty()){
-				Integer idVacacion=Integer.parseInt(generaReporteArchivo.getIdVacacion());
-				vacacion=periodoService.buscaVacacionPeriodo(idVacacion);
-			}else{
-				vacacion=null;
+		String jasper = "/documentos/sicoa/jasper/vacacion/Vacaciones.jrxml";
+		byte[] output = null;
+		VacacionPeriodoDto vacacion;
+
+			if(generaReporteArchivo.getIdVacacion() != null && !generaReporteArchivo.getIdVacacion().isEmpty()){
+				Integer idVacacion = Integer.parseInt(generaReporteArchivo.getIdVacacion());
+				vacacion = periodoService.buscaVacacionPeriodo(idVacacion);
+			} else {
+				vacacion = null;
 			}
-			InputStream template = null;
-			try {
-				File file = new File("/documentos/sicoa/jasper/vacacion/Vacaciones.jrxml");
-				template = new FileInputStream(file);
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			if(template != null){
-			   JasperReport jasperReport=JasperCompileManager.compileReport(template);
-				DateFormat df = new SimpleDateFormat("MMM dd, yyyy");
-				System.out.println("Datos "+generaReporteArchivo.getNombre());
+
+			File file = new File(jasper);
+			InputStream  template = new FileInputStream(file);
+
+			if( template != null ){
+			   JasperReport jasperReport = JasperCompileManager.compileReport(template);
+				DateFormat df = new SimpleDateFormat(ServiceConstants.MMM_DD_YYYY);
+				logger.info("Datos: {} ",generaReporteArchivo.getNombre());
 				JRDataSource dataSource= new JREmptyDataSource();
-				Map<String,Object> parametros = new HashMap<String, Object>();
-				parametros.put("nombre", generaReporteArchivo.getNombre());
-				parametros.put("apellidoPaterno", generaReporteArchivo.getApellidoPaterno());
-				parametros.put("apellidoMaterno", generaReporteArchivo.getApellidoMaterno());
-				parametros.put("rfc", generaReporteArchivo.getRfc());
-				parametros.put("idSolicitud", generaReporteArchivo.getIdsolicitud());
-				parametros.put("idEstatus", generaReporteArchivo.getIdEstatus());
-				parametros.put("puesto", generaReporteArchivo.getIdPuesto());
-				parametros.put("unidadAdministrativa", generaReporteArchivo.getUnidadAdministrativa());
-				parametros.put("numeroEmpleado", generaReporteArchivo.getNumeroEmpleado());
+				Map<String,Object> parametros = new HashMap<>();
+				parametros.put(ServiceConstants.NOMBRE, generaReporteArchivo.getNombre());
+				parametros.put(ServiceConstants.APELLIDO_PATERNO, generaReporteArchivo.getApellidoPaterno());
+				parametros.put(ServiceConstants.APELLIDO_MATERNO, generaReporteArchivo.getApellidoMaterno());
+				parametros.put(ServiceConstants.RFC, generaReporteArchivo.getRfc());
+				parametros.put(ServiceConstants.ID_SOLICITUD, generaReporteArchivo.getIdsolicitud());
+				parametros.put(ServiceConstants.ID_ESTATUS, generaReporteArchivo.getIdEstatus());
+				parametros.put(ServiceConstants.PUESTO, generaReporteArchivo.getIdPuesto());
+				parametros.put(ServiceConstants.UNIDAD_ADMVA, generaReporteArchivo.getUnidadAdministrativa());
+				parametros.put(ServiceConstants.NUMERO_EMPLEADO, generaReporteArchivo.getNumeroEmpleado());
 				Date fechaInicio = null;
 				Date fechaFin = null;
-				Date fechaIngreso=null;
+				Date fechaIngreso = null;
 				String fechaInicial = "";
-				String fechaFinal= "";
-				String fechaIngresal="";
-				try {
+				String fechaFinal = "";
+				String fechaIngresal = "";
+
 					if(generaReporteArchivo.getFechaInicio()!= null){
-						fechaInicio= df.parse(generaReporteArchivo.getFechaInicio());
-						fechaInicial=df.format(fechaInicio);
+						fechaInicio = df.parse(generaReporteArchivo.getFechaInicio());
+						fechaInicial = df.format(fechaInicio);
 					}
 					if(generaReporteArchivo.getFechaFin()!= null){
-						fechaFin= df.parse(generaReporteArchivo.getFechaFin());
-						fechaFinal=df.format(fechaFin);
+						fechaFin = df.parse(generaReporteArchivo.getFechaFin());
+						fechaFinal = df.format(fechaFin);
 					}
 					if(generaReporteArchivo.getFechaIngreso()!= null){
-						fechaIngreso= df.parse(generaReporteArchivo.getFechaIngreso());
-						fechaIngresal=df.format(fechaIngreso);
+						fechaIngreso = df.parse(generaReporteArchivo.getFechaIngreso());
+						fechaIngresal = df.format(fechaIngreso);
 					}
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				fechaFinal= generaReporteArchivo.getFechaFin().substring(0, 12);
-				fechaInicial=generaReporteArchivo.getFechaInicio().substring(0, 12);
-				parametros.put("fechaIngreso", generaReporteArchivo.getFechaIngreso());
-				parametros.put("fechaInicio", fechaInicial);
-				parametros.put("fechaFin", fechaFinal);
-				parametros.put("responsable", generaReporteArchivo.getResponsable());
-				parametros.put("numeroEmpleado", generaReporteArchivo.getNumeroEmpleado());
-				parametros.put("responsable", generaReporteArchivo.getResponsable());
-				parametros.put("numeroEmpleado", generaReporteArchivo.getNumeroEmpleado());
-				parametros.put("diasVacaciones", generaReporteArchivo.getDias());
+				fechaFinal = generaReporteArchivo.getFechaFin().substring(0, 12);
+				fechaInicial = generaReporteArchivo.getFechaInicio().substring(0, 12);
+				parametros.put(ServiceConstants.FECHA_INGRESO, generaReporteArchivo.getFechaIngreso());
+				parametros.put(ServiceConstants.FECHA_INICIO, fechaInicial);
+				parametros.put(ServiceConstants.FECHA_FIN, fechaFinal);
+				parametros.put(ServiceConstants.RESPONSABLE, generaReporteArchivo.getResponsable());
+				parametros.put(ServiceConstants.NUMERO_EMPLEADO, generaReporteArchivo.getNumeroEmpleado());
+				parametros.put(ServiceConstants.RESPONSABLE, generaReporteArchivo.getResponsable());
+				parametros.put(ServiceConstants.NUMERO_EMPLEADO, generaReporteArchivo.getNumeroEmpleado());
+				parametros.put(ServiceConstants.DIAS_VACACIONES, generaReporteArchivo.getDias());
 				Date fecha = new Date();
-				String fechaActual= null;
-				Integer diasRestantes=0;
-				if(vacacion.getDias()!=null){
-					diasRestantes=vacacion.getDias();
+				String fechaActual = null;
+				Integer diasRestantes = 0;
+				if(vacacion.getDias() != null){
+					
+					diasRestantes = vacacion.getDias();
 					parametros.put("diasRestantes",""+diasRestantes);
 				}
-				System.out.println("idVacacion para el archivo "+generaReporteArchivo.getIdVacacion()+" fechaInicio "+generaReporteArchivo.getFechaInicio()+ 
+				logger.info("idVacacion para el archivo: {} ", generaReporteArchivo.getIdVacacion()+" fechaInicio "+generaReporteArchivo.getFechaInicio()+ 
 						" fechaFin "+generaReporteArchivo.getFechaFin()+" periodo "+vacacion.getIdPeriodo().getDescripcion());
 				parametros.put("periodo", vacacion.getIdPeriodo().getDescripcion());
-				fechaActual=df.format(fecha);
+				fechaActual = df.format(fecha);
 				parametros.put("fechaActual",fechaActual);
 				JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
 				output = JasperExportManager.exportReportToPdf (jasperPrint); 
 				 repo.setNombre(output);
 			}
-		} catch (JRException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 		return repo;
 	}
 
