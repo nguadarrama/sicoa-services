@@ -1,6 +1,8 @@
 package mx.gob.segob.dgtic.webservices.recursos;
 
 
+import java.io.FileNotFoundException;
+
 import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -178,7 +180,7 @@ public class AsistenciaRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("formatoJustificacion")	
 	@PermitAll
-	public Response formatoJustificacion(@RequestParam String jsonFormatoJustificacion) {
+	public Response formatoJustificacion(@RequestParam String jsonFormatoJustificacion) throws FileNotFoundException {
 		JsonObject jsonObject = new JsonParser().parse(jsonFormatoJustificacion).getAsJsonObject();
 		
 		GsonBuilder builder = new GsonBuilder();
@@ -193,7 +195,7 @@ public class AsistenciaRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("formatoDescuento")	
 	@PermitAll
-	public Response formatoDescuento(@RequestParam String jsonFormatoDescuento) {
+	public Response formatoDescuento(@RequestParam String jsonFormatoDescuento) throws FileNotFoundException {
 		JsonObject jsonObject = new JsonParser().parse(jsonFormatoDescuento).getAsJsonObject();
 		
 		GsonBuilder builder = new GsonBuilder();

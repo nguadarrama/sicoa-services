@@ -1,5 +1,7 @@
 package mx.gob.segob.dgtic.webservices.recursos;
 
+import java.io.FileNotFoundException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.security.PermitAll;
@@ -25,6 +27,7 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.GeneraReporteArchivo;
 import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionesAux;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
+import net.sf.jasperreports.engine.JRException;
 
 @Path("catalogo")
 @Component
@@ -164,7 +167,7 @@ public class DetalleVacacionRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("generaReporte")	
 	@PermitAll
-	public Response generaReporte(@RequestParam String jsonDetalleVacacion) {
+	public Response generaReporte(@RequestParam String jsonDetalleVacacion) throws FileNotFoundException, ParseException, JRException {
 		JsonObject jsonObject = new JsonParser().parse(jsonDetalleVacacion).getAsJsonObject();
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
