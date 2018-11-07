@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -16,12 +17,13 @@ import org.springframework.stereotype.Repository;
 
 import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DetalleVacacionDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.DiaFestivoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.PeriodoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionPeriodoDto;
-import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.persistence.repository.DetalleVacacionRepository;
+import mx.gob.segob.dgtic.persistence.repository.DiaFestivoRepository;
 
 @Repository
 public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository {
@@ -31,6 +33,8 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 	
 	@Autowired
     private NamedParameterJdbcTemplate nameParameterJdbcTemplate;
+	
+	@Autowired DiaFestivoRepository diaFestivoRepository;
 
 	@Override
 	public List<DetalleVacacionDto> obtenerListaDetalleVacaciones() {
@@ -66,7 +70,6 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
         	detalleVacacionDto.setIdEstatus(estatusDto);
         	System.out.println("Vacaciones recuperadas "+detalleVacacion.get("id_detalle"));
         	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//        	System.out.println("fecha actual"+(Date)detalleVacacion.get("fecha_inicio"));
         	String fechaIni=""+detalleVacacion.get("fecha_inicio");
         	String fechaFin=""+detalleVacacion.get("fecha_fin");
         	String fechaRe=""+detalleVacacion.get("fecha_registro");
@@ -154,7 +157,7 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
     	detalleVacacionDto.setFechaInicio(fechaInicio);
     	detalleVacacionDto.setFechaFin(fechaFinal);
     	detalleVacacionDto.setFechaRegistro(fechaRegistro);
-        System.out.println("informacionConsulta.get "+informacionConsulta.get("fecha_fin"));
+        System.out.println("informacionConsulta.get "+detalleVacacionDto.getFechaInicio());
         detalleVacacionDto.setDias((Integer)informacionConsulta.get("dias"));
         
         return detalleVacacionDto;
@@ -193,7 +196,6 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String fechaIni=sdf.format(detalleVacacionDto.getFechaInicio());
 		String fechaF=sdf.format(detalleVacacionDto.getFechaFin());
-		//select id_detalle from d_detalle_vacacion where ((fecha_inicio between '2018-10-25' and'2018-10-26') or (fecha_fin between '2018-10-25' and '2018-10-26')) and id_usuario='936'
 		String query="select id_detalle from d_detalle_vacacion where (((fecha_inicio between '"+fechaIni+"' and '"+fechaF+"') "
 				+ "or (fecha_fin between '"+fechaIni+"' and '"+fechaF+"' )) "+
 				" or('"+fechaIni+"'>fecha_inicio and fecha_inicio<'"+fechaF+"' and fecha_fin>'"+fechaF+"'))"
@@ -230,7 +232,14 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 			detalleVacacionDto.setMensaje("El registro de vacaciones se realizó correctamente.");
 		else
 			detalleVacacionDto.setMensaje("Se ha generado un error al guardar vacaciones, revise que los datos sean correctos");
+        
+        String respuesta=repetirValidaciones(detalleVacacionDto.getIdUsuario().getClaveUsuario(), detalleVacacionDto.getFechaInicio(), detalleVacacionDto.getDias()
+				, detalleVacacionDto.getFechaFin());
+		System.out.println("validacion de los datos en repository "+respuesta+" claveUsuario "+detalleVacacionDto.getIdUsuario().getClaveUsuario());
+		if(respuesta!=null && !respuesta.isEmpty())
+			detalleVacacionDto.setMensaje(respuesta);
 		return detalleVacacionDto;
+		
 		
 	}
 
@@ -274,28 +283,12 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 	@Override
 	public List<DetalleVacacionDto> consultaVacacionesPropiasPorFiltros(String claveUsuario, String idPeriodo, String idEstatus, String pFechaInicio, String pFechaFinal) {
 		String query="";
-		//StringBuilder qry = new StringBuilder();
-		//qry.append("SELECT detalle.id_detalle, usuario.id_usuario,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, detalle.id_vacacion, detalle.id_responsable, detalle.id_archivo, detalle.id_estatus, estatus.descripcion, detalle.fecha_inicio, detalle.fecha_fin, detalle.dias, unidad.id_unidad, unidad.nombre nombre_unidad ");
-		//qry.append("FROM d_detalle_vacacion detalle, m_usuario usuario, m_estatus estatus, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion, m_vacacion_periodo vacacionPeriodo, r_periodo periodo ");
-		//qry.append("where usuario.id_usuario=detalle.id_usuario and estatus.id_estatus=detalle.id_estatus and unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario and detalle.id_vacacion=vacacionPeriodo.id_vacacion and vacacionPeriodo.id_periodo=periodo.id_periodo and usuario.cve_m_usuario= = ? ");
-		//qry.append("and detalle.fecha_inicio >= ? ");
-		//qry.append("and detalle.fecha_inicio <= ? ");
-//		if(idPeriodo!=null){
-//		qry.append("and periodo.id_periodo = ? ");
-//		List<Map<String, Object>> detalleVacaciones = jdbcTemplate.queryForList(qry.toString(), claveUsuario, pFechaInicio, pFechaFinal, idPeriodo, idEstatus);
-//		}
-//		if(idEstatus!=null){
-//		qry.append("and estatus.id_estatus = ? ");
-//		}
 		query+="select distinct(detalle.id_detalle) id_detalle, usuario.id_usuario,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, detalle.id_vacacion, detalle.fecha_registro ,detalle.id_responsable, detalle.id_archivo, detalle.id_estatus, estatus.estatus, detalle.fecha_inicio, detalle.fecha_fin, detalle.dias, unidad.id_unidad, unidad.nombre nombre_unidad, periodo.descripcion descripcion_periodo, periodo.id_periodo ";
         query+="from d_detalle_vacacion detalle, m_usuario usuario, m_estatus estatus, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion, m_vacacion_periodo vacacionPeriodo, r_periodo periodo ";
         query+="where usuario.id_usuario=detalle.id_usuario and estatus.id_estatus=detalle.id_estatus and unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario and detalle.id_vacacion=vacacionPeriodo.id_vacacion and vacacionPeriodo.id_periodo=periodo.id_periodo and usuario.cve_m_usuario='"+claveUsuario+"' ";
-//        if(claveUsuario!=null && !claveUsuario.trim().isEmpty()){
-//        	query+="and usuario.cve_m_usuario like '%"+claveUsuario+"%' ";
-//        }
+
         if(idPeriodo!=null && !idPeriodo.trim().isEmpty()){
         	query+="and periodo.id_periodo = +'"+idPeriodo+"' ";
-//        	query+="and periodo.id_periodo='"+idPeriodo+"' ";
         }
         if((pFechaInicio!=null && !pFechaInicio.trim().isEmpty())&& (pFechaFinal!=null && !pFechaFinal.trim().isEmpty())){
         	query+="and detalle.fecha_inicio between '"+pFechaInicio+"' and '"+pFechaFinal+"' ";
@@ -304,15 +297,11 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
         }else if(pFechaFinal!=null && !pFechaFinal.trim().isEmpty()){
         	query+="and detalle.fecha_fin='"+pFechaInicio+"'";
         }
-//        if(idEstatus!=null && idEstatus!=""){
+
         if(idEstatus!=null && !idEstatus.trim().isEmpty()){
         	query+="and detalle.id_estatus='"+idEstatus+"' ";
         }
-  //      	query+="and between ";
-        
-//        if(pFechaFinal!=null){
-//        	query+="and ";
-//        }
+  
         System.out.println("query "+query+" datos de consulta ");
 		System.out.println("Datos para la consulta claveUsuario "+claveUsuario+" fechaInicio "+pFechaInicio+" fechaFinal "+pFechaFinal+" idEstatus "+idEstatus);
         List<Map<String, Object>> detalleVacaciones = jdbcTemplate.queryForList(query);
@@ -377,9 +366,6 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 	public List<DetalleVacacionDto> obtenerVacacionesPorFiltros(String claveUsuario, String nombre,
 			String apellidoPaterno, String apellidoMaterno, String idUnidad, String idEstatus) {
 		String query="";
-//		query+="SELECT detalle.id_detalle, usuario.id_usuario,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, detalle.id_vacacion, detalle.id_responsable, detalle.id_archivo, detalle.id_estatus, estatus.descripcion, detalle.fecha_inicio, detalle.fecha_fin, detalle.dias, unidad.id_unidad, unidad.nombre nombre_unidad ";
-//        query+="FROM d_detalle_vacacion detalle, m_usuario usuario, m_estatus estatus, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion ";
-//        query+="where usuario.id_usuario=detalle.id_usuario and estatus.id_estatus=detalle.id_estatus and unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario and usuario.cve_m_usuario='"+claveUsuario+"';";
 		query+="select distinct(detalle.id_detalle) id_detalle, detalle.fecha_registro, usuario.id_usuario,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, detalle.id_vacacion, detalle.id_responsable, detalle.id_archivo, detalle.id_estatus, estatus.estatus, detalle.fecha_inicio, detalle.fecha_fin, detalle.dias, unidad.id_unidad, unidad.nombre nombre_unidad, vacacionPeriodo.dias dias_disponibles, periodo.descripcion descripcion_periodo, periodo.id_periodo ";
         query+="from d_detalle_vacacion detalle, m_usuario usuario, m_estatus estatus, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion, m_vacacion_periodo vacacionPeriodo, r_periodo periodo ";
         query+="where usuario.id_usuario=detalle.id_usuario and estatus.id_estatus=detalle.id_estatus and unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario and detalle.id_vacacion=vacacionPeriodo.id_vacacion and vacacionPeriodo.id_periodo=periodo.id_periodo ";
@@ -465,6 +451,108 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
         
      return listaDetalleVacacion;
      
+	}
+	
+	String claveUsuario=null; Date fechaInicio=null; Integer dias=null; Date fechaFin=null; Boolean bandera=false; Integer diasTotales=0;
+	
+	private String repetirValidaciones(String claveUsuario, Date fechaInicio, Integer dias, Date fechaFin){
+		this.claveUsuario=claveUsuario;
+		this.fechaInicio=fechaInicio;
+		this.fechaFin=fechaFin;
+		this.dias=dias;
+		String respuesta="";
+		Integer contador=0;
+		validaFechasVacaciones(this.claveUsuario, this.fechaInicio,this.dias , this.fechaFin);
+		if(bandera!=false){
+			contador++;
+		}else{
+			System.out.println("Contador "+contador);
+		}
+		if(diasTotales>10){
+			respuesta="Estas solicitando vacaciones un día inmediato posterior o anterior, a otra solicitud de vacaciones "
+					+ "que sumados dan más de 10 días, considera que tu solicitud puede ser rechazada";
+		}
+		
+		return respuesta;
+	}
+	
+	
+	private String validaFechasVacaciones(String claveUsuario, Date fechaInicio, Integer dias, Date fechaFin){
+		diasTotales+=dias;
+		List<DiaFestivoDto> listaDiasFestivos=diaFestivoRepository.obtenerDiasFestivosActivos();
+		List<DetalleVacacionDto> listaDiasVacaciones=consultaVacacionesPropiasPorFiltros(claveUsuario, "","","", "");
+		System.out.println("comprobando días ");
+    	DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    	
+		Calendar c1 = Calendar.getInstance();
+		//System.out.println("Fechas fecha inicial "+detalleVacacionDto.getFechaInicio()+" fecha final "+detalleVacacionDto.getFechaFin());
+	    c1.setTime(fechaInicio);
+	    Calendar c2 = Calendar.getInstance();
+	    c2.setTime(fechaFin);
+	    if(c1.get(Calendar.DAY_OF_WEEK)==Calendar.MONDAY){
+	    	c1.add(Calendar.DAY_OF_WEEK,-2);
+	    	System.out.println("Dia antes "+c1.getTime());
+	    }
+	    c1.add(Calendar.DAY_OF_WEEK,-1);
+	    if(c2.get(Calendar.DAY_OF_WEEK)==Calendar.FRIDAY){
+	    	c2.add(Calendar.DAY_OF_WEEK,+2);
+	    	System.out.println("Dia despues "+c2.getTime());
+	    }
+	    c2.add(Calendar.DAY_OF_WEEK,+1);
+	    for(DiaFestivoDto diaFestivos: listaDiasFestivos){
+	    	
+			String fecha=null;
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+			SimpleDateFormat sdf1 = new SimpleDateFormat("MM-dd-yyyy");
+			//System.out.println("Fechas obtenidas "+diaFestivo.getFecha());
+		   
+
+		    Calendar diaFestivo = Calendar.getInstance();
+			diaFestivo.setTime(diaFestivos.getFecha());
+			if(diaFestivo.equals(c1)){
+				c1.add(Calendar.DAY_OF_WEEK,-1);
+				System.out.println("Dia menos festivo "+c1.getTime());
+			}else
+			{
+				System.out.println("Dia no festivo "+c1.getTime());
+			}
+			if(diaFestivo.equals(c2)){
+				c2.add(Calendar.DAY_OF_WEEK,+1);
+				System.out.println("Dia menos festivo "+c2.getTime());
+			}else
+			{
+				System.out.println("Dia no festivo "+c1.getTime());
+			}
+		}
+		for(DetalleVacacionDto vacacion: listaDiasVacaciones){
+			 Calendar diaInicio = Calendar.getInstance();
+			 Calendar diaFin = Calendar.getInstance();
+			 diaInicio.setTime(vacacion.getFechaInicio());
+			 diaFin.setTime(vacacion.getFechaFin());
+			 
+			if(c1.equals(diaFin)){
+				this.fechaInicio=diaInicio.getTime();
+				this.fechaFin=c2.getTime();
+				System.out.println("Dias que se deben sumar fechaFin "+vacacion.getDias());
+				diasTotales+=vacacion.getDias();
+				bandera=true;
+			}
+			
+			if(c2.equals(diaInicio)){
+				this.fechaInicio=diaInicio.getTime();
+				this.fechaFin=diaFin.getTime();
+				System.out.println("Dias que se deben sumar fechaInicio "+vacacion.getDias());
+				diasTotales+=vacacion.getDias();
+				bandera=true;
+			}
+			
+		}
+		
+		
+		System.out.println("fechaInicio "+c1.getTime()); 
+		System.out.println("fechaFin "+c2.getTime()); 
+		System.out.println("Dias totales "+diasTotales);
+		return"Dias totales "+diasTotales;
 	}
 	
 	
