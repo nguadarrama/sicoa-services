@@ -11,8 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.jfree.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,10 +66,8 @@ public class ComisionServiceImpl extends RecursoBase implements ComisionService 
       try {
         fechaInicial = df.parse(comisionAux.getFechaInicio());
         fechaFinal = df.parse(comisionAux.getFechaFin());
-        System.out.println("fechaInicio " + fechaInicial);
-      } catch (ParseException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+      } catch (ParseException ex) {
+        logger.info("Exception: {}", ex.getMessage());
       }
       comisionDto.setFechaInicio(fechaInicial);
       comisionDto.setFechaFin(fechaFinal);
@@ -83,8 +80,11 @@ public class ComisionServiceImpl extends RecursoBase implements ComisionService 
     horario.setIdHorario(comisionAux.getIdHorario());
     comisionDto.setIdHorario(horario);
     comisionDto.setIdComision(comisionAux.getIdComision());
+    
+    if (Log.isInfoEnabled()) {
+      logger.debug("ComisionDto Envio: {}", gson.toJson(comisionDto));
+    }
 
-    logger.info("ComisionDto Envio: {}", gson.toJson(comisionDto));
     return comisionRules.modificaComision(comisionDto);
 
   }
@@ -92,34 +92,32 @@ public class ComisionServiceImpl extends RecursoBase implements ComisionService 
   @Override
   public ComisionDto agregaComision(ComisionAux comisionAux) {
     ComisionDto comisionDto = new ComisionDto();
-    
+
     UsuarioDto usuarioDto = new UsuarioDto();
     usuarioDto.setIdUsuario(comisionAux.getIdUsuario());
     comisionDto.setIdUsuario(usuarioDto);
-    
+
     comisionDto.setIdResponsable(comisionAux.getIdResponsable());
-    
+
     EstatusDto estatusDto = new EstatusDto();
     estatusDto.setIdEstatus(comisionAux.getIdEstatus());
     comisionDto.setIdEstatus(estatusDto);
     ArchivoDto archivoDto = new ArchivoDto();
     archivoDto.setIdArchivo(null);
     comisionDto.setIdArchivo(archivoDto);
-    
+
     Date fechaInicial = new Date();
     Date fechaFinal = new Date();
     Date fechaSolicitud = new Date();
     DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-    
+
     try {
       fechaInicial = df.parse(comisionAux.getFechaInicio());
-      fechaFinal=df.parse(comisionAux.getFechaFin());
-      fechaSolicitud=df.parse(comisionAux.getFechaRegistro());
-      System.out.println("fechaInicio "+fechaInicial);
-  } catch (ParseException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-  }
+      fechaFinal = df.parse(comisionAux.getFechaFin());
+      fechaSolicitud = df.parse(comisionAux.getFechaRegistro());
+    } catch (ParseException e) {
+      logger.info("Exception: {}", e.getMessage());
+    }
     comisionDto.setFechaInicio(fechaInicial);
     comisionDto.setFechaFin(fechaFinal);
     comisionDto.setFechaRegistro(fechaSolicitud);
@@ -128,7 +126,7 @@ public class ComisionServiceImpl extends RecursoBase implements ComisionService 
     Horario horario = new Horario();
     horario.setIdHorario(comisionAux.getIdHorario());
     comisionDto.setIdHorario(horario);
-    System.out.println("Enviar a rules ");
+    logger.info("Enviar a Rules");
     return comisionRules.agregaComision(comisionDto);
 
   }
@@ -156,7 +154,8 @@ public class ComisionServiceImpl extends RecursoBase implements ComisionService 
   @Override
   public List<ComisionDto> obtenerComisionesPorUnidad(String idUnidad, String claveUsuario,
       String nombre, String apellidoPaterno, String apellidoMaterno) {
-    return comisionRules.obtenerComisionesPorUnidad(idUnidad, claveUsuario, nombre, apellidoPaterno, apellidoMaterno);
+    return comisionRules.obtenerComisionesPorUnidad(idUnidad, claveUsuario, nombre, apellidoPaterno,
+        apellidoMaterno);
   }
 
   @Override
@@ -166,10 +165,9 @@ public class ComisionServiceImpl extends RecursoBase implements ComisionService 
     try {
       InputStream template = null;
       try {
-		File file = new File("/documentos/sicoa/jasper/comision/comisiones.jrxml");
+        File file = new File("/documentos/sicoa/jasper/comision/comisiones.jrxml");
         template = new FileInputStream(file);
       } catch (FileNotFoundException e1) {
-        // TODO Auto-generated catch block
         e1.printStackTrace();
       }
       if (template != null) {
@@ -183,18 +181,17 @@ public class ComisionServiceImpl extends RecursoBase implements ComisionService 
         DateFormat df = new SimpleDateFormat("MMM dd, yyyy");
         Date fechaInicio = null;
         Date fechaFin = null;
-        
+
         try {
-          if(generarReporteArchivo.getFechaInicio()!= null){
-              fechaInicio= df.parse(generarReporteArchivo.getFechaInicio());
+          if (generarReporteArchivo.getFechaInicio() != null) {
+            fechaInicio = df.parse(generarReporteArchivo.getFechaInicio());
           }
-          if(generarReporteArchivo.getFechaFinal()!= null){
-              fechaFin= df.parse(generarReporteArchivo.getFechaFinal());
+          if (generarReporteArchivo.getFechaFinal() != null) {
+            fechaFin = df.parse(generarReporteArchivo.getFechaFinal());
           }
-      } catch (ParseException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-      }
+        } catch (ParseException e) {
+          logger.info("Exception: {}", e.getMessage());
+        }
         parametros.put("fechaInicio", fechaInicio);
         parametros.put("fechaFinal", fechaFin);
         parametros.put("horario", generarReporteArchivo.getHorario());
@@ -209,7 +206,6 @@ public class ComisionServiceImpl extends RecursoBase implements ComisionService 
         repo.setNombre(output);
       }
     } catch (JRException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
 
@@ -220,13 +216,13 @@ public class ComisionServiceImpl extends RecursoBase implements ComisionService 
   @Override
   public ComisionDto modificaComisionEstatusArchivo(ComisionAux comisionAuxDto) {
     ComisionDto comisionDto = new ComisionDto();
-    EstatusDto estatus= new EstatusDto();
+    EstatusDto estatus = new EstatusDto();
     estatus.setIdEstatus(comisionAuxDto.getIdEstatus());
     comisionDto.setIdEstatus(estatus);
-    UsuarioDto usuario= new UsuarioDto(); 
+    UsuarioDto usuario = new UsuarioDto();
     usuario.setIdUsuario(comisionAuxDto.getIdUsuario());
     comisionDto.setIdUsuario(usuario);
-    ArchivoDto archivo= new ArchivoDto();
+    ArchivoDto archivo = new ArchivoDto();
     archivo.setIdArchivo(comisionAuxDto.getIdArchivo());
     comisionDto.setIdArchivo(archivo);
     comisionDto.setIdComision(comisionAuxDto.getIdComision());
