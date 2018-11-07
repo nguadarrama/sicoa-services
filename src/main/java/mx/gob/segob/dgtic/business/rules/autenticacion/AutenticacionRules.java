@@ -7,22 +7,18 @@
 */
 package mx.gob.segob.dgtic.business.rules.autenticacion;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import mx.gob.segob.dgtic.comun.transport.constants.EstatusEnum;
-import mx.gob.segob.dgtic.business.rules.catalogo.CargaInicialRules;
-import mx.gob.segob.dgtic.business.rules.catalogo.UsuarioRules;
 import mx.gob.segob.dgtic.business.service.CargaInicialService;
+import mx.gob.segob.dgtic.business.service.base.ServiceBase;
 import mx.gob.segob.dgtic.comun.transport.constants.DecisionEnum;
+import mx.gob.segob.dgtic.comun.transport.constants.EstatusEnum;
 import mx.gob.segob.dgtic.comun.transport.dto.autenticacion.UsuarioAcceso;
 import mx.gob.segob.dgtic.comun.util.config.AplicacionPropertiesUtil;
 import mx.gob.segob.dgtic.comun.util.crypto.HashUtils;
@@ -33,7 +29,7 @@ import mx.gob.segob.dgtic.persistence.repository.ConfiguracionRepository;
  * Reglas de negocio aplicadas a la autenticaci&oacute;n de usuarios.
  */
 @Component 
-public class AutenticacionRules {
+public class AutenticacionRules extends ServiceBase{
 	
 	/** Constante que representa USUARIO_NO_EXISTE, Mensaje de respuesta en servicio de autenticaci&oacute;n. */
 	private static final String USUARIO_NO_EXISTE = "El usuario o contraseña es incorrecto, por favor intenta de nuevo.";
@@ -69,8 +65,6 @@ public class AutenticacionRules {
 	@Autowired
 	private AutenticacionRepository repositorioAutenticacion;
 	
-	@Autowired 
-	private UsuarioRules usuarioRules;
 	
 	@Autowired ConfiguracionRepository configuracionRepository;
 	
@@ -99,7 +93,7 @@ public class AutenticacionRules {
 	 * @return Lista de claves de error de la evaluaci&oacute;n del usuario
 	 */
 	public List<String> validaAutenticacionRules(UsuarioAcceso usuario, String contraseniaAsignadaUsuarioBD, String credencialAVerificar) {
-		System.out.println("contraseniaAsignadaUsuarioBD "+contraseniaAsignadaUsuarioBD);
+		logger.info("contraseniaAsignadaUsuarioBD: {} ",contraseniaAsignadaUsuarioBD);
 		List<String> errores = new ArrayList<>(0);
 		if(usuario == null){
 				errores.add(USUARIO_NO_EXISTE);
@@ -118,9 +112,9 @@ public class AutenticacionRules {
 			}			
 		}
 		String indicador = configuracionRepository.obtieneUltimaFechaCargaUsuarios();
-		System.out.println("Valor de carga "+indicador);
+		logger.info("Valor de carga: {} ",indicador);
 		if(indicador=="N"){
-			System.out.println("cargando "+indicador);
+			logger.info("cargando: {} ",indicador);
 			cargaInicialService.cargaInicial();
 			configuracionRepository.actualizaUltimaFechaCargaUsuarios();
 			
@@ -250,11 +244,11 @@ public class AutenticacionRules {
 	
 	public Boolean cambiarPassword(String claveUsuario, String password){
 		password=HashUtils.md5(password);
-		Boolean resultado=false;
-		//String  contrasenia=usuarioRules.consultaContrasenia(claveUsuario);
-		/*if(contrasenia.equals(password)){
+		/** Boolean resultado = false;
+		String  contrasenia=usuarioRules.consultaContrasenia(claveUsuario);
+		if(contrasenia.equals(password)){
 			resultado=false;
-		}else{*/
+		}else{**/
 		repositorioAutenticacion.cambiarPassword(password, claveUsuario);
 		return true;
 		

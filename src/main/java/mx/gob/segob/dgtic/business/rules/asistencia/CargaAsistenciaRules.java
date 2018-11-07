@@ -1,22 +1,20 @@
 package mx.gob.segob.dgtic.business.rules.asistencia;
 
 
-import java.util.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import mx.gob.segob.dgtic.business.service.TipoDiaService;
 import mx.gob.segob.dgtic.business.service.UsuarioService;
+import mx.gob.segob.dgtic.business.service.constants.ServiceConstants;
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DiaFestivoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.TipoDiaDto;
@@ -85,7 +83,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 		//obtiene asistencia del sistema de asistencias (biométricos - ASISTENCIA)
 		List<AsistenciaDto> listaAsistenciaCompleta = cargaAsistenciaRepository.obtieneAsistencia(configuracionRepository.obtieneUltimaFechaCargaAsistencia());
 		
-		if (listaAsistenciaCompleta.size() != 0) {
+		if (!listaAsistenciaCompleta.isEmpty()) {
 			List<AsistenciaDto> listaAsistenciaFiltrada = new ArrayList<>();
 			
 			for (AsistenciaDto a : listaAsistenciaCompleta) {
@@ -99,8 +97,8 @@ public class CargaAsistenciaRules extends RecursoBase {
 				}
 			}
 			
-			if (listaAsistenciaFiltrada.size() != 0) {
-				logger.info(listaAsistenciaFiltrada.size() + " asistencias de empleados coincidentes");
+			if (!listaAsistenciaFiltrada.isEmpty()) {
+				logger.info("asistencias de empleados coincidentes: {} ",listaAsistenciaFiltrada.size() );
 				return listaAsistenciaFiltrada;
 				
 			} else {
@@ -144,7 +142,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 		}
 		
 		
-		logger.info(listaUsuarioChecadas.size() + " Usuarios coincidentes en ASISTENCIA y SIRNO. Calculando entrada y salida.");
+		logger.info("Usuarios coincidentes en ASISTENCIA y SIRNO. Calculando entrada y salida: {} ",listaUsuarioChecadas.size() );
 		
 		//recorre usuarios
 		for (UsuarioChecada usuarioChecada : listaUsuarioChecadas) {		
@@ -256,13 +254,13 @@ public class CargaAsistenciaRules extends RecursoBase {
 			}
 		}
 		
-		logger.info(listaAsistenciaCalculada.size() + " se les generó entrada y salida");
+		logger.info("se les generó entrada y salida: {} ",listaAsistenciaCalculada.size() );
 		
 		return listaAsistenciaCalculada;
 	}
 	
 	private List<AsistenciaDto> calculaIncidencias(List<AsistenciaDto> listaAsistencia, List<AsistenciaDto> listaAsistenciaFiltrada) {
-		logger.info(listaAsistencia.size() + " calculando incidencias...");
+		logger.info("calculando incidencias: {} ",listaAsistencia.size());
 		
 		for (AsistenciaDto a : listaAsistencia) {
 			
@@ -295,12 +293,12 @@ public class CargaAsistenciaRules extends RecursoBase {
 		}
 		
 		//calculo de inasistencias. son aquellas usurios que no tienen registro en el sistema de asistencias
-		logger.info(listaAsistencia.size() + " calculando y creando inasistencias...");
+		logger.info("calculando y creando inasistencias: {} ",listaAsistencia.size());
 		
 		//obtiene la fecha de hoy
 		Timestamp diaAyer = new Timestamp(new Date().getTime());
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		/**SimpleDateFormat sdf = new SimpleDateFormat(ServiceConstants.YYYY_MM_DD);**/
 		Calendar c = Calendar.getInstance();
 		
 		c.setTime(diaAyer);
@@ -338,7 +336,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 				AsistenciaDto asistencia = new AsistenciaDto();
 				
 				//empleados que faltaron justificadamente
-				if (listaEmpleadosConPermiso.size() > 0) {
+				if (!listaEmpleadosConPermiso.isEmpty()) {
 
 					//si el usuario no está de vacación, comision ó licencia se le genera inasistencia
 					if (!listaEmpleadosConPermiso.contains(usuario.getClaveUsuario())) {
@@ -364,7 +362,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 						}
 					} else {
 						//cuando el empleado que faltó sí se encuentra de vacaciones no se requiere ninguna acción
-						logger.info("* " + usuario.getClaveUsuario() + ": el empleado se encuentra con permiso");
+						logger.info("el empleado se encuentra con permiso: {} ","* " + usuario.getClaveUsuario() );
 					}
 					
 				} else { //si no hay ningún usuario que esté de vacación, de comisión ó licencia, entonces se revisa si es día inhábil
@@ -392,7 +390,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 			} 
 		}
 		
-		logger.info(listaAsistencia.size() + " asistencias procesadas. Termina cálculo de incidencias");
+		logger.info("asistencias procesadas. Termina cálculo de incidencias: {} ",listaAsistencia.size());
 		
 		return listaAsistencia;
 	}
@@ -492,7 +490,9 @@ class UsuarioChecada {
 	private List<Timestamp> listaChecadas = new ArrayList<>();
 	
 	public UsuarioChecada() {
-		
+		/**
+		 * 
+		 */
 	}
 	
 	public String getIdUsuario() {
