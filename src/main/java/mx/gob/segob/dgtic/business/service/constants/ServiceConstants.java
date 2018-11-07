@@ -24,4 +24,10 @@ public class ServiceConstants {
 	public static final String DIAS_VACACIONES = "diasVacaciones";
 	public static final String MMM_DD_YYYY = "MMM dd, yyyy";
 	public static final String YYYY_MM_DD = "yyyy-MM-dd";
+	public static final String INCIDENCIA = "incidencia";
+	public static final String GENERA_REPORTE_ARCHIVO = "generaReporteArchivo";
+	public static final String NULL = "null";
+	public static final String DETALLE_VACACION = "detalleVacacion";
+	public static final String COMISION = "comision";
+	public static final String PERIODO = "periodo";
 }

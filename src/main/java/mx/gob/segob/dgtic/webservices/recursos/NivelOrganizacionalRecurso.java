@@ -17,13 +17,14 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import mx.gob.segob.dgtic.business.service.NivelOrganizacionalService;
+import mx.gob.segob.dgtic.business.service.base.ServiceBase;
 import mx.gob.segob.dgtic.comun.sicoa.dto.NivelOrganizacionalDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
 @Path("nivel")
 @Component
-public class NivelOrganizacionalRecurso {
+public class NivelOrganizacionalRecurso extends ServiceBase{
 	
 	@Autowired
 	private NivelOrganizacionalService nivelOrganizacionalService;
@@ -63,7 +64,7 @@ public class NivelOrganizacionalRecurso {
 	@Path("busca")	
 	@PermitAll
 	public Response buscaPeriodo(@QueryParam ("idNivel") Integer idNivel) {
-		System.out.println("llego a nivelRecurso: idNivel: "+idNivel);
+		logger.info("llego a nivelRecurso idNivel: {} ",idNivel);
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, nivelOrganizacionalService.buscaNivel(idNivel));
 	}
 	

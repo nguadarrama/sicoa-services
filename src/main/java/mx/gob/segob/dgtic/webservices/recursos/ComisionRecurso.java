@@ -20,6 +20,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import mx.gob.segob.dgtic.business.service.ComisionService;
+import mx.gob.segob.dgtic.business.service.base.ServiceBase;
+import mx.gob.segob.dgtic.business.service.constants.ServiceConstants;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ComisionAux;
 import mx.gob.segob.dgtic.comun.sicoa.dto.GenerarReporteArchivoComision;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
@@ -27,7 +29,7 @@ import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
 @Path("comisiones")
 @Component
-public class ComisionRecurso {
+public class ComisionRecurso extends ServiceBase{
 
   @Autowired
   private ComisionService comisionService;
@@ -62,7 +64,7 @@ public class ComisionRecurso {
 
     GsonBuilder builder = new GsonBuilder();
     Gson gson = builder.create();
-    ComisionAux comisionDto = gson.fromJson(jsonObject.get("comision"), ComisionAux.class);
+    ComisionAux comisionDto = gson.fromJson(jsonObject.get(ServiceConstants.COMISION), ComisionAux.class);
 
     return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,
         comisionService.modificaComision(comisionDto));
@@ -78,8 +80,8 @@ public class ComisionRecurso {
 
     GsonBuilder builder = new GsonBuilder();
     Gson gson = builder.create();
-    ComisionAux comisionAux = gson.fromJson(jsonObject.get("comision"), ComisionAux.class);
-    System.out.println("Datos para comision en recurso " + " fechaInicio "+comisionAux.getFechaInicio()+
+    ComisionAux comisionAux = gson.fromJson(jsonObject.get(ServiceConstants.COMISION), ComisionAux.class);
+    logger.info("Datos para comision en recurso " + " fechaInicio "+comisionAux.getFechaInicio()+
         " fechaFin "+comisionAux.getFechaFin());
     
 

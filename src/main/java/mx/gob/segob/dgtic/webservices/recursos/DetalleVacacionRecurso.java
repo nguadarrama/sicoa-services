@@ -2,8 +2,8 @@ package mx.gob.segob.dgtic.webservices.recursos;
 
 import java.io.FileNotFoundException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
+
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -13,15 +13,19 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import mx.gob.segob.dgtic.business.service.DetalleVacacionService;
+import mx.gob.segob.dgtic.business.service.base.ServiceBase;
+import mx.gob.segob.dgtic.business.service.constants.ServiceConstants;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DetalleVacacionDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.GeneraReporteArchivo;
 import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionesAux;
@@ -31,7 +35,7 @@ import net.sf.jasperreports.engine.JRException;
 
 @Path("catalogo")
 @Component
-public class DetalleVacacionRecurso {
+public class DetalleVacacionRecurso extends ServiceBase{
 
 	@Autowired
 	private DetalleVacacionService detalleVacacionService;
@@ -41,13 +45,13 @@ public class DetalleVacacionRecurso {
 	@Path("obtieneDetalleVacaciones")	
 	@PermitAll
 	public Response obtieneDetalleVacaciones() {
-		System.out.println("Peticion de vacacionesRecurso");
-		List<DetalleVacacionDto> lista = new ArrayList<>();
+		logger.info("Peticion de vacacionesRecurso");
+		List<DetalleVacacionDto> lista;
 		lista= detalleVacacionService.obtenerListaDetalleVacaciones();
 		
 		for (DetalleVacacionDto detalleVacacion : lista) {
 			
-			System.out.println("FechaInicio "+detalleVacacion.getFechaInicio());
+			logger.info("FechaInicio: {} ",detalleVacacion.getFechaInicio());
 		}
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, lista);
 		}
@@ -71,7 +75,7 @@ public class DetalleVacacionRecurso {
 		
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
-		DetalleVacacionDto detalleVacacionDto = gson.fromJson(jsonObject.get("detalleVacacion"), DetalleVacacionDto.class);
+		DetalleVacacionDto detalleVacacionDto = gson.fromJson(jsonObject.get(ServiceConstants.DETALLE_VACACION), DetalleVacacionDto.class);
 		
 		
 
@@ -88,8 +92,8 @@ public class DetalleVacacionRecurso {
 		
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
-		VacacionesAux detalleVacacionDto = gson.fromJson(jsonObject.get("detalleVacacion"), VacacionesAux.class);
-		System.out.println("Datos para idVacacion en recurso "+detalleVacacionDto.getIdVacacion()+" fechaInicio "+detalleVacacionDto.getFechaInicio()+
+		VacacionesAux detalleVacacionDto = gson.fromJson(jsonObject.get(ServiceConstants.DETALLE_VACACION), VacacionesAux.class);
+		logger.info("Datos para idVacacion en recurso "+detalleVacacionDto.getIdVacacion()+" fechaInicio "+detalleVacacionDto.getFechaInicio()+
 				" fechaFin "+detalleVacacionDto.getFechaFin());
 		
 
@@ -118,7 +122,7 @@ public class DetalleVacacionRecurso {
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		DetalleVacacionDto detalleVacacionDto = gson.fromJson(jsonObject.get("detalleVacacion"), DetalleVacacionDto.class);
-		System.out.println("Valor de idUsuario "+detalleVacacionDto.getIdUsuario().getIdUsuario());
+		logger.info("Valor de idUsuario: {} ",detalleVacacionDto.getIdUsuario().getIdUsuario());
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.aceptaORechazaDetalleVacacion(detalleVacacionDto));
 	}
 	
@@ -127,28 +131,28 @@ public class DetalleVacacionRecurso {
 	@Path("consultaVacacionesPropiasPorFiltros")	
 	@PermitAll
 	public Response consultaVacacionesPropiasPorFiltros(@QueryParam("claveUsuario") String claveUsuario, @QueryParam("idEstatus") String idEstatus, @QueryParam("idPeriodo") String idPeriodo, @QueryParam("fechaInicio") String fechaInicio, @QueryParam("fechaFin") String fechaFin) {
-//		Integer nuevoIdPeriodo=null;
-//		Integer nuevoIdEstatus=null;
-//		if(idPeriodo!=null && !idPeriodo.toString().isEmpty()){
-//				try{
-//					nuevoIdPeriodo=Integer.parseInt(idPeriodo);
-//					
-//				}catch(Exception e){
-//					e.printStackTrace();
-//					nuevoIdPeriodo=null;
-//					
-//				}
-//		}
-//		if(idEstatus!=null && !idEstatus.toString().isEmpty()){
-//			try{
-//				
-//				nuevoIdEstatus=Integer.parseInt(idEstatus);
-//			}catch(Exception e){
-//				e.printStackTrace();
-//				
-//				nuevoIdEstatus=null;
-//			}
-//		}
+	/**	Integer nuevoIdPeriodo=null;
+		Integer nuevoIdEstatus=null;
+		if(idPeriodo!=null && !idPeriodo.toString().isEmpty()){
+				try{
+					nuevoIdPeriodo=Integer.parseInt(idPeriodo);
+					
+				}catch(Exception e){
+					e.printStackTrace();
+					nuevoIdPeriodo=null;
+					
+				}
+		}
+		if(idEstatus!=null && !idEstatus.toString().isEmpty()){
+			try{
+				
+				nuevoIdEstatus=Integer.parseInt(idEstatus);
+			}catch(Exception e){
+				e.printStackTrace();
+				
+				nuevoIdEstatus=null;
+			}
+		} **/
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.consultaVacacionesPropiasPorFiltros(claveUsuario, idPeriodo, idEstatus, fechaInicio, fechaFin));
 	}
 	
@@ -171,7 +175,7 @@ public class DetalleVacacionRecurso {
 		JsonObject jsonObject = new JsonParser().parse(jsonDetalleVacacion).getAsJsonObject();
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
-		GeneraReporteArchivo generaReporteArchivo = gson.fromJson(jsonObject.get("generaReporteArchivo"), GeneraReporteArchivo.class);
+		GeneraReporteArchivo generaReporteArchivo = gson.fromJson(jsonObject.get(ServiceConstants.GENERA_REPORTE_ARCHIVO), GeneraReporteArchivo.class);
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,detalleVacacionService.generaReporteVacaciones(generaReporteArchivo));
 	}
 }

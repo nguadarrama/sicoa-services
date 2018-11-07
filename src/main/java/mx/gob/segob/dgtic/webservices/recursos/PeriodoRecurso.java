@@ -20,12 +20,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import mx.gob.segob.dgtic.business.service.PeriodoService;
+import mx.gob.segob.dgtic.business.service.base.ServiceBase;
+import mx.gob.segob.dgtic.business.service.constants.ServiceConstants;
 import mx.gob.segob.dgtic.comun.sicoa.dto.PeriodoDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 @Path("catalogo")
 @Component
-public class PeriodoRecurso {
+public class PeriodoRecurso extends ServiceBase{
 		
 		@Autowired
 		private PeriodoService periodoService;
@@ -67,7 +69,7 @@ public class PeriodoRecurso {
 			
 			GsonBuilder builder = new GsonBuilder();
 			Gson gson = builder.create();
-			PeriodoDto periodoDto = gson.fromJson(jsonObject.get("periodo"), PeriodoDto.class);
+			PeriodoDto periodoDto = gson.fromJson(jsonObject.get(ServiceConstants.PERIODO), PeriodoDto.class);
 			
 			periodoService.modificaPeriodo(periodoDto);
 
@@ -83,7 +85,7 @@ public class PeriodoRecurso {
 			JsonObject jsonObject = new JsonParser().parse(jsonPeriodo).getAsJsonObject();
 			GsonBuilder builder = new GsonBuilder();
 			Gson gson = builder.create();
-			PeriodoDto periodoDto = gson.fromJson(jsonObject.get("periodo"), PeriodoDto.class);
+			PeriodoDto periodoDto = gson.fromJson(jsonObject.get(ServiceConstants.PERIODO), PeriodoDto.class);
 			periodoDto = periodoService.agregaPeriodo(periodoDto);
 			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, periodoDto);
 		}
@@ -105,7 +107,7 @@ public class PeriodoRecurso {
 		@PermitAll
 		public Response buscaPeriodoPorClaveUsuario(@QueryParam("claveUsuario") String claveUsuario) {
 			
-			PeriodoDto periodo=periodoService.buscaPeriodoPorClaveUsuario(claveUsuario);
+			PeriodoDto periodo = periodoService.buscaPeriodoPorClaveUsuario(claveUsuario);
 			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,periodo );
 		}
 		
@@ -115,7 +117,9 @@ public class PeriodoRecurso {
 		@Path("generaPeriodoVacacional")	
 		@PermitAll
 		public Response generaPeriodoVacacional(@RequestParam String inicio, @RequestParam String descripcion,@RequestParam boolean activo) {
-			System.out.println("datos recibidos: "+" fechhaInicio: "+inicio+" descripcion: "+descripcion+" activo: "+activo);
+			logger.info("datos recibidos-- fechhaInicio: {}", inicio);
+			logger.info("descripcion: {} ", descripcion);
+			logger.info(" activo: {} ",activo);
 			periodoService.generaPeriodoVacacional(inicio, descripcion, activo);
 			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 		}
@@ -130,7 +134,7 @@ public class PeriodoRecurso {
 			GsonBuilder builder = new GsonBuilder();
 			Gson gson = builder.create();
 			PeriodoDto periodoDto = gson.fromJson(jsonObject.get("periodo"), PeriodoDto.class);
-			System.out.println("periodoRecurso method--modificaestatusPeriodo-- idPeriodo: "+periodoDto.getIdPeriodo()+" +activo: "+periodoDto.getActivo() );
+			logger.info("periodoRecurso method--modificaestatusPeriodo-- idPeriodo: {} ",periodoDto.getIdPeriodo()+" activo: "+periodoDto.getActivo() );
 			periodoDto = periodoService.cambiaEstatusPeriodo(periodoDto);
 			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, periodoDto);
 		}
