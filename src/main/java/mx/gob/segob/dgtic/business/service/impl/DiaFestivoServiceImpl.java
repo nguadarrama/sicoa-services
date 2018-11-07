@@ -26,9 +26,9 @@ public class DiaFestivoServiceImpl implements DiaFestivoService {
 		
 	}
 
-	public DiaFestivoDto buscaDiaFestivo(Integer id_festivo){
+	public DiaFestivoDto buscaDiaFestivo(Integer idFestivo){
 		
-		return diaFestivoRules.buscaDiaFestivo(id_festivo);
+		return diaFestivoRules.buscaDiaFestivo(idFestivo);
 		
 	}
 

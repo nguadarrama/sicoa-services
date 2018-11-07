@@ -19,7 +19,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import mx.gob.segob.dgtic.business.service.CargaInicialService;
 import mx.gob.segob.dgtic.business.service.UsuarioService;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
@@ -31,16 +30,15 @@ public class UsuarioRecurso {
 
 	@Autowired 
 	private UsuarioService usuarioService;
-	
-	@Autowired 
-	private CargaInicialService cargaInicialService;
+
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("cargaInicial")
 	@PermitAll
 	public Response cargaInicial(){
-		return null; //ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, usuarioService.cargaInicial());
+		return null; 
+		/**ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, usuarioService.cargaInicial()); **/
 	}
 	
 	@GET
@@ -48,7 +46,7 @@ public class UsuarioRecurso {
 	@Path("obtieneUsuarios")	
 	@PermitAll
 	public Response obtieneUsuarios() {
-			//cargaInicialService.cargaInicial();
+			/**cargaInicialService.cargaInicial(); **/
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, usuarioService.obtenerListaUsuarios());
 	}
 	

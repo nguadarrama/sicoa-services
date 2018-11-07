@@ -1,6 +1,8 @@
 package mx.gob.segob.dgtic.webservices.recursos;
 
 
+import java.io.FileNotFoundException;
+
 import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -24,6 +26,7 @@ import com.google.gson.JsonParser;
 
 import mx.gob.segob.dgtic.business.service.AsistenciaService;
 import mx.gob.segob.dgtic.business.service.HorarioService;
+import mx.gob.segob.dgtic.business.service.constants.ServiceConstants;
 import mx.gob.segob.dgtic.comun.sicoa.dto.GeneraReporteArchivo;
 import mx.gob.segob.dgtic.comun.sicoa.dto.IncidenciaDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
@@ -77,7 +80,7 @@ public class AsistenciaRecurso {
 			@QueryParam("cveCoordinador") String cveCoordinador) {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistenciaEmpleadoRangoCoordinador(claveEmpleado, nombre, 
-				paterno, materno, nivel, !tipo.equals("null") ? Integer.parseInt(tipo) : 0, !estado.equals("null") ? Integer.parseInt(estado) : 0, inicio, fin, unidadAdministrativa, cveCoordinador));
+				paterno, materno, nivel, !tipo.equals(ServiceConstants.NULL) ? Integer.parseInt(tipo) : 0, !estado.equals(ServiceConstants.NULL) ? Integer.parseInt(estado) : 0, inicio, fin, unidadAdministrativa, cveCoordinador));
 	}
 	
 	@GET
@@ -97,7 +100,7 @@ public class AsistenciaRecurso {
 			@QueryParam("unidad") String unidadAdministrativa) {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistenciaEmpleadoRangoDireccion(claveEmpleado, nombre, 
-				paterno, materno, nivel, !tipo.equals("null") ? Integer.parseInt(tipo) : 0, !estado.equals("null") ? Integer.parseInt(estado) : 0, inicio, fin, unidadAdministrativa));
+				paterno, materno, nivel, !tipo.equals(ServiceConstants.NULL) ? Integer.parseInt(tipo) : 0, !estado.equals(ServiceConstants.NULL) ? Integer.parseInt(estado) : 0, inicio, fin, unidadAdministrativa));
 	}
 	
 	@GET
@@ -118,9 +121,9 @@ public class AsistenciaRecurso {
 		JsonObject jsonObject = new JsonParser().parse(jsonIncidencia).getAsJsonObject();
 		
 		GsonBuilder builder = new GsonBuilder();
-		builder.setDateFormat("yyyy-MM-dd");
+		builder.setDateFormat(ServiceConstants.YYYY_MM_DD);
 		Gson gson = builder.create();
-		IncidenciaDto incidencia = gson.fromJson(jsonObject.get("incidencia"), IncidenciaDto.class);
+		IncidenciaDto incidencia = gson.fromJson(jsonObject.get(ServiceConstants.INCIDENCIA), IncidenciaDto.class);
 		
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.creaIncidencia(incidencia));
 	}
@@ -134,9 +137,9 @@ public class AsistenciaRecurso {
 		JsonObject jsonObject = new JsonParser().parse(jsonDescuento).getAsJsonObject();
 		
 		GsonBuilder builder = new GsonBuilder();
-		builder.setDateFormat("yyyy-MM-dd");
+		builder.setDateFormat(ServiceConstants.YYYY_MM_DD);
 		Gson gson = builder.create();
-		IncidenciaDto descuento = gson.fromJson(jsonObject.get("incidencia"), IncidenciaDto.class);
+		IncidenciaDto descuento = gson.fromJson(jsonObject.get(ServiceConstants.INCIDENCIA), IncidenciaDto.class);
 		
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.creaDescuento(descuento));
 	}
@@ -150,9 +153,9 @@ public class AsistenciaRecurso {
 		JsonObject jsonObject = new JsonParser().parse(jsonIncidencia).getAsJsonObject();
 		
 		GsonBuilder builder = new GsonBuilder();
-		builder.setDateFormat("yyyy-MM-dd");
+		builder.setDateFormat(ServiceConstants.YYYY_MM_DD);
 		Gson gson = builder.create();
-		IncidenciaDto incidencia = gson.fromJson(jsonObject.get("incidencia"), IncidenciaDto.class);
+		IncidenciaDto incidencia = gson.fromJson(jsonObject.get(ServiceConstants.INCIDENCIA), IncidenciaDto.class);
 		
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.dictaminaIncidencia(incidencia));
 	}
@@ -166,9 +169,9 @@ public class AsistenciaRecurso {
 		JsonObject jsonObject = new JsonParser().parse(jsonIncidencia).getAsJsonObject();
 		
 		GsonBuilder builder = new GsonBuilder();
-		builder.setDateFormat("yyyy-MM-dd");
+		builder.setDateFormat(ServiceConstants.YYYY_MM_DD);
 		Gson gson = builder.create();
-		IncidenciaDto incidencia = gson.fromJson(jsonObject.get("incidencia"), IncidenciaDto.class);
+		IncidenciaDto incidencia = gson.fromJson(jsonObject.get(ServiceConstants.INCIDENCIA), IncidenciaDto.class);
 		
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.aplicaDescuento(incidencia));
 	}
@@ -178,12 +181,12 @@ public class AsistenciaRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("formatoJustificacion")	
 	@PermitAll
-	public Response formatoJustificacion(@RequestParam String jsonFormatoJustificacion) {
+	public Response formatoJustificacion(@RequestParam String jsonFormatoJustificacion) throws FileNotFoundException {
 		JsonObject jsonObject = new JsonParser().parse(jsonFormatoJustificacion).getAsJsonObject();
 		
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
-		FormatoIncidencia generaReporteArchivo = gson.fromJson(jsonObject.get("generaReporteArchivo"), FormatoIncidencia.class);
+		FormatoIncidencia generaReporteArchivo = gson.fromJson(jsonObject.get(ServiceConstants.GENERA_REPORTE_ARCHIVO), FormatoIncidencia.class);
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,asistenciaService.generaFormatoJustificacion(generaReporteArchivo));
 	}
@@ -193,12 +196,12 @@ public class AsistenciaRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("formatoDescuento")	
 	@PermitAll
-	public Response formatoDescuento(@RequestParam String jsonFormatoDescuento) {
+	public Response formatoDescuento(@RequestParam String jsonFormatoDescuento) throws FileNotFoundException {
 		JsonObject jsonObject = new JsonParser().parse(jsonFormatoDescuento).getAsJsonObject();
 		
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
-		FormatoIncidencia generaReporteArchivo = gson.fromJson(jsonObject.get("generaReporteArchivo"), FormatoIncidencia.class);
+		FormatoIncidencia generaReporteArchivo = gson.fromJson(jsonObject.get(ServiceConstants.GENERA_REPORTE_ARCHIVO), FormatoIncidencia.class);
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,asistenciaService.generaFormatoDescuento(generaReporteArchivo));
 	}
@@ -222,7 +225,7 @@ public class AsistenciaRecurso {
 			@QueryParam("permisos") String permisos) {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.reporteCoordinador(claveEmpleado, nombre, 
-				paterno, materno, nivel, !tipo.equals("null") ? Integer.parseInt(tipo) : 0, !estado.equals("null") ? Integer.parseInt(estado) : 0, inicio, 
+				paterno, materno, nivel, !tipo.equals(ServiceConstants.NULL) ? Integer.parseInt(tipo) : 0, !estado.equals(ServiceConstants.NULL) ? Integer.parseInt(estado) : 0, inicio, 
 						fin, unidadAdministrativa, cveCoordinador, permisos));
 	}
 	
@@ -244,7 +247,7 @@ public class AsistenciaRecurso {
 			@QueryParam("permisos") String permisos) {
 		
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.reporteDireccion(claveEmpleado, nombre, 
-				paterno, materno, nivel, !tipo.equals("null") ? Integer.parseInt(tipo) : 0, !estado.equals("null") ? Integer.parseInt(estado) : 0, inicio, fin, unidadAdministrativa, permisos));
+				paterno, materno, nivel, !tipo.equals(ServiceConstants.NULL) ? Integer.parseInt(tipo) : 0, !estado.equals(ServiceConstants.NULL) ? Integer.parseInt(estado) : 0, inicio, fin, unidadAdministrativa, permisos));
 	}
 	
 }

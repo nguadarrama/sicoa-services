@@ -1,6 +1,5 @@
 package mx.gob.segob.dgtic.business.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ public class CargaInicialServiceImpl  implements CargaInicialService{
 	
 	@Override
 	public void cargaInicial() {
-		List<UsuarioDto> listaUsuariosRecuperados = new ArrayList<UsuarioDto>();
+		List<UsuarioDto> listaUsuariosRecuperados;
 		listaUsuariosRecuperados = cargaInicialRules.recuperarUsuariosCargaInicial();
 		PerfilDto perfilDto = new PerfilDto();
 		perfilDto.setClavePerfil("3");

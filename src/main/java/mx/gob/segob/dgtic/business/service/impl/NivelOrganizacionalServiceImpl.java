@@ -4,16 +4,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import mx.gob.segob.dgtic.business.rules.catalogo.NivelOrganizacionalRules;
 import mx.gob.segob.dgtic.business.service.NivelOrganizacionalService;
+import mx.gob.segob.dgtic.business.service.base.ServiceBase;
 import mx.gob.segob.dgtic.comun.sicoa.dto.NivelOrganizacionalDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
 
 @Service
-public class NivelOrganizacionalServiceImpl implements NivelOrganizacionalService{
+public class NivelOrganizacionalServiceImpl extends ServiceBase implements NivelOrganizacionalService{
 
 	
 	@Autowired
@@ -23,17 +22,16 @@ public class NivelOrganizacionalServiceImpl implements NivelOrganizacionalServic
 	@Override
 	public NivelOrganizacionalDto creaNivel(NivelOrganizacionalDto nivelDto) {
 		NivelOrganizacionalDto nivel = new NivelOrganizacionalDto();
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		/********************************************************************************
-		 * Verificando que no exista el horario en el nivel organizacional a dar de alta
+		 * VERIFICANDO QUE NO EXISTA EL HORARIO EN EL NIVEL ORGANIZACIONAL A DAR DE ALTA
 		 ********************************************************************************/
 		boolean existe = false;
-		//existe = nivelOrganizacionalRules.existeNivel(nivelDto.getIdHorario());
-		Horario horario = new Horario();
-		horario = buscaHorario(nivelDto.getIdHorario());
-		System.out.println("horario devuelto: Hora Entrada "+horario.getHoraEntrada().toString()+" -  Hora Salida "+horario.getHoraSalida().toString());
+		existe = nivelOrganizacionalRules.existeNivel(nivelDto.getIdHorario());
+		Horario horario = buscaHorario(nivelDto.getIdHorario());
+		
+		logger.info("Hora Entrada: {}", horario.getHoraEntrada());
+		logger.info("Hora Salida: {}",horario.getHoraSalida());
 		if(existe) {
-			System.out.println("El horario ya existe en el nivel");
 			nivel.setMensaje("El registro ya existe en el sistema, favor de validar. ");
 		}
 		else {
@@ -42,14 +40,15 @@ public class NivelOrganizacionalServiceImpl implements NivelOrganizacionalServic
 			nivelDto.setHorario("Hora Entrada "+horario.getHoraEntrada().toString()+" -  Hora Salida "+horario.getHoraSalida().toString());
 			
 		nivel = nivelOrganizacionalRules.agregaNivel(nivelDto);
-		System.out.println("NivelCreado--"+gson.toJson(nivel));
+		logger.info("NivelCreado: {}", "");
+		gson.toJson(nivel);
 		/**********************************************************************
-		 * Aqui se actualiza el id_horario a todos los empleados que forman
-		 * parte del nivel seleccionado
+		 *AQUI SE ACTUALIZA  id_horario A TODOS LOS EMPLEADOS QUE FORMAN
+		 *PARTE DEL NIVEL SELECCIONADO
 		 **********************************************************************/
 		actualizaHorarioEmpleado(nivelDto.getIdHorario(), nivelDto.getNivel());
-		} // fin de else	
-		System.out.println("reutn periodoServiceImpl-- method--agregaPeriodo: "+nivel);
+		} 	
+		logger.info("reutn periodoServiceImpl-- method--agregaPeriodo: {}",nivel);
 		return nivel;
 	}
 
@@ -69,17 +68,15 @@ public class NivelOrganizacionalServiceImpl implements NivelOrganizacionalServic
 	@Override
 	public NivelOrganizacionalDto modificaNivel(NivelOrganizacionalDto nivelDto) {
 		NivelOrganizacionalDto nv = new NivelOrganizacionalDto();
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		Horario horario = new Horario();
-		horario = buscaHorario(nivelDto.getIdHorario());
+		Horario horario = buscaHorario(nivelDto.getIdHorario());
 		nv.setIdNivel(nivelDto.getIdNivel());
 		nv.setIdHorario(nivelDto.getIdHorario());
 		nv.setHorario("Hora Entrada "+horario.getHoraEntrada().toString()+" -  Hora Salida "+horario.getHoraSalida().toString());
-		
-		System.out.println("NivelOrgServiceImpl--method--modificaNivel: "+gson.toJson(nv));
+		logger.info("NivelOrgServiceImpl--method--modificaNivel: {} "," ");
+		gson.toJson(nv);
 		nv =  nivelOrganizacionalRules.modificaNivel(nv);
 		/********************************************
-		 * Actualizando la tabla m_usuario.idHorario
+		 *ACTUALIZANDO LA TABLA m_usuario.idHorario
 		 ********************************************/
 		nivelOrganizacionalRules.actualizaHorarioEmpleado(nivelDto.getIdHorario(), nivelDto.getNivel());
 		return nv;

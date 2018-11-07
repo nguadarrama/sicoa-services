@@ -1,8 +1,6 @@
 package mx.gob.segob.dgtic.webservices.recursos;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -12,26 +10,22 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
 import mx.gob.segob.dgtic.business.service.VacacionPeriodoService;
-import mx.gob.segob.dgtic.comun.sicoa.dto.PeriodoDto;
+import mx.gob.segob.dgtic.business.service.base.ServiceBase;
 import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionPeriodoDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
-import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
 @Path("catalogo")
 @Component
-public class VacacionPeriodoRecurso {
+public class VacacionPeriodoRecurso extends ServiceBase{
 
 	@Autowired
 	private VacacionPeriodoService vacacionPeriodoService;
@@ -98,14 +92,14 @@ public class VacacionPeriodoRecurso {
 		String datoUsuario="claveUsuario";
 		String usuario =""+ jsonObject.get(datoUsuario);
 		usuario=usuario.replace("\"", "");
-		System.out.println("clave para usuario "+usuario);
+		logger.info("clave para usuario: {} ",usuario);
 		String dato="idPeriodo";
 		String id =""+ jsonObject.get(dato);
 		id=id.replace("\"", "");
-		System.out.println("id "+id);
+		logger.info("id : {} ",id);
 		
 				Integer idPeriodo=Integer.parseInt(id);
-				System.out.println("clave para periodo "+idPeriodo);
+				logger.info("clave para periodo: {} ",idPeriodo);
 				return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, vacacionPeriodoService.consultaVacacionPeriodoPorClaveUsuarioYPeriodo(idPeriodo, usuario));
 		        
 			
@@ -118,11 +112,11 @@ public class VacacionPeriodoRecurso {
 	@PermitAll
 	public Response obtenerUsuariosVacacionesPorFiltros(@QueryParam("claveUsuario") String claveUsuario, @QueryParam("nombre") String nombre, @QueryParam("apellidoPaterno") String apellidoPaterno, @QueryParam("apellidoMaterno") String apellidoMaterno, @QueryParam("idUnidad") String idUnidad) {
 		
-		List<VacacionPeriodoDto> lista = new ArrayList<>();
+		List<VacacionPeriodoDto> lista;
 		lista= vacacionPeriodoService.obtenerUsuariosConVacacionesPorFiltros(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, idUnidad);
-		System.out.println("pasa por aqui "+lista.size());
+		logger.info("pasa por aqui: {} ",lista.size());
 		for(VacacionPeriodoDto vacacion: lista){
-			System.out.println("DatoSSSSSSSSSSSSSSSSSSSSSSSS"+vacacion.getIdUsuario().getClaveUsuario());
+			logger.info("DatoSSSSSSSSSSSSSSSSSSSSSSSS: {} ",vacacion.getIdUsuario().getClaveUsuario());
 		}
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, lista);
 	}

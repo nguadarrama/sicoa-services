@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="justificacion_incidencias" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="278501ae-7448-4c4b-9795-a8055ee58510">
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="52"/>
-	<property name="ireport.y" value="528"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="nombre" class="java.lang.String"/>
 	<parameter name="unidad" class="java.lang.String"/>
 	<parameter name="comision" class="java.lang.String"/>
@@ -30,7 +30,7 @@
 				<text><![CDATA[DIRECCIÓN DE ADMINISTRACIÓN DE PERSONAL]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="63" y="83" width="437" height="14" uuid="82eb07e6-6424-4003-b5e2-a6d19b66aad5"/>
+				<reportElement x="63" y="94" width="437" height="14" uuid="82eb07e6-6424-4003-b5e2-a6d19b66aad5"/>
 				<textElement textAlignment="Center"/>
 				<text><![CDATA[AVISO DE COMISIÓN OFICIAL]]></text>
 			</staticText>

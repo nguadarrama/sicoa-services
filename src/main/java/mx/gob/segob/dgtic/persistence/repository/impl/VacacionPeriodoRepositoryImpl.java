@@ -157,7 +157,7 @@ public class VacacionPeriodoRepositoryImpl implements VacacionPeriodoRepository{
 	public VacacionPeriodoDto consultaVacacionPeriodoPorClaveUsuarioYPeriodo(Integer idPeriodo, String claveUsuario){
 		StringBuilder qry = new StringBuilder();
 		System.out.println("Dato claveUsuario "+claveUsuario+" idPeriodo "+idPeriodo);
-		qry.append("select vacacion.id_vacacion, vacacion.dias ");
+		qry.append("select vacacion.id_vacacion, vacacion.dias, usuario.cve_m_usuario ");
         qry.append("from r_periodo periodo, m_vacacion_periodo vacacion , m_usuario usuario ");
         qry.append("where vacacion.activo=true and vacacion.id_usuario=usuario.id_usuario and vacacion.dias>0 and periodo.activo=true and usuario.cve_m_usuario = :claveUsuario and periodo.id_periodo = :idPeriodo and vacacion.id_periodo=periodo.id_periodo order by vacacion.fecha_inicio asc limit 1 ");
         
@@ -166,8 +166,11 @@ public class VacacionPeriodoRepositoryImpl implements VacacionPeriodoRepository{
         parametros.addValue("idPeriodo", idPeriodo);
         Map<String, Object> informacionConsulta = nameParameterJdbcTemplate.queryForMap(qry.toString(), parametros);
         VacacionPeriodoDto vacacion= new VacacionPeriodoDto();
+        UsuarioDto usuario= new UsuarioDto();
         		vacacion.setIdVacacion((Integer)informacionConsulta.get("id_vacacion"));
         		vacacion.setDias((Integer)informacionConsulta.get("dias"));
+        		usuario.setClaveUsuario((String)informacionConsulta.get("cve_m_usuario"));
+        		vacacion.setIdUsuario(usuario);
         return vacacion;
        // return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<VacacionPeriodoDto>(VacacionPeriodoDto.class));
 	}

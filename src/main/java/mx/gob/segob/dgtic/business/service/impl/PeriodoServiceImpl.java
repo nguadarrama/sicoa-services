@@ -4,14 +4,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import mx.gob.segob.dgtic.business.rules.catalogo.PeriodoRules;
 import mx.gob.segob.dgtic.business.rules.catalogo.UsuarioRules;
 import mx.gob.segob.dgtic.business.rules.catalogo.VacacionPeriodoRules;
@@ -34,10 +29,8 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 	@Override
 	public List<PeriodoDto> obtenerListaPeriodos() {
 		List<PeriodoDto> listaP;
-		System.out.println("PeriodoServiceImpl");
 		listaP = periodoRules.obtenerListaPeriodos();
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		logger.info(" listaObtenida: "+gson.toJson(listaP.size()));
+		gson.toJson(listaP);
 		return listaP;
 	}
 
@@ -48,12 +41,7 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 	
 	@Override
 	public PeriodoDto buscaPeriodo(Integer idPeriodo) {
-		// PeriodoDto periodoDto=null;
-		// periodoDto= periodoRules.buscaPeriodo(idPeriodo);
 		return periodoRules.buscaPeriodo(idPeriodo);
-		// System.out.println("periodo "+periodoDto.getIdPerfil());
-
-		// return perfilDto;
 	}
 
 	@Override
@@ -65,23 +53,24 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 	@Override
 	public PeriodoDto agregaPeriodo(PeriodoDto periodoDto) {
 		PeriodoDto periodo = new PeriodoDto();
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		Date parsedInicio = periodoDto.getFechaInicio();
 		Date parsedFin =  periodoDto.getFechaFin();
 
 		java.sql.Date fechaInicio = new java.sql.Date(parsedInicio.getTime());
 		java.sql.Date fechaFin = new java.sql.Date(parsedFin.getTime());
 
-		// se suman 1.5 años a la fecha fin para incluirla en la fecha de termino de vacaciones
+		/******************************************
+		 * SE SUMAN 1.5 AÑOS A LA FECHA FIN PARA
+		 * INCLUIRLA EN LA FECHA DE TERMINO
+		 *****************************************/
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		logger.info("fechaFin= "+fechaFin);
-		/**
-		 * Verificando que no exista el periodo a dar de alta
-		 */
+		logger.info("fechaFin: {}",fechaFin);
+		/*****************************************************
+		 * VERIFICANDO QUE NO EXISTA EL PERIODO A DAR DE ALTA
+		 *****************************************************/
 		boolean existe = false;
 		existe = periodoRules.existePeriodo(sdf.format(fechaInicio));
 		if(existe) {
-			System.out.println("El periodo ya existe");
 			periodo.setMensaje("El periodo ya se encuentra registrado, verifique por favor. ");
 		}
 		else {
@@ -91,34 +80,30 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 			periodoDto.setActivo(periodoDto.getActivo());
 			
 		periodo = periodoRules.agregaPeriodo(periodoDto);
-		System.out.println("PeriodoCreado--"+gson.toJson(periodo));
-		logger.info("periodo: "+periodo);
+		logger.info("periodo: [{}]",periodo);
 			Calendar c2 = Calendar.getInstance();
 			c2.setTime(periodoDto.getFechaInicio());
 			c2.add(Calendar.MONTH, -6); 
 			parsedInicio =  c2.getTime();
-			System.out.println("fecha -6meses: "+parsedInicio);
+			logger.info("fecha -6meses: {}",parsedInicio);
 			String fecha = sdf.format(parsedInicio);
-			logger.info("periodo cs = "+c2);
+			logger.info("periodo cs: {}",c2);
 			int estatusPeriodo = 1; 
 			/************************************************************
-			* este estatus correspondera al que se obtenga al dar de alta
-			* el periodo de vacaciones en la tabla estatus
+			* ESTE ESTATUS CORRESPONDE AL QUE SE OBTENGA AL DAR DE ALTA
+			* EL PERIODO DE VACACIONES EN LA TABLA ESTATUS
 			* ***********************************************************/
 			List<UsuarioDto> usuarios = usuarioRules.obtenerListaUsuariosActivos(fecha);
-			
-//			System.out.println("usuarios devueltos PeriodoService: "+gson.toJson(usuarios));
 			List<PeriodoDto> periodos = periodoRules.topPeriodo();
 			for(UsuarioDto user :usuarios) {
 				/*************************************************************
-				 * Aqui se agregan los periodos a todos los usuarios devueltos
+				 * AGREGANDO PERIODOS A LOS USUARIOS ENCONTRADOS
 				 *************************************************************/
 				int idUltimo = periodos.get(0).getIdPeriodo();
-//				System.out.println("ultimoIdPeriodo: "+idUltimo);
+				/** System.out.println("ultimoIdPeriodo: "+idUltimo); **/
 				vacacionRules.generarVacacionesTodos(user.getIdUsuario(), idUltimo , estatusPeriodo, sdf.format(fechaInicio), 10, periodoDto.getActivo());
 			}
-		} // fin de else	
-		System.out.println("reutn periodoServiceImpl-- method--agregaPeriodo: "+periodo);
+		}
 		return periodo;
 	}
 
@@ -134,7 +119,9 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 
 	@Override
 	public void  generaPeriodoVacacional(String inicio, String descripcion, boolean activo) {
-		
+		/**
+		 *  
+		 */
 	}
 	
 	@Transactional

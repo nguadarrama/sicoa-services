@@ -224,7 +224,8 @@ public class AutenticacionServiceImpl extends ServiceBase implements Autenticaci
 
 	@Override
 	public Boolean cambiarPassword(String password, String claveUsuario) {
-		Boolean resultado=autenticacionRules.cambiarPassword(claveUsuario, password);
+		Boolean resultado;
+		resultado =  autenticacionRules.cambiarPassword(claveUsuario, password);
 		return resultado;
 	}
 }

@@ -21,6 +21,7 @@ import com.google.gson.JsonParser;
 
 import mx.gob.segob.dgtic.business.service.ArchivoService;
 import mx.gob.segob.dgtic.business.service.JustificacionService;
+import mx.gob.segob.dgtic.business.service.base.ServiceBase;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.JustificacionDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
@@ -28,7 +29,7 @@ import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
 @Path("catalogo")
 @Component
-public class ArchivoRecurso {
+public class ArchivoRecurso extends ServiceBase{
 
 	@Autowired
 	private ArchivoService archivoService;
@@ -52,7 +53,7 @@ public class ArchivoRecurso {
 	@Path("buscaArchivo")	
 	@PermitAll
 	public Response buscaArchivo(@QueryParam("id") Integer id) {
-		System.out.println("IdArchivo en recurso "+id);
+		logger.info("IdArchivo en recurso: {} ",id);
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, archivoService.buscaArchivo(id));
 	}
 	
@@ -81,7 +82,7 @@ public class ArchivoRecurso {
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		ArchivoDto archivoDto = gson.fromJson(jsonObject.get("archivo"), ArchivoDto.class);
-		System.out.println("archivo en recurso "+archivoDto.getArchivo());
+		logger.info("archivo en recurso: {} ",archivoDto.getArchivo());
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, archivoService.agregaArhivo(archivoDto));
 	}

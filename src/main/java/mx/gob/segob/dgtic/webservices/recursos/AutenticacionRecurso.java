@@ -29,14 +29,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import mx.gob.segob.dgtic.business.service.AutenticacionService;
 import mx.gob.segob.dgtic.comun.exception.ReglaNegocioException;
-import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
 import mx.gob.segob.dgtic.comun.transport.dto.autenticacion.UsuarioAcceso;
 import mx.gob.segob.dgtic.comun.util.resteasy.token.exception.TokenBuilderException;
@@ -173,7 +170,7 @@ public class AutenticacionRecurso extends RecursoBase {
 		return response;
 	}
 	
-	/*@PUT
+	/**@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("cambiaContrasenia")
@@ -187,7 +184,7 @@ public class AutenticacionRecurso extends RecursoBase {
 		response=ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 		
 		return response;
-	}*/
+	}**/
 	
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
@@ -196,16 +193,21 @@ public class AutenticacionRecurso extends RecursoBase {
 	@PermitAll
 	public Response cambiaContrasenia(@RequestParam String jsonContrasenia) {
 		JsonObject jsonObject = new JsonParser().parse(jsonContrasenia).getAsJsonObject();
-		List<String> datos = new ArrayList<String>();
+		List<String> datos = new ArrayList<>();
 		
 		String datoUsuario="usuario";
 		String usuario =""+ jsonObject.get(datoUsuario);
 		String contrasenia =""+ jsonObject.get("contrasenia");
 		contrasenia=contrasenia.replace("\"", "");
 		usuario=usuario.replace("\"", "");
-		System.out.println("usuario recibido "+usuario +" contrasenia "+contrasenia);
-		Boolean resultado=autenticacionService.cambiarPassword(contrasenia,usuario);
-		if(resultado==true){
+		logger.info("usuario recibido: {} ",usuario);
+		logger.info("contrasenia: {}", contrasenia );
+		boolean resultado = false;
+		resultado = autenticacionService.cambiarPassword(contrasenia,usuario);
+		/**
+		 * Consultar resultado
+		 */
+		if(!resultado){
 			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 		}else{
 			return ResponseJSONGenericoUtil.getRespuestaError(StatusResponse.NOT_MODIFIED, datos, "Fallo la actualización");

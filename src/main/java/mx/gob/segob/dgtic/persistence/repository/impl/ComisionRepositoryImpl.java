@@ -105,6 +105,7 @@ public class ComisionRepositoryImpl implements ComisionRepository{
         usuarioDto.setApellidoMaterno((String)informacionConsulta.get("apellido_materno"));
         usuarioDto.setIdPuesto((String)informacionConsulta.get("id_puesto"));
         usuarioDto.setFechaIngreso((Date)informacionConsulta.get("fecha_ingreso"));
+        System.out.println("Fecha ingreso usuario "+ usuarioDto.getFechaIngreso());
         usuarioDto.setRfc((String)informacionConsulta.get("rfc"));
         usuarioDto.setIdUnidad((Integer)informacionConsulta.get("id_unidad"));
         usuarioDto.setNombreUnidad((String)informacionConsulta.get("nombre_unidad"));
@@ -133,7 +134,7 @@ public class ComisionRepositoryImpl implements ComisionRepository{
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        System.out.println("informacionConsulta.get "+fechaInicio+" "+fechaFin);
+        System.out.println("FechaInicio: "+fechaInicio+" FechaFin: "+fechaFinal + " FechaRegistro: " + fechaRegistro);
         comisionDto.setFechaInicio(fechaInicio);
         comisionDto.setFechaFin(fechaFinal);
         comisionDto.setFechaRegistro(fechaRegistro);
@@ -149,12 +150,14 @@ public class ComisionRepositoryImpl implements ComisionRepository{
 		
 	}
 
-	@Override
-	public void modificaComision(ComisionDto comisionDto) {
-		StringBuilder qry = new StringBuilder();
-		qry.append("UPDATE m_comision SET fecha_inicio= :fechaInicio, fecha_fin = :fechaFin, dias = :dias, comision = :comision, id_horario = :idHorario ");
-		qry.append("WHERE id_comision = :idComision");
-		
+  @Override
+  public ComisionDto modificaComision(ComisionDto comisionDto) {
+    StringBuilder qry = new StringBuilder();
+    Integer i = 0;
+    qry.append(
+        "UPDATE m_comision SET fecha_inicio= :fechaInicio, fecha_fin = :fechaFin, dias = :dias, comision = :comision, id_horario = :idHorario ");
+    qry.append("WHERE id_comision = :idComision");
+
     MapSqlParameterSource parametros = new MapSqlParameterSource();
     parametros.addValue("idComision", comisionDto.getIdComision());
     parametros.addValue("fechaInicio", comisionDto.getFechaInicio());
@@ -163,9 +166,21 @@ public class ComisionRepositoryImpl implements ComisionRepository{
     parametros.addValue("comision", comisionDto.getComision());
     parametros.addValue("idHorario", comisionDto.getIdHorario().getIdHorario());
 
-    nameParameterJdbcTemplate.update(qry.toString(), parametros);
-		
-	}
+    try {
+      i = nameParameterJdbcTemplate.update(qry.toString(), parametros);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    if (i == 1) {
+      comisionDto.setMensaje("El registro de comisión se actualizó correctamente.");
+    } else {
+      comisionDto
+          .setMensaje("Se ha generado un error al actualizar comisión, revise la información");
+    }
+
+    return comisionDto;
+
+  }
 	
   @Override
   public ComisionDto modificaComisionEstatusArchivo(ComisionDto comisionDto) {

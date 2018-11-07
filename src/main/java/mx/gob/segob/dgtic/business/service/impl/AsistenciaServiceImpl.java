@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -19,12 +17,12 @@ import org.springframework.stereotype.Service;
 
 import mx.gob.segob.dgtic.business.rules.asistencia.AsistenciaRules;
 import mx.gob.segob.dgtic.business.service.AsistenciaService;
+import mx.gob.segob.dgtic.business.service.constants.ServiceConstants;
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.IncidenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.reporte;
 import mx.gob.segob.dgtic.comun.util.FormatoIncidencia;
 import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
-
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
@@ -49,7 +47,7 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 	@Override
 	public List<AsistenciaDto> buscaAsistenciaEmpleadoRango(String claveEmpleado, String inicio, String fin) {
 		
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
+		SimpleDateFormat formatter = new SimpleDateFormat(ServiceConstants.YYYY_MM_DD); 
 		java.sql.Date fechaInicio = null;
 		java.sql.Date fechaFin = null;
 		
@@ -70,7 +68,7 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 				
 				
 			} catch (ParseException e) {
-				logger.warn("Error al convertir la fecha en búsqueda de asistencia: " + e.getMessage());
+				logger.info(" Error al convertir la fecha en búsqueda de asistencia: {} ", e.getMessage());
 			}
 		}
 		
@@ -78,11 +76,11 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 	}
 	
 	@Override
-	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(String cve_m_usuario, String nombre, String paterno,
+	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(String cveMusuario, String nombre, String paterno,
 			String materno, String nivel, Integer tipo, Integer estado, String fechaInicial, String fechaFinal,
 			String unidadAdministrativa, String cveCoordinador) {
 		
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
+		SimpleDateFormat formatter = new SimpleDateFormat(ServiceConstants.YYYY_MM_DD); 
 		java.sql.Date fechaInicio = null;
 		java.sql.Date fechaFin = null;
 		
@@ -101,20 +99,20 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 				c.add(Calendar.DAY_OF_MONTH, 1);  
 				fechaFin.setTime(c.getTimeInMillis());
 			} catch (ParseException e) {
-				logger.warn("Error al convertir la fecha en búsqueda de asistencia: " + e.getMessage());
+				logger.warn("Error al convertir la fecha en búsqueda de asistencia: {} ", e.getMessage());
 			}
 		}
 		
-		return asistenciaRules.buscaAsistenciaEmpleadoRangoCoordinador(cve_m_usuario, nombre,
+		return asistenciaRules.buscaAsistenciaEmpleadoRangoCoordinador(cveMusuario, nombre,
 				paterno, materno, nivel, tipo, estado, fechaInicio, fechaFin, unidadAdministrativa, cveCoordinador);
 	}
 	
 	@Override
-	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoDireccion(String cve_m_usuario, String nombre, String paterno,
+	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoDireccion(String cveMusuario, String nombre, String paterno,
 			String materno, String nivel, Integer tipo, Integer estado, String fechaInicial, String fechaFinal,
 			String unidadAdministrativa) {
 		
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
+		SimpleDateFormat formatter = new SimpleDateFormat(ServiceConstants.YYYY_MM_DD); 
 		java.sql.Date fechaInicio = null;
 		java.sql.Date fechaFin = null;
 		
@@ -133,11 +131,11 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 				c.add(Calendar.DAY_OF_MONTH, 1);  
 				fechaFin.setTime(c.getTimeInMillis());
 			} catch (ParseException e) {
-				logger.warn("Error al convertir la fecha en búsqueda de asistencia: " + e.getMessage());
+				logger.warn("Error al convertir la fecha en búsqueda de asistencia: {} ", e.getMessage());
 			}
 		}
 		
-	    	return asistenciaRules.buscaAsistenciaEmpleadoRangoDireccion(cve_m_usuario, nombre, 
+	    	return asistenciaRules.buscaAsistenciaEmpleadoRangoDireccion(cveMusuario, nombre, 
 					paterno, materno, nivel, tipo, estado, fechaInicio, fechaFin, unidadAdministrativa);
 	}
 
@@ -167,26 +165,20 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 	}
 
 	@Override
-	public reporte generaFormatoJustificacion(FormatoIncidencia generaReporteArchivo) {
+	public reporte generaFormatoJustificacion(FormatoIncidencia generaReporteArchivo) throws FileNotFoundException {
 		reporte repo = new reporte();
 		byte[] output= null;
-		URI uri = null;
-		
+		String f = "/documentos/sicoa/jasper/asistencia/justificacion/justificacion_incidencias.jrxml";
 		try {
-			uri = this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI();
-			String url = uri.toString().replace("vfs:/", "");
+
 			InputStream template = null;
-			try {
-				//ClassLoader classLoader = getClass().getClassLoader();
-				File file = new File("/documentos/sicoa/jasper/asistencia/justificacion/justificacion_incidencias.jrxml");
+
+				File file = new File(f);
 				template = new FileInputStream(file);
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+
 			JasperReport jasperReport=JasperCompileManager.compileReport(template);
 			JRDataSource dataSource= new JREmptyDataSource();
-			Map<String,Object> parametros = new HashMap<String, Object>();
+			Map<String,Object> parametros = new HashMap<>();
 			parametros.put("nombre", generaReporteArchivo.getNombre());
 			parametros.put("unidad", generaReporteArchivo.getUnidadAdministrativa());
 			parametros.put("fechaActual", generaReporteArchivo.getFechaActual());
@@ -195,34 +187,27 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 			output = JasperExportManager.exportReportToPdf (jasperPrint); 
 			repo.setNombre(output);
 			
-		} catch (JRException | URISyntaxException e) {
-			logger.warn("Errora al generar formato justificación -> " + this.getClass());
-			e.printStackTrace();
+		} catch (JRException e) {
+			logger.warn("Errora al generar formato justificación -> {} ",this.getClass());
+			logger.error(" Error: {} ",e);
 		}
 		return repo;
 	}
 	
 	@Override
-	public reporte generaFormatoDescuento(FormatoIncidencia generaReporteArchivo) {
+	public reporte generaFormatoDescuento(FormatoIncidencia generaReporteArchivo) throws FileNotFoundException {
 		reporte repo = new reporte();
 		byte[] output= null;
-		URI uri = null;
-		
+		String f = "/documentos/sicoa/jasper/asistencia/descuento/descuento_incidencias.jrxml";
 		try {
-			//uri = this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI();
-			//String url = uri.toString().replace("vfs:/", "");
 			InputStream template = null;
-			try {
-				//ClassLoader classLoader = getClass().getClassLoader();
-				File file = new File("/documentos/sicoa/jasper/asistencia/descuento/descuento_incidencias.jrxml");
+		
+				File file = new File(f);
 				template = new FileInputStream(file);
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+		
 			JasperReport jasperReport=JasperCompileManager.compileReport(template);
 			JRDataSource dataSource= new JREmptyDataSource();
-			Map<String,Object> parametros = new HashMap<String, Object>();
+			Map<String,Object> parametros = new HashMap<>();
 			parametros.put("nombre", generaReporteArchivo.getNombre());
 			parametros.put("fechaActual", generaReporteArchivo.getFechaActual());
 			parametros.put("cve_m_usuario", generaReporteArchivo.getCve_m_usuario());
@@ -231,14 +216,14 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 			repo.setNombre(output);
 			
 		} catch (JRException e) {
-			logger.warn("Errora al generar formato descuento -> " + this.getClass());
-			e.printStackTrace();
+			logger.warn("Errora al generar formato descuento ->: {} ",this.getClass());
+			logger.error("Error: {}", e);
 		}
 		return repo;
 	}
 
 	@Override
-	public List<AsistenciaDto> reporteDireccion(String cve_m_usuario, String nombre, String paterno, String materno,
+	public List<AsistenciaDto> reporteDireccion(String cveMusuario, String nombre, String paterno, String materno,
 			String nivel, Integer tipo, Integer estado, String fechaInicial, String fechaFinal,
 			String unidadAdministrativa, String permisos) {
 
@@ -261,20 +246,20 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 				c.add(Calendar.DAY_OF_MONTH, 1);  
 				fechaFin.setTime(c.getTimeInMillis());
 			} catch (ParseException e) {
-				logger.warn("Error al convertir la fecha en búsqueda de asistencia: " + e.getMessage());
+				logger.warn("Error al convertir la fecha en búsqueda de asistencia: {}", e.getMessage());
 			}
 		}
 		
-    	return asistenciaRules.reporteDireccion(cve_m_usuario, nombre, 
+    	return asistenciaRules.reporteDireccion(cveMusuario, nombre, 
 					paterno, materno, nivel, tipo, estado, fechaInicio, fechaFin, unidadAdministrativa, permisos);
 	}
 
 	@Override
-	public List<AsistenciaDto> reporteCoordinador(String cve_m_usuario, String nombre, String paterno, String materno,
+	public List<AsistenciaDto> reporteCoordinador(String cveMusuario, String nombre, String paterno, String materno,
 			String nivel, Integer tipo, Integer estado, String fechaInicial, String fechaFinal,
 			String unidadAdministrativa, String cveCoordinador, String permisos) {
 
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
+		SimpleDateFormat formatter = new SimpleDateFormat(ServiceConstants.YYYY_MM_DD); 
 		java.sql.Date fechaInicio = null;
 		java.sql.Date fechaFin = null;
 		
@@ -293,11 +278,11 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 				c.add(Calendar.DAY_OF_MONTH, 1);  
 				fechaFin.setTime(c.getTimeInMillis());
 			} catch (ParseException e) {
-				logger.warn("Error al convertir la fecha en búsqueda de asistencia: " + e.getMessage());
+				logger.warn("Error al convertir la fecha en búsqueda de asistencia: {}", e.getMessage());
 			}
 		}
 				
-		return asistenciaRules.reporteCoordinador(cve_m_usuario, nombre,
+		return asistenciaRules.reporteCoordinador(cveMusuario, nombre,
 				paterno, materno, nivel, tipo, estado, fechaInicio, fechaFin, unidadAdministrativa, cveCoordinador, permisos);
 	}
 	

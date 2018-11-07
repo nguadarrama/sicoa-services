@@ -14,8 +14,8 @@ public class DashServiceImpl implements DashService {
 	private DashRules dashRules;
 
 	@Override
-	public DashBoardDto dashBoard(Integer id_usuario) {
-		return dashRules.dashBoard(id_usuario);
+	public DashBoardDto dashBoard(Integer idUsuario) {
+		return dashRules.dashBoard(idUsuario);
 	}
 
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import mx.gob.segob.dgtic.business.rules.catalogo.LicenciaMedicaRules;
 import mx.gob.segob.dgtic.business.service.LicenciaMedicaService;
+import mx.gob.segob.dgtic.business.service.base.ServiceBase;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.LicenciaMedicaDto;
@@ -18,7 +19,7 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.LicenciaMedicaDtoAux;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 
 @Service
-public class LicenciaMedicaServiceImpl implements LicenciaMedicaService {
+public class LicenciaMedicaServiceImpl extends ServiceBase implements LicenciaMedicaService {
 
 	@Autowired
 	private LicenciaMedicaRules licenciaMedicaRules;
@@ -62,10 +63,10 @@ public class LicenciaMedicaServiceImpl implements LicenciaMedicaService {
     	try {
     		fechaInicial = df.parse(licenciaMedicaDto.getFechaInicioAux());
     		fechaFinal=df.parse(licenciaMedicaDto.getFechaFinAux());
-			System.out.println("fechaInicio "+fechaInicial+" fechaInicial "+fechaInicial);
+    		logger.info("fechaInicio: {} ",fechaInicial);
+    		logger.info("fechaInicial: {} ",fechaInicial);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("error: {}",e);
 		}
     	licencia.setDias(licenciaMedicaDto.getDias());
     	EstatusDto estatus = new EstatusDto();
