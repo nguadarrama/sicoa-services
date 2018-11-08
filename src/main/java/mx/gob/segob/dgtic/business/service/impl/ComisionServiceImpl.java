@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.jfree.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +36,11 @@ import net.sf.jasperreports.engine.JasperReport;
 
 @Service
 public class ComisionServiceImpl extends RecursoBase implements ComisionService {
+  
+  private static final String COMISIONDTO_ENVIO_LOGGER = "ComisionDto Envio: {}";
+  private static final String EXCEPTION_LOGGER = "Exception: {}";
+  private static final String RUTA_JASPER = "/documentos/sicoa/jasper/comision/comisiones.jrxml";
+  
 
   @Autowired
   private ComisionRules comisionRules;
@@ -55,7 +59,6 @@ public class ComisionServiceImpl extends RecursoBase implements ComisionService 
 
   @Override
   public ComisionDto modificaComision(ComisionAux comisionAux) {
-    logger.info("ComisionAux service back: {}", gson.toJson(comisionAux));
     ComisionDto comisionDto = new ComisionDto();
     Date fechaInicial = null;
     Date fechaFinal = null;
@@ -66,8 +69,8 @@ public class ComisionServiceImpl extends RecursoBase implements ComisionService 
       try {
         fechaInicial = df.parse(comisionAux.getFechaInicio());
         fechaFinal = df.parse(comisionAux.getFechaFin());
-      } catch (ParseException ex) {
-        logger.info("Exception: {}", ex.getMessage());
+      } catch (ParseException e) {
+        logger.error(EXCEPTION_LOGGER, e.getMessage());
       }
       comisionDto.setFechaInicio(fechaInicial);
       comisionDto.setFechaFin(fechaFinal);
@@ -81,9 +84,8 @@ public class ComisionServiceImpl extends RecursoBase implements ComisionService 
     comisionDto.setIdHorario(horario);
     comisionDto.setIdComision(comisionAux.getIdComision());
     
-    if (Log.isInfoEnabled()) {
-      logger.debug("ComisionDto Envio: {}", gson.toJson(comisionDto));
-    }
+    String comisionDtoJson = gson.toJson(comisionDto);
+    logger.info(COMISIONDTO_ENVIO_LOGGER, comisionDtoJson);
 
     return comisionRules.modificaComision(comisionDto);
 
@@ -116,7 +118,7 @@ public class ComisionServiceImpl extends RecursoBase implements ComisionService 
       fechaFinal = df.parse(comisionAux.getFechaFin());
       fechaSolicitud = df.parse(comisionAux.getFechaRegistro());
     } catch (ParseException e) {
-      logger.info("Exception: {}", e.getMessage());
+      logger.error(EXCEPTION_LOGGER, e.getMessage());
     }
     comisionDto.setFechaInicio(fechaInicial);
     comisionDto.setFechaFin(fechaFinal);
@@ -126,7 +128,9 @@ public class ComisionServiceImpl extends RecursoBase implements ComisionService 
     Horario horario = new Horario();
     horario.setIdHorario(comisionAux.getIdHorario());
     comisionDto.setIdHorario(horario);
-    logger.info("Enviar a Rules");
+    
+    String comisionDtoJson = gson.toJson(comisionDto);
+    logger.info(COMISIONDTO_ENVIO_LOGGER, comisionDtoJson);
     return comisionRules.agregaComision(comisionDto);
 
   }
@@ -164,49 +168,35 @@ public class ComisionServiceImpl extends RecursoBase implements ComisionService 
     byte[] output = null;
     try {
       InputStream template = null;
-      try {
-        File file = new File("/documentos/sicoa/jasper/comision/comisiones.jrxml");
-        template = new FileInputStream(file);
-      } catch (FileNotFoundException e1) {
-        e1.printStackTrace();
-      }
-      if (template != null) {
-        JasperReport jasperReport = JasperCompileManager.compileReport(template);
-        System.out.println("Datos " + generarReporteArchivo.getNombre());
-        JRDataSource dataSource = new JREmptyDataSource();
-        Map<String, Object> parametros = new HashMap<String, Object>();
-        parametros.put("nombre", generarReporteArchivo.getNombre());
-        parametros.put("unidad", generarReporteArchivo.getUnidad());
-        parametros.put("comision", generarReporteArchivo.getComision());
-        DateFormat df = new SimpleDateFormat("MMM dd, yyyy");
-        Date fechaInicio = null;
-        Date fechaFin = null;
+      File file = new File(RUTA_JASPER);
+      template = new FileInputStream(file);
+      JasperReport jasperReport = JasperCompileManager.compileReport(template);
+      JRDataSource dataSource = new JREmptyDataSource();
+      Map<String, Object> parametros = new HashMap<>();
+      parametros.put("nombre", generarReporteArchivo.getNombre());
+      parametros.put("unidad", generarReporteArchivo.getUnidad());
+      parametros.put("comision", generarReporteArchivo.getComision());
+      DateFormat df = new SimpleDateFormat("MMM dd, yyyy");
+      Date fechaInicio = null;
+      Date fechaFin = null;
 
-        try {
-          if (generarReporteArchivo.getFechaInicio() != null) {
-            fechaInicio = df.parse(generarReporteArchivo.getFechaInicio());
-          }
-          if (generarReporteArchivo.getFechaFinal() != null) {
-            fechaFin = df.parse(generarReporteArchivo.getFechaFinal());
-          }
-        } catch (ParseException e) {
-          logger.info("Exception: {}", e.getMessage());
-        }
-        parametros.put("fechaInicio", fechaInicio);
-        parametros.put("fechaFinal", fechaFin);
-        parametros.put("horario", generarReporteArchivo.getHorario());
-
-        System.out.println("Parametros para el archivo " + generarReporteArchivo.getNombre()
-            + " unidad " + generarReporteArchivo.getUnidad() + " comision "
-            + generarReporteArchivo.getComision() + " fechaInicio "
-            + generarReporteArchivo.getFechaInicio());
-        JasperPrint jasperPrint =
-            JasperFillManager.fillReport(jasperReport, parametros, dataSource);
-        output = JasperExportManager.exportReportToPdf(jasperPrint);
-        repo.setNombre(output);
+      if (generarReporteArchivo.getFechaInicio() != null) {
+        fechaInicio = df.parse(generarReporteArchivo.getFechaInicio());
       }
-    } catch (JRException e) {
-      e.printStackTrace();
+      if (generarReporteArchivo.getFechaFinal() != null) {
+        fechaFin = df.parse(generarReporteArchivo.getFechaFinal());
+      }
+      parametros.put("fechaInicio", fechaInicio);
+      parametros.put("fechaFinal", fechaFin);
+      parametros.put("horario", generarReporteArchivo.getHorario());
+
+      String generarReporteArchivoJson = gson.toJson(generarReporteArchivo);
+      logger.info("GenerarReporteArchivo: {}", generarReporteArchivoJson);
+      JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
+      output = JasperExportManager.exportReportToPdf(jasperPrint);
+      repo.setNombre(output);
+    } catch (JRException | ParseException | FileNotFoundException e) {
+      logger.error(EXCEPTION_LOGGER, e.getMessage());
     }
 
     return repo;
@@ -226,6 +216,9 @@ public class ComisionServiceImpl extends RecursoBase implements ComisionService 
     archivo.setIdArchivo(comisionAuxDto.getIdArchivo());
     comisionDto.setIdArchivo(archivo);
     comisionDto.setIdComision(comisionAuxDto.getIdComision());
+    
+    String comisionDtoJson = gson.toJson(comisionDto);
+    logger.info(COMISIONDTO_ENVIO_LOGGER, comisionDtoJson);
     return comisionRules.modificaComisionEstatusArchivo(comisionDto);
   }
 
