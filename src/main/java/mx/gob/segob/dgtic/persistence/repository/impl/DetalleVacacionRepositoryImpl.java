@@ -193,6 +193,7 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 	@Override
 	public DetalleVacacionDto agregaDetalleVacacion(DetalleVacacionDto detalleVacacionDto) {
 		Integer i = 0;
+		diasTotales=0;
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String fechaIni=sdf.format(detalleVacacionDto.getFechaInicio());
 		String fechaF=sdf.format(detalleVacacionDto.getFechaFin());
@@ -244,15 +245,27 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 	}
 
 	@Override
-	public void eliminaDetalleVacacion(Integer idDetalle) {
+	public DetalleVacacionDto eliminaDetalleVacacion(Integer idDetalle) {
+		DetalleVacacionDto detalleVacacion = new DetalleVacacionDto();
+		Integer i=0;
 		StringBuilder qry = new StringBuilder();
 		qry.append("DELETE FROM d_detalle_vacacion  WHERE id_detalle = :idDetalle");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idDetalle", idDetalle);
 
-		nameParameterJdbcTemplate.update(qry.toString(), parametros);
-		
+		try{
+			i= nameParameterJdbcTemplate.update(qry.toString(), parametros);
+			if(i == 1){
+				detalleVacacion.setMensaje("La eliminación de vacaciones se realizó correctamente.");
+			}else{
+				detalleVacacion.setMensaje("Se ha generado un error al eliminar vacaciones, revise la información");
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return detalleVacacion;
 	}
 
 	@Override
@@ -462,15 +475,18 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 		this.dias=dias;
 		String respuesta="";
 		Integer contador=0;
+		if(contador==0){
 		validaFechasVacaciones(this.claveUsuario, this.fechaInicio,this.dias , this.fechaFin);
-		if(bandera!=false){
-			contador++;
-		}else{
-			System.out.println("Contador "+contador);
+		contador++;
 		}
+		while(bandera!=false){
+			contador++;
+			validaFechasVacaciones(this.claveUsuario, this.fechaInicio,this.dias , this.fechaFin);
+		}
+			System.out.println("Contador "+contador);
 		if(diasTotales>10){
 			respuesta="Estas solicitando vacaciones un día inmediato posterior o anterior, a otra solicitud de vacaciones "
-					+ "que sumados dan más de 10 días, considera que tu solicitud puede ser rechazada";
+					+ "que sumados dan más de 10 días, considera que tu solicitud puede ser declinada";
 		}
 		
 		return respuesta;
@@ -524,6 +540,7 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 				System.out.println("Dia no festivo "+c1.getTime());
 			}
 		}
+	    Integer con=0;
 		for(DetalleVacacionDto vacacion: listaDiasVacaciones){
 			 Calendar diaInicio = Calendar.getInstance();
 			 Calendar diaFin = Calendar.getInstance();
@@ -533,24 +550,30 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 			if(c1.equals(diaFin)){
 				this.fechaInicio=diaInicio.getTime();
 				this.fechaFin=c2.getTime();
-				System.out.println("Dias que se deben sumar fechaFin "+vacacion.getDias());
-				diasTotales+=vacacion.getDias();
 				bandera=true;
+				con++;
+				System.out.println("Dias que se deben sumar fechaFin "+vacacion.getDias()+" bandera "+bandera);
+				diasTotales+=vacacion.getDias();
+				
 			}
 			
 			if(c2.equals(diaInicio)){
 				this.fechaInicio=diaInicio.getTime();
-				this.fechaFin=diaFin.getTime();
-				System.out.println("Dias que se deben sumar fechaInicio "+vacacion.getDias());
-				diasTotales+=vacacion.getDias();
 				bandera=true;
+				con++;
+				this.fechaFin=diaFin.getTime();
+				System.out.println("Dias que se deben sumar fechaInicio "+vacacion.getDias()+" bandera "+bandera);
+				diasTotales+=vacacion.getDias();
+				
 			}
-			
+		}
+		if(con==0){
+			bandera=false;
 		}
 		
 		
-		System.out.println("fechaInicio "+c1.getTime()); 
-		System.out.println("fechaFin "+c2.getTime()); 
+		System.out.println("fechaInicio "+this.fechaInicio); 
+		System.out.println("fechaFin "+this.fechaFin); 
 		System.out.println("Dias totales "+diasTotales);
 		return"Dias totales "+diasTotales;
 	}

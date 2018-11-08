@@ -99,10 +99,7 @@ public class DetalleVacacionRecurso extends ServiceBase{
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("eliminaDetalleVacacion")	
 	public Response eliminaDetalleVacacion(@QueryParam("id") Integer id) {
-		
-		detalleVacacionService.eliminaDetalleVacacion(id);
-
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.eliminaDetalleVacacion(id));
 	}
 	
 	@PUT

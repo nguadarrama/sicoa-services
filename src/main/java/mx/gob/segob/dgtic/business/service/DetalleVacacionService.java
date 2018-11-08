@@ -16,7 +16,7 @@ public interface DetalleVacacionService {
 	public DetalleVacacionDto buscaDetalleVacacion(Integer idDetalle);
 	public DetalleVacacionDto modificaDetalleVacacion(DetalleVacacionDto detalleVacacionDto);
 	public DetalleVacacionDto agregaDetalleVacacion(VacacionesAux detalleVacacionDto);
-	public void eliminaDetalleVacacion(Integer idDetalle);
+	public DetalleVacacionDto eliminaDetalleVacacion(Integer idDetalle);
 	public DetalleVacacionDto aceptaORechazaDetalleVacacion(DetalleVacacionDto detalleVacacionDto);
 	public List<DetalleVacacionDto> obtenerVacacionesPorFiltros(String claveUsuario, String nombre, String apellidoPaterno, String apellidoMaterno, String idUnidad, String idEstatus);
 	public List<DetalleVacacionDto> consultaVacacionesPropiasPorFiltros(String claveUsuario, String idPeriodo, String idEstatus, String pfechaInicio, String pfechaFin );

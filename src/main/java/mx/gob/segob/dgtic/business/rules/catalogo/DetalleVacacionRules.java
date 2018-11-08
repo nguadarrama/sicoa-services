@@ -88,8 +88,12 @@ public class DetalleVacacionRules {
 	    
 	}
 	
-	public void eliminaDetalleVacacion(Integer idDetalle){
-		detalleVacacionRepository.eliminaDetalleVacacion(idDetalle);
+	public DetalleVacacionDto eliminaDetalleVacacion(Integer idDetalle){
+		DetalleVacacionDto detalle= buscaDetalleVacacion(idDetalle);
+		VacacionPeriodoDto periodo= vacacionPeriodoRepository.buscaVacacionPeriodo(detalle.getIdVacacion().getIdVacacion());
+		periodo.setDias(periodo.getDias()+detalle.getDias());
+		vacacionPeriodoRepository.modificaVacacionPeriodo(periodo);
+		return detalleVacacionRepository.eliminaDetalleVacacion(idDetalle);
 	}
 	
 	public DetalleVacacionDto aceptaORechazaDetalleVacacion(DetalleVacacionDto detalleVacacionDto){

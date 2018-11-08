@@ -9,11 +9,11 @@ public class VacacionesAux {
 
 		
 	private Integer idDetalle;
-	private Integer idUsuario;
-	private Integer idVacacion;
+	private UsuarioDto idUsuario;
+	private VacacionPeriodoDto idVacacion;
 	private Integer idResponsable;
-	private Integer idArchivo;
-	private Integer idEstatus;
+	private ArchivoDto idArchivo;
+	private EstatusDto idEstatus;
 	private String fechaInicio;
 	private String fechaFin;
 	private Integer dias;
@@ -33,16 +33,16 @@ public class VacacionesAux {
 	public void setIdDetalle(Integer idDetalle) {
 		this.idDetalle = idDetalle;
 	}
-	public Integer getIdUsuario() {
+	public UsuarioDto getIdUsuario() {
 		return idUsuario;
 	}
-	public void setIdUsuario(Integer idUsuario) {
+	public void setIdUsuario(UsuarioDto idUsuario) {
 		this.idUsuario = idUsuario;
 	}
-	public Integer getIdVacacion() {
+	public VacacionPeriodoDto getIdVacacion() {
 		return idVacacion;
 	}
-	public void setIdVacacion(Integer idVacacion) {
+	public void setIdVacacion(VacacionPeriodoDto idVacacion) {
 		this.idVacacion = idVacacion;
 	}
 	public Integer getIdResponsable() {
@@ -51,16 +51,16 @@ public class VacacionesAux {
 	public void setIdResponsable(Integer idResponsable) {
 		this.idResponsable = idResponsable;
 	}
-	public Integer getIdArchivo() {
+	public ArchivoDto getIdArchivo() {
 		return idArchivo;
 	}
-	public void setIdArchivo(Integer idArchivo) {
+	public void setIdArchivo(ArchivoDto idArchivo) {
 		this.idArchivo = idArchivo;
 	}
-	public Integer getIdEstatus() {
+	public EstatusDto getIdEstatus() {
 		return idEstatus;
 	}
-	public void setIdEstatus(Integer idEstatus) {
+	public void setIdEstatus(EstatusDto idEstatus) {
 		this.idEstatus = idEstatus;
 	}
 	public String getFechaInicio() {
