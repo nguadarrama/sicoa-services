@@ -952,4 +952,17 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         return listaAsistencia;
 	}
 
+	@Override
+	public void eliminaAsistencia(Integer idAsistencia) {
+		StringBuilder qry = new StringBuilder();
+		qry.append("delete from m_asistencia  where id_asistencia = :idAsistencia");
+		
+		MapSqlParameterSource parametros = new MapSqlParameterSource();
+		parametros.addValue("idAsistencia", idAsistencia);
+
+			nameParameterJdbcTemplate.update(qry.toString(), parametros);
+			
+		
+	}
+
 }

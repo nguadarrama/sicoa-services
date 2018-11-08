@@ -37,4 +37,5 @@ public interface AsistenciaRepository {
 	public List<AsistenciaDto> reporteCoordinador(String cve_m_usuario, String nombre, String paterno, 
     		String materno, String nivel, Integer tipo, Integer estado, Date fechaInicial, Date fechaFinal, String unidadAdministrativa, Integer idUnidadCoordinador, String Permisos);
 	
+	public void eliminaAsistencia(Integer idAsistencia);
 }
