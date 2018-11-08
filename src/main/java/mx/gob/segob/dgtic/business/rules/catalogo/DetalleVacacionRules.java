@@ -60,6 +60,8 @@ public class DetalleVacacionRules {
 	}
 	
 	public DetalleVacacionDto agregaDetalleVacacion(DetalleVacacionDto detalleVacacionDto){
+		UsuarioDto usuario=usuarioRepository.buscaUsuarioPorId(detalleVacacionDto.getIdUsuario().getIdUsuario());
+		detalleVacacionDto.setIdUsuario(usuario);
 		//detalleVacacionRepository.agregaDetalleVacacion(detalleVacacionDto);
 		System.out.println("idVacacion en rules "+detalleVacacionDto.getIdVacacion().getIdVacacion());
 	    //ArchivoDto archivoDto = new ArchivoDto();
