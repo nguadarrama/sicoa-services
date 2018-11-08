@@ -1,7 +1,5 @@
 package mx.gob.segob.dgtic.webservices.recursos;
 
-
-import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -32,7 +30,6 @@ public class HorarioRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneHorarios")	
-	@PermitAll
 	public Response obtieneHorarios() {
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, horarioService.obtenerListaHorarios());
 	}
@@ -40,7 +37,6 @@ public class HorarioRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneHorariosCat")	
-	@PermitAll
 	public Response obtieneHorariosCat() {
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, horarioService.obtenerListaHorariosCatalogo());
 	}
@@ -48,7 +44,6 @@ public class HorarioRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("buscaHorario")	
-	@PermitAll
 	public Response buscaHorario(@QueryParam("id") Integer id) {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, horarioService.buscaHorario(id));
@@ -58,7 +53,6 @@ public class HorarioRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modificaHorario")	
-	@PermitAll
 	public Response modificaHorario(@RequestParam String jsonHorario) {
 		JsonObject jsonObject = new JsonParser().parse(jsonHorario).getAsJsonObject();
 		
@@ -74,7 +68,6 @@ public class HorarioRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agregaHorario")	
-	@PermitAll
 	public Response agregaaHorario(@RequestParam String jsonHorario) {
 		JsonObject jsonObject = new JsonParser().parse(jsonHorario).getAsJsonObject();
 		GsonBuilder builder = new GsonBuilder();
@@ -87,7 +80,6 @@ public class HorarioRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("eliminaHorario")	
-	@PermitAll
 	public Response eliminaHorario(@QueryParam("id") Integer id) {
 		horarioService.eliminaHorario(id);
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");

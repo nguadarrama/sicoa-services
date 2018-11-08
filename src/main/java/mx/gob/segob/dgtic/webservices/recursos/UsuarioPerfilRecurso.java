@@ -1,6 +1,5 @@
 package mx.gob.segob.dgtic.webservices.recursos;
 
-import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -34,7 +33,6 @@ public class UsuarioPerfilRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("consultaPerfilesUsuario")	
-	@PermitAll
 	public Response obtienePerfilesPorUsuario(@QueryParam("id") String id) {
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, usuarioPerfilService.consultaPerfilesPorUsuario(id));
 	}
@@ -43,7 +41,6 @@ public class UsuarioPerfilRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agregaEliminaPerfilesUsuario")	
-	@PermitAll
 	public Response agregaEliminaPerfilesUsuario(@RequestParam String jsonUsuarioPerfil) {
 		JsonObject jsonObject = new JsonParser().parse(jsonUsuarioPerfil).getAsJsonObject();
 		

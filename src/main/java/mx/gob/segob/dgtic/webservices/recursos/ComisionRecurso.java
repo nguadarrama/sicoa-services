@@ -1,6 +1,5 @@
 package mx.gob.segob.dgtic.webservices.recursos;
 
-import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -37,7 +36,6 @@ public class ComisionRecurso extends ServiceBase{
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("obtieneComisiones")
-  @PermitAll
   public Response obtieneComisiones() {
 
     return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,
@@ -47,7 +45,6 @@ public class ComisionRecurso extends ServiceBase{
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("buscaComision")
-  @PermitAll
   public Response buscaComision(@QueryParam("id") Integer id) {
 
     return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,
@@ -58,7 +55,6 @@ public class ComisionRecurso extends ServiceBase{
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("modificaComision")
-  @PermitAll
   public Response modificaComision(@RequestParam String jsonComision) {
     JsonObject jsonObject = new JsonParser().parse(jsonComision).getAsJsonObject();
 
@@ -74,7 +70,6 @@ public class ComisionRecurso extends ServiceBase{
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("agregaComision")
-  @PermitAll
   public Response agregaComision(@RequestParam String jsonComision) {
     JsonObject jsonObject = new JsonParser().parse(jsonComision).getAsJsonObject();
 
@@ -91,7 +86,6 @@ public class ComisionRecurso extends ServiceBase{
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("eliminaComision")
-  @PermitAll
   public Response eliminaComision(@QueryParam("id") Integer id) {
 
     comisionService.eliminaComision(id);
@@ -102,7 +96,6 @@ public class ComisionRecurso extends ServiceBase{
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("obtieneListaComisionPorFiltros")
-  @PermitAll
   public Response obtieneListaComisionPorFiltros(@QueryParam("claveUsuario") String claveUsuario,
       @QueryParam("idEstatus") String idEstatus, @QueryParam("fechaInicio") String fechaInicio,
       @QueryParam("fechaFin") String fechaFin) {
@@ -114,7 +107,6 @@ public class ComisionRecurso extends ServiceBase{
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("obtieneListaComisionPorFiltrosEmpleados")    
-  @PermitAll
   public Response obtieneListaComisionEmpleados(@QueryParam("claveUsuario") String claveUsuario,@QueryParam("idEstatus") String idEstatus, 
           @QueryParam("nombre") String nombre, @QueryParam("apellidoPaterno") String apellidoPaterno, @QueryParam("apellidoMaterno") String apellidoMaterno,
           @QueryParam("idUnidad") String idUnidad) {
@@ -125,7 +117,6 @@ public class ComisionRecurso extends ServiceBase{
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("obtieneComisionesPorUnidad")  
-  @PermitAll
   public Response obtieneComisionesPorUnidad(@QueryParam("idUnidad") String idUnidad, @QueryParam("claveUsuario") String claveUsuario,
           @QueryParam("nombre") String nombre, @QueryParam("apellidoPaterno") String apellidoPaterno, @QueryParam("apellidoMaterno")String apellidoMaterno) {
 
@@ -136,7 +127,6 @@ public class ComisionRecurso extends ServiceBase{
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("generarReporte")  
-  @PermitAll
   public Response generarReporte(@RequestParam String jsonDetalleVacacion) {
       JsonObject jsonObject = new JsonParser().parse(jsonDetalleVacacion).getAsJsonObject();
       GsonBuilder builder = new GsonBuilder();
@@ -149,7 +139,6 @@ public class ComisionRecurso extends ServiceBase{
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("modificaComisionEstatusArchivo") 
-  @PermitAll
   public Response modificaComisionEstatusArchivo(@RequestParam String jsonLicenciaMedica) {
       JsonObject jsonObject = new JsonParser().parse(jsonLicenciaMedica).getAsJsonObject();
       

@@ -1,6 +1,5 @@
 package mx.gob.segob.dgtic.webservices.recursos;
 
-import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -34,7 +33,6 @@ public class PerfilRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtienePerfiles")	
-	@PermitAll
 	public Response obtienePerfiles() {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, perfilService.obtenerListaPerfiles());
@@ -43,7 +41,6 @@ public class PerfilRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("buscaPerfil")	
-	@PermitAll
 	public Response buscaPerfil(@QueryParam("id") String id) {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, perfilService.buscaPerfil(id));
@@ -53,7 +50,6 @@ public class PerfilRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modificaPerfil")	
-	@PermitAll
 	public Response modificaPerfil(@RequestParam String jsonPerfil) {
 		JsonObject jsonObject = new JsonParser().parse(jsonPerfil).getAsJsonObject();
 		
@@ -70,7 +66,6 @@ public class PerfilRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agregaPerfil")	
-	@PermitAll
 	public Response agregaPerfil(@RequestParam String jsonPerfil) {
 		JsonObject jsonObject = new JsonParser().parse(jsonPerfil).getAsJsonObject();
 		
@@ -86,7 +81,6 @@ public class PerfilRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("eliminaPerfil")	
-	@PermitAll
 	public Response eliminaPerfil(@QueryParam("id") String id) {
 		
 		perfilService.eliminaPerfil(id);

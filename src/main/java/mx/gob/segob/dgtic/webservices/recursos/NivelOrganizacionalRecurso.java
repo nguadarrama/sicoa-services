@@ -1,6 +1,5 @@
 package mx.gob.segob.dgtic.webservices.recursos;
 
-import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -32,7 +31,6 @@ public class NivelOrganizacionalRecurso extends ServiceBase{
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtiene")	
-	@PermitAll
 	public Response obtenerListaNiveles() {
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, nivelOrganizacionalService.obtenerListaNiveles());
 	}
@@ -40,7 +38,6 @@ public class NivelOrganizacionalRecurso extends ServiceBase{
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneNivelesEmpleado")	
-	@PermitAll
 	public Response obtenerNivelesEmpleados() {
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, nivelOrganizacionalService.nivelesEmpleado());
 	}
@@ -49,7 +46,6 @@ public class NivelOrganizacionalRecurso extends ServiceBase{
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agrega")	
-	@PermitAll
 	public Response agregaPeriodo(@RequestParam String jsonNivelOrganizacional) {
 		JsonObject jsonObject = new JsonParser().parse(jsonNivelOrganizacional).getAsJsonObject();
 		GsonBuilder builder = new GsonBuilder();
@@ -62,7 +58,6 @@ public class NivelOrganizacionalRecurso extends ServiceBase{
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("busca")	
-	@PermitAll
 	public Response buscaPeriodo(@QueryParam ("idNivel") Integer idNivel) {
 		logger.info("llego a nivelRecurso idNivel: {} ",idNivel);
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, nivelOrganizacionalService.buscaNivel(idNivel));
@@ -72,7 +67,6 @@ public class NivelOrganizacionalRecurso extends ServiceBase{
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modifica")	
-	@PermitAll
 	public Response modificaNivel(@RequestParam String jsonNivel) {
 		JsonObject jsonObject = new JsonParser().parse(jsonNivel).getAsJsonObject();
 		GsonBuilder builder = new GsonBuilder();

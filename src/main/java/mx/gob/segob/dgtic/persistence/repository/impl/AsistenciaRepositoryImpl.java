@@ -652,7 +652,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		Boolean usuarioFueAgregadoAQuery = false;
 	       
         qry.append("SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus, ");
-        qry.append("i.id_estatus, i.descuento, ");
+        qry.append("i.id_estatus, i.descuento ");
         qry.append("FROM m_asistencia a ");
         qry.append("inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ");
         qry.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia ");

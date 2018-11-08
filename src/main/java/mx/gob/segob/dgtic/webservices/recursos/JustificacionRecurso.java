@@ -1,6 +1,5 @@
 package mx.gob.segob.dgtic.webservices.recursos;
 
-import javax.annotation.security.PermitAll;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -25,7 +24,6 @@ public class JustificacionRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneJustificaciones")
-	@PermitAll
 	public Response obtieneJustificacion(){
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, justificacionService.obtenerListaJustificaciones());
 	}
@@ -33,7 +31,6 @@ public class JustificacionRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneLista")
-	@PermitAll
 	public Response obtieneLista(){
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, justificacionService.obtenerLista());
 	}
@@ -41,7 +38,6 @@ public class JustificacionRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("buscaJustificacion")	
-	@PermitAll
 	public Response buscaJustificacion(@QueryParam("id") Integer id) {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, justificacionService.buscaJustificacion(id));
@@ -51,7 +47,6 @@ public class JustificacionRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("eliminaJustificacion")	
-	@PermitAll
 	public Response eliminaJustificacion(@QueryParam("id") Integer id) {
 		justificacionService.eliminaJustificacion(id);
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
