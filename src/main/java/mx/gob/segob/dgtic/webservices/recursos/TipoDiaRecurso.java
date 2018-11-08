@@ -1,6 +1,5 @@
 package mx.gob.segob.dgtic.webservices.recursos;
 
-import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -33,7 +32,6 @@ public class TipoDiaRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneTipoDias")
-	@PermitAll
 	public Response obtieneTipoDias(){
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, tipoDiaService.obtenerListaTipoDias());
 	}
@@ -41,7 +39,6 @@ public class TipoDiaRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("buscaTipoDia")	
-	@PermitAll
 	public Response buscaTipoDia(@QueryParam("id") Integer id) {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, tipoDiaService.buscaTipoDia(id));
@@ -51,7 +48,6 @@ public class TipoDiaRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modificaTipoDia")	
-	@PermitAll
 	public Response modificaTipoDia(@RequestParam String jsonTipoDia) {
 		JsonObject jsonObject = new JsonParser().parse(jsonTipoDia).getAsJsonObject();
 		
@@ -68,7 +64,6 @@ public class TipoDiaRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agregaTipoDia")	
-	@PermitAll
 	public Response agregaTipoDia(@RequestParam String jsonPermiso) {
 		JsonObject jsonObject = new JsonParser().parse(jsonPermiso).getAsJsonObject();
 		
@@ -84,7 +79,6 @@ public class TipoDiaRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("eliminaTipoDia")	
-	@PermitAll
 	public Response eliminaTipoDia(@QueryParam("id") Integer id) {
 		
 		tipoDiaService.eliminaTipoDia(id);

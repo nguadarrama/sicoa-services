@@ -1,6 +1,5 @@
 package mx.gob.segob.dgtic.webservices.recursos;
 
-import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -34,7 +33,6 @@ public class PermisoRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtienePermisos")	
-	@PermitAll
 	public Response obtienePermisos() {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, permisoService.obtenerListaPermisos());
@@ -43,7 +41,6 @@ public class PermisoRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("buscaPermiso")	
-	@PermitAll
 	public Response buscaPermiso(@QueryParam("id") String id) {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, permisoService.buscaPermiso(id));
@@ -53,7 +50,6 @@ public class PermisoRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modificaPermiso")	
-	@PermitAll
 	public Response modificaPermiso(@RequestParam String jsonPermiso) {
 		JsonObject jsonObject = new JsonParser().parse(jsonPermiso).getAsJsonObject();
 		
@@ -70,7 +66,6 @@ public class PermisoRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agregaPermiso")	
-	@PermitAll
 	public Response agregaPermiso(@RequestParam String jsonPermiso) {
 		JsonObject jsonObject = new JsonParser().parse(jsonPermiso).getAsJsonObject();
 		
@@ -86,7 +81,6 @@ public class PermisoRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("eliminaPermiso")	
-	@PermitAll
 	public Response eliminaPermiso(@QueryParam("id") String id) {
 		
 		permisoService.eliminaPermiso(id);

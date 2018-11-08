@@ -2,7 +2,6 @@
 package mx.gob.segob.dgtic.webservices.recursos;
 
 
-import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -33,7 +32,6 @@ public class DiaFestivoRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtiene")	
-	@PermitAll
 	public Response obtieneDiasFestivos() {
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, diaFestivoService.obtenerListaDiasFestivos());
 	}
@@ -41,7 +39,6 @@ public class DiaFestivoRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneCat")	
-	@PermitAll
 	public Response obtieneDiasFestivosCat() {
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, diaFestivoService.obtenerListaDiasFestivosCatalogo());
 	}
@@ -49,7 +46,6 @@ public class DiaFestivoRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("busca")	
-	@PermitAll
 	public Response buscaDiaFestivo(@QueryParam("id") Integer id) {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, diaFestivoService.buscaDiaFestivo(id));
@@ -60,7 +56,6 @@ public class DiaFestivoRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modifica")	
-	@PermitAll
 	public Response modificaDiaFestivo(@RequestParam String jsonDiaFestivo) {
 		
 		JsonObject jsonObject = new JsonParser().parse(jsonDiaFestivo).getAsJsonObject();
@@ -75,7 +70,6 @@ public class DiaFestivoRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agrega")	
-	@PermitAll
 	public Response agregaaHorario(@RequestParam String jsonDiaFestivo) {
 		
 		JsonObject jsonObject = new JsonParser().parse(jsonDiaFestivo).getAsJsonObject();
@@ -89,7 +83,6 @@ public class DiaFestivoRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("elimina")	
-	@PermitAll
 	public Response eliminaDiaFestivo(@QueryParam("id") Integer id) {
 		
 		diaFestivoService.eliminaDiaFestivo(id);
@@ -100,7 +93,6 @@ public class DiaFestivoRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneDiasActivos")	
-	@PermitAll
 	public Response obtieneDiasFestivosActivos() {
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, diaFestivoService.obtenerDiasFestivosActivos());
 	}

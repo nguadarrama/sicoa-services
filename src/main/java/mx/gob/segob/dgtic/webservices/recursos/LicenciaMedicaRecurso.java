@@ -1,6 +1,5 @@
 package mx.gob.segob.dgtic.webservices.recursos;
 
-import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -34,7 +33,6 @@ public class LicenciaMedicaRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneLicenciasMedicas")	
-	@PermitAll
 	public Response obtieneLicenciasMedicas() {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, licenciaMedicaService.obtenerListaLicenciaMedica());
@@ -43,7 +41,6 @@ public class LicenciaMedicaRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("buscaLicenciaMedica")	
-	@PermitAll
 	public Response buscaLicenciaMedica(@QueryParam("id") Integer id) {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, licenciaMedicaService.buscaLicenciaMedica(id));
@@ -53,7 +50,6 @@ public class LicenciaMedicaRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modificaLicenciaMedica")	
-	@PermitAll
 	public Response modificaLicenciaMedica(@RequestParam String jsonLicenciaMedica) {
 		JsonObject jsonObject = new JsonParser().parse(jsonLicenciaMedica).getAsJsonObject();
 		
@@ -70,7 +66,6 @@ public class LicenciaMedicaRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agregaLicenciaMedica")	
-	@PermitAll
 	public Response agregaLicenciaMedica(@RequestParam String jsonLicenciaMedica) {
 		JsonObject jsonObject = new JsonParser().parse(jsonLicenciaMedica).getAsJsonObject();
 		
@@ -86,7 +81,6 @@ public class LicenciaMedicaRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("eliminaLicenciaMedica")	
-	@PermitAll
 	public Response eliminaLicenciaMedica(@QueryParam("id") Integer id) {
 		
 		licenciaMedicaService.eliminaLicenciaMedica(id);
@@ -97,7 +91,6 @@ public class LicenciaMedicaRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneListaLicenciaMedicaPorFiltros")	
-	@PermitAll
 	public Response obtieneListaLicenciaMedicaPorFiltros(@QueryParam("claveUsuario") String claveUsuario,@QueryParam("idEstatus") String idEstatus, 
 			@QueryParam("fechaInicio") String fechaInicio, @QueryParam("fechaFin") String fechaFin) {
 
@@ -107,7 +100,6 @@ public class LicenciaMedicaRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneListaLicenciaMedicaEmpleados")	
-	@PermitAll
 	public Response obtieneListaLicenciaMedicaEmpleados(@QueryParam("claveUsuario") String claveUsuario,@QueryParam("idEstatus") String idEstatus, 
 			@QueryParam("nombre") String nombre, @QueryParam("apellidoPaterno") String apellidoPaterno, @QueryParam("apellidoMaterno") String apellidoMaterno,
 			@QueryParam("idUnidad") String idUnidad) {
@@ -118,7 +110,6 @@ public class LicenciaMedicaRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneLicenciasPorUnidad")	
-	@PermitAll
 	public Response obtieneLicenciasPorUnidad(@QueryParam("idUnidad") String idUnidad, @QueryParam("claveUsuario") String claveUsuario,
 			@QueryParam("nombre") String nombre, @QueryParam("apellidoPaterno") String apellidoPaterno, @QueryParam("apellidoMaterno")String apellidoMaterno) {
 
@@ -128,7 +119,6 @@ public class LicenciaMedicaRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("buscaDiasLicenciaMedica")	
-	@PermitAll
 	public Response buscaDiasLicenciaMedica(@QueryParam("claveUsuario") String claveUsuario) {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, licenciaMedicaService.consultaDiasLicenciaMedica(claveUsuario));

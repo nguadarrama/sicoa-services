@@ -1,7 +1,6 @@
 package mx.gob.segob.dgtic.webservices.recursos;
 
 import java.util.List;
-import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -33,7 +32,6 @@ public class VacacionPeriodoRecurso extends ServiceBase{
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneVacacionesPeriodos")	
-	@PermitAll
 	public Response obtieneVacacionesPeriodos() {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, vacacionPeriodoService.obtenerListaVacacionPeriodo());
@@ -42,7 +40,6 @@ public class VacacionPeriodoRecurso extends ServiceBase{
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("buscaVacacionPeriodo")	
-	@PermitAll
 	public Response buscaVacacionPeriodo(@QueryParam("id") Integer id) {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, vacacionPeriodoService.buscaVacacionPeriodo(id));
@@ -52,7 +49,6 @@ public class VacacionPeriodoRecurso extends ServiceBase{
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modificaVacacionPeriodo")	
-	@PermitAll
 	public Response modificaVacacionPeriodo(@RequestParam String jsonVacacionPeriodo) {
 		JsonObject jsonObject = new JsonParser().parse(jsonVacacionPeriodo).getAsJsonObject();
 		
@@ -69,7 +65,6 @@ public class VacacionPeriodoRecurso extends ServiceBase{
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agregaVacacionPeriodo")	
-	@PermitAll
 	public Response agregaVacacionPeriodo(@RequestParam String jsonVacacionPeriodo) {
 		JsonObject jsonObject = new JsonParser().parse(jsonVacacionPeriodo).getAsJsonObject();
 		
@@ -86,7 +81,6 @@ public class VacacionPeriodoRecurso extends ServiceBase{
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("buscaVacacionPeriodoPorClaveUsuarioYPeriodo")	
-	@PermitAll
 	public Response buscaVacacionPeriodoPorClaveUsuarioYPeriodo(@RequestParam String jsonVacaciones ) {
 		JsonObject jsonObject = new JsonParser().parse(jsonVacaciones).getAsJsonObject();
 		String datoUsuario="claveUsuario";
@@ -109,7 +103,6 @@ public class VacacionPeriodoRecurso extends ServiceBase{
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtenerUsuariosVacacionesPorFiltros")	
-	@PermitAll
 	public Response obtenerUsuariosVacacionesPorFiltros(@QueryParam("claveUsuario") String claveUsuario, @QueryParam("nombre") String nombre, @QueryParam("apellidoPaterno") String apellidoPaterno, @QueryParam("apellidoMaterno") String apellidoMaterno, @QueryParam("idUnidad") String idUnidad) {
 		
 		List<VacacionPeriodoDto> lista;

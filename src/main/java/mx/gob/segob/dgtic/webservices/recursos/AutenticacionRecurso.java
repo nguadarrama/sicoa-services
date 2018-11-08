@@ -190,7 +190,6 @@ public class AutenticacionRecurso extends RecursoBase {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("cambiaContrasenia")	
-	@PermitAll
 	public Response cambiaContrasenia(@RequestParam String jsonContrasenia) {
 		JsonObject jsonObject = new JsonParser().parse(jsonContrasenia).getAsJsonObject();
 		List<String> datos = new ArrayList<>();

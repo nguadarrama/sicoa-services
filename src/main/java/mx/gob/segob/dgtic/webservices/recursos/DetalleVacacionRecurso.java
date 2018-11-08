@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.util.List;
 
-import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -43,7 +42,6 @@ public class DetalleVacacionRecurso extends ServiceBase{
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneDetalleVacaciones")	
-	@PermitAll
 	public Response obtieneDetalleVacaciones() {
 		logger.info("Peticion de vacacionesRecurso");
 		List<DetalleVacacionDto> lista;
@@ -59,7 +57,6 @@ public class DetalleVacacionRecurso extends ServiceBase{
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("buscaDetalleVacacion")	
-	@PermitAll
 	public Response buscaDetalleVacacion(@QueryParam("id") Integer id) {
 		
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.buscaDetalleVacacion(id));
@@ -69,7 +66,6 @@ public class DetalleVacacionRecurso extends ServiceBase{
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modificaDetalleVacacion")	
-	@PermitAll
 	public Response modificaDetalleVacacion(@RequestParam String jsonDetalleVacacion) {
 		JsonObject jsonObject = new JsonParser().parse(jsonDetalleVacacion).getAsJsonObject();
 		
@@ -86,7 +82,6 @@ public class DetalleVacacionRecurso extends ServiceBase{
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agregaDetalleVacacion")	
-	@PermitAll
 	public Response agregaDetalleVacacion(@RequestParam String jsonDetalleVacacion) {
 		JsonObject jsonObject = new JsonParser().parse(jsonDetalleVacacion).getAsJsonObject();
 		
@@ -103,7 +98,6 @@ public class DetalleVacacionRecurso extends ServiceBase{
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("eliminaDetalleVacacion")	
-	@PermitAll
 	public Response eliminaDetalleVacacion(@QueryParam("id") Integer id) {
 		
 		detalleVacacionService.eliminaDetalleVacacion(id);
@@ -115,7 +109,6 @@ public class DetalleVacacionRecurso extends ServiceBase{
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("aceptaORechazaDetalleVacacion")	
-	@PermitAll
 	public Response aceptaORechazaDetalleVacacion(@RequestParam String jsonDetalleVacacion) {
 		JsonObject jsonObject = new JsonParser().parse(jsonDetalleVacacion).getAsJsonObject();
 		
@@ -129,7 +122,6 @@ public class DetalleVacacionRecurso extends ServiceBase{
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("consultaVacacionesPropiasPorFiltros")	
-	@PermitAll
 	public Response consultaVacacionesPropiasPorFiltros(@QueryParam("claveUsuario") String claveUsuario, @QueryParam("idEstatus") String idEstatus, @QueryParam("idPeriodo") String idPeriodo, @QueryParam("fechaInicio") String fechaInicio, @QueryParam("fechaFin") String fechaFin) {
 	/**	Integer nuevoIdPeriodo=null;
 		Integer nuevoIdEstatus=null;
@@ -159,7 +151,6 @@ public class DetalleVacacionRecurso extends ServiceBase{
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtenerVacacionesPorFiltros")	
-	@PermitAll
 	public Response obtenerVacacionesPorFiltros(@QueryParam("claveUsuario") String claveUsuario, @QueryParam("nombre") String nombre, @QueryParam("apellidoPaterno") String apellidoPaterno, @QueryParam("apellidoMaterno") String apellidoMaterno, @QueryParam("idUnidad") String idUnidad, @QueryParam("idEstatus") String idEstatus) {
 
 		
@@ -170,7 +161,6 @@ public class DetalleVacacionRecurso extends ServiceBase{
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("generaReporte")	
-	@PermitAll
 	public Response generaReporte(@RequestParam String jsonDetalleVacacion) throws FileNotFoundException, ParseException, JRException {
 		JsonObject jsonObject = new JsonParser().parse(jsonDetalleVacacion).getAsJsonObject();
 		GsonBuilder builder = new GsonBuilder();

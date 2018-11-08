@@ -1,6 +1,5 @@
 package mx.gob.segob.dgtic.webservices.recursos;
 
-import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -34,7 +33,6 @@ public class IncidenciaRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneIncidencias")	
-	@PermitAll
 	public Response obtieneIncidencias() {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, incidenciaService.obtenerListaIncidencias());
@@ -43,7 +41,6 @@ public class IncidenciaRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("buscaIncidencia")	
-	@PermitAll
 	public Response buscaIncidencia(@QueryParam("id") Integer id) {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, incidenciaService.buscaIncidencia(id));
@@ -53,7 +50,6 @@ public class IncidenciaRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modificaIncidencia")	
-	@PermitAll
 	public Response modificaIncidencia(@RequestParam String jsonIncidencia) {
 		JsonObject jsonObject = new JsonParser().parse(jsonIncidencia).getAsJsonObject();
 		
@@ -70,7 +66,6 @@ public class IncidenciaRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agregaIncidencia")	
-	@PermitAll
 	public Response agregaIncidencia(@RequestParam String jsonIncidencia) {
 		JsonObject jsonObject = new JsonParser().parse(jsonIncidencia).getAsJsonObject();
 		
@@ -86,7 +81,6 @@ public class IncidenciaRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("eliminaIncidencia")	
-	@PermitAll
 	public Response eliminaIncidencia(@QueryParam("id") Integer id) {
 		
 		incidenciaService.eliminaIncidencia(id);

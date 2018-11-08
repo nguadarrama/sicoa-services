@@ -1,6 +1,5 @@
 package mx.gob.segob.dgtic.webservices.recursos;
 
-import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -35,7 +34,6 @@ public class UsuarioRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("cargaInicial")
-	@PermitAll
 	public Response cargaInicial(){
 		return null; 
 		/**ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, usuarioService.cargaInicial()); **/
@@ -44,7 +42,6 @@ public class UsuarioRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneUsuarios")	
-	@PermitAll
 	public Response obtieneUsuarios() {
 			/**cargaInicialService.cargaInicial(); **/
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, usuarioService.obtenerListaUsuarios());
@@ -53,7 +50,6 @@ public class UsuarioRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("buscaUsuario")	
-	@PermitAll
 	public Response buscaUsuario(@QueryParam("id") String id) {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, usuarioService.buscaUsuario(id));
@@ -63,7 +59,6 @@ public class UsuarioRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modificaUsuario")	
-	@PermitAll
 	public Response modificaUsuario(@RequestParam String jsonUsuario) {
 		JsonObject jsonObject = new JsonParser().parse(jsonUsuario).getAsJsonObject();
 		
@@ -79,7 +74,6 @@ public class UsuarioRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("eliminaUsuario")	
-	@PermitAll
 	public Response eliminaUsuario(@QueryParam("id") String id) {
 		
 		usuarioService.eliminaUsuario(id);
@@ -90,7 +84,6 @@ public class UsuarioRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("reiniciaContrasenia")	
-	@PermitAll
 	public Response reiniciaContrasenia(@QueryParam("claveUsuario") String claveUsuario) {
 		
 		usuarioService.reiniciaContrasenia(claveUsuario);
@@ -101,7 +94,6 @@ public class UsuarioRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("buscaUsuarioPorId")	
-	@PermitAll
 	public Response buscaUsuarioPorId(@QueryParam("id") String id) {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, usuarioService.buscaUsuarioPorId(Integer.parseInt(id)));
@@ -110,7 +102,6 @@ public class UsuarioRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneJefes")	
-	@PermitAll
 	public Response obtieneJefesActivos() {
 		
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, usuarioService.obtenerListaJefes());

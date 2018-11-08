@@ -1,6 +1,5 @@
 package mx.gob.segob.dgtic.webservices.recursos;
 
-import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -34,7 +33,6 @@ public class UnidadAdministrativaRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneUnidadesAdministrativas")	
-	@PermitAll
 	public Response obtieneUnidadesAdministrativas() {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, unidadAdministrativaService.obtenerListaUnidadAdministrativa());
@@ -44,7 +42,6 @@ public class UnidadAdministrativaRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("consultaRegistraUsuarioUnidadAdministrativa")	
-	@PermitAll
 	public Response consultaRegistraUsuarioUnidadAdministrativa(@RequestParam String jsonUsuarioUnidadAdministrativa) {
 		JsonObject jsonObject = new JsonParser().parse(jsonUsuarioUnidadAdministrativa).getAsJsonObject();
 		
@@ -60,7 +57,6 @@ public class UnidadAdministrativaRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("consultaResponsable")	
-	@PermitAll
 	public Response consultaResponsable(@QueryParam("id") String id) {
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, unidadAdministrativaService.consultaResponsable(id));
 	}
@@ -68,7 +64,6 @@ public class UnidadAdministrativaRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneUnidadesAdministrativasCompletas")	
-	@PermitAll
 	public Response obtieneUnidadesAdministrativasCompletas() {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, unidadAdministrativaService.obtenerUnidadesAdministrativas());
@@ -77,7 +72,6 @@ public class UnidadAdministrativaRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneUnidades")	
-	@PermitAll
 	public Response obtieneUnidades() {
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, unidadAdministrativaService.obtieneUnidades());
 	}

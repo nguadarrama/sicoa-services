@@ -1,6 +1,5 @@
 package mx.gob.segob.dgtic.webservices.recursos;
 
-import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -35,7 +34,6 @@ public class PeriodoRecurso extends ServiceBase{
 		@GET
 		@Produces(MediaType.APPLICATION_JSON)
 		@Path("obtienePeriodos")	
-		@PermitAll
 		public Response obtienePeriodos() {
 
 			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, periodoService.obtenerListaPeriodos());
@@ -44,7 +42,6 @@ public class PeriodoRecurso extends ServiceBase{
 		@GET
 		@Produces(MediaType.APPLICATION_JSON)
 		@Path("obtienePeriodosCat")	
-		@PermitAll
 		public Response obtienePeriodosCat() {
 
 			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, periodoService.obtenerListaPeriodosCatalogo());
@@ -53,7 +50,6 @@ public class PeriodoRecurso extends ServiceBase{
 		@GET
 		@Produces(MediaType.APPLICATION_JSON)
 		@Path("buscaPeriodo")	
-		@PermitAll
 		public Response buscaPeriodo(@QueryParam("id") Integer id) {
 
 			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, periodoService.buscaPeriodo(id));
@@ -63,7 +59,6 @@ public class PeriodoRecurso extends ServiceBase{
 		@Produces(MediaType.APPLICATION_JSON)
 		@Consumes(MediaType.APPLICATION_JSON)
 		@Path("modificaPeriodo")	
-		@PermitAll
 		public Response modificaPeriodo(@RequestParam String jsonPeriodo) {
 			JsonObject jsonObject = new JsonParser().parse(jsonPeriodo).getAsJsonObject();
 			
@@ -80,7 +75,6 @@ public class PeriodoRecurso extends ServiceBase{
 		@Produces(MediaType.APPLICATION_JSON)
 		@Consumes(MediaType.APPLICATION_JSON)
 		@Path("agregaPeriodo")	
-		@PermitAll
 		public Response agregaPeriodo(@RequestParam String jsonPeriodo) {
 			JsonObject jsonObject = new JsonParser().parse(jsonPeriodo).getAsJsonObject();
 			GsonBuilder builder = new GsonBuilder();
@@ -93,7 +87,6 @@ public class PeriodoRecurso extends ServiceBase{
 		@GET
 		@Produces(MediaType.APPLICATION_JSON)
 		@Path("eliminaPeriodo")	
-		@PermitAll
 		public Response eliminaPeriodo(@QueryParam("id") Integer id) {
 			
 			periodoService.eliminaPeriodo(id);
@@ -104,7 +97,6 @@ public class PeriodoRecurso extends ServiceBase{
 		@GET
 		@Produces(MediaType.APPLICATION_JSON)
 		@Path("buscaPeriodoPorClaveUsuario")	
-		@PermitAll
 		public Response buscaPeriodoPorClaveUsuario(@QueryParam("claveUsuario") String claveUsuario) {
 			
 			PeriodoDto periodo = periodoService.buscaPeriodoPorClaveUsuario(claveUsuario);
@@ -115,7 +107,6 @@ public class PeriodoRecurso extends ServiceBase{
 		@Produces(MediaType.APPLICATION_JSON)
 		@Consumes(MediaType.APPLICATION_JSON)
 		@Path("generaPeriodoVacacional")	
-		@PermitAll
 		public Response generaPeriodoVacacional(@RequestParam String inicio, @RequestParam String descripcion,@RequestParam boolean activo) {
 			logger.info("datos recibidos-- fechhaInicio: {}", inicio);
 			logger.info("descripcion: {} ", descripcion);
@@ -128,7 +119,6 @@ public class PeriodoRecurso extends ServiceBase{
 		@Produces(MediaType.APPLICATION_JSON)
 		@Consumes(MediaType.APPLICATION_JSON)
 		@Path("modificaEstatusPeriodo")	
-		@PermitAll
 		public Response modificaestatusPeriodo(@RequestParam String jsonPeriodo) {
 			JsonObject jsonObject = new JsonParser().parse(jsonPeriodo).getAsJsonObject();
 			GsonBuilder builder = new GsonBuilder();

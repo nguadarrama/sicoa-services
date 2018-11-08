@@ -1,6 +1,5 @@
 package mx.gob.segob.dgtic.webservices.recursos;
 
-import javax.annotation.security.PermitAll;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -24,7 +23,6 @@ public class DashBoardRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("top")	
-	@PermitAll
 	public Response buscaJustificacion(@QueryParam("id") Integer id) {
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, dashService.dashBoard(id));
 	}

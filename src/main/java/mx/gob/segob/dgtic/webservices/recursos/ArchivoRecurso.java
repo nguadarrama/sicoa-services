@@ -1,6 +1,5 @@
 package mx.gob.segob.dgtic.webservices.recursos;
 
-import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -42,7 +41,6 @@ public class ArchivoRecurso extends ServiceBase{
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneArchivos")	
-	@PermitAll
 	public Response obtieneArchivos() {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, archivoService.obtenerListaArchivos());
@@ -51,7 +49,6 @@ public class ArchivoRecurso extends ServiceBase{
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("buscaArchivo")	
-	@PermitAll
 	public Response buscaArchivo(@QueryParam("id") Integer id) {
 		logger.info("IdArchivo en recurso: {} ",id);
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, archivoService.buscaArchivo(id));
@@ -61,7 +58,6 @@ public class ArchivoRecurso extends ServiceBase{
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modificaArchivo")	
-	@PermitAll
 	public Response modificaArchivo(@RequestParam String jsonArchivo) {
 		JsonObject jsonObject = new JsonParser().parse(jsonArchivo).getAsJsonObject();
 		
@@ -75,7 +71,6 @@ public class ArchivoRecurso extends ServiceBase{
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agregaArchivo")	
-	@PermitAll
 	public Response agregaArchivo(@RequestParam String jsonArchivo) {
 		JsonObject jsonObject = new JsonParser().parse(jsonArchivo).getAsJsonObject();
 		
@@ -90,7 +85,6 @@ public class ArchivoRecurso extends ServiceBase{
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("eliminaArchivo")	
-	@PermitAll
 	public Response eliminaArchivo(@QueryParam("id") Integer id) {
 		
 		archivoService.eliminaArchivo(id);
@@ -102,7 +96,6 @@ public class ArchivoRecurso extends ServiceBase{
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modificaJust")	
-	@PermitAll
 	public Response modificaJustificacion(@RequestParam String jsonJustificacion) {
 		
 		JsonObject jsonObject = new JsonParser().parse(jsonJustificacion).getAsJsonObject();
@@ -118,7 +111,6 @@ public class ArchivoRecurso extends ServiceBase{
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agregaJust")	
-	@PermitAll
 	public Response agregaJustificacion(@RequestParam String jsonJustificacion) {
 		JsonObject jsonObject = new JsonParser().parse(jsonJustificacion).getAsJsonObject();
 		GsonBuilder builder = new GsonBuilder();

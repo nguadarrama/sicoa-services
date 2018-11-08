@@ -1,6 +1,5 @@
 package mx.gob.segob.dgtic.webservices.recursos;
 
-import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -34,7 +33,6 @@ public class EstatusRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneEstatus")	
-	@PermitAll
 	public Response obtieneEstatus() {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, estatusService.obtenerListaEstatus());
@@ -43,7 +41,6 @@ public class EstatusRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("buscaEstatus")	
-	@PermitAll
 	public Response buscaEstatus(@QueryParam("id") Integer id) {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, estatusService.buscaEstatus(id));
@@ -53,7 +50,6 @@ public class EstatusRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modificaEstatus")	
-	@PermitAll
 	public Response modificaEstatus(@RequestParam String jsonEstatus) {
 		JsonObject jsonObject = new JsonParser().parse(jsonEstatus).getAsJsonObject();
 		
@@ -70,7 +66,6 @@ public class EstatusRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agregaEstatus")	
-	@PermitAll
 	public Response agregaEstatus(@RequestParam String jsonEstatus) {
 		JsonObject jsonObject = new JsonParser().parse(jsonEstatus).getAsJsonObject();
 		
@@ -86,7 +81,6 @@ public class EstatusRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("eliminaEstatus")	
-	@PermitAll
 	public Response eliminaEstatus(@QueryParam("id") Integer id) {
 		
 		estatusService.eliminaEstatus(id);
@@ -97,7 +91,6 @@ public class EstatusRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneListaCompletaEstatus")	
-	@PermitAll
 	public Response obtieneListaCompletaEstatus() {
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, estatusService.obtenerListaCompletaEstatus());
