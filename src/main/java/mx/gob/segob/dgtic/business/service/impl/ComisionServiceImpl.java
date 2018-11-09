@@ -176,7 +176,7 @@ public class ComisionServiceImpl extends RecursoBase implements ComisionService 
       parametros.put("nombre", generarReporteArchivo.getNombre());
       parametros.put("unidad", generarReporteArchivo.getUnidad());
       parametros.put("comision", generarReporteArchivo.getComision());
-      DateFormat df = new SimpleDateFormat("MMM dd, yyyy");
+      DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
       Date fechaInicio = null;
       Date fechaFin = null;
 
