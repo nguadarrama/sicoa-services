@@ -174,7 +174,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         }
         
         if (!unidadAdministrativa.isEmpty()) {
-        	qry.append(" and ua.nombre like '%" + unidadAdministrativa + "%' ");
+        	qry.append(" and ua.nombre like '' ");
         }
         
         if (!nivel.isEmpty()) {
