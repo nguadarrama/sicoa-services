@@ -63,12 +63,27 @@ public class IncidenciaRepositoryImpl implements IncidenciaRepository {
 	@Override
 	public IncidenciaDto buscaIncidencia(Integer idIncidencia) {
 		StringBuilder qry = new StringBuilder();
-		qry.append("SELECT id_incidencia, id_asistencia, id_tipo_incidencia, id_archivo, id_estatus, id_responsable, descuento, observaciones ");
+		qry.append("SELECT id_incidencia, id_asistencia, id_tipo_dia, id_archivo, id_estatus, id_responsable, descuento, observaciones ");
         qry.append("FROM m_incidencia ");
         qry.append("WHERE id_incidencia = :idIncidencia");
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
         parametros.addValue("idIncidencia", idIncidencia);
+
+        return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<IncidenciaDto>(IncidenciaDto.class));
+	}
+	
+	@Override
+	public IncidenciaDto buscaIncidenciaPorIdAsistencia(Integer idAsistencia) {
+		StringBuilder qry = new StringBuilder();
+		qry.append("SELECT id_incidencia, id_asistencia, id_tipo_dia, id_archivo, id_estatus, id_responsable, descuento, observaciones ");
+        qry.append("FROM m_incidencia ");
+        qry.append("WHERE id_asistencia = :idAsistencia");
+        
+        MapSqlParameterSource parametros = new MapSqlParameterSource();
+        parametros.addValue("idAsistencia", idAsistencia);
+        
+        IncidenciaDto incidecia = nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<IncidenciaDto>(IncidenciaDto.class));
 
         return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<IncidenciaDto>(IncidenciaDto.class));
 	}

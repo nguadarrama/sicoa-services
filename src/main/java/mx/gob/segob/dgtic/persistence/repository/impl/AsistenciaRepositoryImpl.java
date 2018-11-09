@@ -529,12 +529,13 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		StringBuilder qry = new StringBuilder();
 		
 		qry.append("update m_incidencia ");
-		qry.append("set id_estatus = :idEstatus ");
+		qry.append("set id_estatus = :idEstatus, descuento = :descuento ");
         qry.append("WHERE id_asistencia = :idAsistencia");
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idAsistencia", incidencia.getIdAsistencia().getIdAsistencia());
 		parametros.addValue("idEstatus", incidencia.getEstatus().getIdEstatus());
+		parametros.addValue("descuento", incidencia.getDescuento());
 		
 		try {
 			return nameParameterJdbcTemplate.update(qry.toString(), parametros);

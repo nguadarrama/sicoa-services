@@ -8,6 +8,7 @@ public interface IncidenciaRepository {
 
 	public List<IncidenciaDto> obtenerListaIncidencias();
 	public IncidenciaDto buscaIncidencia(Integer idIncidencia);
+	public IncidenciaDto buscaIncidenciaPorIdAsistencia(Integer idAsistencia);
 	public void modificaIncidencia(IncidenciaDto incidenciaDto);
 	public void agregaIncidencia(IncidenciaDto incidenciaDto);
 	public void eliminaIncidencia(Integer idIncidencia);

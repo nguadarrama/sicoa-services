@@ -19,8 +19,10 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DiaFestivoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.TipoDiaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
+import mx.gob.segob.dgtic.comun.util.crypto.HashUtils;
 import mx.gob.segob.dgtic.persistence.repository.AsistenciaRepository;
 import mx.gob.segob.dgtic.persistence.repository.CargaAsistenciaRepository;
+import mx.gob.segob.dgtic.persistence.repository.CargaInicialRepository;
 import mx.gob.segob.dgtic.persistence.repository.ConfiguracionRepository;
 import mx.gob.segob.dgtic.persistence.repository.DiaFestivoRepository;
 import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
@@ -46,8 +48,12 @@ public class CargaAsistenciaRules extends RecursoBase {
 	@Autowired
 	private DiaFestivoRepository diaFestivoRepository;
 	
-	private List<UsuarioDto> listaUsuarios = new ArrayList<>();
-	private List<String> listaClaveUsuariosEnAsistencia = new ArrayList<>();
+	@Autowired
+	private CargaInicialRepository cargaInicialRepository;
+	
+	private List<UsuarioDto> listaUsuarios;
+	private List<String> listaClaveUsuariosEnAsistencia;
+	Set<String> listaIdusuariosAsistencia;
 	
 	public void procesaAsistencia() {
 
@@ -67,6 +73,9 @@ public class CargaAsistenciaRules extends RecursoBase {
 			//la asistencia se guarda
 			cargaAsistenciaRepository.guardaAsistencia(listaAsistenciaCalculada);
 			
+			//actualiza la nómina de sicoa
+			actualizaNomina();
+			
 			//actualiza la última fecha de carga de asistencias
 			configuracionRepository.actualizaUltimaFechaCargaAsistencia();
 		} else {
@@ -77,8 +86,10 @@ public class CargaAsistenciaRules extends RecursoBase {
 	}
 	
 	private List<AsistenciaDto> filtraAsistencia() {
-		//obtiene nómina del sistema de nómina (SIRNO)
+		//obtiene los usuarios
+		listaUsuarios = new ArrayList<>();
 		listaUsuarios = usuarioService.obtenerListaUsuarios();
+		listaIdusuariosAsistencia = new HashSet<>();
 		
 		//obtiene asistencia del sistema de asistencias (biométricos - ASISTENCIA)
 		List<AsistenciaDto> listaAsistenciaCompleta = cargaAsistenciaRepository.obtieneAsistencia(configuracionRepository.obtieneUltimaFechaCargaAsistencia());
@@ -87,6 +98,9 @@ public class CargaAsistenciaRules extends RecursoBase {
 			List<AsistenciaDto> listaAsistenciaFiltrada = new ArrayList<>();
 			
 			for (AsistenciaDto a : listaAsistenciaCompleta) {
+				//se obtienen los id de usuario (cve_m_usuario) de la lista de asistencia, sin repetidos
+				listaIdusuariosAsistencia.add(a.getUsuarioDto().getClaveUsuario());
+				
 				for (UsuarioDto u : listaUsuarios) {
 					
 					//id nómina de asistencias ==  id nómina de usuarios: se guarda asistencia en la lista
@@ -117,6 +131,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 		Set<String> hashSetIdUsuarios = new HashSet<>();
 		List<UsuarioChecada> listaUsuarioChecadas = new ArrayList<>();
 		List<AsistenciaDto> listaAsistenciaCalculada = new ArrayList<>();
+		listaClaveUsuariosEnAsistencia = new ArrayList<>();
 		
 		//recupera de la asistencia los id's de usuarios: sin repetidos
 		for(AsistenciaDto a : listaAsistencia) {
@@ -481,6 +496,31 @@ public class CargaAsistenciaRules extends RecursoBase {
 		}
 		
 		return esInhabil;
+	}
+	
+	private void actualizaNomina() {
+		logger.info("-> Proceso de actualización de nómina <-");
+		List<String> listaClaveUsuariosEnSicoa = new ArrayList<>();
+		
+		//se obtienen las cve de usuario en una lista
+		for (UsuarioDto usuarioSicoa : listaUsuarios) {
+			listaClaveUsuariosEnSicoa.add(usuarioSicoa.getClaveUsuario());
+		}
+		
+		for (String usuarioAsistencia : listaIdusuariosAsistencia) {
+			if (!listaClaveUsuariosEnSicoa.contains(usuarioAsistencia)) {
+				logger.info("-> " + usuarioAsistencia + " usuario nuevo detectado en asistencias");
+				UsuarioDto usuarioSIRNO = cargaInicialRepository.obtieneUsuarioPorCve_m_usuario(usuarioAsistencia);
+				
+				if (usuarioSIRNO != null) {
+					usuarioSIRNO.setPassword(HashUtils.md5(usuarioSIRNO.getClaveUsuario()));
+					usuarioService.agregaUsuario(usuarioSIRNO);
+					logger.info("   " + usuarioAsistencia + " existe en SIRNO, se procede a registrarlo en SICOA");
+				} else {
+					logger.info("   " + usuarioAsistencia + " NO existe en SIRNO, NO se procede a registrarlo en SICOA");
+				}
+			}
+		}
 	}
 }
 

@@ -177,7 +177,6 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 	public void agregaUsuario(UsuarioDto usuarioDto) {
 		
 		StringBuilder qry = new StringBuilder();
-		System.out.println(" numero de intentos"+usuarioDto.getNumeroIntentos());
 		qry.append("insert into m_usuario (id_area, cve_c_perfil, id_horario, id_puesto, cve_m_usuario, nombre, apellido_paterno, apellido_materno, "
         		+ "fecha_ingreso, password, activo, nuevo, en_sesion, ultimo_acceso, numero_intentos, bloqueado, fecha_bloqueo,  primera_vez, estatus, "
         		+ "nivel, rfc, nombre_jefe) ");

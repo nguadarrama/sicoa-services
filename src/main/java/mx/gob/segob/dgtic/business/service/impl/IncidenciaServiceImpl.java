@@ -28,6 +28,12 @@ public class IncidenciaServiceImpl implements IncidenciaService {
 	}
 
 	@Override
+	public IncidenciaDto buscaIncidenciaPorIdAsistencia(Integer idAsistencia) {
+		
+		return incidenciaRules.buscaIncidenciaPorIdAsistencia(idAsistencia);
+	}
+	
+	@Override
 	public void modificaIncidencia(IncidenciaDto incidenciaDto) {
 		incidenciaRules.modificaIncidencia(incidenciaDto);
 		

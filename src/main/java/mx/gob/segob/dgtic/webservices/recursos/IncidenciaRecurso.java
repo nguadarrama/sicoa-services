@@ -46,6 +46,14 @@ public class IncidenciaRecurso {
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, incidenciaService.buscaIncidencia(id));
 	}
 	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("buscaIncidenciaPorIdAsistencia")	
+	public Response buscaIncidenciaPorIdAsistencia(@QueryParam("id") Integer id) {
+
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, incidenciaService.buscaIncidenciaPorIdAsistencia(id));
+	}
+	
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)

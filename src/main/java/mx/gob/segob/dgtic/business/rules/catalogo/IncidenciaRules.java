@@ -22,6 +22,10 @@ public class IncidenciaRules {
 		return incidenciaRepository.buscaIncidencia(idIncidencia);
 	}
 	
+	public IncidenciaDto buscaIncidenciaPorIdAsistencia (Integer idAsistencia){
+		return incidenciaRepository.buscaIncidenciaPorIdAsistencia(idAsistencia);
+	}
+	
 	public void modificaIncidencia(IncidenciaDto incidenciaDto){
 		incidenciaRepository.modificaIncidencia(incidenciaDto);
 	}
