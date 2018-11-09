@@ -205,8 +205,8 @@ public class VacacionPeriodoRepositoryImpl implements VacacionPeriodoRepository{
 		String query="";
 		 
 		query+="select usuario.id_usuario,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, vacacionPeriodo.dias, periodo.descripcion, periodo.id_periodo, vacacionPeriodo.id_vacacion ";
-        query+="from m_usuario usuario, m_vacacion_periodo vacacionPeriodo, r_periodo periodo ";
-        query+="where periodo.id_periodo=vacacionPeriodo.id_periodo and usuario.id_usuario=vacacionPeriodo.id_usuario and vacacionPeriodo.dias>0 ";
+        query+="from m_usuario usuario, m_vacacion_periodo vacacionPeriodo, r_periodo periodo, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion ";
+        query+="where periodo.id_periodo=vacacionPeriodo.id_periodo and usuario.id_usuario=vacacionPeriodo.id_usuario and vacacionPeriodo.dias>0 and unidad.id_unidad = relacion.id_unidad ";
         if(claveUsuario!=null && !claveUsuario.toString().isEmpty()){
         	query+="and usuario.cve_m_usuario like '%"+claveUsuario+"%' ";
         }
@@ -219,13 +219,15 @@ public class VacacionPeriodoRepositoryImpl implements VacacionPeriodoRepository{
         if(apellidoMaterno!=null && !apellidoMaterno.toString().isEmpty()){
         	query+="and usuario.apellido_materno like '%"+apellidoMaterno+"%' ";
         }
+        if(idUnidad!=null && !idUnidad.toString().isEmpty()){
+        	query+="and unidad.id_unidad ='"+idUnidad+"' ";
+        }
        System.out.println("Query "+query);
 		List<Map<String, Object>> detalleVacaciones = jdbcTemplate.queryForList(query);
 		List<VacacionPeriodoDto> listaVacacionPeriodo=new  ArrayList<>();
 		for (Map<String, Object> detalleVacacion : detalleVacaciones) {
 			VacacionPeriodoDto vacacionPeriodoDto= new VacacionPeriodoDto();
 			UsuarioDto usuarioDto = new UsuarioDto();
-			System.out.println("Valorrrrrrrrrrrrrrrrrrrrrrrrr "+detalleVacacion.get("cve_m_usuario"));
 			usuarioDto.setIdUsuario((Integer)detalleVacacion.get("id_usuario"));
 			usuarioDto.setClaveUsuario((String)detalleVacacion.get("cve_m_usuario"));
 			usuarioDto.setNombre((String)detalleVacacion.get("nombre"));

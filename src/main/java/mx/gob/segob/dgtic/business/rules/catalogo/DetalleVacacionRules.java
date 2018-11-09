@@ -226,7 +226,6 @@ public class DetalleVacacionRules extends RecursoBase {
 		detalleVacacionDto.setIdEstatus(estatus);
 		detalleVacacionDto=aceptaORechazaDetalleVacacion(detalleVacacionDto);
 		
-		
 		return detalleVacacionDto;
 	}
 
