@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="descuento_incidencias" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2775dccf-cbaa-4bb1-974d-683ac5cf5e9d">
 	<property name="ireport.zoom" value="0.75"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="29"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="fechaActual" class="java.lang.String"/>
 	<parameter name="cve_m_usuario" class="java.lang.String"/>
 	<parameter name="nombre" class="java.lang.String"/>
@@ -39,8 +39,11 @@
 				<reportElement x="167" y="583" width="236" height="79" uuid="4f51b8ff-5f70-4125-979e-509d0e1187d4"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="295" y="59" width="247" height="42" uuid="62d40b30-b65d-4e3a-9f38-249139f7fe70"/>
-				<text><![CDATA[UNIDAD RESPONSABLE             SECRETARIADO EJECUTIVO DEL SISTEMA NACIONAL DE  SEGURIDAD PÚBLICA]]></text>
+				<reportElement x="286" y="59" width="269" height="63" uuid="62d40b30-b65d-4e3a-9f38-249139f7fe70"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[UNIDAD RESPONSABLE  SECRETARIADO EJECUTIVO DEL SISTEMA NACIONAL DE  SEGURIDAD PÚBLICA]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="295" y="122" width="40" height="14" uuid="e7629354-e795-4169-9894-b22f2e197054"/>
@@ -127,6 +130,10 @@
 				<reportElement x="30" y="224" width="265" height="20" uuid="eed2748d-ff22-4748-af19-8f427dec655d"/>
 				<textFieldExpression><![CDATA[$P{nombre}]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement x="16" y="59" width="253" height="93" uuid="48dfdbd7-f45b-4afc-80f1-e600c329a4b0"/>
+				<imageExpression><![CDATA["documentos/sicoa/jasper/vacacion/secretariado.png"]]></imageExpression>
+			</image>
 		</band>
 	</detail>
 </jasperReport>
