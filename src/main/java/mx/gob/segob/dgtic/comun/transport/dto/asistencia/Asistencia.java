@@ -12,7 +12,9 @@ public class Asistencia {
 	private Timestamp fecha;
 	
 	public Asistencia() {
-		
+		/**
+		 * 
+		 */
 	}
 
 	public Integer getIdEnrolamiento() {

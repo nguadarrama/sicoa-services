@@ -7,18 +7,15 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.multipart.MultipartFile;
-
 import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
 import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.persistence.repository.ArchivoRepository;
+import mx.gob.segob.dgtic.persistence.repository.constants.RepositoryConstants;
 import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 
 @Repository
@@ -42,11 +39,11 @@ public class ArchivoRepositoryImpl extends RecursoBase implements ArchivoReposit
 	        
 	        for (Map<String, Object> archivo : archivos) {
 	        	ArchivoDto archivoDto = new ArchivoDto();
-	    		archivoDto.setIdArchivo((Integer)archivo.get("id_archivo"));
-	    		archivoDto.setNombre((String)archivo.get("nombre"));
-	    		archivoDto.setUrl((String)archivo.get("url"));
-	    		archivoDto.setSize((Integer)archivo.get("size"));
-	    		archivoDto.setActivo((Boolean)archivo.get("activo"));
+	    		archivoDto.setIdArchivo((Integer)archivo.get(RepositoryConstants.ID_ARCHIVO));
+	    		archivoDto.setNombre((String)archivo.get(RepositoryConstants.NOMBRE));
+	    		archivoDto.setUrl((String)archivo.get(RepositoryConstants.URL));
+	    		archivoDto.setSize((Integer)archivo.get(RepositoryConstants.SIZE));
+	    		archivoDto.setActivo((Boolean)archivo.get(RepositoryConstants.ACTIVO));
 	    		listaArchivo.add(archivoDto);
 	    	}
 	     return listaArchivo;	
@@ -55,18 +52,19 @@ public class ArchivoRepositoryImpl extends RecursoBase implements ArchivoReposit
 	@Override
 	public ArchivoDto buscaArchivo(Integer idArchivo){
 		
-		System.out.println("idArchivo en repository "+idArchivo);
+		logger.info("idArchivo en repository: {} ",idArchivo);
 		StringBuilder qry = new StringBuilder();
 		qry.append("Select id_archivo, nombre, url, size, activo ");
         qry.append("from m_archivo ");
         qry.append("where id_archivo = :idArchivo");
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
-        parametros.addValue("idArchivo", idArchivo);
-        ArchivoDto archivo= new ArchivoDto();
+        parametros.addValue(RepositoryConstants.ID_ARCHIVO2, idArchivo);
+        ArchivoDto archivo;
        
         archivo=nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<ArchivoDto>(ArchivoDto.class));
-        System.out.println("Dato que se va a retornar "+archivo.getUrl()+" query "+qry.toString());
+        logger.info("Dato que se va a retornar: {} ", archivo.getUrl() + " qry ");
+        gson.toJson(qry.toString());
         return archivo;
 		
 	}
@@ -79,9 +77,9 @@ public class ArchivoRepositoryImpl extends RecursoBase implements ArchivoReposit
 		qry.append("WHERE id_archivo = :idArchivo");
 		if(archivoDto.getArchivo()!=null){
 			try {
-				System.out.println("Guardando archivo");
+				logger.info("Guardando archivo");
 			byte[] bite=archivoDto.getArchivo();
-			System.out.println("datos del archivo "+bite);
+			logger.info("datos del archivo: {} ",bite);
 			Path path= Paths.get(archivoDto.getUrl());
 			Path pathNombre= Paths.get(archivoDto.getUrl()+archivoDto.getNombre()+archivoDto.getIdArchivo()+".pdf");
 			archivoDto.setNombre(archivoDto.getNombre()+archivoDto.getIdArchivo()+".pdf");
@@ -91,8 +89,7 @@ public class ArchivoRepositoryImpl extends RecursoBase implements ArchivoReposit
 				
 				Files.write(pathNombre, bite);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.warn(" Error: {}  ", e);
 			}
 		}
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
@@ -105,7 +102,7 @@ public class ArchivoRepositoryImpl extends RecursoBase implements ArchivoReposit
 		try{
 			i= nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.warn(" Error: {} ", e);
 		}
 		if(i == 1){
 			archivoDto.setMensaje("El archivo se actualizó correctamente.");
@@ -126,7 +123,7 @@ public class ArchivoRepositoryImpl extends RecursoBase implements ArchivoReposit
 		Map<String, Object> id1 = jdbcTemplate.queryForMap(qry.toString());
         id = ((Integer) id1.get("id_archivo"));
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.warn(" Error: {} ", e);
 		}
 		if(id==null){
 			id=1;
@@ -136,9 +133,9 @@ public class ArchivoRepositoryImpl extends RecursoBase implements ArchivoReposit
         archivoDto.setNombre(archivoDto.getNombre()+id+".pdf");
 		if(archivoDto.getArchivo()!=null){
 			try {
-				System.out.println("Guardando archivo");
+				logger.info("Guardando archivo");
 			byte[] bite=archivoDto.getArchivo();
-			System.out.println("datos del archivo "+bite);
+			logger.info("datos del archivo: {} ",bite);
 			Path path= Paths.get(archivoDto.getUrl());
 			Path pathNombre= Paths.get(archivoDto.getUrl()+archivoDto.getNombre());
 			if (!Files.exists(path)){
@@ -147,16 +144,15 @@ public class ArchivoRepositoryImpl extends RecursoBase implements ArchivoReposit
 				
 				Files.write(pathNombre, bite);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.warn("Error: {} ", e);
 			}
 		}
 		qry = new StringBuilder();
-		//String valorRuta= ruta+archivoDto.getArchivo().getOriginalFilename();
-		//archivoDto.setUrl(valorRuta);
-		//archivoDto.setSize((int) (long) archivoDto.getArchivo().getSize());
-		//archivoDto.setActivo(true);
-	    //archivoDto.setNombre(archivoDto.getArchivo().getOriginalFilename());
+		/** String valorRuta= ruta+archivoDto.getArchivo().getOriginalFilename();
+		archivoDto.setUrl(valorRuta);
+		archivoDto.setSize((int) (long) archivoDto.getArchivo().getSize());
+		archivoDto.setActivo(true);
+	    archivoDto.setNombre(archivoDto.getArchivo().getOriginalFilename()); **/
 		
 		qry.append("INSERT INTO m_archivo (nombre, url, size, activo) ");
 		qry.append("VALUES (:nombre, :url, :size, :activo) ");
@@ -170,7 +166,7 @@ public class ArchivoRepositoryImpl extends RecursoBase implements ArchivoReposit
 		try{
 			i= nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.warn("Error: {} ", e);
 		}
 		
         

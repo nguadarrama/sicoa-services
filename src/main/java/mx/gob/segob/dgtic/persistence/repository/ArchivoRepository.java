@@ -2,8 +2,6 @@ package mx.gob.segob.dgtic.persistence.repository;
 
 import java.util.List;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
 
 public interface ArchivoRepository {

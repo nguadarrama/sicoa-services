@@ -7,11 +7,7 @@
 */
 package mx.gob.segob.dgtic.comun.sicoa.dto;
 
-import java.io.InputStream;
-
 import javax.persistence.Transient;
-
-import org.springframework.web.multipart.MultipartFile;
 
 import mx.gob.segob.dgtic.comun.util.mapper.annotations.MapeaColumna;
 

@@ -46,7 +46,7 @@ public class AntiSqlFilter implements Filter {
 	 */
 	@Override
 	public void destroy() {
-		logger.info("Destroy "+getClass().getCanonicalName());
+		logger.info("Destroy: {} ",getClass().getCanonicalName());
 		this.filterConfig = null;
 	}
 
@@ -91,7 +91,7 @@ public class AntiSqlFilter implements Filter {
 		xsspattern = Pattern.compile(regexBuilder);
 		this.filterConfig = filterConfig;
 
-		logger.info("Inicializando "+getClass().getCanonicalName());
+		logger.info("Inicializando: {} ",getClass().getCanonicalName());
 	}
 
 	/**
