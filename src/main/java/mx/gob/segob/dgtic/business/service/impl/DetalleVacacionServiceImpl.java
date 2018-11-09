@@ -141,7 +141,6 @@ public class DetalleVacacionServiceImpl extends ServiceBase implements DetalleVa
 
 			if( template != null ){
 			   JasperReport jasperReport = JasperCompileManager.compileReport(template);
-				DateFormat df = new SimpleDateFormat(ServiceConstants.MMM_DD_YYYY);
 				logger.info("Datos: {} ",generaReporteArchivo.getNombre());
 				JRDataSource dataSource= new JREmptyDataSource();
 				Map<String,Object> parametros = new HashMap<>();
@@ -183,8 +182,6 @@ public class DetalleVacacionServiceImpl extends ServiceBase implements DetalleVa
 				parametros.put(ServiceConstants.RESPONSABLE, generaReporteArchivo.getResponsable());
 				parametros.put(ServiceConstants.NUMERO_EMPLEADO, generaReporteArchivo.getNumeroEmpleado());
 				parametros.put(ServiceConstants.DIAS_VACACIONES, generaReporteArchivo.getDias());
-				//Date fecha = df.parse(generaReporteArchivo.getFechaPeticion());
-				String fechaActual = null;
 				Integer diasRestantes = 0;
 				if(vacacion.getDias() != null){
 					

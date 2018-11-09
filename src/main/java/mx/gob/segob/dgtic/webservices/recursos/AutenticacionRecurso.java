@@ -170,21 +170,6 @@ public class AutenticacionRecurso extends RecursoBase {
 		return response;
 	}
 	
-	/**@PUT
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("cambiaContrasenia")
-	@PermitAll
-	public Response cambiaPassword(@QueryParam("usuario") String usuario, 
-			@QueryParam("contrasenia") String contrasenia ){
-		System.out.println("usuario "+usuario);
-		Response response = null;
-		
-		autenticacionService.cambiarPassword(contrasenia, usuario);
-		response=ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
-		
-		return response;
-	}**/
 	
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
@@ -194,19 +179,17 @@ public class AutenticacionRecurso extends RecursoBase {
 		JsonObject jsonObject = new JsonParser().parse(jsonContrasenia).getAsJsonObject();
 		List<String> datos = new ArrayList<>();
 		
-		String datoUsuario="usuario";
-		String usuario =""+ jsonObject.get(datoUsuario);
+		String usuario =""+ jsonObject.get("usuario");
 		String contrasenia =""+ jsonObject.get("contrasenia");
 		contrasenia=contrasenia.replace("\"", "");
 		usuario=usuario.replace("\"", "");
 		logger.info("usuario recibido: {} ",usuario);
 		logger.info("contrasenia: {}", contrasenia );
-		boolean resultado = false;
-		resultado = autenticacionService.cambiarPassword(contrasenia,usuario);
+		Integer resultado = autenticacionService.cambiarPassword(contrasenia,usuario);
 		/**
 		 * Consultar resultado
 		 */
-		if(!resultado){
+		if(resultado > 0){
 			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 		}else{
 			return ResponseJSONGenericoUtil.getRespuestaError(StatusResponse.NOT_MODIFIED, datos, "Fallo la actualización");

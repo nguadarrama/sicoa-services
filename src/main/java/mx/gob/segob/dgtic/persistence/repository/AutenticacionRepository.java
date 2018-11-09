@@ -106,7 +106,7 @@ public interface AutenticacionRepository {
 	 */
 	void anularSessionUsuarios();
 	
-	void cambiarPassword(String password, String claveUsuario);
+	Integer cambiarPassword(String password, String claveUsuario);
 
 	
 }

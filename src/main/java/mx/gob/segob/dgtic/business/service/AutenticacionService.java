@@ -64,5 +64,5 @@ public interface AutenticacionService {
 	 */
 	void anularSessionUsuarios();
 	
-	Boolean cambiarPassword(String password, String claveUsuario);
+	Integer cambiarPassword(String password, String claveUsuario);
 }

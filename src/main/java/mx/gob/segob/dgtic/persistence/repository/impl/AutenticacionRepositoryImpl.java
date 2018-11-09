@@ -304,7 +304,7 @@ public class AutenticacionRepositoryImpl extends RepositoryBase implements Auten
 
 
 	@Override
-	public void cambiarPassword(String password, String claveUsuario) {
+	public Integer cambiarPassword(String password, String claveUsuario) {
 		System.out.println("actualizado "+claveUsuario+"clave "+password);
 		StringBuilder qry = new StringBuilder();
 		qry.append("UPDATE m_usuario SET password = :password, primera_vez='N' ");
@@ -313,7 +313,7 @@ public class AutenticacionRepositoryImpl extends RepositoryBase implements Auten
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("password", password);
 		parametros.addValue("claveUsuario", claveUsuario);
-		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		return nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		
 	}
 }

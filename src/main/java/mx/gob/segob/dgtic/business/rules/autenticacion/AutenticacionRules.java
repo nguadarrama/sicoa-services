@@ -242,15 +242,8 @@ public class AutenticacionRules extends ServiceBase{
 		return permitirAutenticacion;		
 	}
 	
-	public Boolean cambiarPassword(String claveUsuario, String password){
+	public Integer cambiarPassword(String claveUsuario, String password){
 		password=HashUtils.md5(password);
-		/** Boolean resultado = false;
-		String  contrasenia=usuarioRules.consultaContrasenia(claveUsuario);
-		if(contrasenia.equals(password)){
-			resultado=false;
-		}else{**/
-		repositorioAutenticacion.cambiarPassword(password, claveUsuario);
-		return true;
-		
+		return repositorioAutenticacion.cambiarPassword(password, claveUsuario);
 	}
 }
