@@ -84,9 +84,12 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 			Calendar c2 = Calendar.getInstance();
 			c2.setTime(periodoDto.getFechaInicio());
 			c2.add(Calendar.MONTH, -6); 
-			parsedInicio =  c2.getTime();
-			logger.info("fecha -6meses: {}",parsedInicio);
-			String fecha = sdf.format(parsedInicio);
+			/**parsedInicio =  c2.getTime(); **/
+			parsedFin = c2.getTime();
+			/**logger.info("fecha -6meses: {}",parsedInicio);
+			 String fecha = sdf.format(parsedInicio); **/
+			logger.info("fecha Fin -6meses: {} ", parsedFin);
+			String fecha = sdf.format(parsedFin);
 			logger.info("periodo cs: {}",c2);
 			int estatusPeriodo = 1; 
 			/************************************************************
