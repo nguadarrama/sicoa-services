@@ -200,5 +200,10 @@ public class DetalleVacacionServiceImpl extends ServiceBase implements DetalleVa
 
 		return repo;
 	}
+	
+	@Override
+	public DetalleVacacionDto cancelaVacaciones(Integer idDetalle) {
+		return detalleVacacionRules.cancelaVacaciones(idDetalle);
+	}
 
 }

@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import mx.gob.segob.dgtic.business.service.constants.ServiceConstants;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
+import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DetalleVacacionDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DiaFestivoDto;
@@ -29,7 +31,7 @@ import mx.gob.segob.dgtic.persistence.repository.DiaFestivoRepository;
 import mx.gob.segob.dgtic.persistence.repository.UsuarioRepository;
 import mx.gob.segob.dgtic.persistence.repository.VacacionPeriodoRepository;
 @Component
-public class DetalleVacacionRules {
+public class DetalleVacacionRules extends RecursoBase {
 	
 	@Autowired
 	private DetalleVacacionRepository detalleVacacionRepository;
@@ -83,9 +85,7 @@ public class DetalleVacacionRules {
 	    if(detalleVacacionDto.getMensaje().contains("correctamente"))
 	    	//modificamos el numero de vacaciones en la tabla vacacion_periodo
 		    vacacionPeriodoRepository.modificaVacacionPeriodo(vacacionPeriodoDto);
-	    return detalleVacacionDto;
-	    
-	    
+	    return detalleVacacionDto;  
 	}
 	
 	public DetalleVacacionDto eliminaDetalleVacacion(Integer idDetalle){
@@ -179,6 +179,55 @@ public class DetalleVacacionRules {
 	
 	public List<DetalleVacacionDto> consultaVacacionesPropiasPorFiltros(String claveUsuario, String idPeriodo, String idEstatus, String pfechaInicio, String pfechaFin ){
 		return detalleVacacionRepository.consultaVacacionesPropiasPorFiltros(claveUsuario, idPeriodo, idEstatus, pfechaInicio, pfechaFin);
+	}
+	
+	public DetalleVacacionDto cancelaVacaciones(Integer idDetalle){
+		DetalleVacacionDto detalleVacacionDto = new DetalleVacacionDto();
+		detalleVacacionDto = buscaDetalleVacacion(idDetalle);
+		UsuarioDto usuario = usuarioRepository.buscaUsuarioPorId(detalleVacacionDto.getIdUsuario().getIdUsuario());
+		SimpleDateFormat formatter = new SimpleDateFormat(ServiceConstants.YYYY_MM_DD); 
+		java.sql.Date fechaInicio = null;
+		java.sql.Date fechaFin = null;
+		
+	    	try {
+				String parsedInicio = formatter.format(detalleVacacionDto.getFechaInicio());
+				
+				String parsedFin = formatter.format(detalleVacacionDto.getFechaFin());
+				System.out.println("fechas "+parsedInicio+" "+parsedFin);
+				Date parsedInicial = formatter.parse(parsedInicio);
+				Date parsedFinal = formatter.parse(parsedFin);
+				System.out.println("fechas "+parsedInicial+" "+parsedFinal);
+				
+				fechaInicio = new java.sql.Date(parsedInicial.getTime());
+				fechaFin = new java.sql.Date(parsedFinal.getTime());
+				System.out.println("Dato a mostrar "+fechaInicio);
+				
+//				se suma un día a la fecha fin para incluirla en la búsqueda
+				Calendar c = Calendar.getInstance();
+				
+				c.setTime(fechaFin);
+				c.add(Calendar.DAY_OF_MONTH, 1);  
+				fechaFin.setTime(c.getTimeInMillis());
+			} catch (ParseException e) {
+				logger.warn("Error al convertir la fecha en búsqueda de asistencia: {} ", e.getMessage());
+			}
+		
+		List<AsistenciaDto> listaAsistencia= asistenciaRepository.buscaAsistenciaEmpleadoRangoDireccion(usuario.getClaveUsuario(), 
+				"", "", "", "", 5, 0, fechaInicio, fechaFin, 
+				"");
+		System.out.println("resultado de consulta asistencia "+listaAsistencia.size()+" filtros claveUsuario "+usuario.getClaveUsuario()
+		+" fechaInicio "+fechaInicio+" fechaFin "+fechaFin);
+		for(AsistenciaDto asistencia: listaAsistencia){
+			System.out.println("idAsistencia "+asistencia.getIdAsistencia());
+			asistenciaRepository.eliminaAsistencia(asistencia.getIdAsistencia());
+		}
+		EstatusDto estatus =new EstatusDto();
+		estatus.setIdEstatus(3);
+		detalleVacacionDto.setIdEstatus(estatus);
+		detalleVacacionDto=aceptaORechazaDetalleVacacion(detalleVacacionDto);
+		
+		
+		return detalleVacacionDto;
 	}
 
 }

@@ -165,4 +165,11 @@ public class DetalleVacacionRecurso extends ServiceBase{
 		GeneraReporteArchivo generaReporteArchivo = gson.fromJson(jsonObject.get(ServiceConstants.GENERA_REPORTE_ARCHIVO), GeneraReporteArchivo.class);
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,detalleVacacionService.generaReporteVacaciones(generaReporteArchivo));
 	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("cancelaVacaciones")	
+	public Response cancelaVacaciones(@QueryParam("id") Integer id) {
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.cancelaVacaciones(id));
+	}
 }

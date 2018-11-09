@@ -21,4 +21,5 @@ public interface DetalleVacacionService {
 	public List<DetalleVacacionDto> obtenerVacacionesPorFiltros(String claveUsuario, String nombre, String apellidoPaterno, String apellidoMaterno, String idUnidad, String idEstatus);
 	public List<DetalleVacacionDto> consultaVacacionesPropiasPorFiltros(String claveUsuario, String idPeriodo, String idEstatus, String pfechaInicio, String pfechaFin );
 	public reporte generaReporteVacaciones(GeneraReporteArchivo generaReporteArchivo) throws FileNotFoundException, ParseException, JRException;
+	public DetalleVacacionDto cancelaVacaciones(Integer idDetalle);
 }

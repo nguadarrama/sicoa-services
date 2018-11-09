@@ -59,6 +59,7 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 				fechaInicio = new java.sql.Date(parsedInicio.getTime());
 				fechaFin = new java.sql.Date(parsedFin.getTime());
 				
+				
 				//se suma un día a la fecha fin para incluirla en la búsqueda
 				Calendar c = Calendar.getInstance();
 				
@@ -91,6 +92,7 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 				
 				fechaInicio = new java.sql.Date(parsedInicio.getTime());
 				fechaFin = new java.sql.Date(parsedFin.getTime());
+				System.out.println("Dato a mostrar "+fechaInicio);
 				
 				//se suma un día a la fecha fin para incluirla en la búsqueda
 				Calendar c = Calendar.getInstance();
