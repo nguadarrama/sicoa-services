@@ -1,20 +1,12 @@
 package mx.gob.segob.dgtic.business.rules.asistencia;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
-
-import mx.gob.segob.dgtic.comun.exception.ArchivoException;
-import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.IncidenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
-import mx.gob.segob.dgtic.comun.util.jasper.JasperUtil;
 import mx.gob.segob.dgtic.persistence.repository.ArchivoRepository;
 import mx.gob.segob.dgtic.persistence.repository.AsistenciaRepository;
 import mx.gob.segob.dgtic.persistence.repository.UsuarioRepository;
@@ -38,29 +30,32 @@ public class AsistenciaRules {
 	}
 	
 	public List<AsistenciaDto> buscaAsistenciaEmpleadoRango(String claveEmpleado, Date fechaInicio, Date fechaFin) {
-		List<AsistenciaDto> listaAsistencia = asistenciaRepository.buscaAsistenciaEmpleadoRango(claveEmpleado, fechaInicio, fechaFin);
+		List<AsistenciaDto> listaAsistencia;
+		listaAsistencia = asistenciaRepository.buscaAsistenciaEmpleadoRango(claveEmpleado, fechaInicio, fechaFin);
 		
 		return listaAsistencia;
 	}
 	
-	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(String cve_m_usuario, String nombre, String paterno,
+	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(String cveMusuario, String nombre, String paterno,
 			String materno, String nivel, Integer tipo, Integer estado, Date fechaInicial, Date fechaFinal,
 			String unidadAdministrativa, String cveCoordinador) {
 		
 		//se obtiene la unidad administrativa del coordinador
 		UsuarioDto coordinador = usuarioRepository.buscaUsuario(cveCoordinador);
 		
-		List<AsistenciaDto> listaAsistencia = asistenciaRepository.buscaAsistenciaEmpleadoRangoCoordinador(cve_m_usuario, nombre, 
+		List<AsistenciaDto> listaAsistencia;
+		listaAsistencia = asistenciaRepository.buscaAsistenciaEmpleadoRangoCoordinador(cveMusuario, nombre, 
 				paterno, materno, nivel, tipo, estado, fechaInicial, fechaFinal, unidadAdministrativa, coordinador.getIdUnidad());
 		
 		return listaAsistencia;
 	}
 	
-	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoDireccion(String cve_m_usuario, String nombre, String paterno,
+	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoDireccion(String cveMusuario, String nombre, String paterno,
 			String materno, String nivel, Integer tipo, Integer estado, Date fechaInicial, Date fechaFinal,
 			String unidadAdministrativa) {
 		
-		List<AsistenciaDto> listaAsistencia = asistenciaRepository.buscaAsistenciaEmpleadoRangoDireccion(cve_m_usuario, nombre, 
+		List<AsistenciaDto> listaAsistencia;
+		listaAsistencia = asistenciaRepository.buscaAsistenciaEmpleadoRangoDireccion(cveMusuario, nombre, 
 				paterno, materno, nivel, tipo, estado, fechaInicial, fechaFinal, unidadAdministrativa);
 		
 		return listaAsistencia;
@@ -98,24 +93,26 @@ public class AsistenciaRules {
 		return asistenciaRepository.aplicaDescuento(incidencia);
 	}
 	
-	public List<AsistenciaDto> reporteDireccion(String cve_m_usuario, String nombre, String paterno,
+	public List<AsistenciaDto> reporteDireccion(String cveMusuario, String nombre, String paterno,
 			String materno, String nivel, Integer tipo, Integer estado, Date fechaInicial, Date fechaFinal,
 			String unidadAdministrativa, String permisos) {
 		
-		List<AsistenciaDto> listaAsistencia = asistenciaRepository.reporteDireccion(cve_m_usuario, nombre, 
+		List<AsistenciaDto> listaAsistencia;
+		listaAsistencia = asistenciaRepository.reporteDireccion(cveMusuario, nombre, 
 				paterno, materno, nivel, tipo, estado, fechaInicial, fechaFinal, unidadAdministrativa, permisos);
 		
 		return listaAsistencia;
 	}
 	
-	public List<AsistenciaDto> reporteCoordinador(String cve_m_usuario, String nombre, String paterno,
+	public List<AsistenciaDto> reporteCoordinador(String cveMusuario, String nombre, String paterno,
 			String materno, String nivel, Integer tipo, Integer estado, Date fechaInicial, Date fechaFinal,
 			String unidadAdministrativa, String cveCoordinador, String permisos) {
 		
 		//se obtiene la unidad administrativa del coordinador
 		UsuarioDto coordinador = usuarioRepository.buscaUsuario(cveCoordinador);
 		
-		List<AsistenciaDto> listaAsistencia = asistenciaRepository.reporteCoordinador(cve_m_usuario, nombre, 
+		List<AsistenciaDto> listaAsistencia;
+		listaAsistencia = asistenciaRepository.reporteCoordinador(cveMusuario, nombre, 
 				paterno, materno, nivel, tipo, estado, fechaInicial, fechaFinal, unidadAdministrativa, coordinador.getIdUnidad(), permisos);
 		
 		return listaAsistencia;

@@ -47,7 +47,6 @@ public class DashBoardDto implements Serializable {
 		 */
 		public DashBoardDto() {
 			super();
-			// TODO Auto-generated constructor stub
 		}
 
 		/**

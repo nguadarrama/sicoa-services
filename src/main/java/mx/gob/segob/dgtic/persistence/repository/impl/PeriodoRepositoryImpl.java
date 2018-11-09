@@ -21,9 +21,10 @@ import com.google.gson.GsonBuilder;
 import mx.gob.segob.dgtic.comun.sicoa.dto.PeriodoDto;
 import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.persistence.repository.PeriodoRepository;
+import mx.gob.segob.dgtic.persistence.repository.base.RepositoryBase;
 
 @Repository
-public class PeriodoRepositoryImpl implements PeriodoRepository{
+public class PeriodoRepositoryImpl extends RepositoryBase implements PeriodoRepository{
 	
 	@Autowired
     private JdbcTemplate jdbcTemplate;
@@ -235,7 +236,7 @@ public class PeriodoRepositoryImpl implements PeriodoRepository{
 				periodo.setMensaje("Error al modificar el horario, verifique la información. ");
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			logger.warn("Error: {} ", e);
 		}
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		System.out.println("periodoRepoImpl--method--cambioEstatusPeriodo: "+gson.toJson(periodo));

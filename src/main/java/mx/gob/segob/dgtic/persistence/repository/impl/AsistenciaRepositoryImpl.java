@@ -228,7 +228,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 	}
 	
 	@Override
-	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoDireccion(String cve_m_usuario, String nombre, String paterno,
+	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoDireccion(String cveMusuario, String nombre, String paterno,
 			String materno, String nivel, Integer tipo, Integer estado, Date fechaInicial, Date fechaFinal,
 			String unidadAdministrativa) {
 			
@@ -249,15 +249,15 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         	qry.append("where entrada >= '" + fechaInicial + "'");
         	qry.append(" and entrada < '" + fechaFinal  + "'");
         } else {
-        	if (!cve_m_usuario.isEmpty()) {
-            	qry.append("where a.id_usuario = " + cve_m_usuario);
+        	if (!cveMusuario.isEmpty()) {
+            	qry.append("where a.id_usuario = " + cveMusuario);
             	usuarioFueAgregadoAQuery = true;
             }
         }
         
         if (!usuarioFueAgregadoAQuery) { //si usuario ya fue agregado a la query, entonces ya no agrega esta sección
-        	if (!cve_m_usuario.isEmpty()) {
-        		qry.append(" and a.id_usuario = " + cve_m_usuario);
+        	if (!cveMusuario.isEmpty()) {
+        		qry.append(" and a.id_usuario = " + cveMusuario);
         	}
         }
         
@@ -645,7 +645,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 	}
 
 	@Override
-	public List<AsistenciaDto> reporteDireccion(String cve_m_usuario, String nombre, String paterno, String materno,
+	public List<AsistenciaDto> reporteDireccion(String cveMusuario, String nombre, String paterno, String materno,
 			String nivel, Integer tipo, Integer estado, Date fechaInicial, Date fechaFinal, String unidadAdministrativa,
 			String p) {
 
@@ -669,15 +669,15 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         	qry.append("where entrada >= '" + fechaInicial + "'");
         	qry.append(" and entrada < '" + fechaFinal  + "'");
         } else {
-        	if (!cve_m_usuario.isEmpty()) {
-            	qry.append("where a.id_usuario = " + cve_m_usuario);
+        	if (!cveMusuario.isEmpty()) {
+            	qry.append("where a.id_usuario = " + cveMusuario);
             	usuarioFueAgregadoAQuery = true;
             }
         }
         
         if (!usuarioFueAgregadoAQuery) { //si usuario ya fue agregado a la query, entonces ya no agrega esta sección
-        	if (!cve_m_usuario.isEmpty()) {
-        		qry.append(" and a.id_usuario = " + cve_m_usuario);
+        	if (!cveMusuario.isEmpty()) {
+        		qry.append(" and a.id_usuario = " + cveMusuario);
         	}
         }
         
@@ -803,7 +803,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 	}
 
 	@Override
-	public List<AsistenciaDto> reporteCoordinador(String cve_m_usuario, String nombre, String paterno, String materno,
+	public List<AsistenciaDto> reporteCoordinador(String cveMusuario, String nombre, String paterno, String materno,
 			String nivel, Integer tipo, Integer estado, Date fechaInicial, Date fechaFinal, String unidadAdministrativa, Integer idUnidadCoordinador,
 			String p) {
 
@@ -828,8 +828,8 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         	qry.append(" and entrada < '" + fechaFinal  + "'");
         } 
         
-    	if (!cve_m_usuario.isEmpty()) {
-    		qry.append(" and a.id_usuario = " + cve_m_usuario);
+    	if (!cveMusuario.isEmpty()) {
+    		qry.append(" and a.id_usuario = " + cveMusuario);
     	}
         
         if (!nombre.isEmpty()) {

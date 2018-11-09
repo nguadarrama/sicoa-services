@@ -24,9 +24,10 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionPeriodoDto;
 import mx.gob.segob.dgtic.persistence.repository.DetalleVacacionRepository;
 import mx.gob.segob.dgtic.persistence.repository.DiaFestivoRepository;
+import mx.gob.segob.dgtic.persistence.repository.base.RepositoryBase;
 
 @Repository
-public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository {
+public class DetalleVacacionRepositoryImpl extends RepositoryBase implements DetalleVacacionRepository {
 
 	@Autowired
     private JdbcTemplate jdbcTemplate;
@@ -81,8 +82,7 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
         		fechaFinal = sdf.parse(fechaFin);
         		fechaRegistro=sdf.parse(fechaRe);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.warn("Eror: {} ", e);
 			}
         	detalleVacacionDto.setFechaRegistro(fechaRegistro);
         	detalleVacacionDto.setFechaInicio(fechaInicio);
@@ -150,18 +150,17 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
     		fechaFinal = sdf.parse(fechaFin);
     		fechaRegistro=sdf.parse(fechaRe);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.warn("Error: {} ", e);
 		}
-    	System.out.println("informacionConsulta.get "+fechaInicio+" "+fechaFin);
+    	logger.info("informacionConsulta.get: {} ",fechaInicio);
+    	logger.info(" FechaFin: {} ", fechaFin);
     	detalleVacacionDto.setFechaInicio(fechaInicio);
     	detalleVacacionDto.setFechaFin(fechaFinal);
     	detalleVacacionDto.setFechaRegistro(fechaRegistro);
-        System.out.println("informacionConsulta.get "+detalleVacacionDto.getFechaInicio());
+        logger.info("informacionConsulta.get: {} ",detalleVacacionDto.getFechaInicio());
         detalleVacacionDto.setDias((Integer)informacionConsulta.get("dias"));
         
         return detalleVacacionDto;
-        //return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<DetalleVacacionDto>(DetalleVacacionDto.class));
 	}
 
 	@Override
@@ -362,13 +361,11 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
         		fechaFinal = sdf.parse(fechaFin);
         		fechaRegistro=sdf.parse(fechaRe);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.warn("Error: {} ", e);
 			}
         	detalleVacacionDto.setFechaInicio(fechaInicio);
         	detalleVacacionDto.setFechaFin(fechaFinal);
         	detalleVacacionDto.setFechaRegistro(fechaRegistro);
-        	//System.out.println("fecha actual "+detalleVacacionDto.getFechaInicio());
         	detalleVacacionDto.setDias((Integer)detalleVacacion.get("dias"));
     		listaDetalleVacacion.add(detalleVacacionDto);
     	}
@@ -437,27 +434,24 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
         	detalleVacacionDto.setIdEstatus(estatusDto);
         	
         	
-        	System.out.println("Vacaciones recuperadas "+detalleVacacion.get("id_detalle"));
+        	logger.info("Vacaciones recuperadas: {} ",detalleVacacion.get("id_detalle"));
         	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//        	System.out.println("fecha actual"+(Date)detalleVacacion.get("fecha_inicio"));
-        	String fechaIni=""+detalleVacacion.get("fecha_inicio");
-        	String fechaFin=""+detalleVacacion.get("fecha_fin");
-        	String fechaRe=""+detalleVacacion.get("fecha_registro");
-        	Date fechaInicio=null;
-        	Date fechaFinal=null;
-        	Date fechaRegistro=null;
+        	String fechaIni = "" + detalleVacacion.get("fecha_inicio");
+        	String fechaFin = "" + detalleVacacion.get("fecha_fin");
+        	String fechaRe = "" + detalleVacacion.get("fecha_registro");
+        	Date fechaInicio = null;
+        	Date fechaFinal = null;
+        	Date fechaRegistro = null;
         	try {
         		fechaInicio = sdf.parse(fechaIni);
         		fechaFinal = sdf.parse(fechaFin);
-        		//fechaRegistro=sdf.parse(fechaRe);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.warn("  Error {} ", e);
 			}
         	detalleVacacionDto.setFechaInicio(fechaInicio);
         	detalleVacacionDto.setFechaFin(fechaFinal);
         	detalleVacacionDto.setFechaRegistro(fechaRegistro);
-        	System.out.println("fecha actual "+detalleVacacionDto.getFechaInicio());
+        	logger.info("fecha actual: {} ",detalleVacacionDto.getFechaInicio());
         	detalleVacacionDto.setDias((Integer)detalleVacacion.get("dias"));
     		listaDetalleVacacion.add(detalleVacacionDto);
     	}
@@ -466,16 +460,21 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
      
 	}
 	
-	String claveUsuario=null; Date fechaInicio=null; Integer dias=null; Date fechaFin=null; Boolean bandera=false; Integer diasTotales=0;
+	String claveUsuario=null; 
+	Date fechaInicio = null;
+	Integer dias = null;
+	Date fechaFin = null; 
+	Boolean bandera = false; 
+	Integer diasTotales = 0;
 	
 	private String repetirValidaciones(String claveUsuario, Date fechaInicio, Integer dias, Date fechaFin){
 		this.claveUsuario=claveUsuario;
 		this.fechaInicio=fechaInicio;
 		this.fechaFin=fechaFin;
 		this.dias=dias;
-		String respuesta="";
-		Integer contador=0;
-		if(contador==0){
+		String respuesta = "";
+		Integer contador = 0;
+		if(contador == 0){
 		validaFechasVacaciones(this.claveUsuario, this.fechaInicio,this.dias , this.fechaFin);
 		contador++;
 		}
@@ -483,7 +482,7 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 			contador++;
 			validaFechasVacaciones(this.claveUsuario, this.fechaInicio,this.dias , this.fechaFin);
 		}
-			System.out.println("Contador "+contador);
+			logger.info("Contador: {} ",contador);
 		if(diasTotales>10){
 			respuesta="Estas solicitando vacaciones un día inmediato posterior o anterior, a otra solicitud de vacaciones "
 					+ "que sumados dan más de 10 días, considera que tu solicitud puede ser declinada";
@@ -497,22 +496,21 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 		diasTotales+=dias;
 		List<DiaFestivoDto> listaDiasFestivos=diaFestivoRepository.obtenerDiasFestivosActivos();
 		List<DetalleVacacionDto> listaDiasVacaciones=consultaVacacionesPropiasPorFiltros(claveUsuario, "","","", "");
-		System.out.println("comprobando días ");
+		logger.info("comprobando días ");
     	DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
     	
 		Calendar c1 = Calendar.getInstance();
-		//System.out.println("Fechas fecha inicial "+detalleVacacionDto.getFechaInicio()+" fecha final "+detalleVacacionDto.getFechaFin());
 	    c1.setTime(fechaInicio);
 	    Calendar c2 = Calendar.getInstance();
 	    c2.setTime(fechaFin);
 	    if(c1.get(Calendar.DAY_OF_WEEK)==Calendar.MONDAY){
 	    	c1.add(Calendar.DAY_OF_WEEK,-2);
-	    	System.out.println("Dia antes "+c1.getTime());
+	    	logger.info("Dia antes: {} ",c1.getTime());
 	    }
 	    c1.add(Calendar.DAY_OF_WEEK,-1);
 	    if(c2.get(Calendar.DAY_OF_WEEK)==Calendar.FRIDAY){
 	    	c2.add(Calendar.DAY_OF_WEEK,+2);
-	    	System.out.println("Dia despues "+c2.getTime());
+	    	logger.info("Dia despues: {} ",c2.getTime());
 	    }
 	    c2.add(Calendar.DAY_OF_WEEK,+1);
 	    for(DiaFestivoDto diaFestivos: listaDiasFestivos){
@@ -520,24 +518,23 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 			String fecha=null;
 			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 			SimpleDateFormat sdf1 = new SimpleDateFormat("MM-dd-yyyy");
-			//System.out.println("Fechas obtenidas "+diaFestivo.getFecha());
 		   
 
 		    Calendar diaFestivo = Calendar.getInstance();
 			diaFestivo.setTime(diaFestivos.getFecha());
 			if(diaFestivo.equals(c1)){
 				c1.add(Calendar.DAY_OF_WEEK,-1);
-				System.out.println("Dia menos festivo "+c1.getTime());
+				logger.info("Dia menos festivo: {} ",c1.getTime());
 			}else
 			{
-				System.out.println("Dia no festivo "+c1.getTime());
+				logger.info("Dia no festivo: {} ",c1.getTime());
 			}
 			if(diaFestivo.equals(c2)){
 				c2.add(Calendar.DAY_OF_WEEK,+1);
-				System.out.println("Dia menos festivo "+c2.getTime());
+				logger.info("Dia menos festivo: {} ",c2.getTime());
 			}else
 			{
-				System.out.println("Dia no festivo "+c1.getTime());
+				logger.info("Dia no festivo: {} ",c1.getTime());
 			}
 		}
 	    Integer con=0;
@@ -552,7 +549,8 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 				this.fechaFin=c2.getTime();
 				bandera=true;
 				con++;
-				System.out.println("Dias que se deben sumar fechaFin "+vacacion.getDias()+" bandera "+bandera);
+				logger.info("Dias que se deben sumar fechaFin: {} ",vacacion.getDias());
+				logger.info(" bandera: {} ",bandera);
 				diasTotales+=vacacion.getDias();
 				
 			}
@@ -562,7 +560,8 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 				bandera=true;
 				con++;
 				this.fechaFin=diaFin.getTime();
-				System.out.println("Dias que se deben sumar fechaInicio "+vacacion.getDias()+" bandera "+bandera);
+				logger.info("Dias que se deben sumar fechaInicio: {} ",vacacion.getDias());
+				logger.info(" bandera: {} ",bandera);
 				diasTotales+=vacacion.getDias();
 				
 			}
@@ -572,9 +571,9 @@ public class DetalleVacacionRepositoryImpl implements DetalleVacacionRepository 
 		}
 		
 		
-		System.out.println("fechaInicio "+this.fechaInicio); 
-		System.out.println("fechaFin "+this.fechaFin); 
-		System.out.println("Dias totales "+diasTotales);
+		logger.info("fechaInicio: {} ",this.fechaInicio); 
+		logger.info("fechaFin: {} ",this.fechaFin); 
+		logger.info("Dias totales: {} ",diasTotales);
 		return"Dias totales "+diasTotales;
 	}
 	

@@ -25,9 +25,4 @@ public abstract class RecursoBase {
     protected final Logger logger = LoggerFactory.getLogger(ServiceBase.class);
     
     protected final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-	public void generaPeriodoVacacional(String inicio, String descripcion, boolean activo) {
-		// TODO Auto-generated method stub
-		
-	}
 }

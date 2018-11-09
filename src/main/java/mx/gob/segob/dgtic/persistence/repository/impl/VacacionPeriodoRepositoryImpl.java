@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -13,19 +12,15 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.PeriodoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionPeriodoDto;
-import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.persistence.repository.VacacionPeriodoRepository;
+import mx.gob.segob.dgtic.persistence.repository.base.RepositoryBase;
 
 @Repository
-public class VacacionPeriodoRepositoryImpl implements VacacionPeriodoRepository{
+public class VacacionPeriodoRepositoryImpl extends RepositoryBase implements VacacionPeriodoRepository{
 
 	@Autowired
     private JdbcTemplate jdbcTemplate;
@@ -207,19 +202,19 @@ public class VacacionPeriodoRepositoryImpl implements VacacionPeriodoRepository{
 		query+="select usuario.id_usuario,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, vacacionPeriodo.dias, periodo.descripcion, periodo.id_periodo, vacacionPeriodo.id_vacacion ";
         query+="from m_usuario usuario, m_vacacion_periodo vacacionPeriodo, r_periodo periodo, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion ";
         query+="where periodo.id_periodo=vacacionPeriodo.id_periodo and usuario.id_usuario=vacacionPeriodo.id_usuario and vacacionPeriodo.dias>0 and unidad.id_unidad = relacion.id_unidad ";
-        if(claveUsuario!=null && !claveUsuario.toString().isEmpty()){
+        if(claveUsuario!=null && !claveUsuario.isEmpty()){
         	query+="and usuario.cve_m_usuario like '%"+claveUsuario+"%' ";
         }
-        if(nombre!=null && !nombre.toString().isEmpty()){
+        if(nombre!=null && !nombre.isEmpty()){
         	query+="and usuario.nombre like '%"+nombre+"%' ";
         }
-        if(apellidoPaterno!=null && !apellidoPaterno.toString().isEmpty()){
+        if(apellidoPaterno!=null && !apellidoPaterno.isEmpty()){
         	query+="and usuario.apellido_paterno like '%"+apellidoPaterno+"%' ";
         }
-        if(apellidoMaterno!=null && !apellidoMaterno.toString().isEmpty()){
+        if(apellidoMaterno!=null && !apellidoMaterno.isEmpty()){
         	query+="and usuario.apellido_materno like '%"+apellidoMaterno+"%' ";
         }
-        if(idUnidad!=null && !idUnidad.toString().isEmpty()){
+        if(idUnidad!=null && !idUnidad.isEmpty()){
         	query+="and unidad.id_unidad ='"+idUnidad+"' ";
         }
        System.out.println("Query "+query);
