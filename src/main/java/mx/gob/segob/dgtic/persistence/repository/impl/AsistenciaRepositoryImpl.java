@@ -2,7 +2,6 @@ package mx.gob.segob.dgtic.persistence.repository.impl;
 
 import java.util.Date;
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -233,7 +232,6 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 			String unidadAdministrativa) {
 			
 		StringBuilder qry = new StringBuilder();
-		Boolean usuarioFueAgregadoAQuery = false;
 	       
         qry.append("SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus, ");
         qry.append("i.id_estatus, i.descuento ");
@@ -244,22 +242,16 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         qry.append("inner join m_usuario u on u.cve_m_usuario = a.id_usuario ");
         qry.append("inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ");
         qry.append("inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ");
+        qry.append("where 1 = 1");
         
         if (fechaInicial != null && fechaFinal != null) {
-        	qry.append("where entrada >= '" + fechaInicial + "'");
+        	qry.append(" and entrada >= '" + fechaInicial + "'");
         	qry.append(" and entrada < '" + fechaFinal  + "'");
-        } else {
-        	if (!cveMusuario.isEmpty()) {
-            	qry.append("where a.id_usuario = " + cveMusuario);
-            	usuarioFueAgregadoAQuery = true;
-            }
         }
         
-        if (!usuarioFueAgregadoAQuery) { //si usuario ya fue agregado a la query, entonces ya no agrega esta sección
-        	if (!cveMusuario.isEmpty()) {
-        		qry.append(" and a.id_usuario = " + cveMusuario);
-        	}
-        }
+    	if (!cveMusuario.isEmpty()) {
+    		qry.append(" and a.id_usuario = " + cveMusuario);
+    	}
         
         if (!nombre.isEmpty()) {
         	qry.append(" and u.nombre like '%" + nombre + "%' ");
@@ -274,7 +266,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         }
         
         if (!unidadAdministrativa.isEmpty()) {
-        	qry.append(" and ua.nombre like '%" + unidadAdministrativa + "%' ");
+        	qry.append(" and ua.id_unidad = " + unidadAdministrativa);
         }
         
         if (!nivel.isEmpty()) {
