@@ -642,7 +642,6 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 			String p) {
 
 		StringBuilder qry = new StringBuilder();
-		Boolean usuarioFueAgregadoAQuery = false;
 	       
         qry.append("SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus, ");
         qry.append("i.id_estatus, i.descuento ");
@@ -656,22 +655,16 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         qry.append("left join m_licencia_medica l on l.id_usuario = u.id_usuario ");
         qry.append("left join m_comision c on c.id_usuario = u.id_usuario ");
         qry.append("left join d_detalle_vacacion v on v.id_usuario = u.id_usuario ");
+        qry.append("where 1 = 1");
         
         if (fechaInicial != null && fechaFinal != null) {
-        	qry.append("where entrada >= '" + fechaInicial + "'");
+        	qry.append(" and entrada >= '" + fechaInicial + "'");
         	qry.append(" and entrada < '" + fechaFinal  + "'");
-        } else {
-        	if (!cveMusuario.isEmpty()) {
-            	qry.append("where a.id_usuario = " + cveMusuario);
-            	usuarioFueAgregadoAQuery = true;
-            }
         }
         
-        if (!usuarioFueAgregadoAQuery) { //si usuario ya fue agregado a la query, entonces ya no agrega esta sección
-        	if (!cveMusuario.isEmpty()) {
-        		qry.append(" and a.id_usuario = " + cveMusuario);
-        	}
-        }
+    	if (!cveMusuario.isEmpty()) {
+    		qry.append(" and a.id_usuario = " + cveMusuario);
+    	}
         
         if (!nombre.isEmpty()) {
         	qry.append(" and u.nombre like '%" + nombre + "%' ");
