@@ -951,4 +951,85 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		
 	}
 
+  @Override
+  public List<AsistenciaDto> buscaAsistenciaEmpleado(String claveUsuario, Integer tipo,
+      Integer estado, Date fechaInicial, Date fechaFinal) {
+    StringBuilder qry = new StringBuilder();
+    Boolean usuarioFueAgregadoAQuery = false;
+
+    qry.append(
+        "SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus, ");
+    qry.append("i.id_estatus, i.descuento ");
+    qry.append("FROM m_asistencia a ");
+    qry.append("inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ");
+    qry.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia ");
+    qry.append("left join m_estatus e on e.id_estatus = i.id_estatus ");
+    qry.append("inner join m_usuario u on u.cve_m_usuario = a.id_usuario ");
+    qry.append(
+        "inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ");
+    qry.append("inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ");
+
+    if (fechaInicial != null && fechaFinal != null) {
+      qry.append("where entrada >= '" + fechaInicial + "'");
+      qry.append(" and entrada <= '" + fechaFinal + "'");
+    } else {
+      if (!claveUsuario.isEmpty()) {
+        qry.append("where a.id_usuario = " + claveUsuario);
+        usuarioFueAgregadoAQuery = true;
+      }
+    }
+
+    if (!usuarioFueAgregadoAQuery) { // si usuario ya fue agregado a la query, entonces ya no agrega
+                                     // esta sección
+      if (!claveUsuario.isEmpty()) {
+        qry.append(" and a.id_usuario = " + claveUsuario);
+      }
+    }
+
+    if (tipo > 0) {
+      qry.append(" and t.id_tipo_dia = " + tipo);
+    }
+
+    if (estado > 0) {
+      qry.append(" and e.id_estatus = " + estado);
+    }
+
+    System.out.println("Query busqueda asistencias: " + qry.toString());
+    List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString());
+    List<AsistenciaDto> listaAsistencia = new ArrayList<>();
+
+    for (Map<String, Object> a : asistencias) {
+      UsuarioDto usuario = usuarioRepository.buscaUsuario((String) a.get("id_usuario"));
+
+      TipoDiaDto tipoDia = new TipoDiaDto();
+      tipoDia.setIdTipoDia((Integer) a.get("id_tipo_dia"));
+      tipoDia.setNombre((String) a.get("nombre"));
+
+      EstatusDto estatus = new EstatusDto();
+      estatus.setEstatus((String) a.get("estatus"));
+
+      IncidenciaDto incidencia = new IncidenciaDto();
+      incidencia.setEstatus(estatus);
+
+      if ((Boolean) a.get("descuento") != null) {
+        incidencia.setDescuento((Boolean) a.get("descuento"));
+      } else {
+        incidencia.setDescuento(false);
+      }
+
+      AsistenciaDto asistencia = new AsistenciaDto();
+      asistencia.setIdAsistencia((Integer) a.get("id_asistencia"));
+      asistencia.setUsuarioDto(usuario);
+      asistencia.setIdTipoDia(tipoDia);
+      asistencia.setEntrada((Timestamp) a.get("entrada"));
+      asistencia.setSalida((Timestamp) a.get("salida"));
+      asistencia.setIdEstatus(estatus);
+      asistencia.setIncidencia(incidencia);
+
+      listaAsistencia.add(asistencia);
+    }
+
+    return listaAsistencia;
+  }
+
 }

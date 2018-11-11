@@ -464,4 +464,38 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
     return listaComisiones;
   }
 
+  @Override
+  public List<ComisionDto> obtenerComisionesPorUsuarioRango(Integer idUsuario, Date fechaInicio,
+      Date fechaFin) {
+    StringBuilder query = new StringBuilder();
+    query.append("SELECT comision.id_comision, comision.id_usuario, comision.id_estatus, comision.fecha_inicio, ");
+    query.append("comision.fecha_fin, comision.dias ");
+    query.append("FROM m_comision comision ");
+    query.append("WHERE ((comision.fecha_inicio <= '" + fechaInicio + "' AND comision.fecha_fin >= '" + fechaFin + "') ");
+    query.append("OR comision.fecha_fin BETWEEN '" + fechaInicio + "' AND '" + fechaFin + "' ");
+    query.append("OR comision.fecha_inicio BETWEEN '" + fechaInicio + "' AND '" + fechaFin + "') ");
+    query.append("AND comision.id_usuario = '" + idUsuario + "'");
+    
+    logger.info(QUERY_LOGGER, query);
+    List<Map<String, Object>> consulta = jdbcTemplate.queryForList(query.toString());
+    List<ComisionDto> listaComisiones = new ArrayList<>();
+
+    for (Map<String, Object> comisiones : consulta) {
+      ComisionDto comisionDto = new ComisionDto();
+      comisionDto.setIdComision((Integer) comisiones.get(COLUMNA_ID_COMISION));
+      UsuarioDto usuarioDto = new UsuarioDto();
+      usuarioDto.setIdUsuario((Integer) comisiones.get(COLUMNA_ID_USUARIO));
+      comisionDto.setIdUsuario(usuarioDto);
+      EstatusDto estatus = new EstatusDto();
+      estatus.setIdEstatus((Integer) comisiones.get(COLUMNA_ID_ESTATUS));
+      comisionDto.setIdEstatus(estatus);
+      comisionDto.setFechaInicio((Date) comisiones.get(COLUMNA_FECHA_INICIO));
+      comisionDto.setFechaFin((Date) comisiones.get(COLUMNA_FECHA_FIN));
+      comisionDto.setDias((Integer) comisiones.get(COLUMNA_DIAS));
+      listaComisiones.add(comisionDto);
+    }
+    logger.info("Número de registros recuperados: {}", listaComisiones.size());
+    return listaComisiones;
+  }
+
 }

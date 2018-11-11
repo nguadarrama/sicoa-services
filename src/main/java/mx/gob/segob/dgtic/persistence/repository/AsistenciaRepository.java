@@ -17,6 +17,8 @@ public interface AsistenciaRepository {
 	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoDireccion(String cve_m_usuario, String nombre, String paterno, 
     		String materno, String nivel, Integer tipo, Integer estado, Date fechaInicial, Date fechaFinal, String unidadAdministrativa);
 	
+	public List<AsistenciaDto> buscaAsistenciaEmpleado(String claveUsuario, Integer tipo, Integer estado, Date fechaInicial, Date fechaFinal);
+	
 	public AsistenciaDto buscaAsistenciaPorId(Integer id);
 	public Integer creaIncidencia(IncidenciaDto incidencia);
 	public Integer creaDescuento(IncidenciaDto incidencia);

@@ -29,4 +29,7 @@ public interface ComisionRepository {
   
   public List<ComisionDto> obtenerComisionesPorUnidad(String idUnidad, String claveUsuario, String nombre,
       String apellidoPaterno, String apellidoMaterno);
+  
+  public List<ComisionDto> obtenerComisionesPorUsuarioRango(Integer idUsuario, Date fechaInicio,
+      Date fechaFin);
 }

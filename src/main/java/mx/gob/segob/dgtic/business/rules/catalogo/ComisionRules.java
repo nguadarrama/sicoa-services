@@ -34,6 +34,9 @@ public class ComisionRules extends RecursoBase {
 
   @Autowired
   private DiaFestivoRepository diaFestivoRepository;
+  
+  private static final Integer TIPO_COMISION = 7;
+  private static final Integer TIPO_INASISTENCIA = 8;
 
   public List<ComisionDto> obtenerListaComisiones() {
     return comisionRepository.obtenerListaComisiones();
@@ -60,6 +63,22 @@ public class ComisionRules extends RecursoBase {
       tipoDiaDto.setIdTipoDia(7);
       UsuarioDto usuarioDto =
           usuarioRepository.buscaUsuarioPorId(comisionDto.getIdUsuario().getIdUsuario());
+
+
+      /** Obtener lista de inasistencias **/
+      List<AsistenciaDto> listaInasistencias = asistenciaRepository.buscaAsistenciaEmpleado(
+          usuarioDto.getClaveUsuario(), TIPO_INASISTENCIA, 0, new Timestamp(fechaInicio.getTime()),
+          new Timestamp(fechaFin.getTime()));
+      logger.info("listaInasistencias: {}", listaInasistencias.size());
+
+      /** Elimina las inasistencias obtenidas en el periodo de la comision **/
+      if (!listaInasistencias.isEmpty()) {
+        for (AsistenciaDto asistencia : listaInasistencias) {
+          logger.info("idAsistencia: {}", asistencia.getIdAsistencia());
+          asistenciaRepository.eliminaAsistencia(asistencia.getIdAsistencia());
+        }
+      }
+
       for (Iterator<Date> it = listaFechas.iterator(); it.hasNext();) {
         Date date = it.next();
         AsistenciaDto asistenciaDto = new AsistenciaDto();
@@ -76,6 +95,8 @@ public class ComisionRules extends RecursoBase {
 
     } else if (comisionDto.getIdEstatus().getIdEstatus() == 3) {
       comisionAux = comisionRepository.modificaComisionEstatusArchivo(comisionDto);
+    } else if (comisionDto.getIdEstatus().getIdEstatus() == 6) {
+      comisionAux = cancelarComision(comisionDto);
     } else {
       comisionAux = comisionRepository.modificaComisionEstatusArchivo(comisionDto);
     }
@@ -87,7 +108,20 @@ public class ComisionRules extends RecursoBase {
   }
 
   public ComisionDto agregaComision(ComisionDto comisionDto) {
-    return comisionRepository.agregaComision(comisionDto);
+    ComisionDto comisionRespuesta = null;
+    List<ComisionDto> listaComisiones = comisionRepository.obtenerComisionesPorUsuarioRango(
+        comisionDto.getIdUsuario().getIdUsuario(),
+        new Timestamp(comisionDto.getFechaInicio().getTime()),
+        new Timestamp(comisionDto.getFechaFin().getTime()));
+    
+    if (listaComisiones.isEmpty()) {
+      comisionRespuesta = comisionRepository.agregaComision(comisionDto);
+    } else {
+      comisionRespuesta = new ComisionDto();
+      comisionRespuesta.setMensaje("El periodo dado interfiere con una comisión existente");
+    }
+
+    return comisionRespuesta;
   }
 
   public void eliminaComision(Integer idComision) {
@@ -111,6 +145,53 @@ public class ComisionRules extends RecursoBase {
       String nombre, String apellidoPaterno, String apellidoMaterno) {
     return comisionRepository.obtenerComisionesPorUnidad(idUnidad, claveUsuario, nombre,
         apellidoPaterno, apellidoMaterno);
+  }
+  
+  private ComisionDto cancelarComision(ComisionDto comisionDto) {
+    /** Buscamos la comision por el id para obtener periodo. **/
+    ComisionDto comisionAux = buscaComision(comisionDto.getIdComision());
+    comisionDto.setFechaInicio(comisionAux.getFechaInicio());
+    comisionDto.setFechaFin(comisionAux.getFechaFin());
+    
+    /** Periodo de la comision **/
+    Date fechaInicio = comisionDto.getFechaInicio();
+    Date fechaFin = comisionDto.getFechaFin();
+    
+    logger.info("Fechas: fechaInicial: {} fechaFin: {} ", comisionDto.getFechaInicio(),
+        comisionDto.getFechaFin());
+
+    UsuarioDto usuarioDto =
+        usuarioRepository.buscaUsuarioPorId(comisionDto.getIdUsuario().getIdUsuario());
+
+    /** Obtener lista de inasistencias **/
+    List<AsistenciaDto> listaInasistencias =
+        asistenciaRepository.buscaAsistenciaEmpleado(usuarioDto.getClaveUsuario(),
+           TIPO_INASISTENCIA, 0, new Timestamp(fechaInicio.getTime()) , new Timestamp(fechaFin.getTime()));
+    logger.info("listaInasistencias: {}", listaInasistencias.size());
+    
+    /** Si existe una inasistencia en el rango de fecha de la comision mandará mensaje de error **/
+    if (listaInasistencias.isEmpty()) {
+      List<AsistenciaDto> listaAsistenciasComision =
+          asistenciaRepository.buscaAsistenciaEmpleado(usuarioDto.getClaveUsuario(),
+             TIPO_COMISION, 0, new Timestamp(fechaInicio.getTime()), new Timestamp(fechaFin.getTime()));
+      logger.info("listaAsistenciasComision: {}", listaAsistenciasComision.size());
+
+      if (!listaAsistenciasComision.isEmpty()) {
+        for (Iterator<AsistenciaDto> it = listaAsistenciasComision.iterator(); it.hasNext();) {
+          AsistenciaDto asistencia = it.next();
+          logger.info("idAsistencia: {}", asistencia.getIdAsistencia());
+          asistenciaRepository.eliminaAsistencia(asistencia.getIdAsistencia());
+          comisionAux = comisionRepository.modificaComisionEstatusArchivo(comisionDto);
+        }
+      } else {
+        comisionAux.setMensaje("Hubo un problema al cancelar la comisión");
+      }
+    } else {
+      comisionAux.setMensaje(
+          "Lo sentimos el usuario no cuenta con ningún registro de entrada o salida de los días a cancelar");
+    }
+
+    return comisionAux;
   }
 
   private List<Date> removerFinesDeSemana(Date fechaInicio, Date fechaFin) {
