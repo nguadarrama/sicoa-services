@@ -679,7 +679,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         }
         
         if (!unidadAdministrativa.isEmpty()) {
-        	qry.append(" and ua.nombre like '%" + unidadAdministrativa + "%' ");
+        	qry.append(" and ua.id_unidad = " + unidadAdministrativa);
         }
         
         if (!nivel.isEmpty()) {
@@ -827,10 +827,6 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         
         if (!materno.isEmpty()) {
         	qry.append(" and u.apellido_materno like '%" + materno + "%' ");
-        }
-        
-        if (!unidadAdministrativa.isEmpty()) {
-        	qry.append(" and ua.nombre like '%" + unidadAdministrativa + "%' ");
         }
         
         if (!nivel.isEmpty()) {
