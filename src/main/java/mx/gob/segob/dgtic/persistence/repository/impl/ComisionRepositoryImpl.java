@@ -358,11 +358,19 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
       String nombre, String apellidoPaterno, String apellidoMaterno, String idEstatus,
       String idUnidad) {
     StringBuilder query = new StringBuilder();
-    query.append("SELECT usuario.id_usuario, usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, comision.id_comision, ");
-    query.append("unidad.id_unidad, unidad.nombre nombre_unidad, comision.id_responsable, estatus.id_estatus, estatus.estatus, comision.fecha_inicio, ");
+    query.append("SELECT usuario.id_usuario,  usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, ");
+    query.append("relacion.cve_m_usuario, relacion.id_unidad, unidad.nombre nombre_unidad, comision.id_comision, ");
+    query.append("comision.id_responsable, comision.id_estatus, estatus.estatus, comision.fecha_inicio, ");
     query.append("comision.fecha_fin, comision.dias, comision.comision, comision.dias, comision.fecha_registro ");
-    query.append("FROM m_comision comision, m_usuario usuario, m_estatus estatus, c_unidad_administrativa unidad ");
-    query.append("WHERE usuario.id_usuario=comision.id_usuario and estatus.id_estatus=comision.id_estatus ");
+    query.append("FROM ds_sicoa.m_comision comision ");
+    query.append("INNER JOIN ds_sicoa.m_usuario usuario ON usuario.id_usuario = comision.id_usuario ");
+    query.append("INNER JOIN ds_sicoa.usuario_unidad_administrativa relacion on usuario.cve_m_usuario=relacion.cve_m_usuario ");
+    query.append("INNER JOIN ds_sicoa.m_estatus estatus ON estatus.id_estatus = comision.id_estatus ");
+    query.append("INNER JOIN ds_sicoa.c_unidad_administrativa unidad ON unidad.id_unidad = relacion.id_unidad ");
+
+    if (idUnidad != null && !idUnidad.trim().isEmpty()) {
+      query.append(" where unidad.id_unidad ='" + idUnidad + "' ");
+    }
     
     if (claveUsuario != null && !claveUsuario.trim().isEmpty()) {
       query.append("and usuario.cve_m_usuario like '%" + claveUsuario + "%' ");
@@ -406,7 +414,6 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
       ArchivoDto archivo = new ArchivoDto();
       comision.setIdArchivo(archivo);
       comision.setIdComision((Integer) comisiones.get(COLUMNA_ID_COMISION));
-      logger.info("Dato recuperado: {}", comisiones.get(COLUMNA_ID_USUARIO));
       comision.setDias((Integer) comisiones.get(COLUMNA_DIAS));
       comision.setFechaFin((Date) comisiones.get(COLUMNA_FECHA_FIN));
       comision.setFechaInicio((Date) comisiones.get(COLUMNA_FECHA_INICIO));
