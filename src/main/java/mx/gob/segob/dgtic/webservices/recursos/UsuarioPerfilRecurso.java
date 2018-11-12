@@ -48,9 +48,11 @@ public class UsuarioPerfilRecurso {
 		Gson gson = builder.create();
 		UsuarioPerfilDto usuarioPerfilDto = gson.fromJson(jsonObject.get("usuarioPerfil"), UsuarioPerfilDto.class);
 		
-		usuarioPerfilService.insertaEliminaUsuarioPerfil(usuarioPerfilDto);
-
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+		Integer r = usuarioPerfilService.insertaEliminaUsuarioPerfil(usuarioPerfilDto);
+		if (r > 0)
+			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+		else 
+			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.NOT_MODIFIED, "");
 	}
 
 }

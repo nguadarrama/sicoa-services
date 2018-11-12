@@ -59,11 +59,8 @@ public class AutenticacionRepositoryImpl extends RepositoryBase implements Auten
 	     qry.append(" SELECT password ");
 	     qry.append(" FROM m_usuario  ");
 	     qry.append(" WHERE cve_m_usuario = :cveUsuario  ");
-	     
-
 	     MapSqlParameterSource parametros = new MapSqlParameterSource();
 	     parametros.addValue("cveUsuario", cveUsuario);
-	     
 	     String palabraClave = null;
 	     try {
 	    	 palabraClave = jdbcTemplate.queryForObject( 

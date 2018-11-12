@@ -8,7 +8,7 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioUnidadAdministrativaDto;
 public interface UnidadAdministrativaService {
 
 	public List<UsuarioUnidadAdministrativaDto> obtenerListaUnidadAdministrativa();
-	public void consultaRegistraUsuarioUnidadAdministrativa(UsuarioUnidadAdministrativaDto usuarioUnidadAdministrativaDto);
+	public Integer consultaRegistraUsuarioUnidadAdministrativa(UsuarioUnidadAdministrativaDto usuarioUnidadAdministrativaDto);
 	public List<UsuarioUnidadAdministrativaDto> consultaResponsable(String claveUsuario);
 	public List<UsuarioUnidadAdministrativaDto> obtenerUnidadesAdministrativas();
 	public List<UsuarioUnidadAdministrativaDto> consultasoloUnidades();

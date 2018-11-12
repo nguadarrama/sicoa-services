@@ -58,6 +58,9 @@ public class AutenticacionRules extends ServiceBase{
 	/**  Constante que representa CONFIG_AUT_INTENTOS_ACCESO_PERMITIDO, variable de las propiedades de configuraci&oacute;n de la aplicaci&oacute;n ({@code aplicacion.properties} : {@code autenticacion.numero_intentos_bloqueo} ) . */
 	private static final String CONFIG_AUT_INTENTOS_ACCESO_PERMITIDO = "autenticacion.numero_intentos_bloqueo";
 	
+	/**  Constante que representa CONFIG_AUT_INTENTOS_ACCESO_PERMITIDO, variable de las propiedades de configuraci&oacute;n de la aplicaci&oacute;n ({@code aplicacion.properties} : {@code autenticacion.numero_intentos_bloqueo} ) . */
+	private static final String CONFIGURACION_AUTENTICACION_MINUTOS_SESION = "autenticacion.minutos_sesion";
+	
 	
 	/**
 	 * Repositorio de datos para la autenticaci&oacute;n de usuario.
@@ -166,12 +169,10 @@ public class AutenticacionRules extends ServiceBase{
 	 * @return true, si el usuario se encuentra bloqueado.
 	 */
 	private boolean esUsuarioBloqueado(UsuarioAcceso usuario){
-		
 		boolean bloqueado = Boolean.FALSE;
 		Integer duracionMinutosBloqueo = Integer.parseInt( 
 													AplicacionPropertiesUtil.getPropiedades()
 																			.obtenerPropiedad(CONFIGURACION_AUTENTICACION_MINUTOS_BLOQUEADO));
-		
 		if( usuario.getBloqueado() != null && 
 			usuario.getBloqueado().equals(DecisionEnum.S)){
 			
@@ -181,7 +182,6 @@ public class AutenticacionRules extends ServiceBase{
 				Calendar tiempoDesbloqueo = Calendar.getInstance();
 				tiempoDesbloqueo.setTime(fechaBloqueo);
 				tiempoDesbloqueo.add(Calendar.MINUTE, duracionMinutosBloqueo);
-				
 				Calendar tiempoActual = Calendar.getInstance();
 				if(tiempoActual.after(tiempoDesbloqueo)){
 					bloqueado = Boolean.FALSE;	
@@ -221,11 +221,27 @@ public class AutenticacionRules extends ServiceBase{
 	 * @param usuario El usuario que se evaluara su estado.
 	 * @return true, si se debe permitir multiple-sesion
 	 */
-	private boolean permitirAutenticacionMultisesion(UsuarioAcceso usuario){
+	private Boolean permitirAutenticacionMultisesion(UsuarioAcceso usuario){
 		boolean esUsuarioAutenticado = Boolean.FALSE;
 		if( usuario.getLogueado() != null && 
 			usuario.getLogueado().equals(DecisionEnum.S)){
+				Integer duracionMinutosSesion = Integer.parseInt( 
+															AplicacionPropertiesUtil.getPropiedades()
+																					.obtenerPropiedad(CONFIGURACION_AUTENTICACION_MINUTOS_SESION));
 			esUsuarioAutenticado = Boolean.TRUE;
+			if(duracionMinutosSesion > 0) {
+				Date fechaBloqueo = usuario.getUltimoAcceso();
+				Calendar tiempo = Calendar.getInstance();
+				tiempo.setTime(fechaBloqueo);
+				tiempo.add(Calendar.MINUTE, duracionMinutosSesion);
+				Calendar tiempoActual = Calendar.getInstance();
+				if(tiempoActual.after(tiempo)){
+					esUsuarioAutenticado = Boolean.FALSE;	
+					usuario.setLogueado(DecisionEnum.N);;
+					repositorioAutenticacion.cerrarSession(usuario.getClaveUsuario());
+				}
+			}
+
 		}
 		
 		String configuracionMultisession = AplicacionPropertiesUtil.getPropiedades().obtenerPropiedad(CONFIGURACION_USO_MULTISESSION);

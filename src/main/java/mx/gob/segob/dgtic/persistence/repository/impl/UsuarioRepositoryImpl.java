@@ -15,13 +15,11 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import mx.gob.segob.dgtic.business.service.HorarioService;
 import mx.gob.segob.dgtic.comun.sicoa.dto.PerfilDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
 import mx.gob.segob.dgtic.comun.util.crypto.HashUtils;
 import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
-import mx.gob.segob.dgtic.persistence.repository.PerfilRepository;
 import mx.gob.segob.dgtic.persistence.repository.UsuarioRepository;
 import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 
@@ -33,13 +31,6 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 	
 	@Autowired
     private NamedParameterJdbcTemplate nameParameterJdbcTemplate;
-	
-	@Autowired
-	private HorarioService horarioService;
-	
-	@Autowired
-	private PerfilRepository perfilRepository;
-	
 	
 	@Override
 	public List<UsuarioDto> obtenerListaUsuarios() {
@@ -144,33 +135,15 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 	}
 
 	@Override
-	public void modificaUsuario(UsuarioDto usuarioDto) {
-		
+	public Integer modificaUsuario(UsuarioDto usuarioDto) {
 		StringBuilder qry = new StringBuilder();
 		qry.append("update m_usuario set id_horario = :idHorario, estatus = :estatus ");
 		qry.append("WHERE cve_m_usuario = :claveUsuario ");
-		
-		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		//parametros.addValue("idArea", usuarioDto.getIdArea());
-		//parametros.addValue("clavePerfil", usuarioDto.getClavePerfil().getClavePerfil());
+		MapSqlParameterSource parametros = new MapSqlParameterSource();	
 		parametros.addValue("idHorario", usuarioDto.getIdHorario().getIdHorario());
-		//parametros.addValue("idPuesto", usuarioDto.getIdPuesto());
 		parametros.addValue("claveUsuario", usuarioDto.getClaveUsuario());
-		//parametros.addValue("nombre", usuarioDto.getNombre());
-		//parametros.addValue("apellidoPaterno", usuarioDto.getApellidoPaterno());
-		//parametros.addValue("apellidoMaterno", usuarioDto.getApellidoMaterno());
-		//parametros.addValue("fechaIngreso", usuarioDto.getFechaIngreso());
-//		parametros.addValue("password", usuarioDto.getPassword());
-//		parametros.addValue("activo", usuarioDto.getActivo());
-//		parametros.addValue("nuevo", usuarioDto.getNuevo());
-//		parametros.addValue("enSesion", usuarioDto.getEnSesion());
-//		parametros.addValue("ultimoAcceso", usuarioDto.getUltimoAcceso());
-//		parametros.addValue("NumeroIntentos", usuarioDto.getNumeroIntentos());
-//		parametros.addValue("bloqueado", usuarioDto.getBloqueado());
-//		parametros.addValue("fechaBloqueo", usuarioDto.getFechaBloqueo());
-//		parametros.addValue("primeraVez", usuarioDto.getPrimeraVez());
 		parametros.addValue("estatus", usuarioDto.getEstatus());
-		nameParameterJdbcTemplate.update(qry.toString(), parametros);	
+		return nameParameterJdbcTemplate.update(qry.toString(), parametros);	
 	}
 
 	@Override

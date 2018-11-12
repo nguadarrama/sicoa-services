@@ -20,14 +20,16 @@ public class UnidadAdministrativaRules {
 		return unidadAdministrativaRepository.obtenerListaUnidadAdministrativa();
 	}
 	
-	public void consultaRegistraUsuarioUnidadAdministrativa(UsuarioUnidadAdministrativaDto usuarioUnidadAdministrativaDto){
+	public Integer consultaRegistraUsuarioUnidadAdministrativa(UsuarioUnidadAdministrativaDto usuarioUnidadAdministrativaDto){
 		UsuarioUnidadAdministrativaDto usuarioUnidadAdministrativaAuxDto = null;
+		Integer r = null;
 		usuarioUnidadAdministrativaAuxDto=unidadAdministrativaRepository.buscaUsuarioUnidadAdministrativa(usuarioUnidadAdministrativaDto.getClaveUsuario().getClaveUsuario());
 		if(usuarioUnidadAdministrativaAuxDto!=null){
-			unidadAdministrativaRepository.actualizaUsuarioUnidadAdministrativa(usuarioUnidadAdministrativaDto);
+			r = unidadAdministrativaRepository.actualizaUsuarioUnidadAdministrativa(usuarioUnidadAdministrativaDto);
 		}else{
-			unidadAdministrativaRepository.guardaUsuarioUnidadAdministrativa(usuarioUnidadAdministrativaDto);
+			r = unidadAdministrativaRepository.guardaUsuarioUnidadAdministrativa(usuarioUnidadAdministrativaDto);
 		}
+		return r;
 	}
 	
 	public List<UsuarioUnidadAdministrativaDto> consultaResponsable(String claveUsuario){

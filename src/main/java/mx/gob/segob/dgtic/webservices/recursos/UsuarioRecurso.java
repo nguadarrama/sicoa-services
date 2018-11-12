@@ -61,14 +61,14 @@ public class UsuarioRecurso {
 	@Path("modificaUsuario")	
 	public Response modificaUsuario(@RequestParam String jsonUsuario) {
 		JsonObject jsonObject = new JsonParser().parse(jsonUsuario).getAsJsonObject();
-		
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		UsuarioDto usuarioDto = gson.fromJson(jsonObject.get("usuario"), UsuarioDto.class);
-		
-		usuarioService.modificaUsuario(usuarioDto);
-
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+		Integer r = usuarioService.modificaUsuario(usuarioDto);
+		if (r > 0 )
+			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+		else
+			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.NOT_MODIFIED, "");
 	}
 	
 	@GET

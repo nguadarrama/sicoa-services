@@ -44,14 +44,14 @@ public class UnidadAdministrativaRecurso {
 	@Path("consultaRegistraUsuarioUnidadAdministrativa")	
 	public Response consultaRegistraUsuarioUnidadAdministrativa(@RequestParam String jsonUsuarioUnidadAdministrativa) {
 		JsonObject jsonObject = new JsonParser().parse(jsonUsuarioUnidadAdministrativa).getAsJsonObject();
-		
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		UsuarioUnidadAdministrativaDto usuarioUnidadAdministrativaDto = gson.fromJson(jsonObject.get("UsuarioUnidadAdministrativa"), UsuarioUnidadAdministrativaDto.class);
-		
-		unidadAdministrativaService.consultaRegistraUsuarioUnidadAdministrativa(usuarioUnidadAdministrativaDto);
-
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+		Integer r = unidadAdministrativaService.consultaRegistraUsuarioUnidadAdministrativa(usuarioUnidadAdministrativaDto);
+		if (r> 0)
+			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
+		else 
+			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.NOT_MODIFIED, "");
 	}
 	
 	@GET

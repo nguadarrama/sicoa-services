@@ -110,6 +110,8 @@ public class ApplicationInit implements WebApplicationInitializer  {
 	//Filtro que habilita el control CORS
 	private void agregaFiltroCORS(ServletContext context) {       
         FilterRegistration.Dynamic corsFilter = context.addFilter("CorsFilter", CorsFilter.class);
+        corsFilter.setInitParameter("encoding", "UTF-8");
+        corsFilter.setInitParameter("forceEncoding", "true");
         corsFilter.addMappingForUrlPatterns(null, false, "/*");
 	}
 	
@@ -124,6 +126,8 @@ public class ApplicationInit implements WebApplicationInitializer  {
 	 private void agregaFiltroEncoding(ServletContext context) {       
         FilterRegistration.Dynamic encodingFilter = context.addFilter("EncodingFilter", EncodingFilter.class);
         encodingFilter.setInitParameter("encoding", "UTF-8");
+        encodingFilter.setInitParameter("forceEncoding", "true");
+        encodingFilter.setInitParameter("allowedMethods", "GET,POST,PUT,DELETE,HEAD,OPTIONS");
         encodingFilter.addMappingForUrlPatterns(null, false, "/*");        
 	}
 	

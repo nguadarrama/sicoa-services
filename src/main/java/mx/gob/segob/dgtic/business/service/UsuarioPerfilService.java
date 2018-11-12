@@ -7,6 +7,6 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioPerfilDto;
 public interface UsuarioPerfilService {
 
 	public void agregaUsuarioPerfil(UsuarioPerfilDto usuarioPerfilDto);
-	public void insertaEliminaUsuarioPerfil(UsuarioPerfilDto usuarioPerfilDto);
+	public Integer insertaEliminaUsuarioPerfil(UsuarioPerfilDto usuarioPerfilDto);
 	public List<UsuarioPerfilDto> consultaPerfilesPorUsuario(String claveUsuario);
 }

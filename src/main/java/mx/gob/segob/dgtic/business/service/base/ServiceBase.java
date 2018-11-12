@@ -23,5 +23,21 @@ public abstract class ServiceBase {
     /** Intancia para realizar log  */
     protected final Logger logger = LoggerFactory.getLogger(ServiceBase.class);
     protected final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    
+    public String cambiaCaracter(String cadena){
+    	cadena =  cadena.replaceAll("AA","Á")
+		.replaceAll("EE", "É")
+		.replaceAll("II", "Í")
+		.replaceAll("OO", "Ó")
+		.replaceAll("UU", "Ú")
+		.replaceAll("aa", "á")
+		.replaceAll("ee", "é")
+		.replaceAll("ii", "í")
+		.replaceAll("oo", "ó")
+		.replaceAll("uu", "ú")
+		.replaceAll("nn", "ñ")
+		.replaceAll("NN", "Ñ");
+    	return cadena;
+    }
 
 }

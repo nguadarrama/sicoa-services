@@ -26,11 +26,12 @@ import mx.gob.segob.dgtic.business.service.constants.ServiceConstants;
 import mx.gob.segob.dgtic.comun.sicoa.dto.IncidenciaDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
 import mx.gob.segob.dgtic.comun.util.FormatoIncidencia;
+import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
 @Path("asistencia")
 @Component
-public class AsistenciaRecurso {
+public class AsistenciaRecurso extends RecursoBase{
 	
 	@Autowired
 	private AsistenciaService asistenciaService;
@@ -106,13 +107,12 @@ public class AsistenciaRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("creaIncidencia")	
 	public Response creaIncidencia(@RequestParam String jsonIncidencia) {
+		jsonIncidencia = this.cambiaCaracter(jsonIncidencia);
 		JsonObject jsonObject = new JsonParser().parse(jsonIncidencia).getAsJsonObject();
-		
 		GsonBuilder builder = new GsonBuilder();
 		builder.setDateFormat(ServiceConstants.YYYY_MM_DD);
 		Gson gson = builder.create();
 		IncidenciaDto incidencia = gson.fromJson(jsonObject.get(ServiceConstants.INCIDENCIA), IncidenciaDto.class);
-		
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.creaIncidencia(incidencia));
 	}
 	
@@ -121,6 +121,8 @@ public class AsistenciaRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("creaDescuento")	
 	public Response creaDescuento(@RequestParam String jsonDescuento) {
+		jsonDescuento = this.cambiaCaracter(jsonDescuento);
+		
 		JsonObject jsonObject = new JsonParser().parse(jsonDescuento).getAsJsonObject();
 		
 		GsonBuilder builder = new GsonBuilder();
@@ -136,8 +138,9 @@ public class AsistenciaRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("dictaminaIncidencia")	
 	public Response dictaminaIncidencia(@RequestParam String jsonIncidencia) {
-		JsonObject jsonObject = new JsonParser().parse(jsonIncidencia).getAsJsonObject();
 		
+		jsonIncidencia = this.cambiaCaracter(jsonIncidencia);
+		JsonObject jsonObject = new JsonParser().parse(jsonIncidencia).getAsJsonObject();
 		GsonBuilder builder = new GsonBuilder();
 		builder.setDateFormat(ServiceConstants.YYYY_MM_DD);
 		Gson gson = builder.create();
@@ -151,8 +154,9 @@ public class AsistenciaRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("descuentaIncidencia")	
 	public Response descuentaIncidencia(@RequestParam String jsonIncidencia) {
-		JsonObject jsonObject = new JsonParser().parse(jsonIncidencia).getAsJsonObject();
 		
+		jsonIncidencia = this.cambiaCaracter(jsonIncidencia);
+		JsonObject jsonObject = new JsonParser().parse(jsonIncidencia).getAsJsonObject();
 		GsonBuilder builder = new GsonBuilder();
 		builder.setDateFormat(ServiceConstants.YYYY_MM_DD);
 		Gson gson = builder.create();
@@ -166,6 +170,8 @@ public class AsistenciaRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("formatoJustificacion")	
 	public Response formatoJustificacion(@RequestParam String jsonFormatoJustificacion) throws FileNotFoundException {
+		
+		jsonFormatoJustificacion = this.cambiaCaracter(jsonFormatoJustificacion);
 		JsonObject jsonObject = new JsonParser().parse(jsonFormatoJustificacion).getAsJsonObject();
 		
 		GsonBuilder builder = new GsonBuilder();
@@ -180,6 +186,8 @@ public class AsistenciaRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("formatoDescuento")	
 	public Response formatoDescuento(@RequestParam String jsonFormatoDescuento) throws FileNotFoundException {
+		jsonFormatoDescuento = this.cambiaCaracter(jsonFormatoDescuento);
+		
 		JsonObject jsonObject = new JsonParser().parse(jsonFormatoDescuento).getAsJsonObject();
 		
 		GsonBuilder builder = new GsonBuilder();

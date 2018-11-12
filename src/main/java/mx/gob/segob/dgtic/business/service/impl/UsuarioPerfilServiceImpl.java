@@ -23,9 +23,8 @@ public class UsuarioPerfilServiceImpl implements UsuarioPerfilService {
 	}
 
 	@Override
-	public void insertaEliminaUsuarioPerfil(UsuarioPerfilDto usuarioPerfilDto) {
-		usuarioPerfilRules.insertaEliminaUsuarioPerfil(usuarioPerfilDto);
-		
+	public Integer insertaEliminaUsuarioPerfil(UsuarioPerfilDto usuarioPerfilDto) {
+		return usuarioPerfilRules.insertaEliminaUsuarioPerfil(usuarioPerfilDto);
 	}
 
 	@Override

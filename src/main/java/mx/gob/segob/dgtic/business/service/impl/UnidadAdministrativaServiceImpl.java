@@ -22,9 +22,9 @@ public class UnidadAdministrativaServiceImpl implements UnidadAdministrativaServ
 	}
 
 	@Override
-	public void consultaRegistraUsuarioUnidadAdministrativa(
+	public Integer consultaRegistraUsuarioUnidadAdministrativa(
 			UsuarioUnidadAdministrativaDto usuarioUnidadAdministrativaDto) {
-		unidadAdministrativaRules.consultaRegistraUsuarioUnidadAdministrativa(usuarioUnidadAdministrativaDto);
+		return unidadAdministrativaRules.consultaRegistraUsuarioUnidadAdministrativa(usuarioUnidadAdministrativaDto);
 		
 	}
 

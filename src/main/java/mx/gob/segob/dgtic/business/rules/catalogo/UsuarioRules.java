@@ -23,8 +23,8 @@ public class UsuarioRules {
 	}
 	
 	
-	public void modificaUsuario (UsuarioDto usuarioDto){
-		usuarioRepository.modificaUsuario(usuarioDto);
+	public Integer modificaUsuario (UsuarioDto usuarioDto){
+		return usuarioRepository.modificaUsuario(usuarioDto);
 	}
 	
 	public void agregaUsuario (UsuarioDto usuarioDto){

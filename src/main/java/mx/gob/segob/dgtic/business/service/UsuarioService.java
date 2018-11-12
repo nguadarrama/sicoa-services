@@ -8,7 +8,7 @@ public interface UsuarioService {
 
 	public List<UsuarioDto> obtenerListaUsuarios();
 	public UsuarioDto buscaUsuario(String claveUsuario);
-	public void modificaUsuario(UsuarioDto usuarioDto);
+	public Integer modificaUsuario(UsuarioDto usuarioDto);
 	public void agregaUsuario(UsuarioDto usuarioDto);
 	public void eliminaUsuario(String claveUsuario);
 	public void reiniciaContrasenia(String claveUsuario);

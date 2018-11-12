@@ -1,5 +1,7 @@
 package mx.gob.segob.dgtic.webservices.recursos;
 
+import java.io.UnsupportedEncodingException;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -37,6 +39,7 @@ public class ArchivoRecurso extends ServiceBase{
 	@Autowired 
 	private JustificacionService justificacionService;
 	
+	public static final String ENCODING = "application/json; charset= utf-8";
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -59,8 +62,8 @@ public class ArchivoRecurso extends ServiceBase{
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modificaArchivo")	
 	public Response modificaArchivo(@RequestParam String jsonArchivo) {
+		jsonArchivo = this.cambiaCaracter(jsonArchivo);
 		JsonObject jsonObject = new JsonParser().parse(jsonArchivo).getAsJsonObject();
-		
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		ArchivoDto archivoDto = gson.fromJson(jsonObject.get("archivo"), ArchivoDto.class);
@@ -72,8 +75,8 @@ public class ArchivoRecurso extends ServiceBase{
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agregaArchivo")	
 	public Response agregaArchivo(@RequestParam String jsonArchivo) {
+		jsonArchivo = this.cambiaCaracter(jsonArchivo);
 		JsonObject jsonObject = new JsonParser().parse(jsonArchivo).getAsJsonObject();
-		
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		ArchivoDto archivoDto = gson.fromJson(jsonObject.get("archivo"), ArchivoDto.class);
@@ -97,7 +100,7 @@ public class ArchivoRecurso extends ServiceBase{
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modificaJust")	
 	public Response modificaJustificacion(@RequestParam String jsonJustificacion) {
-		
+		jsonJustificacion = this.cambiaCaracter(jsonJustificacion);
 		JsonObject jsonObject = new JsonParser().parse(jsonJustificacion).getAsJsonObject();
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
@@ -112,6 +115,7 @@ public class ArchivoRecurso extends ServiceBase{
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agregaJust")	
 	public Response agregaJustificacion(@RequestParam String jsonJustificacion) {
+		jsonJustificacion = this.cambiaCaracter(jsonJustificacion);
 		JsonObject jsonObject = new JsonParser().parse(jsonJustificacion).getAsJsonObject();
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();

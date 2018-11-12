@@ -32,10 +32,8 @@ public class UsuarioServiceImpl implements UsuarioService{
 	}
 
 	@Override
-	public void modificaUsuario(UsuarioDto usuarioDto) {
-		
-		usuarioRules.modificaUsuario(usuarioDto);
-		
+	public Integer modificaUsuario(UsuarioDto usuarioDto) {
+		return usuarioRules.modificaUsuario(usuarioDto);
 	}
 
 	@Override
