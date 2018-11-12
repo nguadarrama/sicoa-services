@@ -373,16 +373,16 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
     }
     
     if (claveUsuario != null && !claveUsuario.trim().isEmpty()) {
-      query.append("and usuario.cve_m_usuario like '%" + claveUsuario + "%' ");
+      query.append("and usuario.cve_m_usuario like '%" + removerGuionBajo(claveUsuario) + "%' ");
     }
     if (nombre != null && !nombre.trim().isEmpty()) {
-      query.append("and usuario.nombre like '%" + nombre + "%' ");
+      query.append("and usuario.nombre like '%" + removerGuionBajo(nombre) + "%' ");
     }
     if (apellidoPaterno != null && !apellidoPaterno.trim().isEmpty()) {
-      query.append("and usuario.apellido_paterno like '%" + apellidoPaterno + "%' ");
+      query.append("and usuario.apellido_paterno like '%" + removerGuionBajo(apellidoPaterno) + "%' ");
     }
     if (apellidoMaterno != null && !apellidoMaterno.trim().isEmpty()) {
-      query.append("and usuario.apellido_materno like '%" + apellidoMaterno + "%' ");
+      query.append("and usuario.apellido_materno like '%" + removerGuionBajo(apellidoMaterno) + "%' ");
     }
     if (idUnidad != null && !idUnidad.trim().isEmpty()) {
       query.append("and unidad.id_unidad='" + idUnidad + "' ");
@@ -436,16 +436,16 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
     query.append("where unidad.id_unidad ='" + idUnidad + "' ");
     
     if (claveUsuario != null && !claveUsuario.trim().isEmpty()) {
-      query.append("and usuario.cve_m_usuario like '%" + claveUsuario + "%' ");
+      query.append("and usuario.cve_m_usuario like '%" + removerGuionBajo(claveUsuario) + "%' ");
     }
     if (nombre != null && !nombre.trim().isEmpty()) {
-      query.append("and usuario.nombre like '%" + nombre + "%' ");
+      query.append("and usuario.nombre like '%" + removerGuionBajo(nombre) + "%' ");
     }
     if (apellidoPaterno != null && !apellidoPaterno.trim().isEmpty()) {
-      query.append("and usuario.apellido_paterno like '%" + apellidoPaterno + "%' ");
+      query.append("and usuario.apellido_paterno like '%" + removerGuionBajo(apellidoPaterno) + "%' ");
     }
     if (apellidoMaterno != null && !apellidoMaterno.trim().isEmpty()) {
-      query.append("and usuario.apellido_materno like '%" + apellidoMaterno + "%' ");
+      query.append("and usuario.apellido_materno like '%" + removerGuionBajo(apellidoMaterno) + "%' ");
     }
     query.append("group by usuario.id_usuario");
 
@@ -503,6 +503,10 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
     }
     logger.info("Número de registros recuperados: {}", listaComisiones.size());
     return listaComisiones;
+  }
+  
+  private String removerGuionBajo(String string) {
+    return string.replace("_", " ");
   }
 
 }
