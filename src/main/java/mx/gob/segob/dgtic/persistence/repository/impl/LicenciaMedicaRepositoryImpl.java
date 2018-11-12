@@ -336,11 +336,11 @@ public class LicenciaMedicaRepositoryImpl implements LicenciaMedicaRepository{
 		System.out.println("sqy "+qry);
 		 List<Map<String, Object>> consulta = jdbcTemplate.queryForList(qry);
 	        List<LicenciaMedicaDto> listaLicencias = new ArrayList<>();
-	        
+	        String SUMA_DIAS = "suma_dias";
 	        for (Map<String, Object> licencias : consulta) {
 	        	LicenciaMedicaDto licenciaMedicaDto= new LicenciaMedicaDto();
 	        	String diasRecuperados=null;
-	        	if(licencias.get("suma_dias")==null){
+	        	if(licencias.get(SUMA_DIAS)==null){
 	        		diasRecuperados="0";
 	        	}else{
 	        	diasRecuperados=""+licencias.get("suma_dias");

@@ -64,7 +64,7 @@ public class FormatoFuenteBean implements Serializable {
         this.color = color;
         this.letra = letra;
 
-        this.fuente = (Font)poLibro.createFont();
+        this.fuente = poLibro.createFont();
         this.fuente.setFontHeightInPoints(tamanho);
         this.fuente.setFontName(letra);
         this.fuente.setBoldweight(estilo);

@@ -1,13 +1,9 @@
 package mx.gob.segob.dgtic.business.service;
 
-import java.io.FileNotFoundException;
 import java.util.List;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ComisionAux;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ComisionDto;
-import mx.gob.segob.dgtic.comun.sicoa.dto.GeneraReporteArchivo;
 import mx.gob.segob.dgtic.comun.sicoa.dto.GenerarReporteArchivoComision;
-import mx.gob.segob.dgtic.comun.sicoa.dto.LicenciaMedicaDto;
-import mx.gob.segob.dgtic.comun.sicoa.dto.LicenciaMedicaDtoAux;
 import mx.gob.segob.dgtic.comun.sicoa.dto.reporte;
 
 public interface ComisionService {

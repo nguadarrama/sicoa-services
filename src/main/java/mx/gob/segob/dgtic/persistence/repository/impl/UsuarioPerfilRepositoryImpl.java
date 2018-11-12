@@ -3,26 +3,19 @@ package mx.gob.segob.dgtic.persistence.repository.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-//import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-
 import mx.gob.segob.dgtic.comun.sicoa.dto.PerfilDto;
-import mx.gob.segob.dgtic.comun.sicoa.dto.UnidadAdministrativaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioPerfilDto;
-import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioUnidadAdministrativaDto;
 import mx.gob.segob.dgtic.persistence.repository.UsuarioPerfilRepository;
+import mx.gob.segob.dgtic.persistence.repository.base.RepositoryBase;
 
 @Repository
-public class UsuarioPerfilRepositoryImpl implements UsuarioPerfilRepository{
-
-	//@Autowired
-    //private JdbcTemplate jdbcTemplate;
+public class UsuarioPerfilRepositoryImpl extends RepositoryBase implements UsuarioPerfilRepository{
 	
 	@Autowired
     private NamedParameterJdbcTemplate nameParameterJdbcTemplate;
@@ -59,15 +52,15 @@ public class UsuarioPerfilRepositoryImpl implements UsuarioPerfilRepository{
 
 	@Override
 	public List<UsuarioPerfilDto> consultaUsuarioPerfil(String claveUsuario) {
-		System.out.println("clave usuario para consulta "+claveUsuario);
-//		StringBuilder qry = new StringBuilder();
-//		qry.append("select usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, perfil.cve_c_perfil, perfil.descripcion ");
-//		qry.append("");
+		logger.info("clave usuario para consulta: {} ",claveUsuario);
+		/**StringBuilder qry = new StringBuilder();
+		qry.append("select usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, perfil.cve_c_perfil, perfil.descripcion ");
+		qry.append("");**/
 		String query="";
 		query+="select relacion.id_usuario_perfil, usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, perfil.cve_c_perfil, perfil.descripcion ";
 		query+="from m_usuario usuario, c_perfil perfil, d_usuario_perfil relacion ";
 		query+="where relacion.cve_m_usuario=usuario.cve_m_usuario and relacion.cve_c_perfil=perfil.cve_c_perfil and usuario.cve_m_usuario = '"+claveUsuario+"'";
-		System.out.println("consulta "+query);
+		logger.info("consulta:{} ",query);
 		
         List<Map<String, Object>> usuariosPerfiles = jdbcTemplate.queryForList(query);
         List<UsuarioPerfilDto> listaUsuarioPerfil = new ArrayList<>();
@@ -79,7 +72,7 @@ public class UsuarioPerfilRepositoryImpl implements UsuarioPerfilRepository{
     		perfilDto.setClavePerfil((String)usuarioPerfil.get("cve_c_perfil"));
     		perfilDto.setDescripcion((String)usuarioPerfil.get("descripcion"));
     		usuarioPerfilDto.setClavePerfil(perfilDto);
-    		System.out.println("descripcion "+usuarioPerfil.get("descripcion"));
+    		logger.info("descripcion : {}",usuarioPerfil.get("descripcion"));
     		UsuarioDto usuarioDto = new UsuarioDto();
     		usuarioDto.setClaveUsuario((String)usuarioPerfil.get("cve_m_usuario"));
     		usuarioDto.setNombre((String)usuarioPerfil.get("nombre"));
@@ -125,8 +118,9 @@ public class UsuarioPerfilRepositoryImpl implements UsuarioPerfilRepository{
 
 	@Override
 	public void actualizaUsuarioPerfil(Integer idUsuarioPerfil) {
-		
-		
+		/**
+		 * 
+		 */
 	}
 
 	

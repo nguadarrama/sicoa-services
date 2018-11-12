@@ -1,27 +1,22 @@
 package mx.gob.segob.dgtic.persistence.repository.impl;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import mx.gob.segob.dgtic.comun.sicoa.dto.PeriodoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UnidadAdministrativaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioUnidadAdministrativaDto;
-import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.persistence.repository.UnidadAdministrativaRepository;
+import mx.gob.segob.dgtic.persistence.repository.base.RepositoryBase;
+import mx.gob.segob.dgtic.persistence.repository.constants.RepositoryConstants;
 @Repository
-public class UnidadAdministrativaRepositoryImpl implements UnidadAdministrativaRepository{
+public class UnidadAdministrativaRepositoryImpl extends RepositoryBase implements UnidadAdministrativaRepository{
 
 	@Autowired
     private JdbcTemplate jdbcTemplate;
@@ -41,14 +36,12 @@ public class UnidadAdministrativaRepositoryImpl implements UnidadAdministrativaR
         
         for (Map<String, Object> unidad : unidadesArdminsitrativas) {
         	UsuarioUnidadAdministrativaDto usuarioUnidadAdministrativaDto = new UsuarioUnidadAdministrativaDto();
-        	//System.out.println("unidad "+unidad.get("nombre"));
     		UnidadAdministrativaDto unidadAdministrativaDto = new UnidadAdministrativaDto();
-    		unidadAdministrativaDto.setIdUnidad((Integer)unidad.get("id_unidad"));
-    		unidadAdministrativaDto.setNombre((String)unidad.get("nombre"));
+    		unidadAdministrativaDto.setIdUnidad((Integer)unidad.get(RepositoryConstants.ID_UNIDAD));
+    		unidadAdministrativaDto.setNombre((String)unidad.get(RepositoryConstants.NOMBRE));
     		UsuarioDto usuarioDto = new UsuarioDto();
     		usuarioUnidadAdministrativaDto.setIdUnidad(unidadAdministrativaDto);
-    		usuarioDto.setClaveUsuario((String)unidad.get("cve_m_usuario"));
-    		//System.out.println("Datos "+unidad.get("cve_m_usuario")+" "+unidad.get("nombre"));
+    		usuarioDto.setClaveUsuario((String)unidad.get(RepositoryConstants.CLAVE_M_USUARIO));
     		usuarioUnidadAdministrativaDto.setClaveUsuario(usuarioDto);
     		
     		listaUnidadAdministrativa.add(usuarioUnidadAdministrativaDto);
@@ -62,9 +55,9 @@ public class UnidadAdministrativaRepositoryImpl implements UnidadAdministrativaR
 		StringBuilder qry = new StringBuilder();
 		qry.append("insert into usuario_unidad_administrativa (cve_m_usuario, id_unidad) ");
 		qry.append("values (:claveUsuario, :idUnidad) ");
-		System.out.println("usuarioUnidadAdministrativaDto.getIdUnidad().getIdUnidad() "+usuarioUnidadAdministrativaDto.getIdUnidad().getIdUnidad());
+		logger.info("usuarioUnidadAdministrativaDto.getIdUnidad().getIdUnidad(): {} ",usuarioUnidadAdministrativaDto.getIdUnidad().getIdUnidad());
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("claveUsuario", usuarioUnidadAdministrativaDto.getClaveUsuario().getClaveUsuario());
+		parametros.addValue(RepositoryConstants.CLAVE_USUARIO2, usuarioUnidadAdministrativaDto.getClaveUsuario().getClaveUsuario());
 		parametros.addValue("idUnidad", usuarioUnidadAdministrativaDto.getIdUnidad().getIdUnidad());
 
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
@@ -86,23 +79,21 @@ public class UnidadAdministrativaRepositoryImpl implements UnidadAdministrativaR
         try{
         informacionConsulta = nameParameterJdbcTemplate.queryForMap(qry.toString(), parametros);
         }catch(EmptyResultDataAccessException error){
-        	
+        	logger.warn("Error: {} ", error);
         }
-
-        		//queryForMap(qry.toString(), parametros);
         if(informacionConsulta!=null){
         
         UnidadAdministrativaDto unidadAdministrativaDto = new UnidadAdministrativaDto();
-		unidadAdministrativaDto.setIdUnidad((Integer)informacionConsulta.get("id_unidad"));
+		unidadAdministrativaDto.setIdUnidad((Integer)informacionConsulta.get(RepositoryConstants.ID_UNIDAD));
 		UsuarioDto usuarioDto = new UsuarioDto();
 		usuarioUnidadAdministrativaDto.setIdUnidad(unidadAdministrativaDto);
-		usuarioDto.setClaveUsuario((String)informacionConsulta.get("cve_m_usuario"));
+		usuarioDto.setClaveUsuario((String)informacionConsulta.get(RepositoryConstants.CLAVE_M_USUARIO));
 		usuarioUnidadAdministrativaDto.setClaveUsuario(usuarioDto);
         }else{
         	usuarioUnidadAdministrativaDto=null;
         }
         return 		usuarioUnidadAdministrativaDto;
-        //return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<UsuarioUnidadAdministrativaDto>(UsuarioUnidadAdministrativaDto.class));
+
 	}
 
 	@Override
@@ -127,24 +118,24 @@ public class UnidadAdministrativaRepositoryImpl implements UnidadAdministrativaR
 		query+="(select unidad.id_unidad ";
 		query+="from c_unidad_administrativa unidad, m_usuario usuario, usuario_unidad_administrativa relacion ";
 		query+="where usuario.cve_m_usuario=relacion.cve_m_usuario and unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario ='"+claveUsuario+"');";
-		System.out.println("query "+query);
+		logger.info("query: {} ",query);
 		List<Map<String, Object>> unidadesArdminsitrativas = jdbcTemplate.queryForList(query);
         List<UsuarioUnidadAdministrativaDto> listaUnidadAdministrativa = new ArrayList<>();
         
         for (Map<String, Object> unidad : unidadesArdminsitrativas) {
         	UsuarioUnidadAdministrativaDto usuarioUnidadAdministrativaDto = new UsuarioUnidadAdministrativaDto();
-        	System.out.println("unidad "+unidad.get("nombre"));
+        	logger.info("unidad: {} ",unidad.get(RepositoryConstants.NOMBRE));
     		UnidadAdministrativaDto unidadAdministrativaDto = new UnidadAdministrativaDto();
-    		unidadAdministrativaDto.setIdUnidad((Integer)unidad.get("id_unidad"));
-    		unidadAdministrativaDto.setNombre((String)unidad.get("nombre_unidad"));
+    		unidadAdministrativaDto.setIdUnidad((Integer)unidad.get(RepositoryConstants.ID_UNIDAD));
+    		unidadAdministrativaDto.setNombre((String)unidad.get(RepositoryConstants.NOMBRE_UNIDAD));
     		UsuarioDto usuarioDto = new UsuarioDto();
     		usuarioUnidadAdministrativaDto.setIdUnidad(unidadAdministrativaDto);
-    		usuarioDto.setIdUsuario((Integer)unidad.get("id_usuario"));
-    		usuarioDto.setClaveUsuario((String)unidad.get("cve_m_usuario"));
-    		usuarioDto.setNombre((String)unidad.get("nombre"));
-    		usuarioDto.setApellidoPaterno((String)unidad.get("apellido_paterno"));
-    		usuarioDto.setApellidoMaterno((String)unidad.get("apellido_materno"));
-    		System.out.println("Datos "+unidad.get("cve_m_usuario")+" "+unidad.get("nombre"));
+    		usuarioDto.setIdUsuario((Integer)unidad.get(RepositoryConstants.ID_USUARIO));
+    		usuarioDto.setClaveUsuario((String)unidad.get(RepositoryConstants.CLAVE_M_USUARIO));
+    		usuarioDto.setNombre((String)unidad.get(RepositoryConstants.NOMBRE));
+    		usuarioDto.setApellidoPaterno((String)unidad.get(RepositoryConstants.APELLIDO_PATERNO));
+    		usuarioDto.setApellidoMaterno((String)unidad.get(RepositoryConstants.APELLIDO_MATERNO));
+    		logger.info("Datos : {} ",unidad.get(RepositoryConstants.CLAVE_M_USUARIO)+" "+unidad.get(RepositoryConstants.NOMBRE));
     		usuarioUnidadAdministrativaDto.setClaveUsuario(usuarioDto);
     		
     		listaUnidadAdministrativa.add(usuarioUnidadAdministrativaDto);
@@ -156,18 +147,18 @@ public class UnidadAdministrativaRepositoryImpl implements UnidadAdministrativaR
 	public List<UsuarioUnidadAdministrativaDto> obtenerUnidadesAdministrativas() {
 		
 			StringBuilder qry = new StringBuilder();
-	        qry.append("select id_unidad, nombre ");
-	        qry.append("from c_unidad_administrativa ");
+	        qry.append(RepositoryConstants.L151);
+	        qry.append(RepositoryConstants.L152);
 	        
 	        List<Map<String, Object>> unidadesArdminsitrativas = jdbcTemplate.queryForList(qry.toString());
 	        List<UsuarioUnidadAdministrativaDto> listaUnidadAdministrativa = new ArrayList<>();
 	        
 	        for (Map<String, Object> unidad : unidadesArdminsitrativas) {
 	        	UsuarioUnidadAdministrativaDto usuarioUnidadAdministrativaDto = new UsuarioUnidadAdministrativaDto();
-	        	System.out.println("unidad recuperada "+unidad.get("nombre"));
+	        	logger.info("unidad recuperada: {} ",unidad.get(RepositoryConstants.NOMBRE));
 	    		UnidadAdministrativaDto unidadAdministrativaDto = new UnidadAdministrativaDto();
-	    		unidadAdministrativaDto.setIdUnidad((Integer)unidad.get("id_unidad"));
-	    		unidadAdministrativaDto.setNombre((String)unidad.get("nombre"));
+	    		unidadAdministrativaDto.setIdUnidad((Integer)unidad.get(RepositoryConstants.ID_UNIDAD));
+	    		unidadAdministrativaDto.setNombre((String)unidad.get(RepositoryConstants.NOMBRE));
 	    		usuarioUnidadAdministrativaDto.setIdUnidad(unidadAdministrativaDto);
 	    		listaUnidadAdministrativa.add(usuarioUnidadAdministrativaDto);
 	    	}
@@ -179,14 +170,14 @@ public class UnidadAdministrativaRepositoryImpl implements UnidadAdministrativaR
 		StringBuilder qry = new StringBuilder();
         qry.append("select id_unidad, nombre ");
         qry.append("from c_unidad_administrativa ");
-        //qry.append("where unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario ");
+
         
         List<Map<String, Object>> unidadesArdminsitrativas = jdbcTemplate.queryForList(qry.toString());
         List<UsuarioUnidadAdministrativaDto> listaUnidadAdministrativa = new ArrayList<>();
         
         for (Map<String, Object> unidad : unidadesArdminsitrativas) {
         	UsuarioUnidadAdministrativaDto usuarioUnidadAdministrativaDto = new UsuarioUnidadAdministrativaDto();
-        	//System.out.println("unidad "+unidad.get("nombre"));
+
     		UnidadAdministrativaDto unidadAdministrativaDto = new UnidadAdministrativaDto();
     		unidadAdministrativaDto.setIdUnidad((Integer)unidad.get("id_unidad"));
     		unidadAdministrativaDto.setNombre((String)unidad.get("nombre"));

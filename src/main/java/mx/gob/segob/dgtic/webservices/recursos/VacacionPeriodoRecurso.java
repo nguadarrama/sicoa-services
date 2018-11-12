@@ -1,6 +1,7 @@
 package mx.gob.segob.dgtic.webservices.recursos;
 
 import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -106,12 +107,12 @@ public class VacacionPeriodoRecurso extends ServiceBase{
 	public Response obtenerUsuariosVacacionesPorFiltros(@QueryParam("claveUsuario") String claveUsuario, @QueryParam("nombre") String nombre, @QueryParam("apellidoPaterno") String apellidoPaterno, @QueryParam("apellidoMaterno") String apellidoMaterno, @QueryParam("idUnidad") String idUnidad) {
 		
 		List<VacacionPeriodoDto> lista;
-		System.out.println("idUnidad "+idUnidad);
+		logger.info("idUnidad: {} ",idUnidad);
 		lista= vacacionPeriodoService.obtenerUsuariosConVacacionesPorFiltros(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, idUnidad);
 		logger.info("pasa por aqui: {} ",lista.size());
-		for(VacacionPeriodoDto vacacion: lista){
+	/**	for(VacacionPeriodoDto vacacion: lista){
 			//logger.info("DatoSSSSSSSSSSSSSSSSSSSSSSSS: {} ",vacacion.getIdUsuario().getClaveUsuario());
-		}
+		} **/
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, lista);
 	}
 	

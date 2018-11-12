@@ -49,12 +49,14 @@ public class NivelOrganizacionalRules {
 	}
 	
 	public Integer actualizaHorarioEmpleado(Integer idHorario, String nivel) {
-		Integer exitoso = nivelOrganizacionalRepository.actualizaHorarioEmpleado(idHorario, nivel);
+		Integer exitoso;
+		exitoso = nivelOrganizacionalRepository.actualizaHorarioEmpleado(idHorario, nivel);
 		return exitoso;
 	}
 	
 	public Horario obtenerHorario(Integer idHorario) {
-		Horario hr = nivelOrganizacionalRepository.buscaHorario(idHorario);
+		Horario hr;
+		hr = nivelOrganizacionalRepository.buscaHorario(idHorario);
 		return hr;
 	}
 }

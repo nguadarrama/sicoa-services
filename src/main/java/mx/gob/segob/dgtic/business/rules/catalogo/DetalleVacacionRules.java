@@ -1,22 +1,16 @@
 package mx.gob.segob.dgtic.business.rules.catalogo;
 
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Iterator;
-
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
-
 import mx.gob.segob.dgtic.business.service.constants.ServiceConstants;
-import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
-import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DetalleVacacionDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DiaFestivoDto;
@@ -30,6 +24,8 @@ import mx.gob.segob.dgtic.persistence.repository.DetalleVacacionRepository;
 import mx.gob.segob.dgtic.persistence.repository.DiaFestivoRepository;
 import mx.gob.segob.dgtic.persistence.repository.UsuarioRepository;
 import mx.gob.segob.dgtic.persistence.repository.VacacionPeriodoRepository;
+import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
+
 @Component
 public class DetalleVacacionRules extends RecursoBase {
 	
@@ -115,7 +111,7 @@ public class DetalleVacacionRules extends RecursoBase {
 		    c1.setTime(fechaInicio);
 		    Calendar c2 = Calendar.getInstance();
 		    c2.setTime(fechaFin);
-		    List<Date> listaFechas = new ArrayList<Date>();
+		    List<Date> listaFechas = new ArrayList<>();
 		    while (!c1.after(c2)) {
 		        System.out.println("Fecha para registrar asistencia "+c1.get(Calendar.DAY_OF_WEEK));
 		        if((c1.get(Calendar.DAY_OF_WEEK)==Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY)){

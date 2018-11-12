@@ -83,7 +83,8 @@ public class IncidenciaRepositoryImpl implements IncidenciaRepository {
         MapSqlParameterSource parametros = new MapSqlParameterSource();
         parametros.addValue("idAsistencia", idAsistencia);
         
-        IncidenciaDto incidecia = nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<IncidenciaDto>(IncidenciaDto.class));
+        IncidenciaDto incidencia;
+        incidencia = nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<IncidenciaDto>(IncidenciaDto.class));
 
         return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<IncidenciaDto>(IncidenciaDto.class));
 	}

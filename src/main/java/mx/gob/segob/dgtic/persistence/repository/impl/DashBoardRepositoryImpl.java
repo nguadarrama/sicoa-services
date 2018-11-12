@@ -81,7 +81,7 @@ public class DashBoardRepositoryImpl extends RecursoBase implements DashBoardRep
         	.append(id_usuario)
         	.append(" order by id_vacacion desc ");
         List<Map<String, Object>> vacaciones = jdbcTemplate.queryForList(qry1.toString());
-        List<DashVacDto> listaVacaciones = new ArrayList<DashVacDto>();
+        List<DashVacDto> listaVacaciones = new ArrayList<>();
         
         for (Map<String, Object> aux : vacaciones) {
         	DashVacDto vac = new DashVacDto();

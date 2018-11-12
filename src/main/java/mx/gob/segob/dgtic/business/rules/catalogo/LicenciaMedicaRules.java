@@ -20,9 +20,10 @@ import mx.gob.segob.dgtic.persistence.repository.AsistenciaRepository;
 import mx.gob.segob.dgtic.persistence.repository.DiaFestivoRepository;
 import mx.gob.segob.dgtic.persistence.repository.LicenciaMedicaRepository;
 import mx.gob.segob.dgtic.persistence.repository.UsuarioRepository;
+import mx.gob.segob.dgtic.persistence.repository.base.RepositoryBase;
 
 @Component
-public class LicenciaMedicaRules {
+public class LicenciaMedicaRules extends RepositoryBase{
 
 	@Autowired
 	private LicenciaMedicaRepository licenciaMedicaRepository;
@@ -45,28 +46,28 @@ public class LicenciaMedicaRules {
 	}
 	
 	public LicenciaMedicaDto modificaLicenciaMedica(LicenciaMedicaDto licenciaMedicaDto){
-		LicenciaMedicaDto licenciaAux= new LicenciaMedicaDto();
+		LicenciaMedicaDto licenciaAux;
 		licenciaAux=buscaLicenciaMedica(licenciaMedicaDto.getIdLicencia());
 		if(licenciaMedicaDto.getIdEstatus().getIdEstatus()==1){
 			licenciaAux=licenciaMedicaRepository.modificaLicenciaMedica(licenciaMedicaDto);
 		}
 		
 		if(licenciaMedicaDto.getIdEstatus().getIdEstatus()==2){
-			List<DiaFestivoDto> listaDias= new ArrayList<>();
+			List<DiaFestivoDto> listaDias;
 			listaDias=diaFestivoRepository.obtenerDiasFestivosActivos();
 			licenciaMedicaDto.setFechaInicio(licenciaAux.getFechaInicio());
 			licenciaMedicaDto.setFechaFin(licenciaAux.getFechaFin());
 			Date fechaInicio=licenciaMedicaDto.getFechaInicio();
 			Date fechaFin=licenciaMedicaDto.getFechaFin();
 			Calendar c1 = Calendar.getInstance();
-			System.out.println("Fechas fecha inicial "+licenciaMedicaDto.getFechaInicio()+" fecha final "+licenciaMedicaDto.getFechaFin());
+			logger.info("Fechas fecha inicial: {} ",licenciaMedicaDto.getFechaInicio()+" fecha final "+licenciaMedicaDto.getFechaFin());
 		    c1.setTime(fechaInicio);
 		    Calendar c2 = Calendar.getInstance();
 		    c2.setTime(fechaFin);
-		    List<Date> listaFechas = new ArrayList<Date>();
+		    List<Date> listaFechas = new ArrayList<>();
 		    while (!c1.after(c2)) {
 		    	if((c1.get(Calendar.DAY_OF_WEEK)==Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY)){
-		        	System.out.println("Datos dentro de la comparación ");
+		        	logger.info("Datos dentro de la comparación ");
 		        	
 		        	c1.add(Calendar.DAY_OF_MONTH, 1);
 		        }else{
@@ -88,19 +89,19 @@ public class LicenciaMedicaRules {
 		    estatusDto.setIdEstatus(2);
 		    TipoDiaDto tipoDiaDto = new TipoDiaDto();
 		    tipoDiaDto.setIdTipoDia(6);
-		    UsuarioDto usuarioDto= new UsuarioDto();
+		    UsuarioDto usuarioDto;
 		    usuarioDto=usuarioRepository.buscaUsuarioPorId(licenciaMedicaDto.getIdUsuario().getIdUsuario());
 		    for (Iterator<Date> it = listaFechas.iterator(); it.hasNext();) {
 		        Date date = it.next();
 		        AsistenciaDto asistenciaDto = new AsistenciaDto(); 
 		        asistenciaDto.setEntrada(new Timestamp(date.getTime()));
 		        asistenciaDto.setSalida(new Timestamp(date.getTime()));
-		        System.out.println("detalleVacacionDto.getIdUsuario().getIdUsuario() "+licenciaMedicaDto.getIdUsuario().getIdUsuario());
+		        logger.info("detalleVacacionDto.getIdUsuario().getIdUsuario(): {} ",licenciaMedicaDto.getIdUsuario().getIdUsuario());
 		        asistenciaDto.setUsuarioDto(usuarioDto);
 		        asistenciaDto.setIdEstatus(estatusDto);
 		        asistenciaDto.setIdTipoDia(tipoDiaDto);
 		        asistenciaRepository.agregaAsistencia(asistenciaDto);
-		        System.out.println("Fecha "+date+" registro insertado");  
+		        logger.info("Fecha: {} ",date);  
 		       licenciaAux=licenciaMedicaRepository.modificaLicenciaMedica(licenciaMedicaDto);
 		    }
 			
