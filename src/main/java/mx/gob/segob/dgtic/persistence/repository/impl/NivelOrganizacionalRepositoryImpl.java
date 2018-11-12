@@ -19,9 +19,11 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
 import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.persistence.repository.NivelOrganizacionalRepository;
+import mx.gob.segob.dgtic.persistence.repository.base.RepositoryBase;
+import mx.gob.segob.dgtic.persistence.repository.constants.RepositoryConstants;
 
 @Repository
-public class NivelOrganizacionalRepositoryImpl implements NivelOrganizacionalRepository{
+public class NivelOrganizacionalRepositoryImpl extends RepositoryBase implements NivelOrganizacionalRepository{
 	
 	@Autowired
     private JdbcTemplate jdbcTemplate;
@@ -40,10 +42,10 @@ public class NivelOrganizacionalRepositoryImpl implements NivelOrganizacionalRep
         List<NivelOrganizacionalDto> listaNiveles = new ArrayList<>();
         for (Map<String, Object> nv : nivelesOrganizacionales) {
         	NivelOrganizacionalDto nivel = new NivelOrganizacionalDto();
-        	nivel.setIdNivel((Integer) nv.get("id_nivel"));
-    		nivel.setNivel((String) nv.get("nivel"));
-    		nivel.setIdHorario((Integer) nv.get("id_horario"));
-    		nivel.setHorario((String) nv.get("horario"));
+        	nivel.setIdNivel((Integer) nv.get(RepositoryConstants.ID_NIVEL));
+    		nivel.setNivel((String) nv.get(RepositoryConstants.NIVEL));
+    		nivel.setIdHorario((Integer) nv.get(RepositoryConstants.ID_HORARIO));
+    		nivel.setHorario((String) nv.get(RepositoryConstants.HORARIO));
     		listaNiveles.add(nivel);
     	}
      return listaNiveles;
@@ -53,14 +55,14 @@ public class NivelOrganizacionalRepositoryImpl implements NivelOrganizacionalRep
 	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_COMMITTED)
 	@Override
 	public NivelOrganizacionalDto buscaNivel(Integer idNivel) {
-		System.out.println("NivelOrganizacionalrepoImpl--method--NivelOrganizacionalDto idNivel: "+idNivel);
+		logger.info("NivelOrganizacionalrepoImpl--method--NivelOrganizacionalDto idNivel: {} ",idNivel);
 		StringBuilder qry = new StringBuilder();
 		NivelOrganizacionalDto nivelDto = new NivelOrganizacionalDto();
 		qry.append("select id_nivel, nivel, id_horario, horario ");
         qry.append("from c_nivel_organizacional ");
         qry.append("where id_nivel = :idNivel");
         MapSqlParameterSource parametros = new MapSqlParameterSource();
-        parametros.addValue("idNivel", idNivel);
+        parametros.addValue(RepositoryConstants.ID_NIVEL2, idNivel);
         
         try {
 			nivelDto = nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<NivelOrganizacionalDto>(NivelOrganizacionalDto.class));
@@ -70,11 +72,11 @@ public class NivelOrganizacionalRepositoryImpl implements NivelOrganizacionalRep
 				nivelDto.setMensaje("Error al obtener la consulta. ");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.warn("Error: {} ", e);
 			nivelDto.setMensaje("Error al obtener la consulta. ");
 		}
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		System.out.println("PeriodoRepoImpl-- method--buscaNivel: "+gson.toJson(nivelDto));
+		logger.info("PeriodoRepoImpl-- method--buscaNivel: {} ",gson.toJson(nivelDto));
 		return nivelDto;
 	}
 
@@ -82,15 +84,15 @@ public class NivelOrganizacionalRepositoryImpl implements NivelOrganizacionalRep
 	@Override
 	public NivelOrganizacionalDto modificaNivel(NivelOrganizacionalDto nivelDto) {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		System.out.println("NivelOrgRepoImpl--method--modificaNivel: "+gson.toJson(nivelDto));
+		logger.info("NivelOrgRepoImpl--method--modificaNivel: {} ",gson.toJson(nivelDto));
 		StringBuilder qry = new StringBuilder();
 		qry.append("update c_nivel_organizacional ");
 		qry.append(" set id_horario = :idHorario, horario = :horario ");
 		qry.append(" where id_nivel = :idNivel");
 		MapSqlParameterSource map = new MapSqlParameterSource();
-		map.addValue("idNivel", nivelDto.getIdNivel());
-		map.addValue("idHorario", nivelDto.getIdHorario());
-		map.addValue("horario", nivelDto.getHorario());
+		map.addValue(RepositoryConstants.ID_NIVEL2, nivelDto.getIdNivel());
+		map.addValue(RepositoryConstants.ID_HORARIO2, nivelDto.getIdHorario());
+		map.addValue(RepositoryConstants.HORARIO, nivelDto.getHorario());
 		nameParameterJdbcTemplate.update(qry.toString(), map);
 		try {
 			Integer exitoso = nameParameterJdbcTemplate.update(qry.toString(), map);
@@ -100,11 +102,11 @@ public class NivelOrganizacionalRepositoryImpl implements NivelOrganizacionalRep
 				nivelDto.setMensaje("Error al modificar el horario. ");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.warn("Eror: {} ", e);
 			nivelDto.setMensaje("Error al modificar el horario, verifiqure la información. ");
 		}
 		
-		System.out.println("PeriodoRepoImpl-- method--modificaNivel: "+gson.toJson(nivelDto));
+		logger.info("PeriodoRepoImpl-- method--modificaNivel: {} ",gson.toJson(nivelDto));
 		return nivelDto;
 	}
 
@@ -115,9 +117,9 @@ public class NivelOrganizacionalRepositoryImpl implements NivelOrganizacionalRep
 		qry.append("insert into c_nivel_organizacional (nivel,id_horario,horario) ");
 		qry.append(" values ( :nivel, :idHorario,  :horario)");
 		MapSqlParameterSource map = new MapSqlParameterSource();
-		map.addValue("nivel", nivelDto.getNivel());
-		map.addValue("idHorario", nivelDto.getIdHorario());
-		map.addValue("horario", nivelDto.getHorario());
+		map.addValue(RepositoryConstants.NIVEL, nivelDto.getNivel());
+		map.addValue(RepositoryConstants.ID_HORARIO2, nivelDto.getIdHorario());
+		map.addValue(RepositoryConstants.HORARIO, nivelDto.getHorario());
 		try {
 			Integer exitoso = nameParameterJdbcTemplate.update(qry.toString(), map);
 			if(exitoso == 1) {
@@ -126,11 +128,11 @@ public class NivelOrganizacionalRepositoryImpl implements NivelOrganizacionalRep
 				nivelDto.setMensaje("Error al asignar el horario laboral, verifique la información. ");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 			nivelDto.setMensaje("El horario: "+nivelDto.getHorario()+" ya se encuentra asignado al Nivel Organizacional, verifique por favor. ");
 		}
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		System.out.println("PeriodoRepoImpl-- method--agregaNivel: "+gson.toJson(nivelDto));
+		logger.info("PeriodoRepoImpl-- method--agregaNivel: {} ",gson.toJson(nivelDto));
 		return nivelDto;
 	}
 
@@ -151,11 +153,11 @@ public class NivelOrganizacionalRepositoryImpl implements NivelOrganizacionalRep
 				nivelDto.setMensaje("Error al elimiar el horario al Nivel Organizacional. ");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error-- {} ",e);
 			nivelDto.setMensaje("Error al elimiar el horario al Nivel Organizacional. ");
 		}
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		System.out.println("PeriodoRepoImpl-- method--eliminaPeriodo: "+gson.toJson(nivelDto));
+		logger.info("PeriodoRepoImpl-- method--eliminaPeriodo: {} ",gson.toJson(nivelDto));
 		return nivelDto;
 	}
 	
@@ -168,7 +170,7 @@ public class NivelOrganizacionalRepositoryImpl implements NivelOrganizacionalRep
 		qry.append(" from c_nivel_organizacional ");
 		qry.append(" where id_horario =:idHorario ");
 		MapSqlParameterSource param = new MapSqlParameterSource();
-		param.addValue("idHorario", idHorario);
+		param.addValue(RepositoryConstants.ID_HORARIO2, idHorario);
 		SqlRowSet rs = nameParameterJdbcTemplate.queryForRowSet(qry.toString(), param);
 		if(rs.next()) {
 			existe = true;
@@ -245,17 +247,17 @@ public class NivelOrganizacionalRepositoryImpl implements NivelOrganizacionalRep
 		try {
 			 exitoso = nameParameterJdbcTemplate.update(qry.toString(), map);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("warn: {} ", e);
 		}
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		System.out.println("PeriodoRepoImpl-- method--modificaNivel: "+gson.toJson(exitoso));
+		logger.info("PeriodoRepoImpl-- method--modificaNivel: {} ",gson.toJson(exitoso));
 		return exitoso;
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_COMMITTED)
 	@Override
 	public Horario buscaHorario(Integer idHorario) {
-		System.out.println("idConsultaHorario: "+idHorario);
+		logger.info("idConsultaHorario: {} ",idHorario);
 		StringBuilder qry = new StringBuilder();
 		qry.append(" select id_horario, nombre, hora_entrada, hora_salida, activo ");
         qry.append(" from c_horario ");

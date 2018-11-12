@@ -509,7 +509,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 		
 		for (String usuarioAsistencia : listaIdusuariosAsistencia) {
 			if (!listaClaveUsuariosEnSicoa.contains(usuarioAsistencia)) {
-				logger.info("-> " + usuarioAsistencia + " usuario nuevo detectado en asistencias");
+				logger.info("->, {} ", usuarioAsistencia, " usuario nuevo detectado en asistencias");
 				UsuarioDto usuarioSIRNO = cargaInicialRepository.obtieneUsuarioPorCve_m_usuario(usuarioAsistencia);
 				
 				if (usuarioSIRNO != null) {

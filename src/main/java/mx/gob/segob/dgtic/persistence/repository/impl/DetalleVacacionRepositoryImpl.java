@@ -25,6 +25,7 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionPeriodoDto;
 import mx.gob.segob.dgtic.persistence.repository.DetalleVacacionRepository;
 import mx.gob.segob.dgtic.persistence.repository.DiaFestivoRepository;
 import mx.gob.segob.dgtic.persistence.repository.base.RepositoryBase;
+import mx.gob.segob.dgtic.persistence.repository.constants.RepositoryConstants;
 
 @Repository
 public class DetalleVacacionRepositoryImpl extends RepositoryBase implements DetalleVacacionRepository {
@@ -48,35 +49,35 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
         
         for (Map<String, Object> detalleVacacion : detalleVacaciones) {
         	DetalleVacacionDto detalleVacacionDto = new DetalleVacacionDto();
-        	detalleVacacionDto.setIdDetalle((Integer)detalleVacacion.get("id_detalle"));
+        	detalleVacacionDto.setIdDetalle((Integer)detalleVacacion.get(RepositoryConstants.ID_DETALLE));
         	UsuarioDto usuarioDto= new UsuarioDto();
-        	usuarioDto.setIdUsuario((Integer)detalleVacacion.get("id_usuario"));
-        	usuarioDto.setClaveUsuario((String)detalleVacacion.get("cve_m_usuario"));
-        	usuarioDto.setNombre((String)detalleVacacion.get("nombre"));
-        	usuarioDto.setApellidoPaterno((String)detalleVacacion.get("apellido_paterno"));
-        	usuarioDto.setApellidoMaterno((String)detalleVacacion.get("apellido_materno"));
-        	usuarioDto.setNombreUnidad((String)detalleVacacion.get("nombre_unidad"));
-        	usuarioDto.setIdUnidad((Integer)detalleVacacion.get("id_unidad"));
+        	usuarioDto.setIdUsuario((Integer)detalleVacacion.get(RepositoryConstants.ID_USUARIO));
+        	usuarioDto.setClaveUsuario((String)detalleVacacion.get(RepositoryConstants.CLAVE_M_USUARIO));
+        	usuarioDto.setNombre((String)detalleVacacion.get(RepositoryConstants.NOMBRE));
+        	usuarioDto.setApellidoPaterno((String)detalleVacacion.get(RepositoryConstants.APELLIDO_PATERNO));
+        	usuarioDto.setApellidoMaterno((String)detalleVacacion.get(RepositoryConstants.APELLIDO_MATERNO));
+        	usuarioDto.setNombreUnidad((String)detalleVacacion.get(RepositoryConstants.NOMBRE_UNIDAD));
+        	usuarioDto.setIdUnidad((Integer)detalleVacacion.get(RepositoryConstants.ID_UNIDAD));
         	detalleVacacionDto.setIdUsuario(usuarioDto);
         	VacacionPeriodoDto vacacionPeriodoDto = new VacacionPeriodoDto();
-        	vacacionPeriodoDto.setIdVacacion((Integer)detalleVacacion.get("id_vacacion"));
+        	vacacionPeriodoDto.setIdVacacion((Integer)detalleVacacion.get(RepositoryConstants.ID_VACACION));
         	detalleVacacionDto.setIdVacacion(vacacionPeriodoDto);
-        	detalleVacacionDto.setIdResponsable((Integer)detalleVacacion.get("id_responsable"));
+        	detalleVacacionDto.setIdResponsable((Integer)detalleVacacion.get(RepositoryConstants.ID_RESPONSABLE));
         	ArchivoDto archivoDto = new ArchivoDto();
-        	archivoDto.setIdArchivo((Integer)detalleVacacion.get("id_archivo"));
+        	archivoDto.setIdArchivo((Integer)detalleVacacion.get(RepositoryConstants.ID_ARCHIVO));
         	detalleVacacionDto.setIdArchivo(archivoDto);
         	EstatusDto estatusDto = new EstatusDto();
-        	estatusDto.setIdEstatus((Integer)detalleVacacion.get("id_estatus"));
-        	estatusDto.setDescripcion((String)detalleVacacion.get("estatus"));
+        	estatusDto.setIdEstatus((Integer)detalleVacacion.get(RepositoryConstants.ID_ESTATUS));
+        	estatusDto.setDescripcion((String)detalleVacacion.get(RepositoryConstants.ESTATUS));
         	detalleVacacionDto.setIdEstatus(estatusDto);
-        	System.out.println("Vacaciones recuperadas "+detalleVacacion.get("id_detalle"));
-        	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        	String fechaIni=""+detalleVacacion.get("fecha_inicio");
-        	String fechaFin=""+detalleVacacion.get("fecha_fin");
-        	String fechaRe=""+detalleVacacion.get("fecha_registro");
-        	Date fechaInicio=null;
-        	Date fechaFinal=null;
-        	Date fechaRegistro=null;
+        	logger.debug("Vacaciones recuperadas: {} ",detalleVacacion.get(RepositoryConstants.ID_DETALLE));
+        	SimpleDateFormat sdf = new SimpleDateFormat(RepositoryConstants.YYYY_MM_DD);
+        	String fechaIni = ""+detalleVacacion.get(RepositoryConstants.FECHA_INICIO);
+        	String fechaFin = ""+detalleVacacion.get(RepositoryConstants.FECHA_FIN);
+        	String fechaRe = ""+detalleVacacion.get(RepositoryConstants.FECHA_REGISTRO);
+        	Date fechaInicio = null;
+        	Date fechaFinal = null;
+        	Date fechaRegistro = null;
         	try {
         		fechaInicio = sdf.parse(fechaIni);
         		fechaFinal = sdf.parse(fechaFin);
@@ -87,7 +88,7 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
         	detalleVacacionDto.setFechaRegistro(fechaRegistro);
         	detalleVacacionDto.setFechaInicio(fechaInicio);
         	detalleVacacionDto.setFechaFin(fechaFinal);
-        	System.out.println("fecha actual "+detalleVacacionDto.getFechaInicio());
+        	logger.info("fecha actual: {} ",detalleVacacionDto.getFechaInicio());
         	detalleVacacionDto.setDias((Integer)detalleVacacion.get("dias"));
     		listaDetalleVacacion.add(detalleVacacionDto);
     	}

@@ -24,6 +24,7 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.TipoDiaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.persistence.repository.AsistenciaRepository;
 import mx.gob.segob.dgtic.persistence.repository.UsuarioRepository;
+import mx.gob.segob.dgtic.persistence.repository.constants.RepositoryConstants;
 import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 
 @Repository
@@ -60,14 +61,14 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         
         for (Map<String, Object> a : asistencias) {
         	TipoDiaDto tipoDia = new TipoDiaDto();
-        	tipoDia.setIdTipoDia((Integer) a.get("id_tipo_dia"));
-        	tipoDia.setNombre((String) a.get("nombre"));
+        	tipoDia.setIdTipoDia((Integer) a.get(RepositoryConstants.ID_TIPO_DIA));
+        	tipoDia.setNombre((String) a.get(RepositoryConstants.NOMBRE));
         	
         	AsistenciaDto asistencia = new AsistenciaDto();
     		asistencia.setUsuarioDto(usuario);
     		asistencia.setIdTipoDia(tipoDia);
-    		asistencia.setEntrada((Timestamp) a.get("entrada"));
-    		asistencia.setSalida((Timestamp) a.get("salida"));
+    		asistencia.setEntrada((Timestamp) a.get(RepositoryConstants.ENTRADA));
+    		asistencia.setSalida((Timestamp) a.get(RepositoryConstants.SALIDA));
     		
     		listaAsistencia.add(asistencia);
     	}
@@ -400,12 +401,12 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		qry.append("VALUES (:idAsistencia, :idTipoDia, :idArchivo, :idEstatus, null, null, null, :idJustificacion, :nombreAutorizador) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("idAsistencia", incidencia.getIdAsistencia().getIdAsistencia());
-		parametros.addValue("idTipoDia", incidencia.getTipoDia().getIdTipoDia());
-		parametros.addValue("idEstatus", incidencia.getEstatus().getIdEstatus());
-		parametros.addValue("idJustificacion", incidencia.getJustificacion().getIdJustificacion());
-		parametros.addValue("idArchivo", incidencia.getIdArchivo().getIdArchivo());
-		parametros.addValue("nombreAutorizador", incidencia.getNombreAutorizador());
+		parametros.addValue(RepositoryConstants.ID_ASISTENCIA2, incidencia.getIdAsistencia().getIdAsistencia());
+		parametros.addValue(RepositoryConstants.ID_TIPO_DIA2, incidencia.getTipoDia().getIdTipoDia());
+		parametros.addValue(RepositoryConstants.ID_ESTATUS2, incidencia.getEstatus().getIdEstatus());
+		parametros.addValue(RepositoryConstants.ID_JUSTIFICACION2, incidencia.getJustificacion().getIdJustificacion());
+		parametros.addValue(RepositoryConstants.ID_ARCHIVO2, incidencia.getIdArchivo().getIdArchivo());
+		parametros.addValue(RepositoryConstants.NOMBRE_AUTORIZADOR2, incidencia.getNombreAutorizador());
 
 		return nameParameterJdbcTemplate.update(qry.toString(), parametros);
 	}
@@ -472,9 +473,9 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 	public Integer editaIncidencia(IncidenciaDto incidencia) {
 		StringBuilder qry = new StringBuilder();
 		
-		qry.append("update m_incidencia ");
-		qry.append("set id_justificacion = :idJustificacion, id_archivo = :idArchivo, nombre_autorizador = :nombreAutorizador, descuento = :descuento ");
-        qry.append("WHERE id_asistencia = :idAsistencia");
+		qry.append(RepositoryConstants.L476);
+		qry.append(RepositoryConstants.L477);
+        qry.append(RepositoryConstants.L478);
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("idAsistencia", incidencia.getIdAsistencia().getIdAsistencia());
@@ -486,7 +487,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		try {
 			return nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		} catch (Exception e) {
-			logger.error("Error al consultar la incidencia con número de asistencia: " + incidencia.getIdAsistencia().getIdAsistencia() + ". " + e.getMessage());
+			logger.error("Error al consultar la incidencia con número de asistencia: {} ", incidencia.getIdAsistencia().getIdAsistencia() + ". " + e.getMessage());
 		}
 		
 		return 0;
@@ -580,17 +581,17 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 	public List<String> obtieneListaEmpleadosDeVacacionesHoy() {
 		StringBuilder qry = new StringBuilder();
 	       
-        qry.append("SELECT id_usuario ");
-        qry.append("FROM m_asistencia ");
-        qry.append("where entrada >= date_Add(curdate(), interval -1 day) "); //interesa el día de ayer
-        qry.append("and entrada < curdate() ");
-        qry.append("and id_tipo_dia = 5"); //vacación
+        qry.append(RepositoryConstants.L584);
+        qry.append(RepositoryConstants.L585);
+        qry.append(RepositoryConstants.L586); //interesa el día de ayer
+        qry.append(RepositoryConstants.L587);
+        qry.append(RepositoryConstants.L588); //vacación
 
         List<Map<String, Object>> empleados = jdbcTemplate.queryForList(qry.toString());
         List<String> listaEmpleados = new ArrayList<>();
         
         for (Map<String, Object> a : empleados) {
-    		listaEmpleados.add((String) a.get("id_usuario"));
+    		listaEmpleados.add((String) a.get(RepositoryConstants.ID_USUARIO));
     	}
         
         return listaEmpleados;
@@ -705,22 +706,22 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
             
             //verificando que permisos hay para definir que el primero no llevará 'or' y los demás sí
             for (String permiso : listaPermisos) {
-	        	if (permiso.contains("vacacion")) {
+	        	if (permiso.contains(RepositoryConstants.VACACION)) {
 	        		condicionVacacion = "";
 	        		break;
 	        	} 
 	        	
-	        	if (permiso.contains("comision")) {
+	        	if (permiso.contains(RepositoryConstants.COMISION)) {
 	        		condicionComision = "";
 	        		break;
 	        	}
 	        	
-	        	if (permiso.contains("licencia")) {
+	        	if (permiso.contains(RepositoryConstants.LICENCIA)) {
 	        		condicionLicencia = "";
 	        		break;
 	        	} 
 	        	
-	        	if (permiso.contains("descuento")) {
+	        	if (permiso.contains(RepositoryConstants.DESCUENTO)) {
 	        		condicionDescuento = "";
 	        		break;
 	        	} 
