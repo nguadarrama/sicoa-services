@@ -1,6 +1,8 @@
 package mx.gob.segob.dgtic.persistence.repository.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -18,11 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import mx.gob.segob.dgtic.business.service.constants.ServiceConstants;
 import mx.gob.segob.dgtic.comun.sicoa.dto.PeriodoDto;
 import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.persistence.repository.PeriodoRepository;
 import mx.gob.segob.dgtic.persistence.repository.base.RepositoryBase;
-import mx.gob.segob.dgtic.persistence.repository.constants.RepositoryConstants;
 
 @Repository
 public class PeriodoRepositoryImpl extends RepositoryBase implements PeriodoRepository{
@@ -36,24 +38,23 @@ public class PeriodoRepositoryImpl extends RepositoryBase implements PeriodoRepo
 	@Override
 	public List<PeriodoDto> obtenerListaPeriodos() {
 		StringBuilder qry = new StringBuilder();
-        qry.append(RepositoryConstants.L39);
-        qry.append(RepositoryConstants.L40);
+        qry.append("select id_periodo, fecha_inicio, fecha_fin, descripcion, activo ");
+        qry.append("from r_periodo where activo = true ");
         
         List<Map<String, Object>> periodos = jdbcTemplate.queryForList(qry.toString());
         List<PeriodoDto> listaPeriodo = new ArrayList<>();
         
         for (Map<String, Object> periodo : periodos) {
     		PeriodoDto periodoDto = new PeriodoDto();
-    		periodoDto.setIdPeriodo((Integer)periodo.get(RepositoryConstants.ID_PERIODO));
-    		periodoDto.setFechaInicio((Date)periodo.get(RepositoryConstants.FECHA_INICIO));
-    		periodoDto.setFechaFin((Date)periodo.get(RepositoryConstants.FECHA_FIN));
-    		periodoDto.setDescripcion((String) periodo.get(RepositoryConstants.DESCRIPCION));
-    		periodoDto.setActivo((Boolean)periodo.get(RepositoryConstants.ACTIVO));
+    		periodoDto.setIdPeriodo((Integer)periodo.get("id_periodo"));
+    		periodoDto.setFechaInicio((Date)periodo.get("fecha_inicio"));
+    		periodoDto.setFechaFin((Date)periodo.get("fecha_fin"));
+    		periodoDto.setDescripcion((String) periodo.get("descripcion"));
+    		periodoDto.setActivo((Boolean)periodo.get("activo"));
     		listaPeriodo.add(periodoDto);
     	}
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        logger.info("listaPeriod: {} ","");
-        gson.toJson(listaPeriodo);
+        System.out.println("listaPeriodo: "+gson.toJson(listaPeriodo));
      return listaPeriodo;	
 	}
 
@@ -69,16 +70,15 @@ public class PeriodoRepositoryImpl extends RepositoryBase implements PeriodoRepo
         
         for (Map<String, Object> periodo : periodos) {
     		PeriodoDto periodoDto = new PeriodoDto();
-    		periodoDto.setIdPeriodo((Integer)periodo.get(RepositoryConstants.ID_PERIODO));
-    		periodoDto.setFechaInicio((Date)periodo.get(RepositoryConstants.FECHA_INICIO));
-    		periodoDto.setFechaFin((Date)periodo.get(RepositoryConstants.FECHA_FIN));
-    		periodoDto.setDescripcion((String) periodo.get(RepositoryConstants.DESCRIPCION));
-    		periodoDto.setActivo((Boolean)periodo.get(RepositoryConstants.ACTIVO));
+    		periodoDto.setIdPeriodo((Integer)periodo.get("id_periodo"));
+    		periodoDto.setFechaInicio((Date)periodo.get("fecha_inicio"));
+    		periodoDto.setFechaFin((Date)periodo.get("fecha_fin"));
+    		periodoDto.setDescripcion((String) periodo.get("descripcion"));
+    		periodoDto.setActivo((Boolean)periodo.get("activo"));
     		listaPeriodo.add(periodoDto);
     	}
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        logger.info("listaPeriodo: {} ","");
-        gson.toJson(listaPeriodo);
+        System.out.println("listaPeriodo: "+gson.toJson(listaPeriodo));
      return listaPeriodo;	
 	}
 	
@@ -86,12 +86,12 @@ public class PeriodoRepositoryImpl extends RepositoryBase implements PeriodoRepo
 	public PeriodoDto buscaPeriodo(Integer idPeriodo) {
 		
 		StringBuilder qry = new StringBuilder();
-		qry.append(RepositoryConstants.L87);
-        qry.append(RepositoryConstants.L88);
-        qry.append(RepositoryConstants.L89);
+		qry.append("select id_periodo, fecha_inicio, fecha_fin, descripcion, activo ");
+        qry.append("from r_periodo ");
+        qry.append("where id_periodo = :idPeriodo");
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
-        parametros.addValue(RepositoryConstants.ID_PERIODO2, idPeriodo);
+        parametros.addValue("idPeriodo", idPeriodo);
 
         return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<PeriodoDto>(PeriodoDto.class));
 	}
@@ -100,15 +100,15 @@ public class PeriodoRepositoryImpl extends RepositoryBase implements PeriodoRepo
 	public void modificaPeriodo(PeriodoDto periodoDto) {
 		
 		StringBuilder qry = new StringBuilder();
-		qry.append(RepositoryConstants.L102);
-		qry.append(RepositoryConstants.L103);
+		qry.append("update r_periodo set fecha_inicio= :fechaInicio, fecha_fin = :fechaFin, descripcion = :descripcion, activo = :activo ");
+		qry.append("where id_periodo = :idPeriodo");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue(RepositoryConstants.ID_PERIODO2, periodoDto.getIdPeriodo());
-		parametros.addValue(RepositoryConstants.FECHA_INICIO2, periodoDto.getFechaInicio());
-		parametros.addValue(RepositoryConstants.FECHA_FIN2, periodoDto.getFechaFin());
-		parametros.addValue(RepositoryConstants.DESCRIPCION, periodoDto.getDescripcion());
-		parametros.addValue(RepositoryConstants.ACTIVO, periodoDto.getActivo());
+		parametros.addValue("idPeriodo", periodoDto.getIdPeriodo());
+		parametros.addValue("fechaInicio", periodoDto.getFechaInicio());
+		parametros.addValue("fechaFin", periodoDto.getFechaFin());
+		parametros.addValue("descripcion", periodoDto.getDescripcion());
+		parametros.addValue("activo", periodoDto.getActivo());
 
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		
@@ -123,10 +123,10 @@ public class PeriodoRepositoryImpl extends RepositoryBase implements PeriodoRepo
 		qry.append("values (:fechaInicio, :fechaFin, :descripcion, :activo) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue(RepositoryConstants.FECHA_INICIO2, periodoDto.getFechaInicio());
-		parametros.addValue(RepositoryConstants.FECHA_FIN2, periodoDto.getFechaFin());
-		parametros.addValue(RepositoryConstants.DESCRIPCION, periodoDto.getDescripcion());
-		parametros.addValue(RepositoryConstants.ACTIVO, periodoDto.getActivo());
+		parametros.addValue("fechaInicio", periodoDto.getFechaInicio());
+		parametros.addValue("fechaFin", periodoDto.getFechaFin());
+		parametros.addValue("descripcion", periodoDto.getDescripcion());
+		parametros.addValue("activo", periodoDto.getActivo());
 
 		try {
 			Integer exitoso = nameParameterJdbcTemplate.update(qry.toString(), parametros);
@@ -136,12 +136,11 @@ public class PeriodoRepositoryImpl extends RepositoryBase implements PeriodoRepo
 				periodoDto.setMensaje("Se ha generado un error con la solicitud, verifique la información. ");
 			}
 		} catch (Exception e) {
-			logger.warn("Eror: {}", e);
+			e.printStackTrace();
 			periodoDto.setMensaje("El periodo con fecha de inicio: "+periodoDto.getFechaInicio()+" ya existe. ");
 		}
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		logger.info("PeriodoRepoImpl-- method--agregaPeriodo: {} ","");
-		gson.toJson(periodoDto);
+		System.out.println("PeriodoRepoImpl-- method--agregaPeriodo: "+gson.toJson(periodoDto));
 		return periodoDto;
 	}
 
@@ -151,7 +150,7 @@ public class PeriodoRepositoryImpl extends RepositoryBase implements PeriodoRepo
 		qry.append("delete from r_periodo where idPeriodo = :idPeriodo");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue(RepositoryConstants.ID_PERIODO2, idPeriodo);
+		parametros.addValue("idPeriodo", idPeriodo);
 
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		
@@ -159,22 +158,26 @@ public class PeriodoRepositoryImpl extends RepositoryBase implements PeriodoRepo
 
 	@Override
 	public PeriodoDto buscaPeriodoPorClaveUsuario(String claveUsuario) {
-		
+		Date fecha= new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat(ServiceConstants.YYYY_MM_DD); 
+		String fechaCadena = formatter.format(fecha);
 		StringBuilder qry = new StringBuilder();
 		qry.append("select periodo.id_periodo, periodo.descripcion, periodo.fecha_inicio, periodo.fecha_fin, periodo.activo ");
 		qry.append("from  m_vacacion_periodo vacacion left join r_periodo periodo on vacacion.id_periodo=periodo.id_periodo ");
 		qry.append("left join m_usuario usuario on vacacion.id_usuario=usuario.id_usuario ");
-		qry.append("where vacacion.activo=true and vacacion.dias>0 and periodo.activo=true and usuario.cve_m_usuario= :claveUsuario order by vacacion.fecha_inicio asc limit 1 ");
+		qry.append("where vacacion.activo=true and vacacion.dias>0 and periodo.activo=true and date_add(periodo.fecha_fin, interval 1 year) > '"+fechaCadena+"' and periodo.fecha_inicio < '"+fechaCadena+"' and usuario.cve_m_usuario= :claveUsuario order by vacacion.fecha_inicio asc limit 1 ");
 		
-        logger.info("Consulta: {} ", qry);
+        //qry.append("from  m_vacacion_periodo vacacion left join r_periodo periodo on vacacion.id_periodo=periodo.id_periodo ");
+        //qry.append("where vacacion.activo=true and vacacion.id_usuario=usuario.id_usuario and vacacion.dias>0 and periodo.activo=true and usuario.cve_m_usuario= :claveUsuario order by vacacion.fecha_inicio asc limit 1");
+        System.out.println("Consulta "+qry.toString());
         MapSqlParameterSource parametros = new MapSqlParameterSource();
         parametros.addValue("claveUsuario", claveUsuario);
         try{
         PeriodoDto periodo= nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<PeriodoDto>(PeriodoDto.class));
-        logger.info("periodo recuperado: {} ",periodo.getIdPeriodo());
+        System.out.println("periodo recuperado "+periodo.getIdPeriodo());
         return periodo;
         }catch(Exception e){
-        	logger.warn("Error: {}", e);
+        	e.printStackTrace();
         	return new PeriodoDto();
         }
 	}
@@ -187,10 +190,10 @@ public class PeriodoRepositoryImpl extends RepositoryBase implements PeriodoRepo
 		qry.append("values (:fechaInicio, :fechaFin, :descripcion, :activo) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue(RepositoryConstants.FECHA_INICIO2, inicio);
-		parametros.addValue(RepositoryConstants.FECHA_FIN2, fin);
-		parametros.addValue(RepositoryConstants.DESCRIPCION, descripcion);
-		parametros.addValue(RepositoryConstants.ACTIVO, activo);
+		parametros.addValue("fechaInicio", inicio);
+		parametros.addValue("fechaFin", fin);
+		parametros.addValue("descripcion", descripcion);
+		parametros.addValue("activo", activo);
 
 		return nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		
@@ -209,16 +212,15 @@ public class PeriodoRepositoryImpl extends RepositoryBase implements PeriodoRepo
         
         for (Map<String, Object> periodo : periodos) {
     		PeriodoDto periodoDto = new PeriodoDto();
-    		periodoDto.setIdPeriodo((Integer)periodo.get(RepositoryConstants.ID_PERIODO));
-    		periodoDto.setFechaInicio((Date)periodo.get(RepositoryConstants.FECHA_INICIO));
-    		periodoDto.setFechaFin((Date)periodo.get(RepositoryConstants.FECHA_FIN));
-    		periodoDto.setDescripcion((String) periodo.get(RepositoryConstants.DESCRIPCION));
-    		periodoDto.setActivo((Boolean)periodo.get(RepositoryConstants.ACTIVO));
+    		periodoDto.setIdPeriodo((Integer)periodo.get("id_periodo"));
+    		periodoDto.setFechaInicio((Date)periodo.get("fecha_inicio"));
+    		periodoDto.setFechaFin((Date)periodo.get("fecha_fin"));
+    		periodoDto.setDescripcion((String) periodo.get("descripcion"));
+    		periodoDto.setActivo((Boolean)periodo.get("activo"));
     		topPeriodo.add(periodoDto);
     	}
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        logger.info("listaPeriodo: {} ","");
-        gson.toJson(topPeriodo);
+        System.out.println("listaPeriodo: "+gson.toJson(topPeriodo));
      return topPeriodo;	
 	}
 
@@ -242,8 +244,7 @@ public class PeriodoRepositoryImpl extends RepositoryBase implements PeriodoRepo
 			logger.warn("Error: {} ", e);
 		}
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		logger.info("periodoRepoImpl--method--cambioEstatusPeriodo: {} ","");
-		gson.toJson(periodo);
+		System.out.println("periodoRepoImpl--method--cambioEstatusPeriodo: "+gson.toJson(periodo));
 		return periodo;
 	}
 
@@ -276,5 +277,50 @@ public class PeriodoRepositoryImpl extends RepositoryBase implements PeriodoRepo
 			existe = true;
 		}
 		return existe;
+	}
+	
+	@Override
+	public Boolean validaPeriodo(Integer idPeriodo) {
+		//Integer i=0;
+		StringBuilder qry = new StringBuilder();
+		Date fecha= new Date();
+		
+		SimpleDateFormat formatter = new SimpleDateFormat(ServiceConstants.YYYY_MM_DD); 
+		 //Calendar fechaA = Calendar.getInstance();
+		 //fechaA.setTime(fecha);
+		 //fechaA.add(Calendar.YEAR, 1);
+		 //fecha=fechaA.getTime();
+		String fechaCadena = formatter.format(fecha);
+		qry.append("select id_periodo ");
+        qry.append("from r_periodo ");
+        //qry.append("where id_periodo = :idPeriodo and (year(fecha_fin)+1 >= year(current_date) and month(fecha_fin) >= month(current_date) and day(fecha_fin) > day(current_date))");
+        qry.append("where id_periodo = :idPeriodo and date_add(fecha_fin, interval 1 year) > '"+fechaCadena+"' and fecha_inicio < '"+fechaCadena+"' ");
+        
+        MapSqlParameterSource parametros = new MapSqlParameterSource();
+        parametros.addValue("idPeriodo", idPeriodo);
+        PeriodoDto periodo= new PeriodoDto();
+        boolean valida=false;
+        try{
+        periodo=nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<PeriodoDto>(PeriodoDto.class));
+        if(periodo.getIdPeriodo()!=null || !periodo.getIdPeriodo().toString().isEmpty()){
+        	valida=true;
+        }else{
+        	qry = new StringBuilder();
+    		qry.append("update r_periodo set activo = :activo ");
+    		qry.append("where id_periodo = :idPeriodo");
+    		
+    		parametros = new MapSqlParameterSource();
+    		parametros.addValue("idPeriodo", idPeriodo);
+    		parametros.addValue("activo", false);
+    		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+        	valida=false;
+        }
+        }catch(Exception e){
+        	
+        }
+        System.out.println("Dato recuperado "+periodo.getIdPeriodo());
+        
+        return valida;
+        
 	}
 }

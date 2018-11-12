@@ -62,7 +62,7 @@ public class LicenciaMedicaRepositoryImpl implements LicenciaMedicaRepository{
 	@Override
 	public LicenciaMedicaDto buscaLicenciaMedica(Integer idLicencia) {
 		StringBuilder qry = new StringBuilder();
-		qry.append("select licencia.id_licencia, licencia.fecha_inicio, licencia.id_responsable, licencia.fecha_fin, licencia.dias, licencia.padecimiento, licencia.fecha_registro, usuario.id_usuario, usuario.nombre, ");
+		qry.append("select distinct(licencia.id_licencia) id_licencia, licencia.fecha_inicio, licencia.id_responsable, licencia.fecha_fin, licencia.dias, licencia.padecimiento, licencia.fecha_registro, usuario.id_usuario, usuario.nombre, ");
         qry.append("usuario.cve_m_usuario, usuario.apellido_paterno, usuario.apellido_materno, usuario.fecha_ingreso, usuario.rfc, usuario.id_puesto, unidad.id_unidad, unidad.nombre nombre_unidad, estatus.id_estatus, ");
         qry.append("estatus.estatus, archivo.id_archivo, archivo.url, archivo.nombre nombre_archivo ");
         qry.append("from m_licencia_medica licencia left join m_usuario usuario on usuario.id_usuario=licencia.id_usuario left join m_estatus estatus on ");
@@ -72,6 +72,7 @@ public class LicenciaMedicaRepositoryImpl implements LicenciaMedicaRepository{
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
         parametros.addValue("idLicencia", idLicencia);
+        System.out.println("id para consulta "+idLicencia+ " consulta "+qry.toString());
         Map<String, Object> informacionConsulta = nameParameterJdbcTemplate.queryForMap(qry.toString(), parametros);
         LicenciaMedicaDto licencia=new LicenciaMedicaDto();
         licencia.setIdLicencia((Integer)informacionConsulta.get("id_licencia"));
@@ -253,8 +254,8 @@ public class LicenciaMedicaRepositoryImpl implements LicenciaMedicaRepository{
 		String qry="select usuario.id_usuario, usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, licencia.id_licencia, ";
 		qry+="licencia.id_responsable, estatus.id_estatus, estatus.estatus, licencia.fecha_inicio, ";
 		qry+="licencia.fecha_fin, licencia.dias, licencia.padecimiento, licencia.dias ";
-		qry+="from m_usuario usuario, m_licencia_medica licencia, m_estatus estatus ";
-		qry+="where usuario.id_usuario=licencia.id_usuario and estatus.id_estatus=licencia.id_estatus ";
+		qry+="from m_usuario usuario, m_licencia_medica licencia, m_estatus estatus, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion ";
+		qry+="where usuario.id_usuario=licencia.id_usuario and estatus.id_estatus=licencia.id_estatus and unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario ";
 		if(claveUsuario!=null && !claveUsuario.trim().isEmpty()){
 			qry+="and usuario.cve_m_usuario like '%"+claveUsuario+"%' ";
 	    }
@@ -274,7 +275,7 @@ public class LicenciaMedicaRepositoryImpl implements LicenciaMedicaRepository{
 	    if(idEstatus!=null && !idEstatus.trim().isEmpty()){
 	    	qry+="and estatus.id_estatus='"+idEstatus+"' ";
 	    }
-        System.out.println("query "+qry);
+        System.out.println("query de licencias empleados "+qry+" idUnidad "+idUnidad);
         List<Map<String, Object>> consulta = jdbcTemplate.queryForList(qry);
         List<LicenciaMedicaDto> listaLicencias = new ArrayList<>();
         
@@ -336,11 +337,11 @@ public class LicenciaMedicaRepositoryImpl implements LicenciaMedicaRepository{
 		System.out.println("sqy "+qry);
 		 List<Map<String, Object>> consulta = jdbcTemplate.queryForList(qry);
 	        List<LicenciaMedicaDto> listaLicencias = new ArrayList<>();
-	        String SUMA_DIAS = "suma_dias";
+	        
 	        for (Map<String, Object> licencias : consulta) {
 	        	LicenciaMedicaDto licenciaMedicaDto= new LicenciaMedicaDto();
 	        	String diasRecuperados=null;
-	        	if(licencias.get(SUMA_DIAS)==null){
+	        	if(licencias.get("suma_dias")==null){
 	        		diasRecuperados="0";
 	        	}else{
 	        	diasRecuperados=""+licencias.get("suma_dias");

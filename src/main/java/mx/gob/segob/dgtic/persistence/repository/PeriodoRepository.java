@@ -19,4 +19,5 @@ public interface PeriodoRepository {
 	public void modificaEstatustPeridoEmpleados(Integer id, boolean activo);
 	public boolean existePeriodo(String fechaInicio);
 	public List<PeriodoDto> obtenerListaPeriodosCatalogo();
+	public Boolean validaPeriodo(Integer idPeriodo);
 }

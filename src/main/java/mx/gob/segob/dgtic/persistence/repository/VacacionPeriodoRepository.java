@@ -12,7 +12,6 @@ public interface VacacionPeriodoRepository {
 	public void agregaVacacionPeriodo(VacacionPeriodoDto vacacionPeriodoDto);
 	public void eliminaVacacionPeriodo(Integer idVacacion);
 	public VacacionPeriodoDto consultaVacacionPeriodoPorClaveUsuarioYPeriodo(Integer idPeriodo, String claveUsuario);
-	
 	public void generarVacacionPeriodotodos(int idUsuario, int idPeriodo, int estatus, String inicio, int dias, boolean activo);
 	public List<VacacionPeriodoDto> obtenerUsuariosConVacacionesPorFiltros(String claveUsuario, String nombre, String apellidoPaterno, String apellidoMaterno, String idUnidad);
 	

@@ -1,5 +1,6 @@
 package mx.gob.segob.dgtic.persistence.repository.impl;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -7,11 +8,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+
 import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DetalleVacacionDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DiaFestivoDto;
@@ -22,7 +25,6 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionPeriodoDto;
 import mx.gob.segob.dgtic.persistence.repository.DetalleVacacionRepository;
 import mx.gob.segob.dgtic.persistence.repository.DiaFestivoRepository;
 import mx.gob.segob.dgtic.persistence.repository.base.RepositoryBase;
-import mx.gob.segob.dgtic.persistence.repository.constants.RepositoryConstants;
 
 @Repository
 public class DetalleVacacionRepositoryImpl extends RepositoryBase implements DetalleVacacionRepository {
@@ -67,13 +69,13 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
         	estatusDto.setIdEstatus((Integer)detalleVacacion.get("id_estatus"));
         	estatusDto.setDescripcion((String)detalleVacacion.get("estatus"));
         	detalleVacacionDto.setIdEstatus(estatusDto);
-        	logger.info("Vacaciones recuperadas: {} ",detalleVacacion.get("id_detalle"));
-        	SimpleDateFormat sdf = new SimpleDateFormat(RepositoryConstants.YYYY_MM_DD);
-        	String fechaIni = "" + detalleVacacion.get(RepositoryConstants.FECHA_INICIO);
-        	String fechaFin = "" + detalleVacacion.get(RepositoryConstants.FECHA_FIN);
-        	String fechaRe = "" + detalleVacacion.get(RepositoryConstants.FECHA_REGISTRO);
-        	Date fechaInicio = null;
-        	Date fechaFinal = null;
+        	System.out.println("Vacaciones recuperadas "+detalleVacacion.get("id_detalle"));
+        	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        	String fechaIni=""+detalleVacacion.get("fecha_inicio");
+        	String fechaFin=""+detalleVacacion.get("fecha_fin");
+        	String fechaRe=""+detalleVacacion.get("fecha_registro");
+        	Date fechaInicio=null;
+        	Date fechaFinal=null;
         	Date fechaRegistro=null;
         	try {
         		fechaInicio = sdf.parse(fechaIni);
@@ -85,7 +87,7 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
         	detalleVacacionDto.setFechaRegistro(fechaRegistro);
         	detalleVacacionDto.setFechaInicio(fechaInicio);
         	detalleVacacionDto.setFechaFin(fechaFinal);
-        	logger.info("fecha actual: {} ",detalleVacacionDto.getFechaInicio());
+        	System.out.println("fecha actual "+detalleVacacionDto.getFechaInicio());
         	detalleVacacionDto.setDias((Integer)detalleVacacion.get("dias"));
     		listaDetalleVacacion.add(detalleVacacionDto);
     	}
@@ -196,7 +198,7 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 		String fechaF=sdf.format(detalleVacacionDto.getFechaFin());
 		String query="select id_detalle from d_detalle_vacacion where (((fecha_inicio between '"+fechaIni+"' and '"+fechaF+"') "
 				+ "or (fecha_fin between '"+fechaIni+"' and '"+fechaF+"' )) "+
-				" or('"+fechaIni+"'>fecha_inicio and fecha_inicio<'"+fechaF+"' and fecha_fin>'"+fechaF+"'))"
+				" or('"+fechaIni+"'>fecha_inicio and fecha_inicio<'"+fechaF+"' and fecha_fin>'"+fechaF+"')) and id_estatus != 3 "
 						+ "and id_usuario='"+detalleVacacionDto.getIdUsuario().getIdUsuario()+"' ";
 		System.out.println("query "+query);
         List<Map<String, Object>> detalleVacaciones = jdbcTemplate.queryForList(query);
@@ -436,7 +438,7 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
         	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         	String fechaIni = "" + detalleVacacion.get("fecha_inicio");
         	String fechaFin = "" + detalleVacacion.get("fecha_fin");
-        	/**String fechaRe = "" + detalleVacacion.get("fecha_registro"); **/
+        	String fechaRe = "" + detalleVacacion.get("fecha_registro");
         	Date fechaInicio = null;
         	Date fechaFinal = null;
         	Date fechaRegistro = null;
@@ -476,7 +478,7 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 		validaFechasVacaciones(this.claveUsuario, this.fechaInicio,this.dias , this.fechaFin);
 		contador++;
 		}
-		while(!bandera){
+		while(bandera!=false){
 			contador++;
 			validaFechasVacaciones(this.claveUsuario, this.fechaInicio,this.dias , this.fechaFin);
 		}
@@ -495,7 +497,7 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 		List<DiaFestivoDto> listaDiasFestivos=diaFestivoRepository.obtenerDiasFestivosActivos();
 		List<DetalleVacacionDto> listaDiasVacaciones=consultaVacacionesPropiasPorFiltros(claveUsuario, "","","", "");
 		logger.info("comprobando días ");
-    	/**DateFormat df = new SimpleDateFormat("dd/MM/yyyy");**/
+    	DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
     	
 		Calendar c1 = Calendar.getInstance();
 	    c1.setTime(fechaInicio);
@@ -513,9 +515,9 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 	    c2.add(Calendar.DAY_OF_WEEK,+1);
 	    for(DiaFestivoDto diaFestivos: listaDiasFestivos){
 	    	
-		/**	String fecha=null;
+			String fecha=null;
 			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-			SimpleDateFormat sdf1 = new SimpleDateFormat("MM-dd-yyyy"); **/
+			SimpleDateFormat sdf1 = new SimpleDateFormat("MM-dd-yyyy");
 		   
 
 		    Calendar diaFestivo = Calendar.getInstance();

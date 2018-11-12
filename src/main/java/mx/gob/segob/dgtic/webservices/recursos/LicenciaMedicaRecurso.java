@@ -103,7 +103,7 @@ public class LicenciaMedicaRecurso {
 	public Response obtieneListaLicenciaMedicaEmpleados(@QueryParam("claveUsuario") String claveUsuario,@QueryParam("idEstatus") String idEstatus, 
 			@QueryParam("nombre") String nombre, @QueryParam("apellidoPaterno") String apellidoPaterno, @QueryParam("apellidoMaterno") String apellidoMaterno,
 			@QueryParam("idUnidad") String idUnidad) {
-
+			System.out.println("idUnidad para busqueda "+idUnidad);
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, licenciaMedicaService.obtenerListaLicenciaMedicaEmpleados(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, idEstatus, idUnidad));
 	}
 	

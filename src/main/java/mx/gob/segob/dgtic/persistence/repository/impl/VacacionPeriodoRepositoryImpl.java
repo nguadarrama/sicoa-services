@@ -1,6 +1,8 @@
 package mx.gob.segob.dgtic.persistence.repository.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -12,10 +14,13 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import mx.gob.segob.dgtic.business.service.constants.ServiceConstants;
 import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.PeriodoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionPeriodoDto;
+import mx.gob.segob.dgtic.persistence.repository.PeriodoRepository;
 import mx.gob.segob.dgtic.persistence.repository.VacacionPeriodoRepository;
 import mx.gob.segob.dgtic.persistence.repository.base.RepositoryBase;
 
@@ -27,6 +32,8 @@ public class VacacionPeriodoRepositoryImpl extends RepositoryBase implements Vac
 	
 	@Autowired
     private NamedParameterJdbcTemplate nameParameterJdbcTemplate;
+	
+	@Autowired PeriodoRepository periodoRepository;
 	
 	@Override
 	public List<VacacionPeriodoDto> obtenerListaVacacionPeriodo() {
@@ -150,24 +157,46 @@ public class VacacionPeriodoRepositoryImpl extends RepositoryBase implements Vac
 	
 	@Override
 	public VacacionPeriodoDto consultaVacacionPeriodoPorClaveUsuarioYPeriodo(Integer idPeriodo, String claveUsuario){
+		Date fecha= new Date();
+		
+		SimpleDateFormat formatter = new SimpleDateFormat(ServiceConstants.YYYY_MM_DD); 
+		String fechaActualCadena = formatter.format(fecha);
+		 Calendar fechaA = Calendar.getInstance();
+		 fechaA.setTime(fecha);
+		 fechaA.add(Calendar.MONTH, -6);
+		 fecha=fechaA.getTime();
+		String fechaCadena = formatter.format(fecha);
+		
+		System.out.println("Fecha actual con formato "+fechaCadena);
 		StringBuilder qry = new StringBuilder();
-		System.out.println("Dato claveUsuario "+claveUsuario+" idPeriodo "+idPeriodo);
-		qry.append("select vacacion.id_vacacion, vacacion.dias, usuario.cve_m_usuario ");
-        qry.append("from r_periodo periodo, m_vacacion_periodo vacacion , m_usuario usuario ");
-        qry.append("where vacacion.activo=true and vacacion.id_usuario=usuario.id_usuario and vacacion.dias>0 and periodo.activo=true and usuario.cve_m_usuario = :claveUsuario and periodo.id_periodo = :idPeriodo and vacacion.id_periodo=periodo.id_periodo order by vacacion.fecha_inicio asc limit 1 ");
-        
-        MapSqlParameterSource parametros = new MapSqlParameterSource();
-        parametros.addValue("claveUsuario", claveUsuario);
-        parametros.addValue("idPeriodo", idPeriodo);
-        Map<String, Object> informacionConsulta = nameParameterJdbcTemplate.queryForMap(qry.toString(), parametros);
-        VacacionPeriodoDto vacacion= new VacacionPeriodoDto();
-        UsuarioDto usuario= new UsuarioDto();
-        		vacacion.setIdVacacion((Integer)informacionConsulta.get("id_vacacion"));
-        		vacacion.setDias((Integer)informacionConsulta.get("dias"));
-        		usuario.setClaveUsuario((String)informacionConsulta.get("cve_m_usuario"));
-        		vacacion.setIdUsuario(usuario);
+		Boolean bandera=periodoRepository.validaPeriodo(idPeriodo);
+		VacacionPeriodoDto vacacion= new VacacionPeriodoDto();
+		if(bandera==true){
+			System.out.println("Dato claveUsuario "+claveUsuario+" idPeriodo "+idPeriodo+ "estatus del periodo "+bandera);
+			qry.append("select vacacion.id_vacacion, vacacion.dias, usuario.cve_m_usuario ");
+	        qry.append("from r_periodo periodo, m_vacacion_periodo vacacion , m_usuario usuario ");
+	        qry.append("where vacacion.activo=true and vacacion.id_usuario=usuario.id_usuario and vacacion.dias>0 and periodo.activo=true and usuario.cve_m_usuario = :claveUsuario and usuario.fecha_ingreso < '"+fechaCadena+"' and date_add(periodo.fecha_fin, interval 1 year) > '"+fechaActualCadena+"' and periodo.fecha_inicio < '"+fechaActualCadena+"' and periodo.id_periodo = :idPeriodo and vacacion.id_periodo=periodo.id_periodo order by vacacion.fecha_inicio asc limit 1 ");
+	        
+	        MapSqlParameterSource parametros = new MapSqlParameterSource();
+	        parametros.addValue("claveUsuario", claveUsuario);
+	        parametros.addValue("idPeriodo", idPeriodo);
+	        
+	        Map<String, Object> informacionConsulta=null;
+	        
+	        try{
+	         informacionConsulta = nameParameterJdbcTemplate.queryForMap(qry.toString(), parametros);
+	         if( informacionConsulta!=null || !informacionConsulta.isEmpty()){
+	         	UsuarioDto usuario= new UsuarioDto();
+	     		vacacion.setIdVacacion((Integer)informacionConsulta.get("id_vacacion"));
+	     		vacacion.setDias((Integer)informacionConsulta.get("dias"));
+	     		usuario.setClaveUsuario((String)informacionConsulta.get("cve_m_usuario"));
+	     		vacacion.setIdUsuario(usuario);
+	         }
+	        }catch(Exception e){
+	        	
+	        }
+		}
         return vacacion;
-       // return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<VacacionPeriodoDto>(VacacionPeriodoDto.class));
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_COMMITTED)
@@ -198,10 +227,15 @@ public class VacacionPeriodoRepositoryImpl extends RepositoryBase implements Vac
 			String apellidoPaterno, String apellidoMaterno, String idUnidad) {
 		System.out.println("Valores "+claveUsuario+" "+nombre+ " "+apellidoPaterno+" "+apellidoMaterno+" "+idUnidad);
 		String query="";
+Date fecha= new Date();
+		
+		SimpleDateFormat formatter = new SimpleDateFormat(ServiceConstants.YYYY_MM_DD); 
+		String fechaCadena = formatter.format(fecha);
 		 
-		query+="select usuario.id_usuario,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, vacacionPeriodo.dias, periodo.descripcion, periodo.id_periodo, vacacionPeriodo.id_vacacion ";
+		query+="select distinct (usuario.id_usuario) id_usuario ,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, vacacionPeriodo.dias, periodo.descripcion, periodo.id_periodo, vacacionPeriodo.id_vacacion ";
         query+="from m_usuario usuario, m_vacacion_periodo vacacionPeriodo, r_periodo periodo, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion ";
-        query+="where periodo.id_periodo=vacacionPeriodo.id_periodo and usuario.id_usuario=vacacionPeriodo.id_usuario and vacacionPeriodo.dias>0 and unidad.id_unidad = relacion.id_unidad ";
+        query+="where periodo.id_periodo=vacacionPeriodo.id_periodo and usuario.id_usuario=vacacionPeriodo.id_usuario and vacacionPeriodo.dias>0 "
+        		+ "and date_add(periodo.fecha_fin, interval 1 year) > '"+fechaCadena+"' and periodo.fecha_inicio < '"+fechaCadena+"' and unidad.id_unidad = relacion.id_unidad ";
         if(claveUsuario!=null && !claveUsuario.isEmpty()){
         	query+="and usuario.cve_m_usuario like '%"+claveUsuario+"%' ";
         }
