@@ -14,7 +14,6 @@ public interface UnidadAdministrativaRepository {
 	public List<UsuarioUnidadAdministrativaDto> consultaResponsable(String claveUsuario);
 	public List<UsuarioUnidadAdministrativaDto> obtenerUnidadesAdministrativas();
 	public List<UsuarioUnidadAdministrativaDto> consultasoloUnidades();
-	
 	public List<UnidadAdministrativaDto> obtenerUnidades();
 	
 }

@@ -50,7 +50,7 @@ public class UnidadAdministrativaRepositoryImpl extends RepositoryBase implement
 	}
 
 	@Override
-	public void guardaUsuarioUnidadAdministrativa(UsuarioUnidadAdministrativaDto usuarioUnidadAdministrativaDto) {
+	public Integer guardaUsuarioUnidadAdministrativa(UsuarioUnidadAdministrativaDto usuarioUnidadAdministrativaDto) {
 	
 		StringBuilder qry = new StringBuilder();
 		qry.append("insert into usuario_unidad_administrativa (cve_m_usuario, id_unidad) ");
@@ -60,7 +60,7 @@ public class UnidadAdministrativaRepositoryImpl extends RepositoryBase implement
 		parametros.addValue(RepositoryConstants.CLAVE_USUARIO2, usuarioUnidadAdministrativaDto.getClaveUsuario().getClaveUsuario());
 		parametros.addValue("idUnidad", usuarioUnidadAdministrativaDto.getIdUnidad().getIdUnidad());
 
-		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		return nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		
 	}
 
@@ -97,7 +97,7 @@ public class UnidadAdministrativaRepositoryImpl extends RepositoryBase implement
 	}
 
 	@Override
-	public void actualizaUsuarioUnidadAdministrativa(UsuarioUnidadAdministrativaDto usuarioUnidadAdministrativaDto) {
+	public Integer actualizaUsuarioUnidadAdministrativa(UsuarioUnidadAdministrativaDto usuarioUnidadAdministrativaDto) {
 		StringBuilder qry = new StringBuilder();
 		qry.append("update usuario_unidad_administrativa set id_unidad= :idUnidad ");
 		qry.append("where cve_m_usuario = :claveUsuario ");
@@ -106,7 +106,7 @@ public class UnidadAdministrativaRepositoryImpl extends RepositoryBase implement
 		parametros.addValue("idUnidad", usuarioUnidadAdministrativaDto.getIdUnidad().getIdUnidad());
 		parametros.addValue("claveUsuario", usuarioUnidadAdministrativaDto.getClaveUsuario().getClaveUsuario());
 
-		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		return nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		
 	}
 

@@ -24,7 +24,7 @@ public class UsuarioPerfilRepositoryImpl extends RepositoryBase implements Usuar
     private JdbcTemplate jdbcTemplate;
 	
 	@Override
-	public void agregaUsuarioPerfil(UsuarioPerfilDto usuarioPerfilDto) {
+	public Integer agregaUsuarioPerfil(UsuarioPerfilDto usuarioPerfilDto) {
 		
 		StringBuilder qry = new StringBuilder();
 		qry.append("insert into d_usuario_perfil (cve_m_usuario, cve_c_perfil) ");
@@ -34,7 +34,7 @@ public class UsuarioPerfilRepositoryImpl extends RepositoryBase implements Usuar
 		parametros.addValue("claveUsuario", usuarioPerfilDto.getClaveUsuario().getClaveUsuario());
 		parametros.addValue("clavePerfil", usuarioPerfilDto.getClavePerfil().getClavePerfil());
 
-		nameParameterJdbcTemplate.update(qry.toString(), parametros);
+		return nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		
 	}
 
