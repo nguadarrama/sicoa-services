@@ -21,11 +21,12 @@ import com.google.gson.JsonParser;
 import mx.gob.segob.dgtic.business.service.UsuarioPerfilService;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioPerfilDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
+import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
 @Path("catalogo")
 @Component
-public class UsuarioPerfilRecurso {
+public class UsuarioPerfilRecurso extends RecursoBase{
 	
 	@Autowired 
 	private UsuarioPerfilService usuarioPerfilService;
@@ -42,12 +43,11 @@ public class UsuarioPerfilRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agregaEliminaPerfilesUsuario")	
 	public Response agregaEliminaPerfilesUsuario(@RequestParam String jsonUsuarioPerfil) {
+		jsonUsuarioPerfil = this.cambiaCaracter(jsonUsuarioPerfil);
 		JsonObject jsonObject = new JsonParser().parse(jsonUsuarioPerfil).getAsJsonObject();
-		
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
-		UsuarioPerfilDto usuarioPerfilDto = gson.fromJson(jsonObject.get("usuarioPerfil"), UsuarioPerfilDto.class);
-		
+		UsuarioPerfilDto usuarioPerfilDto = gson.fromJson(jsonObject.get("usuarioPerfil"), UsuarioPerfilDto.class);		
 		Integer r = usuarioPerfilService.insertaEliminaUsuarioPerfil(usuarioPerfilDto);
 		if (r > 0)
 			return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");

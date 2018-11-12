@@ -21,11 +21,12 @@ import com.google.gson.JsonParser;
 import mx.gob.segob.dgtic.business.service.UnidadAdministrativaService;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioUnidadAdministrativaDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
+import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
 @Path("catalogo")
 @Component
-public class UnidadAdministrativaRecurso {
+public class UnidadAdministrativaRecurso extends RecursoBase{
 	
 	@Autowired
 	private UnidadAdministrativaService unidadAdministrativaService;
@@ -34,7 +35,6 @@ public class UnidadAdministrativaRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneUnidadesAdministrativas")	
 	public Response obtieneUnidadesAdministrativas() {
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, unidadAdministrativaService.obtenerListaUnidadAdministrativa());
 	}
 
@@ -43,6 +43,7 @@ public class UnidadAdministrativaRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("consultaRegistraUsuarioUnidadAdministrativa")	
 	public Response consultaRegistraUsuarioUnidadAdministrativa(@RequestParam String jsonUsuarioUnidadAdministrativa) {
+		jsonUsuarioUnidadAdministrativa = this.cambiaCaracter(jsonUsuarioUnidadAdministrativa);
 		JsonObject jsonObject = new JsonParser().parse(jsonUsuarioUnidadAdministrativa).getAsJsonObject();
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
@@ -65,7 +66,6 @@ public class UnidadAdministrativaRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneUnidadesAdministrativasCompletas")	
 	public Response obtieneUnidadesAdministrativasCompletas() {
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, unidadAdministrativaService.obtenerUnidadesAdministrativas());
 	}
 	

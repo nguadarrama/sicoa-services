@@ -21,11 +21,12 @@ import com.google.gson.JsonParser;
 import mx.gob.segob.dgtic.business.service.PerfilService;
 import mx.gob.segob.dgtic.comun.sicoa.dto.PerfilDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
+import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
 @Path("catalogo")
 @Component
-public class PerfilRecurso {
+public class PerfilRecurso extends RecursoBase{
 	
 	@Autowired
 	private PerfilService perfilService;
@@ -34,7 +35,6 @@ public class PerfilRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtienePerfiles")	
 	public Response obtienePerfiles() {
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, perfilService.obtenerListaPerfiles());
 	}
 	
@@ -42,7 +42,6 @@ public class PerfilRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("buscaPerfil")	
 	public Response buscaPerfil(@QueryParam("id") String id) {
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, perfilService.buscaPerfil(id));
 	}
 	
@@ -51,14 +50,12 @@ public class PerfilRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modificaPerfil")	
 	public Response modificaPerfil(@RequestParam String jsonPerfil) {
-		JsonObject jsonObject = new JsonParser().parse(jsonPerfil).getAsJsonObject();
-		
+		jsonPerfil = this.cambiaCaracter(jsonPerfil);
+		JsonObject jsonObject = new JsonParser().parse(jsonPerfil).getAsJsonObject();	
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
-		PerfilDto perfilDto = gson.fromJson(jsonObject.get("perfil"), PerfilDto.class);
-		
+		PerfilDto perfilDto = gson.fromJson(jsonObject.get("perfil"), PerfilDto.class);	
 		perfilService.modificaPerfil(perfilDto);
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 	}
 	
@@ -67,24 +64,20 @@ public class PerfilRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agregaPerfil")	
 	public Response agregaPerfil(@RequestParam String jsonPerfil) {
+		jsonPerfil = this.cambiaCaracter(jsonPerfil);
 		JsonObject jsonObject = new JsonParser().parse(jsonPerfil).getAsJsonObject();
-		
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		PerfilDto perfilDto = gson.fromJson(jsonObject.get("perfil"), PerfilDto.class);
-		
 		perfilService.agregaPerfil(perfilDto);
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("eliminaPerfil")	
-	public Response eliminaPerfil(@QueryParam("id") String id) {
-		
+	public Response eliminaPerfil(@QueryParam("id") String id) {		
 		perfilService.eliminaPerfil(id);
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 	}
 

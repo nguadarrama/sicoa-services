@@ -13,9 +13,11 @@ import org.springframework.stereotype.Repository;
 import mx.gob.segob.dgtic.comun.sicoa.dto.JustificacionDto;
 import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.persistence.repository.JustificacionRepository;
+import mx.gob.segob.dgtic.persistence.repository.base.RepositoryBase;
+import mx.gob.segob.dgtic.persistence.repository.constants.RepositoryConstants;
 
 @Repository
-public class JustificacionRepositoryImpl implements JustificacionRepository {
+public class JustificacionRepositoryImpl extends RepositoryBase implements JustificacionRepository {
 
 	@Autowired
     private JdbcTemplate jdbcTemplate;
@@ -82,7 +84,6 @@ public class JustificacionRepositoryImpl implements JustificacionRepository {
 	
 	@Override
 	public JustificacionDto modificaJustificacion (JustificacionDto justificacionDto){
-		
 		StringBuilder qry = new StringBuilder();
 		qry.append("UPDATE c_justificacion SET clave = :clave, justificacion = :justificacion, activo = :activo ");
 		qry.append("WHERE id_justificacion = :idJustificacion");
@@ -107,7 +108,6 @@ public class JustificacionRepositoryImpl implements JustificacionRepository {
 	
 	@Override 
 	public JustificacionDto agregaJustificacion(JustificacionDto justificacionDto){
-		
 		StringBuilder qry = new StringBuilder();
 		qry.append("INSERT INTO c_justificacion (clave, justificacion, activo) ");
 		qry.append("VALUES (:clave, :justificacion, :activo ) ");
@@ -124,7 +124,7 @@ public class JustificacionRepositoryImpl implements JustificacionRepository {
 				justificacionDto.setMensaje("Se ha generado un error al guardar, revise la información");
 			}
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.info("Error: {} ", e);
 			justificacionDto.setMensaje("El registro ya existe en el sistema, favor de validar");
 		}
 		return justificacionDto;

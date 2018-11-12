@@ -47,6 +47,7 @@ public class NivelOrganizacionalRecurso extends ServiceBase{
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agrega")	
 	public Response agregaPeriodo(@RequestParam String jsonNivelOrganizacional) {
+		jsonNivelOrganizacional = this.cambiaCaracter(jsonNivelOrganizacional);
 		JsonObject jsonObject = new JsonParser().parse(jsonNivelOrganizacional).getAsJsonObject();
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
@@ -68,6 +69,7 @@ public class NivelOrganizacionalRecurso extends ServiceBase{
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modifica")	
 	public Response modificaNivel(@RequestParam String jsonNivel) {
+		jsonNivel = this.cambiaCaracter(jsonNivel);
 		JsonObject jsonObject = new JsonParser().parse(jsonNivel).getAsJsonObject();
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();

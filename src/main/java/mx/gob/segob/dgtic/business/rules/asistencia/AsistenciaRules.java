@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.IncidenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
-import mx.gob.segob.dgtic.persistence.repository.ArchivoRepository;
 import mx.gob.segob.dgtic.persistence.repository.AsistenciaRepository;
 import mx.gob.segob.dgtic.persistence.repository.UsuarioRepository;
 
@@ -16,9 +15,6 @@ public class AsistenciaRules {
 
 	@Autowired
 	private AsistenciaRepository asistenciaRepository;
-	
-	@Autowired
-	private ArchivoRepository archivoRepository;
 	
 	@Autowired
 	private UsuarioRepository usuarioRepository;
@@ -117,5 +113,6 @@ public class AsistenciaRules {
 		
 		return listaAsistencia;
 	}
+	
 	
 }

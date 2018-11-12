@@ -30,7 +30,6 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 	public List<PeriodoDto> obtenerListaPeriodos() {
 		List<PeriodoDto> listaP;
 		listaP = periodoRules.obtenerListaPeriodos();
-		gson.toJson(listaP);
 		return listaP;
 	}
 
@@ -52,6 +51,7 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 	@Transactional
 	@Override
 	public PeriodoDto agregaPeriodo(PeriodoDto periodoDto) {
+		
 		PeriodoDto periodo = new PeriodoDto();
 		Date parsedInicio = periodoDto.getFechaInicio();
 		Date parsedFin =  periodoDto.getFechaFin();
@@ -65,9 +65,9 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 		 *****************************************/
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		logger.info("fechaFin: {}",fechaFin);
-		/*****************************************************
-		 * VERIFICANDO QUE NO EXISTA EL PERIODO A DAR DE ALTA
-		 *****************************************************/
+			/*****************************************************
+			 * VERIFICANDO QUE NO EXISTA EL PERIODO A DAR DE ALTA
+			 *****************************************************/
 		boolean existe = false;
 		existe = periodoRules.existePeriodo(sdf.format(fechaInicio));
 		if(existe) {

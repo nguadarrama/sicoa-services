@@ -21,11 +21,12 @@ import com.google.gson.JsonParser;
 import mx.gob.segob.dgtic.business.service.TipoDiaService;
 import mx.gob.segob.dgtic.comun.sicoa.dto.TipoDiaDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
+import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
 @Path("catalogo")
 @Component
-public class TipoDiaRecurso {
+public class TipoDiaRecurso extends RecursoBase{
 	@Autowired 
 	private TipoDiaService tipoDiaService;
 	
@@ -40,7 +41,6 @@ public class TipoDiaRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("buscaTipoDia")	
 	public Response buscaTipoDia(@QueryParam("id") Integer id) {
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, tipoDiaService.buscaTipoDia(id));
 	}
 	
@@ -49,14 +49,12 @@ public class TipoDiaRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modificaTipoDia")	
 	public Response modificaTipoDia(@RequestParam String jsonTipoDia) {
+		jsonTipoDia = this.cambiaCaracter(jsonTipoDia);
 		JsonObject jsonObject = new JsonParser().parse(jsonTipoDia).getAsJsonObject();
-		
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
-		TipoDiaDto tipoDiaDto = gson.fromJson(jsonObject.get("tipoDia"), TipoDiaDto.class);
-		
+		TipoDiaDto tipoDiaDto = gson.fromJson(jsonObject.get("tipoDia"), TipoDiaDto.class);		
 		tipoDiaService.modificaTipoDia(tipoDiaDto);
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 	}
 	
@@ -65,24 +63,20 @@ public class TipoDiaRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agregaTipoDia")	
 	public Response agregaTipoDia(@RequestParam String jsonPermiso) {
-		JsonObject jsonObject = new JsonParser().parse(jsonPermiso).getAsJsonObject();
-		
+		jsonPermiso = this.cambiaCaracter(jsonPermiso);
+		JsonObject jsonObject = new JsonParser().parse(jsonPermiso).getAsJsonObject();	
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
-		TipoDiaDto tipoDiaDto = gson.fromJson(jsonObject.get("tipoDia"), TipoDiaDto.class);
-		
+		TipoDiaDto tipoDiaDto = gson.fromJson(jsonObject.get("tipoDia"), TipoDiaDto.class);	
 		tipoDiaService.agregaTipoDia(tipoDiaDto);
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("eliminaTipoDia")	
-	public Response eliminaTipoDia(@QueryParam("id") Integer id) {
-		
+	public Response eliminaTipoDia(@QueryParam("id") Integer id) {		
 		tipoDiaService.eliminaTipoDia(id);
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 	}
 }

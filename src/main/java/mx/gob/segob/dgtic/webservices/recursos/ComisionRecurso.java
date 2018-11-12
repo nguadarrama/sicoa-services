@@ -56,12 +56,11 @@ public class ComisionRecurso extends ServiceBase{
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("modificaComision")
   public Response modificaComision(@RequestParam String jsonComision) {
+	  jsonComision = this.cambiaCaracter(jsonComision);
     JsonObject jsonObject = new JsonParser().parse(jsonComision).getAsJsonObject();
-
     GsonBuilder builder = new GsonBuilder();
     Gson gson = builder.create();
     ComisionAux comisionDto = gson.fromJson(jsonObject.get(ServiceConstants.COMISION), ComisionAux.class);
-
     return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,
         comisionService.modificaComision(comisionDto));
   }
@@ -71,15 +70,13 @@ public class ComisionRecurso extends ServiceBase{
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("agregaComision")
   public Response agregaComision(@RequestParam String jsonComision) {
+	  jsonComision = this.cambiaCaracter(jsonComision);
     JsonObject jsonObject = new JsonParser().parse(jsonComision).getAsJsonObject();
-
     GsonBuilder builder = new GsonBuilder();
     Gson gson = builder.create();
     ComisionAux comisionAux = gson.fromJson(jsonObject.get(ServiceConstants.COMISION), ComisionAux.class);
     logger.info("Datos para comision en recurso " + " fechaInicio "+comisionAux.getFechaInicio()+
         " fechaFin "+comisionAux.getFechaFin());
-    
-
     return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, comisionService.agregaComision(comisionAux));
   }
 
@@ -87,9 +84,7 @@ public class ComisionRecurso extends ServiceBase{
   @Produces(MediaType.APPLICATION_JSON)
   @Path("eliminaComision")
   public Response eliminaComision(@QueryParam("id") Integer id) {
-
     comisionService.eliminaComision(id);
-
     return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
   }
 
@@ -110,7 +105,6 @@ public class ComisionRecurso extends ServiceBase{
   public Response obtieneListaComisionEmpleados(@QueryParam("claveUsuario") String claveUsuario,@QueryParam("idEstatus") String idEstatus, 
           @QueryParam("nombre") String nombre, @QueryParam("apellidoPaterno") String apellidoPaterno, @QueryParam("apellidoMaterno") String apellidoMaterno,
           @QueryParam("idUnidad") String idUnidad) {
-
       return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, comisionService.obtenerListaComisionEmpleados(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, idEstatus, idUnidad));
   }
   
@@ -128,6 +122,7 @@ public class ComisionRecurso extends ServiceBase{
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("generarReporte")  
   public Response generarReporte(@RequestParam String jsonDetalleVacacion) {
+	  jsonDetalleVacacion = this.cambiaCaracter(jsonDetalleVacacion);
       JsonObject jsonObject = new JsonParser().parse(jsonDetalleVacacion).getAsJsonObject();
       GsonBuilder builder = new GsonBuilder();
       Gson gson = builder.create();
@@ -140,12 +135,11 @@ public class ComisionRecurso extends ServiceBase{
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("modificaComisionEstatusArchivo") 
   public Response modificaComisionEstatusArchivo(@RequestParam String jsonLicenciaMedica) {
+	  jsonLicenciaMedica = this.cambiaCaracter(jsonLicenciaMedica);
       JsonObject jsonObject = new JsonParser().parse(jsonLicenciaMedica).getAsJsonObject();
-      
       GsonBuilder builder = new GsonBuilder();
       Gson gson = builder.create();
       ComisionAux comisionDto = gson.fromJson(jsonObject.get("comision"), ComisionAux.class);
-      
       return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,comisionService.modificaComisionEstatusArchivo(comisionDto));
   }
 }

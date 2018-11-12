@@ -21,11 +21,12 @@ import com.google.gson.JsonParser;
 import mx.gob.segob.dgtic.business.service.PermisoService;
 import mx.gob.segob.dgtic.comun.sicoa.dto.PermisoDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
+import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
 @Path("catalogo")
 @Component
-public class PermisoRecurso {
+public class PermisoRecurso extends RecursoBase{
 	
 	@Autowired
 	private PermisoService permisoService;
@@ -34,7 +35,6 @@ public class PermisoRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtienePermisos")	
 	public Response obtienePermisos() {
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, permisoService.obtenerListaPermisos());
 	}
 	
@@ -42,7 +42,6 @@ public class PermisoRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("buscaPermiso")	
 	public Response buscaPermiso(@QueryParam("id") String id) {
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, permisoService.buscaPermiso(id));
 	}
 	
@@ -51,14 +50,12 @@ public class PermisoRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modificaPermiso")	
 	public Response modificaPermiso(@RequestParam String jsonPermiso) {
+		jsonPermiso = this.cambiaCaracter(jsonPermiso);
 		JsonObject jsonObject = new JsonParser().parse(jsonPermiso).getAsJsonObject();
-		
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
-		PermisoDto permisoDto = gson.fromJson(jsonObject.get("permiso"), PermisoDto.class);
-		
+		PermisoDto permisoDto = gson.fromJson(jsonObject.get("permiso"), PermisoDto.class);		
 		permisoService.modificaPermiso(permisoDto);
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 	}
 	
@@ -67,24 +64,20 @@ public class PermisoRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agregaPermiso")	
 	public Response agregaPermiso(@RequestParam String jsonPermiso) {
-		JsonObject jsonObject = new JsonParser().parse(jsonPermiso).getAsJsonObject();
-		
+		jsonPermiso = this.cambiaCaracter(jsonPermiso);
+		JsonObject jsonObject = new JsonParser().parse(jsonPermiso).getAsJsonObject();		
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
-		PermisoDto permisoDto = gson.fromJson(jsonObject.get("permiso"), PermisoDto.class);
-		
+		PermisoDto permisoDto = gson.fromJson(jsonObject.get("permiso"), PermisoDto.class);	
 		permisoService.agregaPermiso(permisoDto);
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("eliminaPermiso")	
-	public Response eliminaPermiso(@QueryParam("id") String id) {
-		
+	public Response eliminaPermiso(@QueryParam("id") String id) {	
 		permisoService.eliminaPermiso(id);
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 	}
 }

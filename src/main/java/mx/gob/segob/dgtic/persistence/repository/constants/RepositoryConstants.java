@@ -21,6 +21,7 @@ public class RepositoryConstants {
 	public static final String SIZE = "size";
 	public static final String ACTIVO = "activo";
 	public static final String YYYY_MM_DD = "yyyy-MM-dd";
+	public static final String DD_MM_YYYY = "dd-MM-yyyy";
 	public static final String FECHA_INICIO = "fecha_inicio";
 	public static final String FECHA_INICIO2 = "fechaInicio";
 	public static final String FECHA_FIN = "fecha_fin";
@@ -33,7 +34,7 @@ public class RepositoryConstants {
 	public static final String CLAVE_M_USUARIO = "cve_m_usuario";
 	public static final String NOMBRE_UNIDAD = "nombre_unidad";
 	public static final String DESCRIPCION = "descripcion";
-
+	public static final String CARACTERES_ESPECIALES = "";
 	/**
 	 * PERIODOREPOSITORYIMPL
 	 * QUERY buscaPeriodo

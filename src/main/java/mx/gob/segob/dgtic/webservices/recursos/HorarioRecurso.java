@@ -18,11 +18,12 @@ import com.google.gson.JsonParser;
 import mx.gob.segob.dgtic.business.service.HorarioService;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
 import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
+import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
 @Path("catalogo")
 @Component
-public class HorarioRecurso {
+public class HorarioRecurso extends RecursoBase{
 	
 	@Autowired
 	private HorarioService horarioService;
@@ -54,13 +55,12 @@ public class HorarioRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modificaHorario")	
 	public Response modificaHorario(@RequestParam String jsonHorario) {
-		JsonObject jsonObject = new JsonParser().parse(jsonHorario).getAsJsonObject();
-		
+		jsonHorario = this.cambiaCaracter(jsonHorario);
+		JsonObject jsonObject = new JsonParser().parse(jsonHorario).getAsJsonObject();		
 		GsonBuilder builder = new GsonBuilder();
 		builder.setDateFormat("yyyy-MM-dd");
 		Gson gson = builder.create();
-		Horario horario = gson.fromJson(jsonObject.get("horario"), Horario.class);
-		
+		Horario horario = gson.fromJson(jsonObject.get("horario"), Horario.class);		
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, horarioService.modificaHorario(horario));
 	}
 	
@@ -69,6 +69,7 @@ public class HorarioRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agregaHorario")	
 	public Response agregaaHorario(@RequestParam String jsonHorario) {
+		jsonHorario = this.cambiaCaracter(jsonHorario);
 		JsonObject jsonObject = new JsonParser().parse(jsonHorario).getAsJsonObject();
 		GsonBuilder builder = new GsonBuilder();
 		builder.setDateFormat("yyyy-MM-dd");

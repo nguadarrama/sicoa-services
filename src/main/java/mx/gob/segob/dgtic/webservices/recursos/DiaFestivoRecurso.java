@@ -20,11 +20,12 @@ import com.google.gson.JsonParser;
 import mx.gob.segob.dgtic.business.service.DiaFestivoService;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DiaFestivoDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
+import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
 @Path("diaFestivo")
 @Component
-public class DiaFestivoRecurso {
+public class DiaFestivoRecurso extends RecursoBase {
 	
 	@Autowired
 	private DiaFestivoService diaFestivoService;
@@ -57,13 +58,12 @@ public class DiaFestivoRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modifica")	
 	public Response modificaDiaFestivo(@RequestParam String jsonDiaFestivo) {
-		
+		jsonDiaFestivo = this.cambiaCaracter(jsonDiaFestivo);
 		JsonObject jsonObject = new JsonParser().parse(jsonDiaFestivo).getAsJsonObject();
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		DiaFestivoDto diaFestivo = gson.fromJson(jsonObject.get("diaFestivo"), DiaFestivoDto.class);
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, diaFestivoService.modificaDiaFestivo(diaFestivo));
-		
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, diaFestivoService.modificaDiaFestivo(diaFestivo));	
 	}
 	
 	@PUT
@@ -71,23 +71,20 @@ public class DiaFestivoRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agrega")	
 	public Response agregaaHorario(@RequestParam String jsonDiaFestivo) {
-		
+		jsonDiaFestivo = this.cambiaCaracter(jsonDiaFestivo);
 		JsonObject jsonObject = new JsonParser().parse(jsonDiaFestivo).getAsJsonObject();
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
-		DiaFestivoDto diaFestivoDto = gson.fromJson(jsonObject.get("diaFestivo"), DiaFestivoDto.class);
-		
+		DiaFestivoDto diaFestivoDto = gson.fromJson(jsonObject.get("diaFestivo"), DiaFestivoDto.class);		
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, diaFestivoService.agregaDiaFestivo(diaFestivoDto));
 	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("elimina")	
-	public Response eliminaDiaFestivo(@QueryParam("id") Integer id) {
-		
+	public Response eliminaDiaFestivo(@QueryParam("id") Integer id) {		
 		diaFestivoService.eliminaDiaFestivo(id);
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
-		
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");		
 	}
 	
 	@GET

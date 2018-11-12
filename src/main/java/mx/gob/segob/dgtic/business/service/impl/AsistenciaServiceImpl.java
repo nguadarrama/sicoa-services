@@ -17,12 +17,12 @@ import org.springframework.stereotype.Service;
 
 import mx.gob.segob.dgtic.business.rules.asistencia.AsistenciaRules;
 import mx.gob.segob.dgtic.business.service.AsistenciaService;
+import mx.gob.segob.dgtic.business.service.base.ServiceBase;
 import mx.gob.segob.dgtic.business.service.constants.ServiceConstants;
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.IncidenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.reporte;
 import mx.gob.segob.dgtic.comun.util.FormatoIncidencia;
-import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
@@ -33,7 +33,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 
 @Service
-public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaService {
+public class AsistenciaServiceImpl extends ServiceBase implements AsistenciaService {
 	
 	@Autowired
 	private AsistenciaRules asistenciaRules;
@@ -92,7 +92,7 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 				
 				fechaInicio = new java.sql.Date(parsedInicio.getTime());
 				fechaFin = new java.sql.Date(parsedFin.getTime());
-				System.out.println("Dato a mostrar "+fechaInicio);
+				logger.info("Dato a mostrar: {} ",fechaInicio);
 				
 				//se suma un día a la fecha fin para incluirla en la búsqueda
 				Calendar c = Calendar.getInstance();
