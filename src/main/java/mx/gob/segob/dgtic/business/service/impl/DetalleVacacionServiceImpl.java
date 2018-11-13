@@ -153,7 +153,7 @@ public class DetalleVacacionServiceImpl extends ServiceBase implements DetalleVa
 				parametros.put(ServiceConstants.PUESTO, generaReporteArchivo.getIdPuesto());
 				parametros.put(ServiceConstants.UNIDAD_ADMVA, generaReporteArchivo.getUnidadAdministrativa());
 				parametros.put(ServiceConstants.NUMERO_EMPLEADO, generaReporteArchivo.getNumeroEmpleado());
-/**				Date fechaInicio = null;
+//				Date fechaInicio = null;
 //				Date fechaFin = null;
 //				Date fechaIngreso = null;
 //				String fechaInicial = "";
@@ -171,9 +171,9 @@ public class DetalleVacacionServiceImpl extends ServiceBase implements DetalleVa
 //					if(generaReporteArchivo.getFechaIngreso()!= null){
 //						fechaIngreso = df.parse(generaReporteArchivo.getFechaIngreso());
 //						fechaIngresal = df.format(fechaIngreso);
-//					} 
+//					}
 				//fechaFinal = generaReporteArchivo.getFechaFin().substring(0, 12);
-				//fechaInicial = generaReporteArchivo.getFechaInicio().substring(0, 12); **/
+				//fechaInicial = generaReporteArchivo.getFechaInicio().substring(0, 12);
 				parametros.put(ServiceConstants.FECHA_INGRESO, generaReporteArchivo.getFechaIngreso());
 				parametros.put(ServiceConstants.FECHA_INICIO, generaReporteArchivo.getFechaInicio());
 				parametros.put(ServiceConstants.FECHA_FIN, generaReporteArchivo.getFechaFin());
@@ -183,14 +183,14 @@ public class DetalleVacacionServiceImpl extends ServiceBase implements DetalleVa
 				parametros.put(ServiceConstants.NUMERO_EMPLEADO, generaReporteArchivo.getNumeroEmpleado());
 				parametros.put(ServiceConstants.DIAS_VACACIONES, generaReporteArchivo.getDias());
 				Integer diasRestantes = 0;
-				if(vacacion != null){
-					
+				if(vacacion.getDias() != null){
 					diasRestantes = vacacion.getDias();
 					parametros.put("diasRestantes",""+diasRestantes);
 				}
 				logger.info("idVacacion para el archivo: {} ", generaReporteArchivo.getIdVacacion()+" fechaInicio "+generaReporteArchivo.getFechaInicio()+ 
-						" fechaFin "+generaReporteArchivo.getFechaFin()+" periodo "+ vacacion.getIdPeriodo().getDescripcion());
+						" fechaFin "+generaReporteArchivo.getFechaFin()+" periodo "+vacacion.getIdPeriodo().getDescripcion());
 				parametros.put("periodo", vacacion.getIdPeriodo().getDescripcion());
+				//fechaActual = df.format(fecha);
 				parametros.put("fechaActual",generaReporteArchivo.getFechaPeticion());
 				JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
 				output = JasperExportManager.exportReportToPdf (jasperPrint); 

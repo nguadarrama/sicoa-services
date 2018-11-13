@@ -175,7 +175,7 @@ public class VacacionPeriodoRepositoryImpl extends RepositoryBase implements Vac
 			System.out.println("Dato claveUsuario "+claveUsuario+" idPeriodo "+idPeriodo+ "estatus del periodo "+bandera);
 			qry.append("select vacacion.id_vacacion, vacacion.dias, usuario.cve_m_usuario ");
 	        qry.append("from r_periodo periodo, m_vacacion_periodo vacacion , m_usuario usuario ");
-	        qry.append("where vacacion.activo=true and vacacion.id_usuario=usuario.id_usuario and vacacion.dias>0 and periodo.activo=true and usuario.cve_m_usuario = :claveUsuario and usuario.fecha_ingreso < '"+fechaCadena+"' and date_add(periodo.fecha_fin, interval 1 year) > '"+fechaActualCadena+"' and periodo.fecha_inicio < '"+fechaActualCadena+"' and periodo.id_periodo = :idPeriodo and vacacion.id_periodo=periodo.id_periodo order by vacacion.fecha_inicio asc limit 1 ");
+	        qry.append("where vacacion.activo=true and vacacion.id_usuario=usuario.id_usuario and vacacion.dias>0 and periodo.activo=true and usuario.cve_m_usuario = :claveUsuario and usuario.fecha_ingreso <= '"+fechaCadena+"' and date_add(periodo.fecha_fin, interval 1 year) >= '"+fechaActualCadena+"' and periodo.fecha_inicio <= '"+fechaActualCadena+"' and periodo.id_periodo = :idPeriodo and vacacion.id_periodo=periodo.id_periodo order by vacacion.fecha_inicio asc limit 1 ");
 	        
 	        MapSqlParameterSource parametros = new MapSqlParameterSource();
 	        parametros.addValue("claveUsuario", claveUsuario);
@@ -227,15 +227,19 @@ public class VacacionPeriodoRepositoryImpl extends RepositoryBase implements Vac
 			String apellidoPaterno, String apellidoMaterno, String idUnidad) {
 		System.out.println("Valores "+claveUsuario+" "+nombre+ " "+apellidoPaterno+" "+apellidoMaterno+" "+idUnidad);
 		String query="";
-Date fecha= new Date();
-		
+		Date fecha= new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat(ServiceConstants.YYYY_MM_DD); 
 		String fechaCadena = formatter.format(fecha);
+		Calendar fechaA = Calendar.getInstance();
+		 fechaA.setTime(fecha);
+		 fechaA.add(Calendar.MONTH, -6);
+		 fecha=fechaA.getTime();
+		String fechaCadena1 = formatter.format(fecha);
 		 
 		query+="select distinct (usuario.id_usuario) id_usuario ,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, vacacionPeriodo.dias, periodo.descripcion, periodo.id_periodo, vacacionPeriodo.id_vacacion ";
         query+="from m_usuario usuario, m_vacacion_periodo vacacionPeriodo, r_periodo periodo, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion ";
         query+="where periodo.id_periodo=vacacionPeriodo.id_periodo and usuario.id_usuario=vacacionPeriodo.id_usuario and vacacionPeriodo.dias>0 "
-        		+ "and date_add(periodo.fecha_fin, interval 1 year) > '"+fechaCadena+"' and periodo.fecha_inicio < '"+fechaCadena+"' and unidad.id_unidad = relacion.id_unidad ";
+        		+ "and date_add(periodo.fecha_fin, interval 1 year) >= '"+fechaCadena+"' and periodo.fecha_inicio <= '"+fechaCadena+"' and usuario.fecha_ingreso <= '"+fechaCadena1+"' and unidad.id_unidad = relacion.id_unidad ";
         if(claveUsuario!=null && !claveUsuario.isEmpty()){
         	query+="and usuario.cve_m_usuario like '%"+claveUsuario+"%' ";
         }
@@ -251,6 +255,7 @@ Date fecha= new Date();
         if(idUnidad!=null && !idUnidad.isEmpty()){
         	query+="and unidad.id_unidad ='"+idUnidad+"' ";
         }
+        query+="order by periodo.fecha_inicio asc ";
        System.out.println("Query "+query);
 		List<Map<String, Object>> detalleVacaciones = jdbcTemplate.queryForList(query);
 		List<VacacionPeriodoDto> listaVacacionPeriodo=new  ArrayList<>();
