@@ -37,8 +37,6 @@ public class AsistenciaRecurso extends RecursoBase{
 	@Autowired
 	private AsistenciaService asistenciaService;
 	
-	private static String ASISTENCIA_BUSQUEDA = "asistenciaBusqueda";
-	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneAsistenciasEmpleadoMes")	
@@ -68,7 +66,7 @@ public class AsistenciaRecurso extends RecursoBase{
 		GsonBuilder builder = new GsonBuilder();
 		builder.setDateFormat(ServiceConstants.YYYY_MM_DD);
 		Gson gson = builder.create();
-		AsistenciaBusquedaUtil asistenciaBusquedaUtil = gson.fromJson(jsonObject.get(ASISTENCIA_BUSQUEDA), AsistenciaBusquedaUtil.class);
+		AsistenciaBusquedaUtil asistenciaBusquedaUtil = gson.fromJson(jsonObject.get("asistenciaBusqueda"), AsistenciaBusquedaUtil.class);
 		
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistenciaEmpleadoRangoCoordinador(asistenciaBusquedaUtil));
 	}
@@ -83,7 +81,7 @@ public class AsistenciaRecurso extends RecursoBase{
 		GsonBuilder builder = new GsonBuilder();
 		builder.setDateFormat(ServiceConstants.YYYY_MM_DD);
 		Gson gson = builder.create();
-		AsistenciaBusquedaUtil asistenciaBusquedaUtil = gson.fromJson(jsonObject.get(ASISTENCIA_BUSQUEDA), AsistenciaBusquedaUtil.class);		
+		AsistenciaBusquedaUtil asistenciaBusquedaUtil = gson.fromJson(jsonObject.get("asistenciaBusqueda"), AsistenciaBusquedaUtil.class);		
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistenciaEmpleadoRangoDireccion(asistenciaBusquedaUtil));
 	}
@@ -202,7 +200,7 @@ public class AsistenciaRecurso extends RecursoBase{
 		GsonBuilder builder = new GsonBuilder();
 		builder.setDateFormat(ServiceConstants.YYYY_MM_DD);
 		Gson gson = builder.create();
-		AsistenciaBusquedaUtil asistenciaBusquedaUtil = gson.fromJson(jsonObject.get(ASISTENCIA_BUSQUEDA), AsistenciaBusquedaUtil.class);
+		AsistenciaBusquedaUtil asistenciaBusquedaUtil = gson.fromJson(jsonObject.get("asistenciaBusqueda"), AsistenciaBusquedaUtil.class);
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.reporteCoordinador(asistenciaBusquedaUtil));
 	}
@@ -218,7 +216,7 @@ public class AsistenciaRecurso extends RecursoBase{
 		GsonBuilder builder = new GsonBuilder();
 		builder.setDateFormat(ServiceConstants.YYYY_MM_DD);
 		Gson gson = builder.create();
-		AsistenciaBusquedaUtil asistenciaBusquedaUtil = gson.fromJson(jsonObject.get(ASISTENCIA_BUSQUEDA), AsistenciaBusquedaUtil.class);
+		AsistenciaBusquedaUtil asistenciaBusquedaUtil = gson.fromJson(jsonObject.get("asistenciaBusqueda"), AsistenciaBusquedaUtil.class);
 		
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.reporteDireccion(asistenciaBusquedaUtil));
 	}
