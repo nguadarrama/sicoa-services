@@ -427,6 +427,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 
 	@Override
 	public boolean existeIncidencia(Integer idAsistencia) {
+		boolean existe = false;
 		StringBuilder qry = new StringBuilder();
 		
 		qry.append("SELECT id_incidencia ");
@@ -438,15 +439,18 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         
         List<Map<String, Object>> asistencia = jdbcTemplate.queryForList(qry.toString(), idAsistencia);
         
-        if (asistencia.size() == 0) {
-        	return false;
+        if (asistencia.isEmpty()) {
+        	existe = false;
         } else {
-        	return true;
+        	existe = true;
         }
+        
+        return existe;
 	}
 	
 	@Override
 	public boolean existeDescuento(Integer idAsistencia) {
+		boolean existe = false;
 		StringBuilder qry = new StringBuilder();
 		
 		qry.append("SELECT id_incidencia ");
@@ -458,11 +462,13 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         
         List<Map<String, Object>> asistencia = jdbcTemplate.queryForList(qry.toString(), idAsistencia);
         
-        if (asistencia.size() == 0) {
-        	return false;
+        if (asistencia.isEmpty()) {
+        	existe = false;
         } else {
-        	return true;
+        	existe = true;
         }
+        
+        return existe;
 	}
 
 	@Override
@@ -692,7 +698,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         //reglas para condiciones de permisos 
         if (!asistenciaBusquedaUtil.getPermisos().isEmpty()) {
         	String[] arrayPermisos = asistenciaBusquedaUtil.getPermisos().split(",");
-            List<String> listaPermisos = new ArrayList<String>(Arrays.asList(arrayPermisos));
+            List<String> listaPermisos = new ArrayList<>(Arrays.asList(arrayPermisos));
             String condicionVacacion = "or";
             String condicionComision = "or";
             String condicionLicencia = "or";
@@ -836,7 +842,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         //reglas para condiciones de permisos 
         if (!asistenciaBusquedaUtil.getPermisos().isEmpty()) {
         	String[] arrayPermisos = asistenciaBusquedaUtil.getPermisos().split(",");
-            List<String> listaPermisos = new ArrayList<String>(Arrays.asList(arrayPermisos));
+            List<String> listaPermisos = new ArrayList<>(Arrays.asList(arrayPermisos));
             String condicionVacacion = "or";
             String condicionComision = "or";
             String condicionLicencia = "or";
@@ -981,7 +987,6 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
       qry.append(" and e.id_estatus = " + estado);
     }
 
-    System.out.println("Query busqueda asistencias: " + qry.toString());
     List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString());
     List<AsistenciaDto> listaAsistencia = new ArrayList<>();
 
