@@ -184,7 +184,6 @@ public class DetalleVacacionServiceImpl extends ServiceBase implements DetalleVa
 				parametros.put(ServiceConstants.DIAS_VACACIONES, generaReporteArchivo.getDias());
 				Integer diasRestantes = 0;
 				if(vacacion.getDias() != null){
-					
 					diasRestantes = vacacion.getDias();
 					parametros.put("diasRestantes",""+diasRestantes);
 				}

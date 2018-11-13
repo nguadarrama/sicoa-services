@@ -206,7 +206,7 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
         if(detalleVacaciones.size()==0 || detalleVacaciones==null){
         	
 			Date fechaActual = new Date();
-			System.out.println("Fecha actual "+fechaActual);
+			System.out.println("Fecha actual "+fechaActual+" dias por descontar "+detalleVacacionDto.getDias());
 			detalleVacacionDto.setFechaRegistro(fechaActual);
 			StringBuilder qry = new StringBuilder();
 			qry.append("INSERT INTO d_detalle_vacacion (id_usuario, id_vacacion, id_responsable, id_estatus, fecha_inicio,fecha_fin, dias, fecha_registro ) ");

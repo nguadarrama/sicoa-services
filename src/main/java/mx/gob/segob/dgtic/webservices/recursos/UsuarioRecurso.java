@@ -21,11 +21,12 @@ import com.google.gson.JsonParser;
 import mx.gob.segob.dgtic.business.service.UsuarioService;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
+import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
 @Path("catalogo")
 @Component
-public class UsuarioRecurso {
+public class UsuarioRecurso extends RecursoBase{
 
 	@Autowired 
 	private UsuarioService usuarioService;
@@ -51,7 +52,6 @@ public class UsuarioRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("buscaUsuario")	
 	public Response buscaUsuario(@QueryParam("id") String id) {
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, usuarioService.buscaUsuario(id));
 	}
 	
@@ -60,6 +60,7 @@ public class UsuarioRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modificaUsuario")	
 	public Response modificaUsuario(@RequestParam String jsonUsuario) {
+		jsonUsuario = this.cambiaCaracter(jsonUsuario);
 		JsonObject jsonObject = new JsonParser().parse(jsonUsuario).getAsJsonObject();
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
@@ -74,20 +75,16 @@ public class UsuarioRecurso {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("eliminaUsuario")	
-	public Response eliminaUsuario(@QueryParam("id") String id) {
-		
+	public Response eliminaUsuario(@QueryParam("id") String id) {	
 		usuarioService.eliminaUsuario(id);
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("reiniciaContrasenia")	
-	public Response reiniciaContrasenia(@QueryParam("claveUsuario") String claveUsuario) {
-		
+	public Response reiniciaContrasenia(@QueryParam("claveUsuario") String claveUsuario) {	
 		usuarioService.reiniciaContrasenia(claveUsuario);
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 	}
 	
@@ -95,15 +92,13 @@ public class UsuarioRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("buscaUsuarioPorId")	
 	public Response buscaUsuarioPorId(@QueryParam("id") String id) {
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, usuarioService.buscaUsuarioPorId(Integer.parseInt(id)));
 	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneJefes")	
-	public Response obtieneJefesActivos() {
-		
+	public Response obtieneJefesActivos() {	
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, usuarioService.obtenerListaJefes());
 	}
 }

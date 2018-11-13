@@ -15,9 +15,11 @@ import org.springframework.stereotype.Repository;
 import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
 import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.persistence.repository.HorarioRepository;
+import mx.gob.segob.dgtic.persistence.repository.base.RepositoryBase;
+import mx.gob.segob.dgtic.persistence.repository.constants.RepositoryConstants;
 
 @Repository
-public class HorarioRepositoryImpl implements HorarioRepository {
+public class HorarioRepositoryImpl extends RepositoryBase implements HorarioRepository {
 	@Autowired
     private JdbcTemplate jdbcTemplate;
 	
@@ -33,11 +35,11 @@ public class HorarioRepositoryImpl implements HorarioRepository {
         List<Horario> listaHorario = new ArrayList<>();
         for (Map<String, Object> h : horarios) {
     		Horario horario = new Horario();
-    		horario.setNombre((String) h.get("nombre"));
-    		horario.setIdHorario((int) h.get("id_horario"));
-    		horario.setHoraEntrada((Time) h.get("hora_entrada"));
-    		horario.setHoraSalida((Time) h.get("hora_salida"));
-    		horario.setActivo((boolean) h.get("activo"));
+    		horario.setNombre((String) h.get(RepositoryConstants.NOMBRE));
+    		horario.setIdHorario((int) h.get(RepositoryConstants.ID_HORARIO));
+    		horario.setHoraEntrada((Time) h.get(RepositoryConstants.HORA_ENTRADA));
+    		horario.setHoraSalida((Time) h.get(RepositoryConstants.HORA_SALIDA));
+    		horario.setActivo((boolean) h.get(RepositoryConstants.ACTIVO));
     		
     		listaHorario.add(horario);
     	}
@@ -53,11 +55,11 @@ public class HorarioRepositoryImpl implements HorarioRepository {
         List<Horario> listaHorario = new ArrayList<>();
         for (Map<String, Object> h : horarios) {
     		Horario horario = new Horario();
-    		horario.setNombre((String) h.get("nombre"));
-    		horario.setIdHorario((int) h.get("id_horario"));
-    		horario.setHoraEntrada((Time) h.get("hora_entrada"));
-    		horario.setHoraSalida((Time) h.get("hora_salida"));
-    		horario.setActivo((boolean) h.get("activo"));
+    		horario.setNombre((String) h.get(RepositoryConstants.NOMBRE));
+    		horario.setIdHorario((int) h.get(RepositoryConstants.ID_HORARIO));
+    		horario.setHoraEntrada((Time) h.get(RepositoryConstants.HORA_ENTRADA));
+    		horario.setHoraSalida((Time) h.get(RepositoryConstants.HORA_SALIDA));
+    		horario.setActivo((boolean) h.get(RepositoryConstants.ACTIVO));
     		
     		listaHorario.add(horario);
     	}
@@ -73,7 +75,7 @@ public class HorarioRepositoryImpl implements HorarioRepository {
         qry.append("WHERE id_horario = :idHorario");
 
         MapSqlParameterSource parametros = new MapSqlParameterSource();
-        parametros.addValue("idHorario", idHorario);
+        parametros.addValue(RepositoryConstants.ID_HORARIO2, idHorario);
 
         return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<Horario>(Horario.class));
 	}
@@ -99,7 +101,7 @@ public class HorarioRepositoryImpl implements HorarioRepository {
 				horario.setMensaje("Se ha generado un error al guardar, revise la información");
 			}
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.error("Error: {} ", e);
 			horario.setMensaje("El registro ya existe en el sistema, favor de validar");
 		}
 		return horario;
@@ -124,7 +126,7 @@ public class HorarioRepositoryImpl implements HorarioRepository {
 				horario.setMensaje("Se ha generado un error al guardar, revise la información");
 			}
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.warn("Error: {} ",e);
 			horario.setMensaje("El registro ya existe en el sistema, favor de validar");
 		}
 		return horario;

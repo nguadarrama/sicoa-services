@@ -21,11 +21,12 @@ import com.google.gson.JsonParser;
 import mx.gob.segob.dgtic.business.service.LicenciaMedicaService;
 import mx.gob.segob.dgtic.comun.sicoa.dto.LicenciaMedicaDtoAux;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
+import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
 @Path("licencia")
 @Component
-public class LicenciaMedicaRecurso {
+public class LicenciaMedicaRecurso extends RecursoBase{
 	
 	@Autowired
 	private LicenciaMedicaService licenciaMedicaService;
@@ -34,7 +35,6 @@ public class LicenciaMedicaRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneLicenciasMedicas")	
 	public Response obtieneLicenciasMedicas() {
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, licenciaMedicaService.obtenerListaLicenciaMedica());
 	}
 	
@@ -42,7 +42,6 @@ public class LicenciaMedicaRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("buscaLicenciaMedica")	
 	public Response buscaLicenciaMedica(@QueryParam("id") Integer id) {
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, licenciaMedicaService.buscaLicenciaMedica(id));
 	}
 	
@@ -51,14 +50,11 @@ public class LicenciaMedicaRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modificaLicenciaMedica")	
 	public Response modificaLicenciaMedica(@RequestParam String jsonLicenciaMedica) {
-		JsonObject jsonObject = new JsonParser().parse(jsonLicenciaMedica).getAsJsonObject();
-		
+		jsonLicenciaMedica = this.cambiaCaracter(jsonLicenciaMedica);
+		JsonObject jsonObject = new JsonParser().parse(jsonLicenciaMedica).getAsJsonObject();	
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		LicenciaMedicaDtoAux licenciaMedicaDto = gson.fromJson(jsonObject.get("licenciaMedica"), LicenciaMedicaDtoAux.class);
-		
-		
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,licenciaMedicaService.modificaLicenciaMedica(licenciaMedicaDto));
 	}
 	
@@ -67,52 +63,50 @@ public class LicenciaMedicaRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agregaLicenciaMedica")	
 	public Response agregaLicenciaMedica(@RequestParam String jsonLicenciaMedica) {
-		JsonObject jsonObject = new JsonParser().parse(jsonLicenciaMedica).getAsJsonObject();
-		
+		jsonLicenciaMedica = this.cambiaCaracter(jsonLicenciaMedica);
+		JsonObject jsonObject = new JsonParser().parse(jsonLicenciaMedica).getAsJsonObject();	
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		LicenciaMedicaDtoAux licenciaMedicaDto = gson.fromJson(jsonObject.get("licenciaMedica"), LicenciaMedicaDtoAux.class);
-		
-		
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,licenciaMedicaService.agregaLicenciaMedica(licenciaMedicaDto));
 	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("eliminaLicenciaMedica")	
-	public Response eliminaLicenciaMedica(@QueryParam("id") Integer id) {
-		
+	public Response eliminaLicenciaMedica(@QueryParam("id") Integer id) {	
 		licenciaMedicaService.eliminaLicenciaMedica(id);
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneListaLicenciaMedicaPorFiltros")	
-	public Response obtieneListaLicenciaMedicaPorFiltros(@QueryParam("claveUsuario") String claveUsuario,@QueryParam("idEstatus") String idEstatus, 
+	public Response obtieneListaLicenciaMedicaPorFiltros(@QueryParam("claveUsuario") String claveUsuario,
+			@QueryParam("idEstatus") String idEstatus, 
 			@QueryParam("fechaInicio") String fechaInicio, @QueryParam("fechaFin") String fechaFin) {
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, licenciaMedicaService.obtenerListaLicenciaMedicaPorFiltros(claveUsuario, fechaInicio, fechaFin, idEstatus));
 	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneListaLicenciaMedicaEmpleados")	
-	public Response obtieneListaLicenciaMedicaEmpleados(@QueryParam("claveUsuario") String claveUsuario,@QueryParam("idEstatus") String idEstatus, 
-			@QueryParam("nombre") String nombre, @QueryParam("apellidoPaterno") String apellidoPaterno, @QueryParam("apellidoMaterno") String apellidoMaterno,
+	public Response obtieneListaLicenciaMedicaEmpleados(@QueryParam("claveUsuario") String claveUsuario,
+			@QueryParam("idEstatus") String idEstatus, 
+			@QueryParam("nombre") String nombre, @QueryParam("apellidoPaterno") String apellidoPaterno,
+			@QueryParam("apellidoMaterno") String apellidoMaterno,
 			@QueryParam("idUnidad") String idUnidad) {
-			System.out.println("idUnidad para busqueda "+idUnidad);
+			logger.info("idUnidad para busqueda: {} ",idUnidad);
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, licenciaMedicaService.obtenerListaLicenciaMedicaEmpleados(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, idEstatus, idUnidad));
 	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneLicenciasPorUnidad")	
-	public Response obtieneLicenciasPorUnidad(@QueryParam("idUnidad") String idUnidad, @QueryParam("claveUsuario") String claveUsuario,
-			@QueryParam("nombre") String nombre, @QueryParam("apellidoPaterno") String apellidoPaterno, @QueryParam("apellidoMaterno")String apellidoMaterno) {
-
+	public Response obtieneLicenciasPorUnidad(@QueryParam("idUnidad") String idUnidad,
+			@QueryParam("claveUsuario") String claveUsuario,
+			@QueryParam("nombre") String nombre, @QueryParam("apellidoPaterno") String apellidoPaterno,
+			@QueryParam("apellidoMaterno")String apellidoMaterno) {
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, licenciaMedicaService.obtenerLicenciasPorUnidad(idUnidad, claveUsuario, nombre, apellidoPaterno, apellidoMaterno));
 	}
 	
@@ -120,7 +114,6 @@ public class LicenciaMedicaRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("buscaDiasLicenciaMedica")	
 	public Response buscaDiasLicenciaMedica(@QueryParam("claveUsuario") String claveUsuario) {
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, licenciaMedicaService.consultaDiasLicenciaMedica(claveUsuario));
 	}
 

@@ -25,9 +25,9 @@ public class DiaFestivoRules {
 		
 	}
 
-	public DiaFestivoDto buscaDiaFestivo(Integer id_festivo){
+	public DiaFestivoDto buscaDiaFestivo(Integer idFestivo){
 		
-		return diaFestivoRepository.buscaDiaFestivo(id_festivo);
+		return diaFestivoRepository.buscaDiaFestivo(idFestivo);
 		
 	}
 

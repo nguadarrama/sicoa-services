@@ -25,6 +25,7 @@ import mx.gob.segob.dgtic.business.service.AsistenciaService;
 import mx.gob.segob.dgtic.business.service.constants.ServiceConstants;
 import mx.gob.segob.dgtic.comun.sicoa.dto.IncidenciaDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
+import mx.gob.segob.dgtic.comun.util.AsistenciaBusquedaUtil;
 import mx.gob.segob.dgtic.comun.util.FormatoIncidencia;
 import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
@@ -35,6 +36,8 @@ public class AsistenciaRecurso extends RecursoBase{
 	
 	@Autowired
 	private AsistenciaService asistenciaService;
+	
+	private static String ASISTENCIA_BUSQUEDA = "asistenciaBusqueda";
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -55,43 +58,34 @@ public class AsistenciaRecurso extends RecursoBase{
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistenciaEmpleadoRango(claveEmpleado, inicio, fin));
 	}
 	
-	@GET
+	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("obtieneAsistenciasEmpleadoRangoCoordinador")	
-	public Response buscaAsistenciaEmpleadoRangoCoordinador(
-			@QueryParam("claveEmpleado") String claveEmpleado,
-			@QueryParam("nombre") String nombre,
-			@QueryParam("paterno") String paterno,
-			@QueryParam("materno") String materno,
-			@QueryParam("nivel") String nivel,
-			@QueryParam("tipo") String tipo,
-			@QueryParam("estado") String estado, 
-			@QueryParam("inicio") String inicio, 
-			@QueryParam("fin") String fin,
-			@QueryParam("unidad") String unidadAdministrativa, 
-			@QueryParam("cveCoordinador") String cveCoordinador) {
-
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistenciaEmpleadoRangoCoordinador(claveEmpleado, nombre, 
-				paterno, materno, nivel, !tipo.equals(ServiceConstants.NULL) ? Integer.parseInt(tipo) : 0, !estado.equals(ServiceConstants.NULL) ? Integer.parseInt(estado) : 0, inicio, fin, unidadAdministrativa, cveCoordinador));
+	public Response buscaAsistenciaEmpleadoRangoCoordinador(@RequestParam String asistenciaBusqueda) {
+		asistenciaBusqueda = this.cambiaCaracter(asistenciaBusqueda);
+		JsonObject jsonObject = new JsonParser().parse(asistenciaBusqueda).getAsJsonObject();		
+		GsonBuilder builder = new GsonBuilder();
+		builder.setDateFormat(ServiceConstants.YYYY_MM_DD);
+		Gson gson = builder.create();
+		AsistenciaBusquedaUtil asistenciaBusquedaUtil = gson.fromJson(jsonObject.get(ASISTENCIA_BUSQUEDA), AsistenciaBusquedaUtil.class);
+		
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistenciaEmpleadoRangoCoordinador(asistenciaBusquedaUtil));
 	}
 	
-	@GET
+	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("obtieneAsistenciasEmpleadoRangoDireccion")	
-	public Response buscaAsistenciaEmpleadoRangoDireccion(
-			@QueryParam("claveEmpleado") String claveEmpleado,
-			@QueryParam("nombre") String nombre,
-			@QueryParam("paterno") String paterno,
-			@QueryParam("materno") String materno,
-			@QueryParam("nivel") String nivel,
-			@QueryParam("tipo") String tipo,
-			@QueryParam("estado") String estado, 
-			@QueryParam("inicio") String inicio, 
-			@QueryParam("fin") String fin,
-			@QueryParam("unidad") String unidadAdministrativa) {
+	public Response buscaAsistenciaEmpleadoRangoDireccion(@RequestParam String asistenciaBusqueda) {
+		asistenciaBusqueda = this.cambiaCaracter(asistenciaBusqueda);
+		JsonObject jsonObject = new JsonParser().parse(asistenciaBusqueda).getAsJsonObject();		
+		GsonBuilder builder = new GsonBuilder();
+		builder.setDateFormat(ServiceConstants.YYYY_MM_DD);
+		Gson gson = builder.create();
+		AsistenciaBusquedaUtil asistenciaBusquedaUtil = gson.fromJson(jsonObject.get(ASISTENCIA_BUSQUEDA), AsistenciaBusquedaUtil.class);		
 
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistenciaEmpleadoRangoDireccion(claveEmpleado, nombre, 
-				paterno, materno, nivel, !tipo.equals(ServiceConstants.NULL) ? Integer.parseInt(tipo) : 0, !estado.equals(ServiceConstants.NULL) ? Integer.parseInt(estado) : 0, inicio, fin, unidadAdministrativa));
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistenciaEmpleadoRangoDireccion(asistenciaBusquedaUtil));
 	}
 	
 	@GET
@@ -197,46 +191,36 @@ public class AsistenciaRecurso extends RecursoBase{
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK,asistenciaService.generaFormatoDescuento(generaReporteArchivo));
 	}
 	
-	@GET
+	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("reporteCoordinador")	
-	public Response reporteCoordinador(
-			@QueryParam("claveEmpleado") String claveEmpleado,
-			@QueryParam("nombre") String nombre,
-			@QueryParam("paterno") String paterno,
-			@QueryParam("materno") String materno,
-			@QueryParam("nivel") String nivel,
-			@QueryParam("tipo") String tipo,
-			@QueryParam("estado") String estado, 
-			@QueryParam("inicio") String inicio, 
-			@QueryParam("fin") String fin,
-			@QueryParam("unidad") String unidadAdministrativa, 
-			@QueryParam("cveCoordinador") String cveCoordinador,
-			@QueryParam("permisos") String permisos) {
+	public Response reporteCoordinador(@RequestParam String asistenciaBusqueda) {
+		
+		asistenciaBusqueda = this.cambiaCaracter(asistenciaBusqueda);
+		JsonObject jsonObject = new JsonParser().parse(asistenciaBusqueda).getAsJsonObject();		
+		GsonBuilder builder = new GsonBuilder();
+		builder.setDateFormat(ServiceConstants.YYYY_MM_DD);
+		Gson gson = builder.create();
+		AsistenciaBusquedaUtil asistenciaBusquedaUtil = gson.fromJson(jsonObject.get(ASISTENCIA_BUSQUEDA), AsistenciaBusquedaUtil.class);
 
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.reporteCoordinador(claveEmpleado, nombre, 
-				paterno, materno, nivel, !tipo.equals(ServiceConstants.NULL) ? Integer.parseInt(tipo) : 0, !estado.equals(ServiceConstants.NULL) ? Integer.parseInt(estado) : 0, inicio, 
-						fin, unidadAdministrativa, cveCoordinador, permisos));
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.reporteCoordinador(asistenciaBusquedaUtil));
 	}
 	
-	@GET
+	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("reporteDireccion")	
-	public Response reporteDireccion(
-			@QueryParam("claveEmpleado") String claveEmpleado,
-			@QueryParam("nombre") String nombre,
-			@QueryParam("paterno") String paterno,
-			@QueryParam("materno") String materno,
-			@QueryParam("nivel") String nivel,
-			@QueryParam("tipo") String tipo,
-			@QueryParam("estado") String estado, 
-			@QueryParam("inicio") String inicio, 
-			@QueryParam("fin") String fin,
-			@QueryParam("unidad") String unidadAdministrativa,
-			@QueryParam("permisos") String permisos) {
+	public Response reporteDireccion(@RequestParam String asistenciaBusqueda) {
 		
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.reporteDireccion(claveEmpleado, nombre, 
-				paterno, materno, nivel, !tipo.equals(ServiceConstants.NULL) ? Integer.parseInt(tipo) : 0, !estado.equals(ServiceConstants.NULL) ? Integer.parseInt(estado) : 0, inicio, fin, unidadAdministrativa, permisos));
+		asistenciaBusqueda = this.cambiaCaracter(asistenciaBusqueda);
+		JsonObject jsonObject = new JsonParser().parse(asistenciaBusqueda).getAsJsonObject();		
+		GsonBuilder builder = new GsonBuilder();
+		builder.setDateFormat(ServiceConstants.YYYY_MM_DD);
+		Gson gson = builder.create();
+		AsistenciaBusquedaUtil asistenciaBusquedaUtil = gson.fromJson(jsonObject.get(ASISTENCIA_BUSQUEDA), AsistenciaBusquedaUtil.class);
+		
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.reporteDireccion(asistenciaBusquedaUtil));
 	}
 	
 }

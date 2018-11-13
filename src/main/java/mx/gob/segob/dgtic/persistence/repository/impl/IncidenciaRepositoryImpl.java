@@ -17,6 +17,7 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.IncidenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.TipoDiaDto;
 import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.persistence.repository.IncidenciaRepository;
+import mx.gob.segob.dgtic.persistence.repository.constants.RepositoryConstants;
 
 @Repository
 public class IncidenciaRepositoryImpl implements IncidenciaRepository {
@@ -30,31 +31,31 @@ public class IncidenciaRepositoryImpl implements IncidenciaRepository {
 	@Override
 	public List<IncidenciaDto> obtenerListaIncidencias() {
 		StringBuilder qry = new StringBuilder();
-        qry.append("SELECT id_incidencia, id_asistencia, id_tipo_dia, id_archivo, id_estatus, id_responsable, descuento, observaciones ");
-        qry.append("FROM m_incidencia ");
+        qry.append(RepositoryConstants.L34);
+        qry.append(RepositoryConstants.L35);
         
         List<Map<String, Object>> incidencias = jdbcTemplate.queryForList(qry.toString());
         List<IncidenciaDto> listaIncidencia = new ArrayList<>();
         
         for (Map<String, Object> incidencia : incidencias) {
         	TipoDiaDto tipoDia = new TipoDiaDto();
-        	tipoDia.setIdTipoDia((Integer)incidencia.get("id_tipo_dia"));
+        	tipoDia.setIdTipoDia((Integer)incidencia.get(RepositoryConstants.ID_TIPO_DIA));
         	
         	IncidenciaDto incidenciaDto = new IncidenciaDto();
-        	incidenciaDto.setIdIncidencia((Integer)incidencia.get("id_incidencia"));
+        	incidenciaDto.setIdIncidencia((Integer)incidencia.get(RepositoryConstants.ID_INCIDENCIA));
         	AsistenciaDto asistenciaDto = new AsistenciaDto();
-        	asistenciaDto.setIdAsistencia((Integer)incidencia.get("id_asistencia"));
+        	asistenciaDto.setIdAsistencia((Integer)incidencia.get(RepositoryConstants.ID_ASISTENCIA));
     		incidenciaDto.setIdAsistencia(asistenciaDto);
     		incidenciaDto.setTipoDia(tipoDia);
     		ArchivoDto archivoDto = new ArchivoDto();
-        	archivoDto.setIdArchivo((Integer)incidencia.get("id_archivo"));
+        	archivoDto.setIdArchivo((Integer)incidencia.get(RepositoryConstants.ID_ARCHIVO));
     		incidenciaDto.setIdArchivo(archivoDto);
     		EstatusDto estatusDto= new EstatusDto();
-    		estatusDto.setIdEstatus((Integer)incidencia.get("id_estatus"));
+    		estatusDto.setIdEstatus((Integer)incidencia.get(RepositoryConstants.ID_ESTATUS));
     		incidenciaDto.setEstatus(estatusDto);
-    		incidenciaDto.setIdResponsable((Integer)incidencia.get("id_responsable"));
-    		incidenciaDto.setDescuento((Boolean)incidencia.get("descuento"));
-    		incidenciaDto.setObservaciones((String)incidencia.get("observaciones"));
+    		incidenciaDto.setIdResponsable((Integer)incidencia.get(RepositoryConstants.ID_RESPONSABLE));
+    		incidenciaDto.setDescuento((Boolean)incidencia.get(RepositoryConstants.DESCUENTO));
+    		incidenciaDto.setObservaciones((String)incidencia.get(RepositoryConstants.OBSERVACIONES));
     		listaIncidencia.add(incidenciaDto);
     	}
      return listaIncidencia;	
@@ -68,7 +69,7 @@ public class IncidenciaRepositoryImpl implements IncidenciaRepository {
         qry.append("WHERE id_incidencia = :idIncidencia");
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
-        parametros.addValue("idIncidencia", idIncidencia);
+        parametros.addValue(RepositoryConstants.ID_INCIDENCIA2, idIncidencia);
 
         return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<IncidenciaDto>(IncidenciaDto.class));
 	}
@@ -83,8 +84,8 @@ public class IncidenciaRepositoryImpl implements IncidenciaRepository {
         MapSqlParameterSource parametros = new MapSqlParameterSource();
         parametros.addValue("idAsistencia", idAsistencia);
         
-        IncidenciaDto incidencia;
-        incidencia = nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<IncidenciaDto>(IncidenciaDto.class));
+        
+        IncidenciaDto incidencia = nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<IncidenciaDto>(IncidenciaDto.class));
 
         return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<IncidenciaDto>(IncidenciaDto.class));
 	}

@@ -13,22 +13,24 @@ import org.springframework.stereotype.Repository;
 import mx.gob.segob.dgtic.comun.sicoa.dto.JustificacionDto;
 import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.persistence.repository.JustificacionRepository;
+import mx.gob.segob.dgtic.persistence.repository.base.RepositoryBase;
+import mx.gob.segob.dgtic.persistence.repository.constants.RepositoryConstants;
 
 @Repository
-public class JustificacionRepositoryImpl implements JustificacionRepository {
+public class JustificacionRepositoryImpl extends RepositoryBase implements JustificacionRepository {
 
 	@Autowired
     private JdbcTemplate jdbcTemplate;
 	
 	@Autowired
     private NamedParameterJdbcTemplate nameParameterJdbcTemplate;
-	
+	private static final String FROM_C_JUSTIFICACION = "FROM c_justificacion ";
 	@Override
 	public List<JustificacionDto> obtenerListaJustificaciones(){
 	
 		StringBuilder qry = new StringBuilder();
         qry.append("SELECT clave, id_justificacion, justificacion, activo ");
-        qry.append("FROM c_justificacion ")
+        qry.append(FROM_C_JUSTIFICACION)
         .append("WHERE activo = true ");
         
         List<Map<String, Object>> justificaciones = jdbcTemplate.queryForList(qry.toString());
@@ -36,10 +38,10 @@ public class JustificacionRepositoryImpl implements JustificacionRepository {
         
         for (Map<String, Object> justificacion : justificaciones) {
     		JustificacionDto justificacionDto = new JustificacionDto();
-    		justificacionDto.setClave((String)justificacion.get("clave"));
-    		justificacionDto.setIdJustificacion((Integer)justificacion.get("id_justificacion"));
-    		justificacionDto.setJustificacion((String)justificacion.get("justificacion"));
-    		justificacionDto.setActivo((Boolean)justificacion.get("activo"));
+    		justificacionDto.setClave((String)justificacion.get(RepositoryConstants.CLAVE));
+    		justificacionDto.setIdJustificacion((Integer)justificacion.get(RepositoryConstants.ID_JUSTIFICACION));
+    		justificacionDto.setJustificacion((String)justificacion.get(RepositoryConstants.JUSTIFICACION));
+    		justificacionDto.setActivo((Boolean)justificacion.get(RepositoryConstants.ACTIVO));
     		listaJustificacion.add(justificacionDto);
     	}
      return listaJustificacion;
@@ -50,17 +52,17 @@ public class JustificacionRepositoryImpl implements JustificacionRepository {
 	
 		StringBuilder qry = new StringBuilder();
         qry.append("SELECT clave, id_justificacion, justificacion, activo ");
-        qry.append("FROM c_justificacion ");
+        qry.append(FROM_C_JUSTIFICACION);
         
         List<Map<String, Object>> justificaciones = jdbcTemplate.queryForList(qry.toString());
         List<JustificacionDto> listaJustificacion = new ArrayList<>();
         
         for (Map<String, Object> justificacion : justificaciones) {
     		JustificacionDto justificacionDto = new JustificacionDto();
-    		justificacionDto.setClave((String)justificacion.get("clave"));
-    		justificacionDto.setIdJustificacion((Integer)justificacion.get("id_justificacion"));
-    		justificacionDto.setJustificacion((String)justificacion.get("justificacion"));
-    		justificacionDto.setActivo((Boolean)justificacion.get("activo"));
+    		justificacionDto.setClave((String)justificacion.get(RepositoryConstants.CLAVE));
+    		justificacionDto.setIdJustificacion((Integer)justificacion.get(RepositoryConstants.ID_JUSTIFICACION));
+    		justificacionDto.setJustificacion((String)justificacion.get(RepositoryConstants.JUSTIFICACION));
+    		justificacionDto.setActivo((Boolean)justificacion.get(RepositoryConstants.ACTIVO));
     		listaJustificacion.add(justificacionDto);
     	}
      return listaJustificacion;
@@ -71,18 +73,17 @@ public class JustificacionRepositoryImpl implements JustificacionRepository {
 		
 		StringBuilder qry = new StringBuilder();
 		qry.append("SELECT id_justificacion, clave, justificacion, activo ");
-        qry.append("FROM c_justificacion ");
+        qry.append(FROM_C_JUSTIFICACION);
         qry.append("WHERE id_justificacion = :idJustificacion");
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
-        parametros.addValue("idJustificacion", idJustificacion);
+        parametros.addValue(RepositoryConstants.ID_JUSTIFICACION2, idJustificacion);
 
         return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<JustificacionDto>(JustificacionDto.class));
 	}
 	
 	@Override
 	public JustificacionDto modificaJustificacion (JustificacionDto justificacionDto){
-		
 		StringBuilder qry = new StringBuilder();
 		qry.append("UPDATE c_justificacion SET clave = :clave, justificacion = :justificacion, activo = :activo ");
 		qry.append("WHERE id_justificacion = :idJustificacion");
@@ -99,7 +100,7 @@ public class JustificacionRepositoryImpl implements JustificacionRepository {
 			else
 				justificacionDto.setMensaje("Se ha generado un error al guardar, revise la información");
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.warn("Warn: {} ", e);
 			justificacionDto.setMensaje("El registro ya existe en el sistema, favor de validar");
 		}
 		return justificacionDto;
@@ -107,7 +108,6 @@ public class JustificacionRepositoryImpl implements JustificacionRepository {
 	
 	@Override 
 	public JustificacionDto agregaJustificacion(JustificacionDto justificacionDto){
-		
 		StringBuilder qry = new StringBuilder();
 		qry.append("INSERT INTO c_justificacion (clave, justificacion, activo) ");
 		qry.append("VALUES (:clave, :justificacion, :activo ) ");
@@ -124,7 +124,7 @@ public class JustificacionRepositoryImpl implements JustificacionRepository {
 				justificacionDto.setMensaje("Se ha generado un error al guardar, revise la información");
 			}
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.info("Error: {} ", e);
 			justificacionDto.setMensaje("El registro ya existe en el sistema, favor de validar");
 		}
 		return justificacionDto;

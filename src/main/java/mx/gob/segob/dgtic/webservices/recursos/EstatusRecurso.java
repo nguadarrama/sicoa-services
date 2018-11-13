@@ -21,11 +21,12 @@ import com.google.gson.JsonParser;
 import mx.gob.segob.dgtic.business.service.EstatusService;
 import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
+import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
 @Path("catalogo")
 @Component
-public class EstatusRecurso {
+public class EstatusRecurso extends RecursoBase{
 	
 	@Autowired
 	private EstatusService estatusService;
@@ -51,14 +52,12 @@ public class EstatusRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modificaEstatus")	
 	public Response modificaEstatus(@RequestParam String jsonEstatus) {
-		JsonObject jsonObject = new JsonParser().parse(jsonEstatus).getAsJsonObject();
-		
+		jsonEstatus = this.cambiaCaracter(jsonEstatus);
+		JsonObject jsonObject = new JsonParser().parse(jsonEstatus).getAsJsonObject();		
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
-		EstatusDto estatusDto = gson.fromJson(jsonObject.get("estatus"), EstatusDto.class);
-		
+		EstatusDto estatusDto = gson.fromJson(jsonObject.get("estatus"), EstatusDto.class);		
 		estatusService.modificaEstatus(estatusDto);
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 	}
 	
@@ -67,24 +66,20 @@ public class EstatusRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agregaEstatus")	
 	public Response agregaEstatus(@RequestParam String jsonEstatus) {
-		JsonObject jsonObject = new JsonParser().parse(jsonEstatus).getAsJsonObject();
-		
+		jsonEstatus = this.cambiaCaracter(jsonEstatus);
+		JsonObject jsonObject = new JsonParser().parse(jsonEstatus).getAsJsonObject();	
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		EstatusDto estatusDto = gson.fromJson(jsonObject.get("estatus"), EstatusDto.class);
-		
 		estatusService.agregaEstatus(estatusDto);
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("eliminaEstatus")	
-	public Response eliminaEstatus(@QueryParam("id") Integer id) {
-		
+	public Response eliminaEstatus(@QueryParam("id") Integer id) {		
 		estatusService.eliminaEstatus(id);
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 	}
 
@@ -92,7 +87,6 @@ public class EstatusRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneListaCompletaEstatus")	
 	public Response obtieneListaCompletaEstatus() {
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, estatusService.obtenerListaCompletaEstatus());
 	}
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import mx.gob.segob.dgtic.comun.sicoa.dto.TipoDiaDto;
 import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.persistence.repository.TipoDiaRepository;
+import mx.gob.segob.dgtic.persistence.repository.constants.RepositoryConstants;
 
 @Repository
 public class TipoDiaRepositoryImpl implements TipoDiaRepository {
@@ -35,10 +36,10 @@ public class TipoDiaRepositoryImpl implements TipoDiaRepository {
         
         for (Map<String, Object> tipoDia : tipoDias) {
     		TipoDiaDto tipoDiaDto = new TipoDiaDto();
-    		tipoDiaDto.setIdTipoDia((Integer)tipoDia.get("id_tipo_dia"));
-    		tipoDiaDto.setNombre((String)tipoDia.get("nombre"));
-    		tipoDiaDto.setObservacion((String)tipoDia.get("observacion"));
-    		tipoDiaDto.setIncidencia((Boolean)tipoDia.get("incidencia"));
+    		tipoDiaDto.setIdTipoDia((Integer)tipoDia.get(RepositoryConstants.ID_TIPO_DIA));
+    		tipoDiaDto.setNombre((String)tipoDia.get(RepositoryConstants.NOMBRE));
+    		tipoDiaDto.setObservacion((String)tipoDia.get(RepositoryConstants.OBSERVACION));
+    		tipoDiaDto.setIncidencia((Boolean)tipoDia.get(RepositoryConstants.INCIDENCIA));
     		listaTipoDia.add(tipoDiaDto);
     	}
      return listaTipoDia;
@@ -53,7 +54,7 @@ public class TipoDiaRepositoryImpl implements TipoDiaRepository {
         qry.append("WHERE id_tipo_dia = :idTipoDia");
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
-        parametros.addValue("idTipoDia", idTipoDia);
+        parametros.addValue(RepositoryConstants.ID_TIPO_DIA2, idTipoDia);
 
         return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<TipoDiaDto>(TipoDiaDto.class));
 	}

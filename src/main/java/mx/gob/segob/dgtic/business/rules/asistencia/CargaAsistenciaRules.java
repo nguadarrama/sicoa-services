@@ -3,18 +3,18 @@ package mx.gob.segob.dgtic.business.rules.asistencia;
 
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import mx.gob.segob.dgtic.business.service.TipoDiaService;
 import mx.gob.segob.dgtic.business.service.UsuarioService;
-import mx.gob.segob.dgtic.business.service.constants.ServiceConstants;
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DiaFestivoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.TipoDiaDto;
@@ -509,7 +509,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 		
 		for (String usuarioAsistencia : listaIdusuariosAsistencia) {
 			if (!listaClaveUsuariosEnSicoa.contains(usuarioAsistencia)) {
-				logger.info("-> " + usuarioAsistencia + " usuario nuevo detectado en asistencias");
+				logger.info("->, {} ", usuarioAsistencia, " usuario nuevo detectado en asistencias");
 				UsuarioDto usuarioSIRNO = cargaInicialRepository.obtieneUsuarioPorCve_m_usuario(usuarioAsistencia);
 				
 				if (usuarioSIRNO != null) {

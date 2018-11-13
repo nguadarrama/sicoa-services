@@ -67,14 +67,11 @@ public class DetalleVacacionRecurso extends ServiceBase{
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modificaDetalleVacacion")	
 	public Response modificaDetalleVacacion(@RequestParam String jsonDetalleVacacion) {
-		JsonObject jsonObject = new JsonParser().parse(jsonDetalleVacacion).getAsJsonObject();
-		
+		jsonDetalleVacacion = this.cambiaCaracter(jsonDetalleVacacion);
+		JsonObject jsonObject = new JsonParser().parse(jsonDetalleVacacion).getAsJsonObject();		
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		DetalleVacacionDto detalleVacacionDto = gson.fromJson(jsonObject.get(ServiceConstants.DETALLE_VACACION), DetalleVacacionDto.class);
-		
-		
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.modificaDetalleVacacion(detalleVacacionDto));
 	}
 	
@@ -83,15 +80,13 @@ public class DetalleVacacionRecurso extends ServiceBase{
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agregaDetalleVacacion")	
 	public Response agregaDetalleVacacion(@RequestParam String jsonDetalleVacacion) {
-		JsonObject jsonObject = new JsonParser().parse(jsonDetalleVacacion).getAsJsonObject();
-		
+		jsonDetalleVacacion = this.cambiaCaracter(jsonDetalleVacacion);
+		JsonObject jsonObject = new JsonParser().parse(jsonDetalleVacacion).getAsJsonObject();		
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		VacacionesAux detalleVacacionDto = gson.fromJson(jsonObject.get(ServiceConstants.DETALLE_VACACION), VacacionesAux.class);
 		logger.info("Datos para idVacacion en recurso "+detalleVacacionDto.getIdVacacion()+" fechaInicio "+detalleVacacionDto.getFechaInicio()+
 				" fechaFin "+detalleVacacionDto.getFechaFin());
-		
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.agregaDetalleVacacion(detalleVacacionDto));
 	}
 	
@@ -107,8 +102,8 @@ public class DetalleVacacionRecurso extends ServiceBase{
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("aceptaORechazaDetalleVacacion")	
 	public Response aceptaORechazaDetalleVacacion(@RequestParam String jsonDetalleVacacion) {
-		JsonObject jsonObject = new JsonParser().parse(jsonDetalleVacacion).getAsJsonObject();
-		
+		jsonDetalleVacacion = this.cambiaCaracter(jsonDetalleVacacion);
+		JsonObject jsonObject = new JsonParser().parse(jsonDetalleVacacion).getAsJsonObject();		
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		DetalleVacacionDto detalleVacacionDto = gson.fromJson(jsonObject.get("detalleVacacion"), DetalleVacacionDto.class);
@@ -148,9 +143,10 @@ public class DetalleVacacionRecurso extends ServiceBase{
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtenerVacacionesPorFiltros")	
-	public Response obtenerVacacionesPorFiltros(@QueryParam("claveUsuario") String claveUsuario, @QueryParam("nombre") String nombre, @QueryParam("apellidoPaterno") String apellidoPaterno, @QueryParam("apellidoMaterno") String apellidoMaterno, @QueryParam("idUnidad") String idUnidad, @QueryParam("idEstatus") String idEstatus) {
-
-		
+	public Response obtenerVacacionesPorFiltros(@QueryParam("claveUsuario") String claveUsuario,
+			@QueryParam("nombre") String nombre, @QueryParam("apellidoPaterno") String apellidoPaterno,
+			@QueryParam("apellidoMaterno") String apellidoMaterno, @QueryParam("idUnidad") String idUnidad,
+			@QueryParam("idEstatus") String idEstatus) {	
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.obtenerVacacionesPorFiltros(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, idUnidad, idEstatus));
 	}
 	
@@ -159,6 +155,7 @@ public class DetalleVacacionRecurso extends ServiceBase{
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("generaReporte")	
 	public Response generaReporte(@RequestParam String jsonDetalleVacacion) throws FileNotFoundException, ParseException, JRException {
+		jsonDetalleVacacion = this.cambiaCaracter(jsonDetalleVacacion);
 		JsonObject jsonObject = new JsonParser().parse(jsonDetalleVacacion).getAsJsonObject();
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();

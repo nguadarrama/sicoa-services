@@ -7,7 +7,7 @@ public interface DiaFestivoRepository {
 
 	public List<DiaFestivoDto> obtenerListaDiasFestivos();
 
-	public DiaFestivoDto buscaDiaFestivo(Integer id_festivo);
+	public DiaFestivoDto buscaDiaFestivo(Integer idFestivo);
 
 	public DiaFestivoDto modificaDiaFestivo(DiaFestivoDto diaFestivo);
 

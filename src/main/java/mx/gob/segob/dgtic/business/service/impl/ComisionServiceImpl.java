@@ -11,11 +11,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import mx.gob.segob.dgtic.business.rules.catalogo.ComisionRules;
 import mx.gob.segob.dgtic.business.service.ComisionService;
+import mx.gob.segob.dgtic.business.service.base.ServiceBase;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ComisionAux;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ComisionDto;
@@ -24,7 +26,6 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.GenerarReporteArchivoComision;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.reporte;
 import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
-import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
@@ -35,7 +36,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 
 @Service
-public class ComisionServiceImpl extends RecursoBase implements ComisionService {
+public class ComisionServiceImpl extends ServiceBase implements ComisionService {
   
   private static final String COMISIONDTO_ENVIO_LOGGER = "ComisionDto Envio: {}";
   private static final String EXCEPTION_LOGGER = "Exception: {}";

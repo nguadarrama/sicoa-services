@@ -165,7 +165,7 @@ public class PeriodoRepositoryImpl extends RepositoryBase implements PeriodoRepo
 		qry.append("select periodo.id_periodo, periodo.descripcion, periodo.fecha_inicio, periodo.fecha_fin, periodo.activo ");
 		qry.append("from  m_vacacion_periodo vacacion left join r_periodo periodo on vacacion.id_periodo=periodo.id_periodo ");
 		qry.append("left join m_usuario usuario on vacacion.id_usuario=usuario.id_usuario ");
-		qry.append("where vacacion.activo=true and vacacion.dias>0 and periodo.activo=true and date_add(periodo.fecha_fin, interval 1 year) > '"+fechaCadena+"' and periodo.fecha_inicio < '"+fechaCadena+"' and usuario.cve_m_usuario= :claveUsuario order by vacacion.fecha_inicio asc limit 1 ");
+		qry.append("where vacacion.activo=true and vacacion.dias>0 and periodo.activo=true and date_add(periodo.fecha_fin, interval 1 year) >= '"+fechaCadena+"' and periodo.fecha_inicio <= '"+fechaCadena+"' and usuario.cve_m_usuario= :claveUsuario order by periodo.fecha_inicio asc limit 1 ");
 		
         //qry.append("from  m_vacacion_periodo vacacion left join r_periodo periodo on vacacion.id_periodo=periodo.id_periodo ");
         //qry.append("where vacacion.activo=true and vacacion.id_usuario=usuario.id_usuario and vacacion.dias>0 and periodo.activo=true and usuario.cve_m_usuario= :claveUsuario order by vacacion.fecha_inicio asc limit 1");
@@ -294,7 +294,7 @@ public class PeriodoRepositoryImpl extends RepositoryBase implements PeriodoRepo
 		qry.append("select id_periodo ");
         qry.append("from r_periodo ");
         //qry.append("where id_periodo = :idPeriodo and (year(fecha_fin)+1 >= year(current_date) and month(fecha_fin) >= month(current_date) and day(fecha_fin) > day(current_date))");
-        qry.append("where id_periodo = :idPeriodo and date_add(fecha_fin, interval 1 year) > '"+fechaCadena+"' and fecha_inicio < '"+fechaCadena+"' ");
+        qry.append("where id_periodo = :idPeriodo and date_add(fecha_fin, interval 1 year) >= '"+fechaCadena+"' and fecha_inicio <= '"+fechaCadena+"' ");
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
         parametros.addValue("idPeriodo", idPeriodo);

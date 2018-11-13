@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DiaFestivoDto;
 import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.persistence.repository.DiaFestivoRepository;
+import mx.gob.segob.dgtic.persistence.repository.constants.RepositoryConstants;
 
 @Repository
 public class DiaFestivoRepositoryImpl implements DiaFestivoRepository {
@@ -27,18 +28,18 @@ public class DiaFestivoRepositoryImpl implements DiaFestivoRepository {
 	public List<DiaFestivoDto> obtenerListaDiasFestivos(){
 	
 		StringBuilder qry = new StringBuilder();
-        qry.append("SELECT id_festivo, nombre, fecha, activo ");
-        qry.append("FROM c_dia_festivo where activo = true ");
+        qry.append(RepositoryConstants.DL31);
+        qry.append(RepositoryConstants.DL32);
         
         List<Map<String, Object>> diasFestivos = jdbcTemplate.queryForList(qry.toString());
         List<DiaFestivoDto> listaDiasFestivos = new ArrayList<>();
         
         for (Map<String, Object> diaFestivo : diasFestivos) {
         	DiaFestivoDto diaFestivoDTO = new DiaFestivoDto();
-        	diaFestivoDTO.setIdDiaFestivo((Integer)diaFestivo.get("id_festivo"));
-        	diaFestivoDTO.setNombre((String)diaFestivo.get("nombre"));
-        	diaFestivoDTO.setFecha((Date)diaFestivo.get("fecha"));
-        	diaFestivoDTO.setActivo((Boolean)diaFestivo.get("activo"));
+        	diaFestivoDTO.setIdDiaFestivo((Integer)diaFestivo.get(RepositoryConstants.ID_FESTIVO));
+        	diaFestivoDTO.setNombre((String)diaFestivo.get(RepositoryConstants.NOMBRE));
+        	diaFestivoDTO.setFecha((Date)diaFestivo.get(RepositoryConstants.FECHA));
+        	diaFestivoDTO.setActivo((Boolean)diaFestivo.get(RepositoryConstants.ACTIVO));
         	listaDiasFestivos.add(diaFestivoDTO);
     	}
      return listaDiasFestivos;
@@ -56,17 +57,17 @@ public class DiaFestivoRepositoryImpl implements DiaFestivoRepository {
         
         for (Map<String, Object> diaFestivo : diasFestivos) {
         	DiaFestivoDto diaFestivoDTO = new DiaFestivoDto();
-        	diaFestivoDTO.setIdDiaFestivo((Integer)diaFestivo.get("id_festivo"));
-        	diaFestivoDTO.setNombre((String)diaFestivo.get("nombre"));
-        	diaFestivoDTO.setFecha((Date)diaFestivo.get("fecha"));
-        	diaFestivoDTO.setActivo((Boolean)diaFestivo.get("activo"));
+        	diaFestivoDTO.setIdDiaFestivo((Integer)diaFestivo.get(RepositoryConstants.ID_FESTIVO));
+        	diaFestivoDTO.setNombre((String)diaFestivo.get(RepositoryConstants.NOMBRE));
+        	diaFestivoDTO.setFecha((Date)diaFestivo.get(RepositoryConstants.FECHA));
+        	diaFestivoDTO.setActivo((Boolean)diaFestivo.get(RepositoryConstants.ACTIVO));
         	listaDiasFestivos.add(diaFestivoDTO);
     	}
      return listaDiasFestivos;
 	}
 	
 	@Override
-	public DiaFestivoDto buscaDiaFestivo (Integer id_festivo){
+	public DiaFestivoDto buscaDiaFestivo (Integer idFestivo){
 		
 		StringBuilder qry = new StringBuilder();
 		qry.append("SELECT id_festivo, nombre, fecha, activo ");
@@ -74,7 +75,7 @@ public class DiaFestivoRepositoryImpl implements DiaFestivoRepository {
         qry.append("WHERE id_festivo = :id_festivo ");
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
-        parametros.addValue("id_festivo", id_festivo);
+        parametros.addValue(RepositoryConstants.ID_FESTIVO, idFestivo);
 
         return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<DiaFestivoDto>(DiaFestivoDto.class));
 	}
@@ -87,10 +88,10 @@ public class DiaFestivoRepositoryImpl implements DiaFestivoRepository {
 		qry.append("WHERE id_festivo = :idDia");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("idDia", diaFestivo.getIdDiaFestivo());
-		parametros.addValue("nombre", diaFestivo.getNombre());
-		parametros.addValue("fecha", diaFestivo.getFecha());
-		parametros.addValue("activo", diaFestivo.getActivo());
+		parametros.addValue(RepositoryConstants.ID_DIA2, diaFestivo.getIdDiaFestivo());
+		parametros.addValue(RepositoryConstants.NOMBRE, diaFestivo.getNombre());
+		parametros.addValue(RepositoryConstants.FECHA, diaFestivo.getFecha());
+		parametros.addValue(RepositoryConstants.ACTIVO, diaFestivo.getActivo());
 
 		try{
 			Integer i = nameParameterJdbcTemplate.update(qry.toString(), parametros);
@@ -100,7 +101,7 @@ public class DiaFestivoRepositoryImpl implements DiaFestivoRepository {
 				diaFestivo.setMensaje("Se ha generado un error al guardar, revise la información");
 			}
 		}catch(Exception e){
-			e.printStackTrace();
+			
 			diaFestivo.setMensaje("El registro ya existe en el sistema, favor de validar");
 		}
 		return diaFestivo;
@@ -126,7 +127,7 @@ public class DiaFestivoRepositoryImpl implements DiaFestivoRepository {
 				diaFestivo.setMensaje("Se ha generado un error al guardar, revise la información");
 			}
 		}catch(Exception e){
-			e.printStackTrace();
+			
 			diaFestivo.setMensaje("El registro ya existe en el sistema, favor de validar");
 		}
 		return diaFestivo;

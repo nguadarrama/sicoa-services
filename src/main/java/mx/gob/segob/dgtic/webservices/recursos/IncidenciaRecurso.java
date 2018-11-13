@@ -21,11 +21,12 @@ import com.google.gson.JsonParser;
 import mx.gob.segob.dgtic.business.service.IncidenciaService;
 import mx.gob.segob.dgtic.comun.sicoa.dto.IncidenciaDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
+import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 
 @Path("catalogo")
 @Component
-public class IncidenciaRecurso {
+public class IncidenciaRecurso extends RecursoBase{
 
 	@Autowired
 	private IncidenciaService incidenciaService;
@@ -34,7 +35,6 @@ public class IncidenciaRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("obtieneIncidencias")	
 	public Response obtieneIncidencias() {
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, incidenciaService.obtenerListaIncidencias());
 	}
 	
@@ -42,7 +42,6 @@ public class IncidenciaRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("buscaIncidencia")	
 	public Response buscaIncidencia(@QueryParam("id") Integer id) {
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, incidenciaService.buscaIncidencia(id));
 	}
 	
@@ -50,7 +49,6 @@ public class IncidenciaRecurso {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("buscaIncidenciaPorIdAsistencia")	
 	public Response buscaIncidenciaPorIdAsistencia(@QueryParam("id") Integer id) {
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, incidenciaService.buscaIncidenciaPorIdAsistencia(id));
 	}
 	
@@ -59,14 +57,12 @@ public class IncidenciaRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("modificaIncidencia")	
 	public Response modificaIncidencia(@RequestParam String jsonIncidencia) {
+		jsonIncidencia = this.cambiaCaracter(jsonIncidencia);
 		JsonObject jsonObject = new JsonParser().parse(jsonIncidencia).getAsJsonObject();
-		
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
-		IncidenciaDto incidenciaDto = gson.fromJson(jsonObject.get("incidencia"), IncidenciaDto.class);
-		
+		IncidenciaDto incidenciaDto = gson.fromJson(jsonObject.get("incidencia"), IncidenciaDto.class);	
 		incidenciaService.modificaIncidencia(incidenciaDto);
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 	}
 	
@@ -75,24 +71,20 @@ public class IncidenciaRecurso {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("agregaIncidencia")	
 	public Response agregaIncidencia(@RequestParam String jsonIncidencia) {
-		JsonObject jsonObject = new JsonParser().parse(jsonIncidencia).getAsJsonObject();
-		
+		jsonIncidencia = this.cambiaCaracter(jsonIncidencia);
+		JsonObject jsonObject = new JsonParser().parse(jsonIncidencia).getAsJsonObject();	
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
-		IncidenciaDto incidenciaDto = gson.fromJson(jsonObject.get("incidencia"), IncidenciaDto.class);
-		
+		IncidenciaDto incidenciaDto = gson.fromJson(jsonObject.get("incidencia"), IncidenciaDto.class);	
 		incidenciaService.agregaIncidencia(incidenciaDto);
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("eliminaIncidencia")	
-	public Response eliminaIncidencia(@QueryParam("id") Integer id) {
-		
+	public Response eliminaIncidencia(@QueryParam("id") Integer id) {	
 		incidenciaService.eliminaIncidencia(id);
-
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 	}
 }

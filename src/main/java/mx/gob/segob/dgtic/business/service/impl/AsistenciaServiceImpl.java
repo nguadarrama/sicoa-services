@@ -17,12 +17,13 @@ import org.springframework.stereotype.Service;
 
 import mx.gob.segob.dgtic.business.rules.asistencia.AsistenciaRules;
 import mx.gob.segob.dgtic.business.service.AsistenciaService;
+import mx.gob.segob.dgtic.business.service.base.ServiceBase;
 import mx.gob.segob.dgtic.business.service.constants.ServiceConstants;
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.IncidenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.reporte;
+import mx.gob.segob.dgtic.comun.util.AsistenciaBusquedaUtil;
 import mx.gob.segob.dgtic.comun.util.FormatoIncidencia;
-import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
@@ -33,7 +34,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 
 @Service
-public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaService {
+public class AsistenciaServiceImpl extends ServiceBase implements AsistenciaService {
 	
 	@Autowired
 	private AsistenciaRules asistenciaRules;
@@ -77,68 +78,57 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 	}
 	
 	@Override
-	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(String cveMusuario, String nombre, String paterno,
-			String materno, String nivel, Integer tipo, Integer estado, String fechaInicial, String fechaFinal,
-			String unidadAdministrativa, String cveCoordinador) {
+	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
 		
 		SimpleDateFormat formatter = new SimpleDateFormat(ServiceConstants.YYYY_MM_DD); 
-		java.sql.Date fechaInicio = null;
-		java.sql.Date fechaFin = null;
 		
-		if (!fechaInicial.isEmpty() && !fechaFinal.isEmpty()) {
+		if (!asistenciaBusquedaUtil.getFechaInicial().isEmpty() && !asistenciaBusquedaUtil.getFechaFinal().isEmpty()) {
 	    	try {
-				Date parsedInicio = formatter.parse(fechaInicial);
-				Date parsedFin = formatter.parse(fechaFinal);
+	    		Date parsedInicio = formatter.parse(asistenciaBusquedaUtil.getFechaInicial());
+				Date parsedFin = formatter.parse(asistenciaBusquedaUtil.getFechaFinal());
 				
-				fechaInicio = new java.sql.Date(parsedInicio.getTime());
-				fechaFin = new java.sql.Date(parsedFin.getTime());
-				System.out.println("Dato a mostrar "+fechaInicio);
+				asistenciaBusquedaUtil.setFechaInicialDate(new java.sql.Date(parsedInicio.getTime()));
+				asistenciaBusquedaUtil.setFechaFinalDate(new java.sql.Date(parsedFin.getTime()));
 				
 				//se suma un día a la fecha fin para incluirla en la búsqueda
 				Calendar c = Calendar.getInstance();
 				
-				c.setTime(fechaFin);
+				c.setTime(asistenciaBusquedaUtil.getFechaFinalDate());
 				c.add(Calendar.DAY_OF_MONTH, 1);  
-				fechaFin.setTime(c.getTimeInMillis());
+				asistenciaBusquedaUtil.getFechaFinalDate().setTime(c.getTimeInMillis());
 			} catch (ParseException e) {
 				logger.warn("Error al convertir la fecha en búsqueda de asistencia: {} ", e.getMessage());
 			}
 		}
 		
-		return asistenciaRules.buscaAsistenciaEmpleadoRangoCoordinador(cveMusuario, nombre,
-				paterno, materno, nivel, tipo, estado, fechaInicio, fechaFin, unidadAdministrativa, cveCoordinador);
+		return asistenciaRules.buscaAsistenciaEmpleadoRangoCoordinador(asistenciaBusquedaUtil);
 	}
 	
 	@Override
-	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoDireccion(String cveMusuario, String nombre, String paterno,
-			String materno, String nivel, Integer tipo, Integer estado, String fechaInicial, String fechaFinal,
-			String unidadAdministrativa) {
+	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoDireccion(AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
 		
 		SimpleDateFormat formatter = new SimpleDateFormat(ServiceConstants.YYYY_MM_DD); 
-		java.sql.Date fechaInicio = null;
-		java.sql.Date fechaFin = null;
 		
-		if (!fechaInicial.isEmpty() && !fechaFinal.isEmpty()) {
+		if (!asistenciaBusquedaUtil.getFechaInicial().isEmpty() && !asistenciaBusquedaUtil.getFechaFinal().isEmpty()) {
 	    	try {
-				Date parsedInicio = formatter.parse(fechaInicial);
-				Date parsedFin = formatter.parse(fechaFinal);
+				Date parsedInicio = formatter.parse(asistenciaBusquedaUtil.getFechaInicial());
+				Date parsedFin = formatter.parse(asistenciaBusquedaUtil.getFechaFinal());
 				
-				fechaInicio = new java.sql.Date(parsedInicio.getTime());
-				fechaFin = new java.sql.Date(parsedFin.getTime());
+				asistenciaBusquedaUtil.setFechaInicialDate(new java.sql.Date(parsedInicio.getTime()));
+				asistenciaBusquedaUtil.setFechaFinalDate(new java.sql.Date(parsedFin.getTime()));
 				
 				//se suma un día a la fecha fin para incluirla en la búsqueda
 				Calendar c = Calendar.getInstance();
 				
-				c.setTime(fechaFin);
+				c.setTime(asistenciaBusquedaUtil.getFechaFinalDate());
 				c.add(Calendar.DAY_OF_MONTH, 1);  
-				fechaFin.setTime(c.getTimeInMillis());
+				asistenciaBusquedaUtil.getFechaFinalDate().setTime(c.getTimeInMillis());
 			} catch (ParseException e) {
 				logger.warn("Error al convertir la fecha en búsqueda de asistencia: {} ", e.getMessage());
 			}
 		}
 		
-	    	return asistenciaRules.buscaAsistenciaEmpleadoRangoDireccion(cveMusuario, nombre, 
-					paterno, materno, nivel, tipo, estado, fechaInicio, fechaFin, unidadAdministrativa);
+	    	return asistenciaRules.buscaAsistenciaEmpleadoRangoDireccion(asistenciaBusquedaUtil);
 	}
 
 	@Override
@@ -225,67 +215,57 @@ public class AsistenciaServiceImpl extends RecursoBase implements AsistenciaServ
 	}
 
 	@Override
-	public List<AsistenciaDto> reporteDireccion(String cveMusuario, String nombre, String paterno, String materno,
-			String nivel, Integer tipo, Integer estado, String fechaInicial, String fechaFinal,
-			String unidadAdministrativa, String permisos) {
+	public List<AsistenciaDto> reporteDireccion(AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
 
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
-		java.sql.Date fechaInicio = null;
-		java.sql.Date fechaFin = null;
 		
-		if (!fechaInicial.isEmpty() && !fechaFinal.isEmpty()) {
+		if (!asistenciaBusquedaUtil.getFechaInicial().isEmpty() && !asistenciaBusquedaUtil.getFechaFinal().isEmpty()) {
 	    	try {
-				Date parsedInicio = formatter.parse(fechaInicial);
-				Date parsedFin = formatter.parse(fechaFinal);
+	    		Date parsedInicio = formatter.parse(asistenciaBusquedaUtil.getFechaInicial());
+				Date parsedFin = formatter.parse(asistenciaBusquedaUtil.getFechaFinal());
 				
-				fechaInicio = new java.sql.Date(parsedInicio.getTime());
-				fechaFin = new java.sql.Date(parsedFin.getTime());
+				asistenciaBusquedaUtil.setFechaInicialDate(new java.sql.Date(parsedInicio.getTime()));
+				asistenciaBusquedaUtil.setFechaFinalDate(new java.sql.Date(parsedFin.getTime()));
 				
 				//se suma un día a la fecha fin para incluirla en la búsqueda
 				Calendar c = Calendar.getInstance();
 				
-				c.setTime(fechaFin);
+				c.setTime(asistenciaBusquedaUtil.getFechaFinalDate());
 				c.add(Calendar.DAY_OF_MONTH, 1);  
-				fechaFin.setTime(c.getTimeInMillis());
+				asistenciaBusquedaUtil.getFechaFinalDate().setTime(c.getTimeInMillis());
 			} catch (ParseException e) {
-				logger.warn("Error al convertir la fecha en búsqueda de asistencia: {}", e.getMessage());
+				logger.warn("Error al convertir la fecha en búsqueda de asistencia: {} ", e.getMessage());
 			}
 		}
 		
-    	return asistenciaRules.reporteDireccion(cveMusuario, nombre, 
-					paterno, materno, nivel, tipo, estado, fechaInicio, fechaFin, unidadAdministrativa, permisos);
+    	return asistenciaRules.reporteDireccion(asistenciaBusquedaUtil);
 	}
 
 	@Override
-	public List<AsistenciaDto> reporteCoordinador(String cveMusuario, String nombre, String paterno, String materno,
-			String nivel, Integer tipo, Integer estado, String fechaInicial, String fechaFinal,
-			String unidadAdministrativa, String cveCoordinador, String permisos) {
+	public List<AsistenciaDto> reporteCoordinador(AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
 
 		SimpleDateFormat formatter = new SimpleDateFormat(ServiceConstants.YYYY_MM_DD); 
-		java.sql.Date fechaInicio = null;
-		java.sql.Date fechaFin = null;
 		
-		if (!fechaInicial.isEmpty() && !fechaFinal.isEmpty()) {
+		if (!asistenciaBusquedaUtil.getFechaInicial().isEmpty() && !asistenciaBusquedaUtil.getFechaFinal().isEmpty()) {
 	    	try {
-				Date parsedInicio = formatter.parse(fechaInicial);
-				Date parsedFin = formatter.parse(fechaFinal);
+	    		Date parsedInicio = formatter.parse(asistenciaBusquedaUtil.getFechaInicial());
+				Date parsedFin = formatter.parse(asistenciaBusquedaUtil.getFechaFinal());
 				
-				fechaInicio = new java.sql.Date(parsedInicio.getTime());
-				fechaFin = new java.sql.Date(parsedFin.getTime());
+				asistenciaBusquedaUtil.setFechaInicialDate(new java.sql.Date(parsedInicio.getTime()));
+				asistenciaBusquedaUtil.setFechaFinalDate(new java.sql.Date(parsedFin.getTime()));
 				
 				//se suma un día a la fecha fin para incluirla en la búsqueda
 				Calendar c = Calendar.getInstance();
 				
-				c.setTime(fechaFin);
+				c.setTime(asistenciaBusquedaUtil.getFechaFinalDate());
 				c.add(Calendar.DAY_OF_MONTH, 1);  
-				fechaFin.setTime(c.getTimeInMillis());
+				asistenciaBusquedaUtil.getFechaFinalDate().setTime(c.getTimeInMillis());
 			} catch (ParseException e) {
-				logger.warn("Error al convertir la fecha en búsqueda de asistencia: {}", e.getMessage());
+				logger.warn("Error al convertir la fecha en búsqueda de asistencia: {} ", e.getMessage());
 			}
 		}
 				
-		return asistenciaRules.reporteCoordinador(cveMusuario, nombre,
-				paterno, materno, nivel, tipo, estado, fechaInicio, fechaFin, unidadAdministrativa, cveCoordinador, permisos);
+		return asistenciaRules.reporteCoordinador(asistenciaBusquedaUtil);
 	}
 	
 }
