@@ -27,18 +27,18 @@ public abstract class RecursoBase {
     protected final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     
     public String cambiaCaracter(String cadena){
-    	cadena =  cadena.replaceAll("AA","Á")
-		.replaceAll("EE", "É")
-		.replaceAll("II", "Í")
-		.replaceAll("OO", "Ó")
-		.replaceAll("UU", "Ú")
-		.replaceAll("aa", "á")
-		.replaceAll("ee", "é")
-		.replaceAll("ii", "í")
-		.replaceAll("oo", "ó")
-		.replaceAll("uu", "ú")
-		.replaceAll("nn", "ñ")
-		.replaceAll("NN", "Ñ");
+    	cadena =  cadena.replaceAll("AAA","Á")
+		.replaceAll("EEE", "É")
+		.replaceAll("III", "Í")
+		.replaceAll("OOO", "Ó")
+		.replaceAll("UUU", "Ú")
+		.replaceAll("aaa", "á")
+		.replaceAll("eee", "é")
+		.replaceAll("iii", "í")
+		.replaceAll("ooo", "ó")
+		.replaceAll("uuu", "ú")
+		.replaceAll("nnn", "ñ")
+		.replaceAll("NNN", "Ñ");
     	return cadena;
     }
 }
