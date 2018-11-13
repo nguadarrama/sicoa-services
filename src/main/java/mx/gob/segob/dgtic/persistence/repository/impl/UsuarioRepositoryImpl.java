@@ -36,10 +36,10 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 	@Override
 	public List<UsuarioDto> obtenerListaUsuarios() {
 		StringBuilder qry = new StringBuilder();
-        qry.append("select usuario.id_usuario, usuario.id_area, usuario.cve_c_perfil, usuario.id_horario, usuario.id_puesto, usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, usuario.fecha_ingreso, usuario.activo, usuario.nuevo, usuario.en_sesion, usuario.ultimo_acceso, usuario.numero_intentos, usuario.bloqueado, usuario.fecha_bloqueo,  usuario.primera_vez, usuario.estatus, usuario.nivel, usuario.rfc, unidad.id_unidad, unidad.nombre nombre_unidad ");
+        qry.append("select distinct usuario.id_usuario, usuario.id_area, usuario.cve_c_perfil, usuario.id_horario, usuario.id_puesto, usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, usuario.fecha_ingreso, usuario.activo, usuario.nuevo, usuario.en_sesion, usuario.ultimo_acceso, usuario.numero_intentos, usuario.bloqueado, usuario.fecha_bloqueo,  usuario.primera_vez, usuario.estatus, usuario.nivel, usuario.rfc, unidad.id_unidad, unidad.nombre nombre_unidad ");
         qry.append("from m_usuario usuario, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion ");
-        qry.append("where unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario ");
-        
+        qry.append("where unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario");
+        logger.info("Qry obtenerListaUsuarios: {} ",qry);
         List<Map<String, Object>> usuarios = jdbcTemplate.queryForList(qry.toString());
         List<UsuarioDto> listaUsuario = new ArrayList<>();
         
@@ -68,10 +68,8 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
     		usuarioDto.setNombreUnidad((String)usuario.get(RepositoryConstants.NOMBRE_UNIDAD));
     		usuarioDto.setIdUnidad((Integer)usuario.get(RepositoryConstants.ID_UNIDAD));
     		listaUsuario.add(usuarioDto);
-    	}
-        
+    	} 
         logger.info("usuarios encontrados: {}",listaUsuario.size());
-        
 		return listaUsuario;
 	}
 
@@ -88,7 +86,7 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
         qry.append("where u.cve_m_usuario = :claveUsuario ");
         qry.append("and u.cve_c_perfil = p.cve_c_perfil ");
         qry.append("and u.id_horario = h.id_horario and unidad.id_unidad=relacion.id_unidad and u.cve_m_usuario=relacion.cve_m_usuario limit 1");
-        
+        /** logger.info("Qry buscaUsuario: {} ", qry); **/
         MapSqlParameterSource parametros = new MapSqlParameterSource();
         parametros.addValue(RepositoryConstants.CLAVE_USUARIO2, claveUsuario);
         
@@ -213,7 +211,7 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 		parametros.addValue("claveUsuario", claveUsuario);
 		String nuevaContrasenia=HashUtils.md5(claveUsuario);
 		logger.info("Datos idUsuario: {} ",claveUsuario);
-		logger.info("contrasenia:  ",nuevaContrasenia);
+		logger.info("contrasenia:  {} ",nuevaContrasenia);
 		parametros.addValue("nuevaContrasenia", nuevaContrasenia);
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);	
 	}
