@@ -2,7 +2,6 @@ package mx.gob.segob.dgtic.persistence.repository.impl;
 
 import java.util.Date;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -635,9 +634,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 	}
 
 	@Override
-	public List<AsistenciaDto> reporteDireccion(String cveMusuario, String nombre, String paterno, String materno,
-			String nivel, Integer tipo, Integer estado, Date fechaInicial, Date fechaFinal, String unidadAdministrativa,
-			String p) {
+	public List<AsistenciaDto> reporteDireccion(AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
 
 		StringBuilder qry = new StringBuilder();
 	       
@@ -655,46 +652,46 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         qry.append("left join d_detalle_vacacion v on v.id_usuario = u.id_usuario ");
         qry.append("where 1 = 1");
         
-        if (fechaInicial != null && fechaFinal != null) {
-        	qry.append(" and entrada >= '" + fechaInicial + "'");
-        	qry.append(" and entrada < '" + fechaFinal  + "'");
+        if (asistenciaBusquedaUtil.getFechaInicialDate() != null && asistenciaBusquedaUtil.getFechaFinalDate() != null) {
+        	qry.append(" and entrada >= '" + asistenciaBusquedaUtil.getFechaInicialDate() + "'");
+        	qry.append(" and entrada < '" + asistenciaBusquedaUtil.getFechaFinalDate()  + "'");
         }
         
-    	if (!cveMusuario.isEmpty()) {
-    		qry.append(" and a.id_usuario = " + cveMusuario);
+    	if (!asistenciaBusquedaUtil.getCveMusuario().isEmpty()) {
+    		qry.append(" and a.id_usuario = " + asistenciaBusquedaUtil.getCveMusuario());
     	}
         
-        if (!nombre.isEmpty()) {
-        	qry.append(" and u.nombre like '%" + nombre + "%' ");
+        if (!asistenciaBusquedaUtil.getNombre().isEmpty()) {
+        	qry.append(" and u.nombre like '%" + asistenciaBusquedaUtil.getNombre() + "%' ");
         }
         
-        if (!paterno.isEmpty()) {
-        	qry.append(" and u.apellido_paterno like '%" + paterno + "%' ");
+        if (!asistenciaBusquedaUtil.getPaterno().isEmpty()) {
+        	qry.append(" and u.apellido_paterno like '%" + asistenciaBusquedaUtil.getPaterno() + "%' ");
         }
         
-        if (!materno.isEmpty()) {
-        	qry.append(" and u.apellido_materno like '%" + materno + "%' ");
+        if (!asistenciaBusquedaUtil.getMaterno().isEmpty()) {
+        	qry.append(" and u.apellido_materno like '%" + asistenciaBusquedaUtil.getMaterno() + "%' ");
         }
         
-        if (!unidadAdministrativa.isEmpty()) {
-        	qry.append(" and ua.id_unidad = " + unidadAdministrativa);
+        if (!asistenciaBusquedaUtil.getUnidadAdministrativa().isEmpty()) {
+        	qry.append(" and ua.id_unidad = " + asistenciaBusquedaUtil.getUnidadAdministrativa());
         }
         
-        if (!nivel.isEmpty()) {
-        	qry.append(" and u.nivel like '%" + nivel + "%' ");
+        if (!asistenciaBusquedaUtil.getNivel().isEmpty()) {
+        	qry.append(" and u.nivel like '%" + asistenciaBusquedaUtil.getNivel() + "%' ");
         }
         
-        if (tipo > 0) {
-        	qry.append(" and t.id_tipo_dia = " + tipo);
+        if (asistenciaBusquedaUtil.getTipo() != null) {
+        	qry.append(" and t.id_tipo_dia = " + asistenciaBusquedaUtil.getTipo());
         }
         
-        if (estado > 0) {
-        	qry.append(" and e.id_estatus = " + estado);
+        if (asistenciaBusquedaUtil.getEstado() != null) {
+        	qry.append(" and e.id_estatus = " + asistenciaBusquedaUtil.getEstado());
         }
         
         //reglas para condiciones de permisos 
-        if (p != null) {
-        	String[] arrayPermisos = p.split(",");
+        if (!asistenciaBusquedaUtil.getPermisos().isEmpty()) {
+        	String[] arrayPermisos = asistenciaBusquedaUtil.getPermisos().split(",");
             List<String> listaPermisos = new ArrayList<String>(Arrays.asList(arrayPermisos));
             String condicionVacacion = "or";
             String condicionComision = "or";
@@ -749,7 +746,6 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         
         List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString());
         List<AsistenciaDto> listaAsistencia = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         
         for (Map<String, Object> a : asistencias) {
         	UsuarioDto usuario = usuarioRepository.buscaUsuario((String) a.get("id_usuario"));
@@ -786,9 +782,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 	}
 
 	@Override
-	public List<AsistenciaDto> reporteCoordinador(String cveMusuario, String nombre, String paterno, String materno,
-			String nivel, Integer tipo, Integer estado, Date fechaInicial, Date fechaFinal, String unidadAdministrativa, Integer idUnidadCoordinador,
-			String p) {
+	public List<AsistenciaDto> reporteCoordinador(AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
 
 		StringBuilder qry = new StringBuilder();
 	       
@@ -804,44 +798,44 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         qry.append("left join m_licencia_medica l on l.id_usuario = u.id_usuario ");
         qry.append("left join m_comision c on c.id_usuario = u.id_usuario ");
         qry.append("left join d_detalle_vacacion v on v.id_usuario = u.id_usuario ");
-        qry.append("where uua.id_unidad = " + idUnidadCoordinador);
+        qry.append("where uua.id_unidad = " + asistenciaBusquedaUtil.getIdUnidadCoordinador());
         
-        if (fechaInicial != null && fechaFinal != null) {
-        	qry.append(" and entrada >= '" + fechaInicial + "'");
-        	qry.append(" and entrada < '" + fechaFinal  + "'");
+        if (asistenciaBusquedaUtil.getFechaInicialDate() != null && asistenciaBusquedaUtil.getFechaFinalDate() != null) {
+        	qry.append(" and entrada >= '" + asistenciaBusquedaUtil.getFechaInicialDate() + "'");
+        	qry.append(" and entrada < '" + asistenciaBusquedaUtil.getFechaFinalDate()  + "'");
         } 
         
-    	if (!cveMusuario.isEmpty()) {
-    		qry.append(" and a.id_usuario = " + cveMusuario);
+    	if (!asistenciaBusquedaUtil.getCveMusuario().isEmpty()) {
+    		qry.append(" and a.id_usuario = " + asistenciaBusquedaUtil.getCveMusuario());
     	}
         
-        if (!nombre.isEmpty()) {
-        	qry.append(" and u.nombre like '%" + nombre + "%' ");
+        if (!asistenciaBusquedaUtil.getNombre().isEmpty()) {
+        	qry.append(" and u.nombre like '%" + asistenciaBusquedaUtil.getNombre() + "%' ");
         }
         
-        if (!paterno.isEmpty()) {
-        	qry.append(" and u.apellido_paterno like '%" + paterno + "%' ");
+        if (!asistenciaBusquedaUtil.getPaterno().isEmpty()) {
+        	qry.append(" and u.apellido_paterno like '%" + asistenciaBusquedaUtil.getPaterno() + "%' ");
         }
         
-        if (!materno.isEmpty()) {
-        	qry.append(" and u.apellido_materno like '%" + materno + "%' ");
+        if (!asistenciaBusquedaUtil.getMaterno().isEmpty()) {
+        	qry.append(" and u.apellido_materno like '%" + asistenciaBusquedaUtil.getMaterno() + "%' ");
         }
         
-        if (!nivel.isEmpty()) {
-        	qry.append(" and u.nivel like '%" + nivel + "%' ");
+        if (!asistenciaBusquedaUtil.getNivel().isEmpty()) {
+        	qry.append(" and u.nivel like '%" + asistenciaBusquedaUtil.getNivel() + "%' ");
         }
         
-        if (tipo > 0) {
-        	qry.append(" and t.id_tipo_dia = " + tipo);
+        if (asistenciaBusquedaUtil.getTipo() != null) {
+        	qry.append(" and t.id_tipo_dia = " + asistenciaBusquedaUtil.getTipo());
         }
         
-        if (estado > 0) {
-        	qry.append(" and e.id_estatus = " + estado);
+        if (asistenciaBusquedaUtil.getEstado() != null) {
+        	qry.append(" and e.id_estatus = " + asistenciaBusquedaUtil.getEstado());
         }
         
         //reglas para condiciones de permisos 
-        if (p != null) {
-        	String[] arrayPermisos = p.split(",");
+        if (!asistenciaBusquedaUtil.getPermisos().isEmpty()) {
+        	String[] arrayPermisos = asistenciaBusquedaUtil.getPermisos().split(",");
             List<String> listaPermisos = new ArrayList<String>(Arrays.asList(arrayPermisos));
             String condicionVacacion = "or";
             String condicionComision = "or";
@@ -896,7 +890,6 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         
         List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString());
         List<AsistenciaDto> listaAsistencia = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         
         for (Map<String, Object> a : asistencias) {
         	UsuarioDto usuario = usuarioRepository.buscaUsuario((String) a.get("id_usuario"));

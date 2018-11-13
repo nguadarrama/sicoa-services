@@ -17,6 +17,7 @@ public class AsistenciaBusquedaUtil {
 	Date fechaFinalDate;
 	String cveUsuarioLogeado;
 	Integer idUnidadCoordinador;
+	String permisos;
 	
 	public String getCveMusuario() {
 		return cveMusuario;
@@ -101,6 +102,12 @@ public class AsistenciaBusquedaUtil {
 	}
 	public void setIdUnidadCoordinador(Integer idUnidadCoordinador) {
 		this.idUnidadCoordinador = idUnidadCoordinador;
+	}
+	public String getPermisos() {
+		return permisos;
+	}
+	public void setPermisos(String permisos) {
+		this.permisos = permisos;
 	}
 	
 }

@@ -85,27 +85,22 @@ public class AsistenciaRules {
 		return asistenciaRepository.aplicaDescuento(incidencia);
 	}
 	
-	public List<AsistenciaDto> reporteDireccion(String cveMusuario, String nombre, String paterno,
-			String materno, String nivel, Integer tipo, Integer estado, Date fechaInicial, Date fechaFinal,
-			String unidadAdministrativa, String permisos) {
+	public List<AsistenciaDto> reporteDireccion(AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
 		
 		List<AsistenciaDto> listaAsistencia;
-		listaAsistencia = asistenciaRepository.reporteDireccion(cveMusuario, nombre, 
-				paterno, materno, nivel, tipo, estado, fechaInicial, fechaFinal, unidadAdministrativa, permisos);
+		listaAsistencia = asistenciaRepository.reporteDireccion(asistenciaBusquedaUtil);
 		
 		return listaAsistencia;
 	}
 	
-	public List<AsistenciaDto> reporteCoordinador(String cveMusuario, String nombre, String paterno,
-			String materno, String nivel, Integer tipo, Integer estado, Date fechaInicial, Date fechaFinal,
-			String unidadAdministrativa, String cveCoordinador, String permisos) {
+	public List<AsistenciaDto> reporteCoordinador(AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
 		
 		//se obtiene la unidad administrativa del coordinador
-		UsuarioDto coordinador = usuarioRepository.buscaUsuario(cveCoordinador);
+		UsuarioDto coordinador = usuarioRepository.buscaUsuario(asistenciaBusquedaUtil.getCveUsuarioLogeado());
+		asistenciaBusquedaUtil.setIdUnidadCoordinador((coordinador.getIdUnidad()));
 		
 		List<AsistenciaDto> listaAsistencia;
-		listaAsistencia = asistenciaRepository.reporteCoordinador(cveMusuario, nombre, 
-				paterno, materno, nivel, tipo, estado, fechaInicial, fechaFinal, unidadAdministrativa, coordinador.getIdUnidad(), permisos);
+		listaAsistencia = asistenciaRepository.reporteCoordinador(asistenciaBusquedaUtil);
 		
 		return listaAsistencia;
 	}
