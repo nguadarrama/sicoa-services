@@ -39,7 +39,7 @@ public class UsuarioPerfilRules  extends ServiceBase{
 					usuarioPerfil.setClaveUsuario(usuarioPerfilDto.getClaveUsuario());
 					r = usuarioPerfilRepository.agregaUsuarioPerfil(usuarioPerfil);
 			}else{
-				logger.info("no se puede insertar el perfil: {} ");
+				logger.info("no se puede insertar el perfil: {} ", "");
 			}
 		}
 		return r;

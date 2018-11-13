@@ -81,18 +81,18 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 			
 		StringBuilder qry = new StringBuilder();
 		       
-        qry.append("SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus, ");
-        qry.append("i.id_estatus, i.descuento ");
-        qry.append("FROM m_asistencia a ");
-        qry.append("inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ");
-        qry.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia ");
-        qry.append("left join m_estatus e on e.id_estatus = i.id_estatus ");
-        qry.append("WHERE id_usuario = " + claveEmpleado);
-        qry.append(" and a.id_tipo_dia = t.id_tipo_dia");
+        qry.append(RepositoryConstants.ARIL84);
+        qry.append(RepositoryConstants.ARIL85);
+        qry.append(RepositoryConstants.ARIL86);
+        qry.append(RepositoryConstants.ARIL87);
+        qry.append(RepositoryConstants.ARIL88);
+        qry.append(RepositoryConstants.ARIL89);
+        qry.append(RepositoryConstants.ARIL90 + claveEmpleado);
+        qry.append(RepositoryConstants.ARIL91);
         
         if (fechaInicio != null && fechaFin != null) {
-        	qry.append(" and entrada >= '" + fechaInicio + "'");
-        	qry.append(" and entrada < '" + fechaFin + "'");
+        	qry.append(RepositoryConstants.ARIL94 + fechaInicio + "'");
+        	qry.append(RepositoryConstants.ARIL95 + fechaFin + "'");
         }
         
         qry.append(" order by entrada");
@@ -104,27 +104,27 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         
         for (Map<String, Object> a : asistencias) {
         	TipoDiaDto tipoDia = new TipoDiaDto();
-        	tipoDia.setIdTipoDia((Integer) a.get("id_tipo_dia"));
-        	tipoDia.setNombre((String) a.get("nombre"));
+        	tipoDia.setIdTipoDia((Integer) a.get(RepositoryConstants.ID_TIPO_DIA));
+        	tipoDia.setNombre((String) a.get(RepositoryConstants.NOMBRE));
         	
         	EstatusDto estatus = new EstatusDto();
-        	estatus.setEstatus((String) a.get("estatus"));
+        	estatus.setEstatus((String) a.get(RepositoryConstants.ESTATUS));
         	
         	IncidenciaDto incidencia = new IncidenciaDto();
         	incidencia.setEstatus(estatus);
         	
-        	if ((Boolean) a.get("descuento") != null) {
-        		incidencia.setDescuento((Boolean) a.get("descuento"));
+        	if ((Boolean) a.get(RepositoryConstants.DESCUENTO) != null) {
+        		incidencia.setDescuento((Boolean) a.get(RepositoryConstants.DESCUENTO));
         	} else {
         		incidencia.setDescuento(false);
         	}
         	
         	AsistenciaDto asistencia = new AsistenciaDto();
-        	asistencia.setIdAsistencia((Integer) a.get("id_asistencia"));
+        	asistencia.setIdAsistencia((Integer) a.get(RepositoryConstants.ID_ASISTENCIA));
     		asistencia.setUsuarioDto(usuario);
     		asistencia.setIdTipoDia(tipoDia);
-    		asistencia.setEntrada((Timestamp) a.get("entrada"));
-    		asistencia.setSalida((Timestamp) a.get("salida"));
+    		asistencia.setEntrada((Timestamp) a.get(RepositoryConstants.ENTRADA));
+    		asistencia.setSalida((Timestamp) a.get(RepositoryConstants.SALIDA));
     		asistencia.setIdEstatus(estatus);
     		asistencia.setIncidencia(incidencia);
     		
@@ -139,83 +139,83 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 			
 		StringBuilder qry = new StringBuilder();
 	       
-        qry.append("SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus, e.id_estatus, ua.nombre as nombre_unidad, ");
-        qry.append("i.id_estatus, i.descuento ");
-        qry.append("FROM m_asistencia a ");
-        qry.append("inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ");
-        qry.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia ");
-        qry.append("left join m_estatus e on e.id_estatus = i.id_estatus ");
-        qry.append("inner join m_usuario u on u.cve_m_usuario = a.id_usuario ");
-        qry.append("inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ");
-        qry.append("inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ");
-        qry.append("where uua.id_unidad = " + asistenciaBusquedaUtil.getIdUnidadCoordinador());
+        qry.append(RepositoryConstants.ARIL142);
+        qry.append(RepositoryConstants.ARIL143);
+        qry.append(RepositoryConstants.ARIL144);
+        qry.append(RepositoryConstants.ARIL145);
+        qry.append(RepositoryConstants.ARIL146);
+        qry.append(RepositoryConstants.ARIL147);
+        qry.append(RepositoryConstants.ARIL148);
+        qry.append(RepositoryConstants.ARIL149);
+        qry.append(RepositoryConstants.ARIL150);
+        qry.append(RepositoryConstants.ARIL151 + asistenciaBusquedaUtil.getIdUnidadCoordinador());
         
         if (asistenciaBusquedaUtil.getFechaInicialDate() != null && asistenciaBusquedaUtil.getFechaFinalDate() != null) {
-        	qry.append(" and entrada >= '" + asistenciaBusquedaUtil.getFechaInicialDate() + "'");
-        	qry.append(" and entrada < '" + asistenciaBusquedaUtil.getFechaFinalDate()  + "'");
+        	qry.append(RepositoryConstants.ARIL154 + asistenciaBusquedaUtil.getFechaInicialDate() + "'");
+        	qry.append(RepositoryConstants.ARIL155 + asistenciaBusquedaUtil.getFechaFinalDate()  + "'");
         }
         
         if (!asistenciaBusquedaUtil.getCveMusuario().isEmpty()) {
-        	qry.append(" and a.id_usuario = " + asistenciaBusquedaUtil.getCveMusuario());
+        	qry.append(RepositoryConstants.ARIL159 + asistenciaBusquedaUtil.getCveMusuario());
         }
         
         if (!asistenciaBusquedaUtil.getNombre().isEmpty()) {
-        	qry.append(" and u.nombre like '%" + asistenciaBusquedaUtil.getNombre() + "%' ");
+        	qry.append(RepositoryConstants.ARIL163 + asistenciaBusquedaUtil.getNombre() + "%' ");
         }
         
         if (!asistenciaBusquedaUtil.getPaterno().isEmpty()) {
-        	qry.append(" and u.apellido_paterno like '%" + asistenciaBusquedaUtil.getPaterno() + "%' ");
+        	qry.append(RepositoryConstants.ARIL167 + asistenciaBusquedaUtil.getPaterno() + "%' ");
         }
         
         if (!asistenciaBusquedaUtil.getMaterno().isEmpty()) {
-        	qry.append(" and u.apellido_materno like '%" + asistenciaBusquedaUtil.getMaterno() + "%' ");
+        	qry.append(RepositoryConstants.ARIL171 + asistenciaBusquedaUtil.getMaterno() + "%' ");
         }
         
         if (!asistenciaBusquedaUtil.getUnidadAdministrativa().isEmpty()) {
-        	qry.append(" and ua.nombre like '' ");
+        	qry.append(RepositoryConstants.ARIL175);
         }
         
         if (!asistenciaBusquedaUtil.getNivel().isEmpty()) {
-        	qry.append(" and u.nivel like '%" + asistenciaBusquedaUtil.getNivel() + "%' ");
+        	qry.append(RepositoryConstants.ARIL179 + asistenciaBusquedaUtil.getNivel() + "%' ");
         }
         
         if (asistenciaBusquedaUtil.getTipo() != null) {
-        	qry.append(" and t.id_tipo_dia = " + asistenciaBusquedaUtil.getTipo());
+        	qry.append(RepositoryConstants.ARIL183 + asistenciaBusquedaUtil.getTipo());
         }
         
         if (asistenciaBusquedaUtil.getEstado() != null) {
-        	qry.append(" and e.id_estatus = " + asistenciaBusquedaUtil.getEstado());
+        	qry.append(RepositoryConstants.ARIL187 + asistenciaBusquedaUtil.getEstado());
         }
         
         List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString());
         List<AsistenciaDto> listaAsistencia = new ArrayList<>();
         
         for (Map<String, Object> a : asistencias) {
-        	UsuarioDto usuario = usuarioRepository.buscaUsuario((String) a.get("id_usuario"));
+        	UsuarioDto usuario = usuarioRepository.buscaUsuario((String) a.get(RepositoryConstants.ID_USUARIO));
         	
         	TipoDiaDto tipoDia = new TipoDiaDto();
-        	tipoDia.setIdTipoDia((Integer) a.get("id_tipo_dia"));
-        	tipoDia.setNombre((String) a.get("nombre"));
+        	tipoDia.setIdTipoDia((Integer) a.get(RepositoryConstants.ID_TIPO_DIA));
+        	tipoDia.setNombre((String) a.get(RepositoryConstants.NOMBRE));
         	
         	EstatusDto estatus = new EstatusDto();
-        	estatus.setEstatus((String) a.get("estatus"));
-        	estatus.setIdEstatus((Integer) a.get("id_estatus"));
+        	estatus.setEstatus((String) a.get(RepositoryConstants.ESTATUS));
+        	estatus.setIdEstatus((Integer) a.get(RepositoryConstants.ID_ESTATUS));
         	
         	IncidenciaDto incidencia = new IncidenciaDto();
         	incidencia.setEstatus(estatus);
         	
-        	if ((Boolean) a.get("descuento") != null) {
-        		incidencia.setDescuento((Boolean) a.get("descuento"));
+        	if ((Boolean) a.get(RepositoryConstants.DESCUENTO) != null) {
+        		incidencia.setDescuento((Boolean) a.get(RepositoryConstants.DESCUENTO));
         	} else {
         		incidencia.setDescuento(false);
         	}
         	
         	AsistenciaDto asistencia = new AsistenciaDto();
-        	asistencia.setIdAsistencia((Integer) a.get("id_asistencia"));
+        	asistencia.setIdAsistencia((Integer) a.get(RepositoryConstants.ID_ASISTENCIA));
     		asistencia.setUsuarioDto(usuario);
     		asistencia.setIdTipoDia(tipoDia);
-    		asistencia.setEntrada((Timestamp) a.get("entrada"));
-    		asistencia.setSalida((Timestamp) a.get("salida"));
+    		asistencia.setEntrada((Timestamp) a.get(RepositoryConstants.ENTRADA));
+    		asistencia.setSalida((Timestamp) a.get(RepositoryConstants.SALIDA));
     		asistencia.setIdEstatus(estatus);
     		asistencia.setIncidencia(incidencia);
     		
@@ -230,82 +230,82 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 			
 		StringBuilder qry = new StringBuilder();
 	       
-        qry.append("SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus, ");
-        qry.append("i.id_estatus, i.descuento ");
-        qry.append("FROM m_asistencia a ");
-        qry.append("inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ");
-        qry.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia ");
-        qry.append("left join m_estatus e on e.id_estatus = i.id_estatus ");
-        qry.append("inner join m_usuario u on u.cve_m_usuario = a.id_usuario ");
-        qry.append("inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ");
-        qry.append("inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ");
-        qry.append("where 1 = 1");
+        qry.append(RepositoryConstants.ARIL233);
+        qry.append(RepositoryConstants.ARIL234);
+        qry.append(RepositoryConstants.ARIL235);
+        qry.append(RepositoryConstants.ARIL236);
+        qry.append(RepositoryConstants.ARIL237);
+        qry.append(RepositoryConstants.ARIL238);
+        qry.append(RepositoryConstants.ARIL239);
+        qry.append(RepositoryConstants.ARIL240);
+        qry.append(RepositoryConstants.ARIL241);
+        qry.append(RepositoryConstants.ARIL242);
         
         if (asistenciaBusquedaUtil.getFechaInicialDate() != null && asistenciaBusquedaUtil.getFechaFinalDate() != null) {
-        	qry.append(" and entrada >= '" + asistenciaBusquedaUtil.getFechaInicialDate() + "'");
-        	qry.append(" and entrada < '" + asistenciaBusquedaUtil.getFechaFinalDate()  + "'");
+        	qry.append(RepositoryConstants.ARIL245 + asistenciaBusquedaUtil.getFechaInicialDate() + "'");
+        	qry.append(RepositoryConstants.ARIL246 + asistenciaBusquedaUtil.getFechaFinalDate()  + "'");
         }
         
     	if (!asistenciaBusquedaUtil.getCveMusuario().isEmpty()) {
-    		qry.append(" and a.id_usuario = " + asistenciaBusquedaUtil.getCveMusuario());
+    		qry.append(RepositoryConstants.ARIL250 + asistenciaBusquedaUtil.getCveMusuario());
     	}
         
         if (!asistenciaBusquedaUtil.getNombre().isEmpty()) {
-        	qry.append(" and u.nombre like '%" + asistenciaBusquedaUtil.getNombre() + "%' ");
+        	qry.append(RepositoryConstants.ARIL254 + asistenciaBusquedaUtil.getNombre() + "%' ");
         }
         
         if (!asistenciaBusquedaUtil.getPaterno().isEmpty()) {
-        	qry.append(" and u.apellido_paterno like '%" + asistenciaBusquedaUtil.getPaterno() + "%' ");
+        	qry.append(RepositoryConstants.ARIL258 + asistenciaBusquedaUtil.getPaterno() + "%' ");
         }
         
         if (!asistenciaBusquedaUtil.getMaterno().isEmpty()) {
-        	qry.append(" and u.apellido_materno like '%" + asistenciaBusquedaUtil.getMaterno() + "%' ");
+        	qry.append(RepositoryConstants.ARIL262 + asistenciaBusquedaUtil.getMaterno() + "%' ");
         }
         
         if (!asistenciaBusquedaUtil.getUnidadAdministrativa().isEmpty()) {
-        	qry.append(" and ua.id_unidad = " + asistenciaBusquedaUtil.getUnidadAdministrativa());
+        	qry.append(RepositoryConstants.ARIL266 + asistenciaBusquedaUtil.getUnidadAdministrativa());
         }
         
         if (!asistenciaBusquedaUtil.getNivel().isEmpty()) {
-        	qry.append(" and u.nivel like '%" + asistenciaBusquedaUtil.getNivel() + "%' ");
+        	qry.append(RepositoryConstants.ARIL270 + asistenciaBusquedaUtil.getNivel() + "%' ");
         }
         
         if (asistenciaBusquedaUtil.getTipo() != null) {
-        	qry.append(" and t.id_tipo_dia = " + asistenciaBusquedaUtil.getTipo());
+        	qry.append(RepositoryConstants.ARIL274 + asistenciaBusquedaUtil.getTipo());
         }
         
         if (asistenciaBusquedaUtil.getEstado() != null) {
-        	qry.append(" and e.id_estatus = " + asistenciaBusquedaUtil.getEstado());
+        	qry.append(RepositoryConstants.ARIL278 + asistenciaBusquedaUtil.getEstado());
         }
         
         List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString());
         List<AsistenciaDto> listaAsistencia = new ArrayList<>();
         
         for (Map<String, Object> a : asistencias) {
-        	UsuarioDto usuario = usuarioRepository.buscaUsuario((String) a.get("id_usuario"));
+        	UsuarioDto usuario = usuarioRepository.buscaUsuario((String) a.get(RepositoryConstants.ID_USUARIO));
         	
         	TipoDiaDto tipoDia = new TipoDiaDto();
-        	tipoDia.setIdTipoDia((Integer) a.get("id_tipo_dia"));
-        	tipoDia.setNombre((String) a.get("nombre"));
+        	tipoDia.setIdTipoDia((Integer) a.get(RepositoryConstants.ID_TIPO_DIA));
+        	tipoDia.setNombre((String) a.get(RepositoryConstants.NOMBRE));
         	
         	EstatusDto estatus = new EstatusDto();
-        	estatus.setEstatus((String) a.get("estatus"));
+        	estatus.setEstatus((String) a.get(RepositoryConstants.ESTATUS));
         	
         	IncidenciaDto incidencia = new IncidenciaDto();
         	incidencia.setEstatus(estatus);
         	
-        	if ((Boolean) a.get("descuento") != null) {
-        		incidencia.setDescuento((Boolean) a.get("descuento"));
+        	if ((Boolean) a.get(RepositoryConstants.DESCUENTO) != null) {
+        		incidencia.setDescuento((Boolean) a.get(RepositoryConstants.DESCUENTO));
         	} else {
         		incidencia.setDescuento(false);
         	}
         	
         	AsistenciaDto asistencia = new AsistenciaDto();
-        	asistencia.setIdAsistencia((Integer) a.get("id_asistencia"));
+        	asistencia.setIdAsistencia((Integer) a.get(RepositoryConstants.ID_ASISTENCIA));
     		asistencia.setUsuarioDto(usuario);
     		asistencia.setIdTipoDia(tipoDia);
-    		asistencia.setEntrada((Timestamp) a.get("entrada"));
-    		asistencia.setSalida((Timestamp) a.get("salida"));
+    		asistencia.setEntrada((Timestamp) a.get(RepositoryConstants.ENTRADA));
+    		asistencia.setSalida((Timestamp) a.get(RepositoryConstants.SALIDA));
     		asistencia.setIdEstatus(estatus);
     		asistencia.setIncidencia(incidencia);
     		
@@ -320,68 +320,68 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		
 		StringBuilder qry = new StringBuilder();
         
-        qry.append("SELECT a.id_asistencia, a.entrada, a.id_tipo_dia, t.nombre as nombre_tipo, e.estatus, e.id_estatus, ");
-        qry.append("i.id_incidencia, j.id_justificacion, j.justificacion, u.nombre as nombre_usuario, u.apellido_paterno, u.apellido_materno, ");
-        qry.append("u.fecha_ingreso, u.cve_m_usuario, u.nombre_jefe, p.descripcion, u.id_puesto, u.rfc, u.nivel, ua.nombre as nombre_unidad, i.id_archivo, ch.url, ch.nombre as nombre_archivo ");
-        qry.append("FROM m_asistencia a ");
-        qry.append("inner join m_usuario u on u.cve_m_usuario = a.id_usuario ");
-        qry.append("inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ");
-        qry.append("inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ");
-        qry.append("inner join c_perfil p on p.cve_c_perfil = u.cve_c_perfil ");
-        qry.append("inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ");
-        qry.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia ");
-        qry.append("left join m_estatus e on e.id_estatus = i.id_estatus ");
-        qry.append("left join c_justificacion j on j.id_justificacion = i.id_justificacion ");
-        qry.append("left join m_archivo ch on ch.id_archivo = i.id_archivo ");
-        qry.append("WHERE a.id_asistencia = :idAsistencia ");
+        qry.append(RepositoryConstants.ARIL323);
+        qry.append(RepositoryConstants.ARIL324);
+        qry.append(RepositoryConstants.ARIL325);
+        qry.append(RepositoryConstants.ARIL326);
+        qry.append(RepositoryConstants.ARIL327);
+        qry.append(RepositoryConstants.ARIL328);
+        qry.append(RepositoryConstants.ARIL329);
+        qry.append(RepositoryConstants.ARIL330);
+        qry.append(RepositoryConstants.ARIL331);
+        qry.append(RepositoryConstants.ARIL332);
+        qry.append(RepositoryConstants.ARIL333);
+        qry.append(RepositoryConstants.ARIL334);
+        qry.append(RepositoryConstants.ARIL335);
+        qry.append(RepositoryConstants.ARIL336);
 
         MapSqlParameterSource parametros = new MapSqlParameterSource();
-        parametros.addValue("idAsistencia", id);
+        parametros.addValue(RepositoryConstants.ID_ASISTENCIA2, id);
         
         Map<String, Object> informacionConsulta = nameParameterJdbcTemplate.queryForMap(qry.toString(), parametros);
         
         PerfilDto perfil = new PerfilDto();
-        perfil.setDescripcion((String) informacionConsulta.get("descripcion"));
+        perfil.setDescripcion((String) informacionConsulta.get(RepositoryConstants.DESCRIPCION));
         
         UsuarioDto usuario = new UsuarioDto();
-        usuario.setNombre((String) informacionConsulta.get("nombre_usuario"));
-        usuario.setApellidoPaterno((String) informacionConsulta.get("apellido_paterno"));
-        usuario.setApellidoMaterno((String) informacionConsulta.get("apellido_materno"));
-        usuario.setFechaIngreso((Date) informacionConsulta.get("fecha_ingreso"));
-        usuario.setClaveUsuario((String) informacionConsulta.get("cve_m_usuario"));
+        usuario.setNombre((String) informacionConsulta.get(RepositoryConstants.NOMBRE_USUARIO));
+        usuario.setApellidoPaterno((String) informacionConsulta.get(RepositoryConstants.APELLIDO_PATERNO));
+        usuario.setApellidoMaterno((String) informacionConsulta.get(RepositoryConstants.APELLIDO_MATERNO));
+        usuario.setFechaIngreso((Date) informacionConsulta.get(RepositoryConstants.FECHA_INGRESO));
+        usuario.setClaveUsuario((String) informacionConsulta.get(RepositoryConstants.CLAVE_M_USUARIO));
         usuario.setClavePerfil(perfil);
-        usuario.setIdPuesto((String) informacionConsulta.get("puesto"));
-        usuario.setRfc((String) informacionConsulta.get("rfc")) ;
-        usuario.setNivel((String) informacionConsulta.get("nivel"));
-        usuario.setIdPuesto((String) informacionConsulta.get("id_puesto"));
-        usuario.setNombreUnidad((String) informacionConsulta.get("nombre_unidad"));
-        usuario.setNombreJefe((String) informacionConsulta.get("nombre_jefe"));
+        usuario.setIdPuesto((String) informacionConsulta.get(RepositoryConstants.PUESTO));
+        usuario.setRfc((String) informacionConsulta.get(RepositoryConstants.RFC)) ;
+        usuario.setNivel((String) informacionConsulta.get(RepositoryConstants.NIVEL));
+        usuario.setIdPuesto((String) informacionConsulta.get(RepositoryConstants.ID_PUESTO));
+        usuario.setNombreUnidad((String) informacionConsulta.get(RepositoryConstants.NOMBRE_UNIDAD));
+        usuario.setNombreJefe((String) informacionConsulta.get(RepositoryConstants.NOMBRE_JEFE));
         
         TipoDiaDto tipoDia = new TipoDiaDto();
-        tipoDia.setIdTipoDia((Integer) informacionConsulta.get("id_tipo_dia"));
-        tipoDia.setNombre((String) informacionConsulta.get("nombre_tipo"));
+        tipoDia.setIdTipoDia((Integer) informacionConsulta.get(RepositoryConstants.ID_TIPO_DIA));
+        tipoDia.setNombre((String) informacionConsulta.get(RepositoryConstants.NOMBRE_TIPO));
         
         EstatusDto estatus = new EstatusDto();
-        estatus.setIdEstatus((Integer) informacionConsulta.get("id_estatus") );
-    	estatus.setEstatus((String) informacionConsulta.get("estatus"));
+        estatus.setIdEstatus((Integer) informacionConsulta.get(RepositoryConstants.ID_ESTATUS) );
+    	estatus.setEstatus((String) informacionConsulta.get(RepositoryConstants.ESTATUS));
     	
     	JustificacionDto justificacion = new JustificacionDto();
-    	justificacion.setIdJustificacion((Integer) informacionConsulta.get("id_justificacion"));
-    	justificacion.setJustificacion((String) informacionConsulta.get("justificacion"));
+    	justificacion.setIdJustificacion((Integer) informacionConsulta.get(RepositoryConstants.ID_JUSTIFICACION));
+    	justificacion.setJustificacion((String) informacionConsulta.get(RepositoryConstants.JUSTIFICACION));
     	
     	ArchivoDto archivo = new ArchivoDto();
-    	archivo.setIdArchivo((Integer) informacionConsulta.get("id_archivo"));
-    	archivo.setUrl((String) informacionConsulta.get("url"));
-    	archivo.setNombre((String) informacionConsulta.get("nombre_archivo"));
+    	archivo.setIdArchivo((Integer) informacionConsulta.get(RepositoryConstants.ID_ARCHIVO));
+    	archivo.setUrl((String) informacionConsulta.get(RepositoryConstants.URL));
+    	archivo.setNombre((String) informacionConsulta.get(RepositoryConstants.NOMBRE_ARCHIVO));
     	
     	IncidenciaDto incidencia = new IncidenciaDto();
-    	incidencia.setIdIncidencia((Integer) informacionConsulta.get("id_incidencia"));
+    	incidencia.setIdIncidencia((Integer) informacionConsulta.get(RepositoryConstants.ID_INCIDENCIA));
     	incidencia.setJustificacion(justificacion);
     	incidencia.setIdArchivo(archivo);
     	
     	AsistenciaDto asistencia = new AsistenciaDto();
-        asistencia.setIdAsistencia((Integer) informacionConsulta.get("id_asistencia"));
-        asistencia.setEntrada((Timestamp) informacionConsulta.get("entrada"));
+        asistencia.setIdAsistencia((Integer) informacionConsulta.get(RepositoryConstants.ID_ASISTENCIA));
+        asistencia.setEntrada((Timestamp) informacionConsulta.get(RepositoryConstants.ENTRADA));
         asistencia.setIdTipoDia(tipoDia);
         asistencia.setIdEstatus(estatus);
         asistencia.setIncidencia(incidencia);
@@ -414,13 +414,13 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		qry.append("VALUES (:idAsistencia, :idTipoDia, :idArchivo, :idEstatus, null, :descuento, null, :idJustificacion, :nombreAutorizador) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("idAsistencia", incidencia.getIdAsistencia().getIdAsistencia());
-		parametros.addValue("idTipoDia", incidencia.getTipoDia().getIdTipoDia());
-		parametros.addValue("idEstatus", incidencia.getEstatus().getIdEstatus());
-		parametros.addValue("descuento", incidencia.getDescuento());
-		parametros.addValue("idJustificacion", incidencia.getJustificacion().getIdJustificacion());
-		parametros.addValue("idArchivo", incidencia.getIdArchivo().getIdArchivo());
-		parametros.addValue("nombreAutorizador", incidencia.getNombreAutorizador());
+		parametros.addValue(RepositoryConstants.ID_ASISTENCIA2, incidencia.getIdAsistencia().getIdAsistencia());
+		parametros.addValue(RepositoryConstants.ID_TIPO_DIA2, incidencia.getTipoDia().getIdTipoDia());
+		parametros.addValue(RepositoryConstants.ID_ESTATUS2, incidencia.getEstatus().getIdEstatus());
+		parametros.addValue(RepositoryConstants.DESCUENTO, incidencia.getDescuento());
+		parametros.addValue(RepositoryConstants.ID_JUSTIFICACION2, incidencia.getJustificacion().getIdJustificacion());
+		parametros.addValue(RepositoryConstants.ID_ARCHIVO2, incidencia.getIdArchivo().getIdArchivo());
+		parametros.addValue(RepositoryConstants.NOMBRE_AUTORIZADOR2, incidencia.getNombreAutorizador());
 
 		return nameParameterJdbcTemplate.update(qry.toString(), parametros);
 	}
@@ -435,7 +435,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         qry.append("WHERE id_asistencia = ? ");
 
         MapSqlParameterSource parametros = new MapSqlParameterSource();
-        parametros.addValue("idAsistencia", idAsistencia);
+        parametros.addValue(RepositoryConstants.ID_ASISTENCIA2, idAsistencia);
         
         List<Map<String, Object>> asistencia = jdbcTemplate.queryForList(qry.toString(), idAsistencia);
         
@@ -458,7 +458,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         qry.append("WHERE id_asistencia = ? ");
 
         MapSqlParameterSource parametros = new MapSqlParameterSource();
-        parametros.addValue("idAsistencia", idAsistencia);
+        parametros.addValue(RepositoryConstants.ID_ASISTENCIA2, idAsistencia);
         
         List<Map<String, Object>> asistencia = jdbcTemplate.queryForList(qry.toString(), idAsistencia);
         
@@ -480,18 +480,17 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         qry.append(RepositoryConstants.L478);
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("idAsistencia", incidencia.getIdAsistencia().getIdAsistencia());
-		parametros.addValue("idJustificacion", incidencia.getJustificacion().getIdJustificacion());
-		parametros.addValue("idArchivo", incidencia.getIdArchivo().getIdArchivo());
-		parametros.addValue("nombreAutorizador", incidencia.getNombreAutorizador());
-		parametros.addValue("descuento", incidencia.getDescuento());
+		parametros.addValue(RepositoryConstants.ID_ASISTENCIA2, incidencia.getIdAsistencia().getIdAsistencia());
+		parametros.addValue(RepositoryConstants.ID_JUSTIFICACION2, incidencia.getJustificacion().getIdJustificacion());
+		parametros.addValue(RepositoryConstants.ID_ARCHIVO2, incidencia.getIdArchivo().getIdArchivo());
+		parametros.addValue(RepositoryConstants.NOMBRE_AUTORIZADOR2, incidencia.getNombreAutorizador());
+		parametros.addValue(RepositoryConstants.DESCUENTO, incidencia.getDescuento());
 		
 		try {
 			return nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		} catch (Exception e) {
 			logger.error("Error al consultar la incidencia con número de asistencia: {} ", incidencia.getIdAsistencia().getIdAsistencia() + ". " + e.getMessage());
-		}
-		
+		}	
 		return 0;
 	}
 	
@@ -499,21 +498,21 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 	public Integer editaDescuento(IncidenciaDto incidencia) {
 		StringBuilder qry = new StringBuilder();
 		
-		qry.append("update m_incidencia ");
-		qry.append("set id_justificacion = :idJustificacion, nombre_autorizador = :nombreAutorizador, id_archivo = :idArchivo, descuento = :descuento ");
-        qry.append("WHERE id_asistencia = :idAsistencia");
+		qry.append(RepositoryConstants.ARL502);
+		qry.append(RepositoryConstants.ARL503);
+        qry.append(RepositoryConstants.ARL504);
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("idAsistencia", incidencia.getIdAsistencia().getIdAsistencia());
-		parametros.addValue("idJustificacion", incidencia.getJustificacion().getIdJustificacion());
-		parametros.addValue("nombreAutorizador", incidencia.getNombreAutorizador());
-		parametros.addValue("descuento", incidencia.getDescuento());
-		parametros.addValue("idArchivo", incidencia.getIdArchivo().getIdArchivo());
+		parametros.addValue(RepositoryConstants.ID_ASISTENCIA2, incidencia.getIdAsistencia().getIdAsistencia());
+		parametros.addValue(RepositoryConstants.ID_JUSTIFICACION2, incidencia.getJustificacion().getIdJustificacion());
+		parametros.addValue(RepositoryConstants.NOMBRE_AUTORIZADOR2, incidencia.getNombreAutorizador());
+		parametros.addValue(RepositoryConstants.DESCUENTO, incidencia.getDescuento());
+		parametros.addValue(RepositoryConstants.ID_ARCHIVO2, incidencia.getIdArchivo().getIdArchivo());
 		
 		try {
 			return nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		} catch (Exception e) {
-			logger.error("Error al consultar la incidencia con número de asistencia: " + incidencia.getIdAsistencia().getIdAsistencia() + ". " + e.getMessage());
+			logger.error("Error al consultar la incidencia con número de asistencia: {} " ,incidencia.getIdAsistencia().getIdAsistencia() + ". " + e.getMessage());
 		}
 		
 		return 0;
@@ -528,14 +527,14 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         qry.append("WHERE id_asistencia = :idAsistencia");
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("idAsistencia", incidencia.getIdAsistencia().getIdAsistencia());
-		parametros.addValue("idEstatus", incidencia.getEstatus().getIdEstatus());
-		parametros.addValue("descuento", incidencia.getDescuento());
+		parametros.addValue(RepositoryConstants.ID_ASISTENCIA2, incidencia.getIdAsistencia().getIdAsistencia());
+		parametros.addValue(RepositoryConstants.ID_ESTATUS2, incidencia.getEstatus().getIdEstatus());
+		parametros.addValue(RepositoryConstants.DESCUENTO, incidencia.getDescuento());
 		
 		try {
 			return nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		} catch (Exception e) {
-			logger.error("Error al dictaminar la justificación, en la indicencia: " + incidencia.getIdAsistencia().getIdAsistencia() + " " + e.getMessage());
+			logger.error("Error al dictaminar la justificación, en la indicencia: {} ", incidencia.getIdAsistencia().getIdAsistencia() + " " + e.getMessage());
 		}
 		
 		return 0;
@@ -550,14 +549,14 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         qry.append("WHERE id_asistencia = :idAsistencia");
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("idAsistencia", incidencia.getIdAsistencia().getIdAsistencia());
-		parametros.addValue("idEstatus", incidencia.getEstatus().getIdEstatus());
-		parametros.addValue("descuento", incidencia.getDescuento());
+		parametros.addValue(RepositoryConstants.ID_ASISTENCIA2, incidencia.getIdAsistencia().getIdAsistencia());
+		parametros.addValue(RepositoryConstants.ID_ESTATUS2, incidencia.getEstatus().getIdEstatus());
+		parametros.addValue(RepositoryConstants.DESCUENTO, incidencia.getDescuento());
 		
 		try {
 			return nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		} catch (Exception e) {
-			logger.error("Error al aplicar descuento en la incidencia: " + incidencia.getIdAsistencia().getIdAsistencia() + " " + e.getMessage());
+			logger.error("Error al aplicar descuento en la incidencia: {} ", incidencia.getIdAsistencia().getIdAsistencia() + " " + e.getMessage());
 		}
 		
 		return 0;
@@ -570,11 +569,11 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		qry.append("values (:idUsuario, :idTipoDia, :idEstatus, :entrada, :salida) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("idUsuario", asistenciaDto.getUsuarioDto().getClaveUsuario());
-		parametros.addValue("idTipoDia", asistenciaDto.getIdTipoDia().getIdTipoDia());
-		parametros.addValue("idEstatus", asistenciaDto.getIdEstatus().getIdEstatus());
-		parametros.addValue("entrada", asistenciaDto.getEntrada());
-		parametros.addValue("salida", asistenciaDto.getSalida());
+		parametros.addValue(RepositoryConstants.ID_USUARIO2, asistenciaDto.getUsuarioDto().getClaveUsuario());
+		parametros.addValue(RepositoryConstants.ID_TIPO_DIA2, asistenciaDto.getIdTipoDia().getIdTipoDia());
+		parametros.addValue(RepositoryConstants.ID_ESTATUS2, asistenciaDto.getIdEstatus().getIdEstatus());
+		parametros.addValue(RepositoryConstants.ENTRADA, asistenciaDto.getEntrada());
+		parametros.addValue(RepositoryConstants.SALIDA, asistenciaDto.getSalida());
 
 		return nameParameterJdbcTemplate.update(qry.toString(), parametros);
 	}
@@ -613,7 +612,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         List<String> listaEmpleados = new ArrayList<>();
         
         for (Map<String, Object> a : empleados) {
-    		listaEmpleados.add((String) a.get("id_usuario"));
+    		listaEmpleados.add((String) a.get(RepositoryConstants.ID_USUARIO));
     	}
         
         return listaEmpleados;
@@ -633,7 +632,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         List<String> listaEmpleados = new ArrayList<>();
         
         for (Map<String, Object> a : empleados) {
-    		listaEmpleados.add((String) a.get("id_usuario"));
+    		listaEmpleados.add((String) a.get(RepositoryConstants.ID_USUARIO));
     	}
         
         return listaEmpleados;
@@ -730,20 +729,20 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         	//se arma la sentencia de la consulta
         	qry.append( " and (");
         	
-    		if (listaPermisos.contains("vacacion")) {
+    		if (listaPermisos.contains(RepositoryConstants.VACACION)) {
     			qry.append(condicionVacacion + " a.id_tipo_dia = 5 ");
     		}
     		
-    		if (listaPermisos.contains("comision")) {
+    		if (listaPermisos.contains(RepositoryConstants.COMISION)) {
     			qry.append(condicionComision + " a.id_tipo_dia = 7 ");
     		}
     		
-    		if (listaPermisos.contains("licencia")) {
+    		if (listaPermisos.contains(RepositoryConstants.LICENCIA)) {
     			qry.append(condicionLicencia + " a.id_tipo_dia = 6 ");
     		}
     		
     		//descuento: validada y la bandera descuento
-    		if (listaPermisos.contains("descuento")) {
+    		if (listaPermisos.contains(RepositoryConstants.DESCUENTO)) {
     			qry.append(condicionDescuento + " (e.id_estatus = 2 and i.descuento = 1)");
     		}
         	
