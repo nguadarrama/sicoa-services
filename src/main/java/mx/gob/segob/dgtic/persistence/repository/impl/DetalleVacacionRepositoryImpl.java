@@ -1,6 +1,5 @@
 package mx.gob.segob.dgtic.persistence.repository.impl;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,13 +7,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-
 import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DetalleVacacionDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DiaFestivoDto;
@@ -35,6 +32,8 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 	
 	@Autowired
     private NamedParameterJdbcTemplate nameParameterJdbcTemplate;
+	
+	private static final String AND = "' and '"; 
 	
 	@Autowired DiaFestivoRepository diaFestivoRepository;
 
@@ -70,13 +69,13 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
         	estatusDto.setIdEstatus((Integer)detalleVacacion.get(RepositoryConstants.ID_ESTATUS));
         	estatusDto.setDescripcion((String)detalleVacacion.get(RepositoryConstants.ESTATUS));
         	detalleVacacionDto.setIdEstatus(estatusDto);
-        	logger.info("Vacaciones recuperadas: {} ",detalleVacacion.get(RepositoryConstants.ID_DETALLE));
+        	logger.info("Vacaciones recuperadas..: {} ",detalleVacacion.get(RepositoryConstants.ID_DETALLE));
         	SimpleDateFormat sdf = new SimpleDateFormat(RepositoryConstants.YYYY_MM_DD);
-        	String fechaIni=""+detalleVacacion.get(RepositoryConstants.FECHA_INICIO);
-        	String fechaFin=""+detalleVacacion.get(RepositoryConstants.FECHA_FIN);
-        	String fechaRe=""+detalleVacacion.get(RepositoryConstants.FECHA_REGISTRO);
-        	Date fechaInicio=null;
-        	Date fechaFinal=null;
+        	String fechaIni = "" + detalleVacacion.get(RepositoryConstants.FECHA_INICIO);
+        	String fechaFin = "" + detalleVacacion.get(RepositoryConstants.FECHA_FIN);
+        	String fechaRe = "" + detalleVacacion.get(RepositoryConstants.FECHA_REGISTRO);
+        	Date fechaInicio = null;
+        	Date fechaFinal = null;
         	Date fechaRegistro=null;
         	try {
         		fechaInicio = sdf.parse(fechaIni);
@@ -196,8 +195,8 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 		SimpleDateFormat sdf = new SimpleDateFormat(RepositoryConstants.YYYY_MM_DD);
 		String fechaIni=sdf.format(detalleVacacionDto.getFechaInicio());
 		String fechaF=sdf.format(detalleVacacionDto.getFechaFin());
-		String query="select id_detalle from d_detalle_vacacion where (((fecha_inicio between '"+fechaIni+"' and '"+fechaF+"') "
-				+ "or (fecha_fin between '"+fechaIni+"' and '"+fechaF+"' )) "+
+		String query="select id_detalle from d_detalle_vacacion where (((fecha_inicio between '"+fechaIni+AND+fechaF+"') "
+				+ "or (fecha_fin between '"+fechaIni+AND+fechaF+"' )) "+
 				" or('"+fechaIni+"'>fecha_inicio and fecha_inicio<'"+fechaF+"' and fecha_fin>'"+fechaF+"')) and id_estatus != 3 "
 						+ "and id_usuario='"+detalleVacacionDto.getIdUsuario().getIdUsuario()+"' ";
 		logger.info("query: {} ",query);
@@ -305,7 +304,7 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
         	query+="and periodo.id_periodo = +'"+idPeriodo+"' ";
         }
         if((pFechaInicio!=null && !pFechaInicio.trim().isEmpty())&& (pFechaFinal!=null && !pFechaFinal.trim().isEmpty())){
-        	query+="and detalle.fecha_inicio between '"+pFechaInicio+"' and '"+pFechaFinal+"' ";
+        	query+="and detalle.fecha_inicio between '"+pFechaInicio+AND+pFechaFinal+"' ";
         }else if(pFechaInicio!=null && !pFechaInicio.trim().isEmpty()){
         	query+="and detalle.fecha_inicio='"+pFechaInicio+"'";
         }else if(pFechaFinal!=null && !pFechaFinal.trim().isEmpty()){

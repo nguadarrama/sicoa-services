@@ -64,6 +64,7 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
   private static final String PARAMETRO_ID_USUARIO = "idUsuario";
   private static final String PARAMETRO_ID_RESPONSABLE = "idResponsable";
   private static final String PARAMETRO_FECHA_REGISTRO = "fechaRegistro";
+  private static final String FROM_M_COMISION_COMISION = "FROM m_comision comision ";
 
 
   @Autowired
@@ -119,7 +120,7 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
     qry.append("usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, usuario.rfc, ");
     qry.append(
         "usuario.id_puesto, usuario.fecha_ingreso, estatus.id_estatus, estatus.estatus, unidad.id_unidad, unidad.nombre nombre_unidad, horario.id_horario ");
-    qry.append("FROM m_comision comision ");
+    qry.append(FROM_M_COMISION_COMISION);
     qry.append("RIGHT JOIN m_usuario usuario ON usuario.id_usuario=comision.id_usuario ");
     qry.append("LEFT JOIN m_estatus estatus ON estatus.id_estatus=comision.id_estatus ");
     qry.append(
@@ -299,7 +300,7 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
     qry2.append("SELECT usuario.id_usuario, usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, comision.id_comision, ");
     qry2.append("comision.id_responsable, archivo.id_archivo, archivo.nombre as nombre_archivo, archivo.url, estatus.id_estatus, estatus.estatus, comision.fecha_inicio, ");
     qry2.append("comision.fecha_fin, comision.dias, comision.comision, comision.dias, comision.fecha_registro ");
-    qry2.append("FROM m_comision comision ");
+    qry2.append(FROM_M_COMISION_COMISION);
     qry2.append("LEFT JOIN m_usuario usuario ON usuario.id_usuario = comision.id_usuario ");
     qry2.append("LEFT JOIN m_archivo archivo ON archivo.id_archivo = comision.id_archivo ");
     qry2.append("LEFT JOIN m_estatus estatus ON estatus.id_estatus = comision.id_estatus ");
@@ -477,7 +478,7 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
     StringBuilder query = new StringBuilder();
     query.append("SELECT comision.id_comision, comision.id_usuario, comision.id_estatus, comision.fecha_inicio, ");
     query.append("comision.fecha_fin, comision.dias ");
-    query.append("FROM m_comision comision ");
+    query.append(FROM_M_COMISION_COMISION);
     query.append("WHERE ((comision.fecha_inicio <= '" + fechaInicio + "' AND comision.fecha_fin >= '" + fechaFin + "') ");
     query.append("OR comision.fecha_fin BETWEEN '" + fechaInicio + "' AND '" + fechaFin + "' ");
     query.append("OR comision.fecha_inicio BETWEEN '" + fechaInicio + "' AND '" + fechaFin + "') ");

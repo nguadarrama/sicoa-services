@@ -13,9 +13,11 @@ import org.springframework.stereotype.Repository;
 import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
 import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.persistence.repository.EstatusRepository;
+import mx.gob.segob.dgtic.persistence.repository.base.RepositoryBase;
+import mx.gob.segob.dgtic.persistence.repository.constants.RepositoryConstants;
 
 @Repository
-public class EstatusRepositoryImpl implements EstatusRepository{
+public class EstatusRepositoryImpl extends RepositoryBase implements EstatusRepository{
 
 	@Autowired
     private JdbcTemplate jdbcTemplate;
@@ -35,10 +37,10 @@ public class EstatusRepositoryImpl implements EstatusRepository{
 	        
 	        for (Map<String, Object> estatus : listaestatus) {
 	    		EstatusDto estatusDto = new EstatusDto();
-	    		estatusDto.setIdEstatus((Integer)estatus.get("id_estatus"));
-	    		estatusDto.setDescripcion((String)estatus.get("descripcion"));
-	    		estatusDto.setEstatus((String)estatus.get("estatus"));
-	    		System.out.println("estatus "+estatus.get("estatus"));
+	    		estatusDto.setIdEstatus((Integer)estatus.get(RepositoryConstants.ID_ESTATUS));
+	    		estatusDto.setDescripcion((String)estatus.get(RepositoryConstants.DESCRIPCION));
+	    		estatusDto.setEstatus((String)estatus.get(RepositoryConstants.ESTATUS));
+	    		logger.info("estatus: {} ",estatus.get(RepositoryConstants.ESTATUS));
 	    		listaEstatus.add(estatusDto);
 	    	}
 	     return listaEstatus;	
@@ -54,7 +56,7 @@ public class EstatusRepositoryImpl implements EstatusRepository{
         qry.append("WHERE id_estatus = :idEstatus");
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
-        parametros.addValue("idEstatus", idEstatus);
+        parametros.addValue(RepositoryConstants.ID_ESTATUS, idEstatus);
 
         return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<EstatusDto>(EstatusDto.class));
 		
@@ -68,9 +70,9 @@ public class EstatusRepositoryImpl implements EstatusRepository{
 		qry.append("WHERE id_estatus = :idEstatus");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("idEstatus", estatusDto.getIdEstatus());
-		parametros.addValue("descripcion", estatusDto.getDescripcion());
-		parametros.addValue("estatus", estatusDto.getEstatus());
+		parametros.addValue(RepositoryConstants.ID_ESTATUS2, estatusDto.getIdEstatus());
+		parametros.addValue(RepositoryConstants.DESCRIPCION, estatusDto.getDescripcion());
+		parametros.addValue(RepositoryConstants.ESTATUS, estatusDto.getEstatus());
 
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 	}
@@ -83,8 +85,8 @@ public class EstatusRepositoryImpl implements EstatusRepository{
 		qry.append("VALUES (:descripcion, :estatus) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("descripcion", estatusDto.getDescripcion());
-		parametros.addValue("estatus", estatusDto.getEstatus());
+		parametros.addValue(RepositoryConstants.DESCRIPCION, estatusDto.getDescripcion());
+		parametros.addValue(RepositoryConstants.ESTATUS, estatusDto.getEstatus());
 
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 	}
@@ -96,7 +98,7 @@ public class EstatusRepositoryImpl implements EstatusRepository{
 		qry.append("DELETE FROM M_ESTATUS WHERE id_estatus = :idEstatus");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("idEstatus", idEstatus);
+		parametros.addValue(RepositoryConstants.ID_ESTATUS2, idEstatus);
 
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 	}
@@ -113,9 +115,9 @@ public class EstatusRepositoryImpl implements EstatusRepository{
 	        
 	        for (Map<String, Object> estatus : listaestatus) {
 	    		EstatusDto estatusDto = new EstatusDto();
-	    		estatusDto.setIdEstatus((Integer)estatus.get("id_estatus"));
-	    		estatusDto.setDescripcion((String)estatus.get("descripcion"));
-	    		estatusDto.setEstatus((String)estatus.get("estatus"));
+	    		estatusDto.setIdEstatus((Integer)estatus.get(RepositoryConstants.ID_ESTATUS));
+	    		estatusDto.setDescripcion((String)estatus.get(RepositoryConstants.DESCRIPCION));
+	    		estatusDto.setEstatus((String)estatus.get(RepositoryConstants.ESTATUS));
 	    		listaEstatus.add(estatusDto);
 	    	}
 	     return listaEstatus;	

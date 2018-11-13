@@ -158,7 +158,9 @@ public class VacacionPeriodoRepositoryImpl extends RepositoryBase implements Vac
 		Boolean bandera=periodoRepository.validaPeriodo(idPeriodo);
 		VacacionPeriodoDto vacacion= new VacacionPeriodoDto();
 		if(bandera==true){
-			logger.info("Dato claveUsuario: {} ",claveUsuario+" idPeriodo "+idPeriodo+ "estatus del periodo "+bandera);
+			logger.info("Dato claveUsuario: {} ",claveUsuario);
+			logger.info("idPeriodo: {} ",idPeriodo);
+			logger.info("estatus del periodo: {} ",bandera);
 			qry.append("select vacacion.id_vacacion, vacacion.dias, usuario.cve_m_usuario ");
 	        qry.append("from r_periodo periodo, m_vacacion_periodo vacacion , m_usuario usuario ");
 	        qry.append("where vacacion.activo=true and vacacion.id_usuario=usuario.id_usuario and vacacion.dias>0 and periodo.activo=true and usuario.cve_m_usuario = :claveUsuario and usuario.fecha_ingreso <= '"+fechaCadena+"' and date_add(periodo.fecha_fin, interval 1 year) >= '"+fechaActualCadena+"' and periodo.fecha_inicio <= '"+fechaActualCadena+"' and periodo.id_periodo = :idPeriodo and vacacion.id_periodo=periodo.id_periodo order by vacacion.fecha_inicio asc limit 1 ");
@@ -179,7 +181,7 @@ public class VacacionPeriodoRepositoryImpl extends RepositoryBase implements Vac
 	     		vacacion.setIdUsuario(usuario);
 	         }
 	        }catch(Exception e){
-	        	
+	        	logger.warn("Warn.- {} ",e);
 	        }
 		}
         return vacacion;
@@ -188,8 +190,12 @@ public class VacacionPeriodoRepositoryImpl extends RepositoryBase implements Vac
 	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_COMMITTED)
 	@Override
 	public void generarVacacionPeriodotodos(int idUsuario, int idPeriodo, int estatus, String inicio, int dias, boolean activo) {
-		logger.info("valores recibidos vacacionesPeriodoRepoImpl: "
-				, " idUsusario: "+idUsuario+" idPeriodo: "+idPeriodo+" estatus: "+estatus+" fechaInicio: "+inicio+" dias: "+dias+" activo: "+activo);
+		logger.info("valores recibidos vacacionesPeriodoRepoImpl idUsusario: {} ",idUsuario);
+		logger.info("idPeriodo: {} ",idPeriodo);
+		logger.info("estatus: {} ",estatus);
+		logger.info("fechaInicio: {} ",inicio);
+		logger.info("dias: {} ",dias);
+		logger.info("activo: {} ",activo);
 		StringBuilder qry = new StringBuilder();
 		qry.append("INSERT INTO m_vacacion_periodo (id_usuario, id_periodo, id_estatus, fecha_inicio, dias, activo ) ");
 		qry.append("VALUES (:idUsuario, :idPeriodo, :idEstatus, '");
@@ -209,7 +215,11 @@ public class VacacionPeriodoRepositoryImpl extends RepositoryBase implements Vac
 	@Override
 	public List<VacacionPeriodoDto> obtenerUsuariosConVacacionesPorFiltros(String claveUsuario, String nombre,
 			String apellidoPaterno, String apellidoMaterno, String idUnidad) {
-		logger.info("Valores: {} ",claveUsuario+" "+nombre+ " "+apellidoPaterno+" "+apellidoMaterno+" "+idUnidad);
+		logger.info("ClaveUsuario: {} ",claveUsuario);
+		logger.info("nombre: {}", nombre);
+		logger.info("ap.Paterno: {} ",apellidoPaterno);
+		logger.info("ap.Materno: {} ",apellidoMaterno);
+		logger.info("idUnidad: {} ",idUnidad);
 		String query="";
 		Date fecha= new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat(ServiceConstants.YYYY_MM_DD); 

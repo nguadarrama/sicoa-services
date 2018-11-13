@@ -97,7 +97,7 @@ public class AsistenciaServiceImpl extends ServiceBase implements AsistenciaServ
 				c.add(Calendar.DAY_OF_MONTH, 1);  
 				asistenciaBusquedaUtil.getFechaFinalDate().setTime(c.getTimeInMillis());
 			} catch (ParseException e) {
-				logger.warn("Error al convertir la fecha en búsqueda de asistencia: {} ", e.getMessage());
+				logger.warn("Error al convertir la fecha en búsqueda de asistencia--: {} ", e.getMessage());
 			}
 		}
 		
@@ -124,7 +124,7 @@ public class AsistenciaServiceImpl extends ServiceBase implements AsistenciaServ
 				c.add(Calendar.DAY_OF_MONTH, 1);  
 				asistenciaBusquedaUtil.getFechaFinalDate().setTime(c.getTimeInMillis());
 			} catch (ParseException e) {
-				logger.warn("Error al convertir la fecha en búsqueda de asistencia: {} ", e.getMessage());
+				logger.warn("Error al convertir la fecha en búsqueda de asistencia...: {} ", e.getMessage());
 			}
 		}
 		

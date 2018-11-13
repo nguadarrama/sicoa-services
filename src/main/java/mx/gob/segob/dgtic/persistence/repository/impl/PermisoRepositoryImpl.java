@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import mx.gob.segob.dgtic.comun.sicoa.dto.PermisoDto;
 import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.persistence.repository.PermisoRepository;
+import mx.gob.segob.dgtic.persistence.repository.constants.RepositoryConstants;
 
 @Repository
 public class PermisoRepositoryImpl implements PermisoRepository {
@@ -35,9 +36,9 @@ public class PermisoRepositoryImpl implements PermisoRepository {
         
         for (Map<String, Object> permiso : permisos) {
     		PermisoDto perfilDto = new PermisoDto();
-    		perfilDto.setIdPermiso((String)permiso.get("cve_c_permiso"));
-    		perfilDto.setDescripcion((String)permiso.get("descripcion"));
-    		perfilDto.setEstatus((String)permiso.get("estatus"));
+    		perfilDto.setIdPermiso((String)permiso.get(RepositoryConstants.CVE_C_PERMISO));
+    		perfilDto.setDescripcion((String)permiso.get(RepositoryConstants.DESCRIPCION));
+    		perfilDto.setEstatus((String)permiso.get(RepositoryConstants.ESTATUS));
     		listaPermiso.add(perfilDto);
     	}
      return listaPermiso;
@@ -53,7 +54,7 @@ public class PermisoRepositoryImpl implements PermisoRepository {
         qry.append("WHERE cve_c_permiso = :idPermiso");
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
-        parametros.addValue("idPermiso", idPermiso);
+        parametros.addValue(RepositoryConstants.ID_PERMISO2, idPermiso);
 
         return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<PermisoDto>(PermisoDto.class));
 		
@@ -67,9 +68,9 @@ public class PermisoRepositoryImpl implements PermisoRepository {
 		qry.append("WHERE cve_c_permiso = :idPermiso");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("idPermiso", permisoDto.getIdPermiso());
-		parametros.addValue("descripcion", permisoDto.getDescripcion());
-		parametros.addValue("estatus", permisoDto.getEstatus());
+		parametros.addValue(RepositoryConstants.ID_PERMISO2, permisoDto.getIdPermiso());
+		parametros.addValue(RepositoryConstants.DESCRIPCION, permisoDto.getDescripcion());
+		parametros.addValue(RepositoryConstants.ESTATUS, permisoDto.getEstatus());
 
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 	}
@@ -82,9 +83,9 @@ public class PermisoRepositoryImpl implements PermisoRepository {
 		qry.append("VALUES (:cve_c_permiso, :descripcion, :estatus) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("cve_c_permiso", permisoDto.getIdPermiso());
-		parametros.addValue("descripcion", permisoDto.getDescripcion());
-		parametros.addValue("estatus", permisoDto.getEstatus());
+		parametros.addValue(RepositoryConstants.CVE_C_PERMISO, permisoDto.getIdPermiso());
+		parametros.addValue(RepositoryConstants.DESCRIPCION, permisoDto.getDescripcion());
+		parametros.addValue(RepositoryConstants.ESTATUS, permisoDto.getEstatus());
 
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 	}
@@ -96,7 +97,7 @@ public class PermisoRepositoryImpl implements PermisoRepository {
 		qry.append("DELETE FROM c_permiso WHERE cve_c_permiso = :idPermiso");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("idPermiso", idPermiso);
+		parametros.addValue(RepositoryConstants.ID_PERMISO2, idPermiso);
 
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 	}

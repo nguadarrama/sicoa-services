@@ -36,13 +36,11 @@ public class UsuarioDto {
      * la clave del perfil.
      */
     @MapeaColumnasInternas(columnas={"cve_c_perfil", "cve_c_perfil"}) private PerfilDto clavePerfil;
-//    @MapeaColumna(columna = "cve_c_perfil") private Usuario clavePerfil;
     
     /**
 	 * El id del horario.
 	 */
     @MapeaColumnasInternas(columnas={"id_horario", "id_horario"}) private Horario idHorario;
-//    @MapeaColumna(columna = "id_horario") private String idHorario;
     
     /**
 	 * El id del puesto.
@@ -170,33 +168,10 @@ public class UsuarioDto {
 	 *
 	 * @return clavePerfil
 	 */
-//	public PerfilDto getClavePerfil() {
-//		return clavePerfil;
-//	}
-//	
-//	/**
-//	 * pasar la clave del perfil.
-//	 *
-//	 * @param clavePerfil la clave del perfil.
-//	 */
-//	public void setClavePerfil(PerfilDto clavePerfil) {
-//		this.clavePerfil = clavePerfil;
-//	}
-//    
-//	/**
-//	 * Obtener el id horario.
-//	 *
-//	 * @return idHorario
-//	 */
 	public Horario getIdHorario() {
 		return idHorario;
 	}
-//	
-//	/**
-//	 * pasar el id horario.
-//	 *
-//	 * @param idHorario el id horario.
-//	 */
+
 	public void setIdHorario(Horario idHorario) {
 		this.idHorario = idHorario;
 	}

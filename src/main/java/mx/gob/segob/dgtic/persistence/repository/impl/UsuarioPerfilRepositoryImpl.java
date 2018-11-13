@@ -13,6 +13,7 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioPerfilDto;
 import mx.gob.segob.dgtic.persistence.repository.UsuarioPerfilRepository;
 import mx.gob.segob.dgtic.persistence.repository.base.RepositoryBase;
+import mx.gob.segob.dgtic.persistence.repository.constants.RepositoryConstants;
 
 @Repository
 public class UsuarioPerfilRepositoryImpl extends RepositoryBase implements UsuarioPerfilRepository{
@@ -69,17 +70,17 @@ public class UsuarioPerfilRepositoryImpl extends RepositoryBase implements Usuar
         	UsuarioPerfilDto usuarioPerfilDto = new UsuarioPerfilDto();
         	
     		PerfilDto perfilDto = new PerfilDto();
-    		perfilDto.setClavePerfil((String)usuarioPerfil.get("cve_c_perfil"));
-    		perfilDto.setDescripcion((String)usuarioPerfil.get("descripcion"));
+    		perfilDto.setClavePerfil((String)usuarioPerfil.get(RepositoryConstants.CVE_C_PERFIL));
+    		perfilDto.setDescripcion((String)usuarioPerfil.get(RepositoryConstants.DESCRIPCION));
     		usuarioPerfilDto.setClavePerfil(perfilDto);
-    		logger.info("descripcion : {}",usuarioPerfil.get("descripcion"));
+    		logger.info("descripcion : {}",usuarioPerfil.get(RepositoryConstants.DESCRIPCION));
     		UsuarioDto usuarioDto = new UsuarioDto();
-    		usuarioDto.setClaveUsuario((String)usuarioPerfil.get("cve_m_usuario"));
-    		usuarioDto.setNombre((String)usuarioPerfil.get("nombre"));
-    		usuarioDto.setApellidoPaterno((String)usuarioPerfil.get("apellido_paterno"));
-    		usuarioDto.setApellidoMaterno((String)usuarioPerfil.get("apellido_materno"));
+    		usuarioDto.setClaveUsuario((String)usuarioPerfil.get(RepositoryConstants.CLAVE_M_USUARIO));
+    		usuarioDto.setNombre((String)usuarioPerfil.get(RepositoryConstants.NOMBRE));
+    		usuarioDto.setApellidoPaterno((String)usuarioPerfil.get(RepositoryConstants.APELLIDO_PATERNO));
+    		usuarioDto.setApellidoMaterno((String)usuarioPerfil.get(RepositoryConstants.APELLIDO_MATERNO));
     		usuarioPerfilDto.setClaveUsuario(usuarioDto);
-    		usuarioPerfilDto.setIdUsuarioPerfil((Integer)usuarioPerfil.get("id_usuario_perfil"));
+    		usuarioPerfilDto.setIdUsuarioPerfil((Integer)usuarioPerfil.get(RepositoryConstants.ID_USUARIO_PERFIL));
     		
     		listaUsuarioPerfil.add(usuarioPerfilDto);
     	}
