@@ -66,18 +66,56 @@ public class ComisionRules extends RecursoBase {
 
 
       /** Obtener lista de inasistencias **/
-      List<AsistenciaDto> listaInasistencias = asistenciaRepository.buscaAsistenciaEmpleado(
-          usuarioDto.getClaveUsuario(), TIPO_INASISTENCIA, 0, new Timestamp(fechaInicio.getTime()),
+      List<AsistenciaDto> listaAsistencias = asistenciaRepository.buscaAsistenciaEmpleado(
+          usuarioDto.getClaveUsuario(), 0, 0, new Timestamp(fechaInicio.getTime()),
           new Timestamp(fechaFin.getTime()));
-      logger.info("listaInasistencias: {}", listaInasistencias.size());
-
+      logger.info("listaInasistencias: {}", listaAsistencias.size());
+      
+      Date fechaActual = new Date();
       /** Elimina las inasistencias obtenidas en el periodo de la comision **/
-      if (!listaInasistencias.isEmpty()) {
-        for (AsistenciaDto asistencia : listaInasistencias) {
-          logger.info("idAsistencia: {}", asistencia.getIdAsistencia());
-          asistenciaRepository.eliminaAsistencia(asistencia.getIdAsistencia());
+      if (!listaAsistencias.isEmpty()) {
+        if (fechaActual.after(comisionDto.getFechaFin())) {
+          logger.info("Fecha actual es mayor a fecha fin");
+          for (Date date : listaFechas) {
+            for (AsistenciaDto asistencia : listaAsistencias) {
+              if (date.getTime() == asistencia.getEntrada().getTime()) {
+                if (asistencia.getIdTipoDia().getIdTipoDia() == 8) {
+                  /** Eliminar inasistencia **/
+                  asistenciaRepository.eliminaAsistencia(asistencia.getIdAsistencia());
+                  /** Agregar asistencia tipo comision **/
+                  AsistenciaDto asistenciaDto = new AsistenciaDto();
+                  logger.info("Registro insertado Fecha: {}", date);
+                  asistenciaDto.setEntrada(new Timestamp(date.getTime()));
+                  asistenciaDto.setSalida(new Timestamp(date.getTime()));
+                  logger.info("idUsuario: {}", comisionDto.getIdUsuario().getIdUsuario());
+                  asistenciaDto.setUsuarioDto(usuarioDto);
+                  asistenciaDto.setIdEstatus(estatusDto);
+                  asistenciaDto.setIdTipoDia(tipoDiaDto);
+                  asistenciaRepository.agregaAsistencia(asistenciaDto);
+                } 
+              }
+            }
+          }
+        } else {
+           logger.info("La comision esta corriendo {}", listaFechas.size());
+            listaFechas = listaFechasLimpia(listaFechas, listaAsistencias);
+            logger.info("Lista comision final {}", listaFechas.size());
+            for(Date date: listaFechas) {
+              AsistenciaDto asistenciaDto = new AsistenciaDto();
+              asistenciaDto.setEntrada(new Timestamp(date.getTime()));
+              asistenciaDto.setSalida(new Timestamp(date.getTime()));
+              logger.info("idUsuario: {}", comisionDto.getIdUsuario().getIdUsuario());
+              asistenciaDto.setUsuarioDto(usuarioDto);
+              asistenciaDto.setIdEstatus(estatusDto);
+              asistenciaDto.setIdTipoDia(tipoDiaDto);
+              asistenciaRepository.agregaAsistencia(asistenciaDto);
+              logger.info("Registro insertado Fecha: {}", date);
+            }
         }
-      }
+        
+        comisionAux = comisionRepository.modificaComisionEstatusArchivo(comisionDto);
+        return comisionAux;
+     }
 
       for (Iterator<Date> it = listaFechas.iterator(); it.hasNext();) {
         Date date = it.next();
@@ -219,6 +257,26 @@ public class ComisionRules extends RecursoBase {
         }
       }
     }
+
+    return listaFechas;
+  }
+  
+  private List<Date> listaFechasLimpia(List<Date> listaFechas,
+      List<AsistenciaDto> listaAsistencias) {
+    List<Date> aEliminar = new ArrayList<>();
+    for (Date date : listaFechas) {
+      for (AsistenciaDto asistencia : listaAsistencias) {
+        if (date.getTime() == asistencia.getEntrada().getTime()) {
+          if (asistencia.getIdTipoDia().getIdTipoDia() == 8) {
+            /** Eliminar inasistencia **/
+            asistenciaRepository.eliminaAsistencia(asistencia.getIdAsistencia());
+          } else {
+            aEliminar.add(date);
+          }
+        }
+      }
+    }
+    listaFechas.removeAll(aEliminar);
 
     return listaFechas;
   }
