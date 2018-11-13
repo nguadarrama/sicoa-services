@@ -25,6 +25,7 @@ import mx.gob.segob.dgtic.business.service.AsistenciaService;
 import mx.gob.segob.dgtic.business.service.constants.ServiceConstants;
 import mx.gob.segob.dgtic.comun.sicoa.dto.IncidenciaDto;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
+import mx.gob.segob.dgtic.comun.util.AsistenciaBusquedaUtil;
 import mx.gob.segob.dgtic.comun.util.FormatoIncidencia;
 import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
@@ -55,43 +56,34 @@ public class AsistenciaRecurso extends RecursoBase{
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistenciaEmpleadoRango(claveEmpleado, inicio, fin));
 	}
 	
-	@GET
+	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("obtieneAsistenciasEmpleadoRangoCoordinador")	
-	public Response buscaAsistenciaEmpleadoRangoCoordinador(
-			@QueryParam("claveEmpleado") String claveEmpleado,
-			@QueryParam("nombre") String nombre,
-			@QueryParam("paterno") String paterno,
-			@QueryParam("materno") String materno,
-			@QueryParam("nivel") String nivel,
-			@QueryParam("tipo") String tipo,
-			@QueryParam("estado") String estado, 
-			@QueryParam("inicio") String inicio, 
-			@QueryParam("fin") String fin,
-			@QueryParam("unidad") String unidadAdministrativa, 
-			@QueryParam("cveCoordinador") String cveCoordinador) {
-
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistenciaEmpleadoRangoCoordinador(claveEmpleado, nombre, 
-				paterno, materno, nivel, !tipo.equals(ServiceConstants.NULL) ? Integer.parseInt(tipo) : 0, !estado.equals(ServiceConstants.NULL) ? Integer.parseInt(estado) : 0, inicio, fin, unidadAdministrativa, cveCoordinador));
+	public Response buscaAsistenciaEmpleadoRangoCoordinador(@RequestParam String asistenciaBusqueda) {
+		asistenciaBusqueda = this.cambiaCaracter(asistenciaBusqueda);
+		JsonObject jsonObject = new JsonParser().parse(asistenciaBusqueda).getAsJsonObject();		
+		GsonBuilder builder = new GsonBuilder();
+		builder.setDateFormat("yyyy-MM-dd");
+		Gson gson = builder.create();
+		AsistenciaBusquedaUtil asistenciaBusquedaUtil = gson.fromJson(jsonObject.get("asistenciaBusqueda"), AsistenciaBusquedaUtil.class);
+		
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistenciaEmpleadoRangoCoordinador(asistenciaBusquedaUtil));
 	}
 	
-	@GET
+	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("obtieneAsistenciasEmpleadoRangoDireccion")	
-	public Response buscaAsistenciaEmpleadoRangoDireccion(
-			@QueryParam("claveEmpleado") String claveEmpleado,
-			@QueryParam("nombre") String nombre,
-			@QueryParam("paterno") String paterno,
-			@QueryParam("materno") String materno,
-			@QueryParam("nivel") String nivel,
-			@QueryParam("tipo") String tipo,
-			@QueryParam("estado") String estado, 
-			@QueryParam("inicio") String inicio, 
-			@QueryParam("fin") String fin,
-			@QueryParam("unidad") String unidadAdministrativa) {
+	public Response buscaAsistenciaEmpleadoRangoDireccion(@RequestParam String asistenciaBusqueda) {
+		asistenciaBusqueda = this.cambiaCaracter(asistenciaBusqueda);
+		JsonObject jsonObject = new JsonParser().parse(asistenciaBusqueda).getAsJsonObject();		
+		GsonBuilder builder = new GsonBuilder();
+		builder.setDateFormat("yyyy-MM-dd");
+		Gson gson = builder.create();
+		AsistenciaBusquedaUtil asistenciaBusquedaUtil = gson.fromJson(jsonObject.get("asistenciaBusqueda"), AsistenciaBusquedaUtil.class);		
 
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistenciaEmpleadoRangoDireccion(claveEmpleado, nombre, 
-				paterno, materno, nivel, !tipo.equals(ServiceConstants.NULL) ? Integer.parseInt(tipo) : 0, !estado.equals(ServiceConstants.NULL) ? Integer.parseInt(estado) : 0, inicio, fin, unidadAdministrativa));
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, asistenciaService.buscaAsistenciaEmpleadoRangoDireccion(asistenciaBusquedaUtil));
 	}
 	
 	@GET

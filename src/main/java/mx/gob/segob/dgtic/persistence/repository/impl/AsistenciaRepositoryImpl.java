@@ -22,6 +22,7 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.JustificacionDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.PerfilDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.TipoDiaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
+import mx.gob.segob.dgtic.comun.util.AsistenciaBusquedaUtil;
 import mx.gob.segob.dgtic.persistence.repository.AsistenciaRepository;
 import mx.gob.segob.dgtic.persistence.repository.UsuarioRepository;
 import mx.gob.segob.dgtic.persistence.repository.constants.RepositoryConstants;
@@ -135,9 +136,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 	}
 	
 	@Override
-	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(String cve_m_usuario, String nombre, String paterno,
-			String materno, String nivel, Integer tipo, Integer estado, Date fechaInicial, Date fechaFinal,
-			String unidadAdministrativa, Integer idUnidadCoordinador) {
+	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
 			
 		StringBuilder qry = new StringBuilder();
 	       
@@ -150,43 +149,43 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         qry.append("inner join m_usuario u on u.cve_m_usuario = a.id_usuario ");
         qry.append("inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ");
         qry.append("inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ");
-        qry.append("where uua.id_unidad = " + idUnidadCoordinador);
+        qry.append("where uua.id_unidad = " + asistenciaBusquedaUtil.getIdUnidadCoordinador());
         
-        if (fechaInicial != null && fechaFinal != null) {
-        	qry.append(" and entrada >= '" + fechaInicial + "'");
-        	qry.append(" and entrada < '" + fechaFinal  + "'");
+        if (asistenciaBusquedaUtil.getFechaInicialDate() != null && asistenciaBusquedaUtil.getFechaFinalDate() != null) {
+        	qry.append(" and entrada >= '" + asistenciaBusquedaUtil.getFechaInicialDate() + "'");
+        	qry.append(" and entrada < '" + asistenciaBusquedaUtil.getFechaFinalDate()  + "'");
         }
         
-        if (!cve_m_usuario.isEmpty()) {
-        	qry.append(" and a.id_usuario = " + cve_m_usuario);
+        if (!asistenciaBusquedaUtil.getCveMusuario().isEmpty()) {
+        	qry.append(" and a.id_usuario = " + asistenciaBusquedaUtil.getCveMusuario());
         }
         
-        if (!nombre.isEmpty()) {
-        	qry.append(" and u.nombre like '%" + nombre + "%' ");
+        if (!asistenciaBusquedaUtil.getNombre().isEmpty()) {
+        	qry.append(" and u.nombre like '%" + asistenciaBusquedaUtil.getNombre() + "%' ");
         }
         
-        if (!paterno.isEmpty()) {
-        	qry.append(" and u.apellido_paterno like '%" + paterno + "%' ");
+        if (!asistenciaBusquedaUtil.getPaterno().isEmpty()) {
+        	qry.append(" and u.apellido_paterno like '%" + asistenciaBusquedaUtil.getPaterno() + "%' ");
         }
         
-        if (!materno.isEmpty()) {
-        	qry.append(" and u.apellido_materno like '%" + materno + "%' ");
+        if (!asistenciaBusquedaUtil.getMaterno().isEmpty()) {
+        	qry.append(" and u.apellido_materno like '%" + asistenciaBusquedaUtil.getMaterno() + "%' ");
         }
         
-        if (!unidadAdministrativa.isEmpty()) {
+        if (!asistenciaBusquedaUtil.getUnidadAdministrativa().isEmpty()) {
         	qry.append(" and ua.nombre like '' ");
         }
         
-        if (!nivel.isEmpty()) {
-        	qry.append(" and u.nivel like '%" + nivel + "%' ");
+        if (!asistenciaBusquedaUtil.getNivel().isEmpty()) {
+        	qry.append(" and u.nivel like '%" + asistenciaBusquedaUtil.getNivel() + "%' ");
         }
         
-        if (tipo > 0) {
-        	qry.append(" and t.id_tipo_dia = " + tipo);
+        if (asistenciaBusquedaUtil.getTipo() != null) {
+        	qry.append(" and t.id_tipo_dia = " + asistenciaBusquedaUtil.getTipo());
         }
         
-        if (estado > 0) {
-        	qry.append(" and e.id_estatus = " + estado);
+        if (asistenciaBusquedaUtil.getEstado() != null) {
+        	qry.append(" and e.id_estatus = " + asistenciaBusquedaUtil.getEstado());
         }
         
         List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString());
@@ -228,9 +227,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 	}
 	
 	@Override
-	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoDireccion(String cveMusuario, String nombre, String paterno,
-			String materno, String nivel, Integer tipo, Integer estado, Date fechaInicial, Date fechaFinal,
-			String unidadAdministrativa) {
+	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoDireccion(AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
 			
 		StringBuilder qry = new StringBuilder();
 	       
@@ -245,41 +242,41 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         qry.append("inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ");
         qry.append("where 1 = 1");
         
-        if (fechaInicial != null && fechaFinal != null) {
-        	qry.append(" and entrada >= '" + fechaInicial + "'");
-        	qry.append(" and entrada < '" + fechaFinal  + "'");
+        if (asistenciaBusquedaUtil.getFechaInicialDate() != null && asistenciaBusquedaUtil.getFechaFinalDate() != null) {
+        	qry.append(" and entrada >= '" + asistenciaBusquedaUtil.getFechaInicialDate() + "'");
+        	qry.append(" and entrada < '" + asistenciaBusquedaUtil.getFechaFinalDate()  + "'");
         }
         
-    	if (!cveMusuario.isEmpty()) {
-    		qry.append(" and a.id_usuario = " + cveMusuario);
+    	if (!asistenciaBusquedaUtil.getCveMusuario().isEmpty()) {
+    		qry.append(" and a.id_usuario = " + asistenciaBusquedaUtil.getCveMusuario());
     	}
         
-        if (!nombre.isEmpty()) {
-        	qry.append(" and u.nombre like '%" + nombre + "%' ");
+        if (!asistenciaBusquedaUtil.getNombre().isEmpty()) {
+        	qry.append(" and u.nombre like '%" + asistenciaBusquedaUtil.getNombre() + "%' ");
         }
         
-        if (!paterno.isEmpty()) {
-        	qry.append(" and u.apellido_paterno like '%" + paterno + "%' ");
+        if (!asistenciaBusquedaUtil.getPaterno().isEmpty()) {
+        	qry.append(" and u.apellido_paterno like '%" + asistenciaBusquedaUtil.getPaterno() + "%' ");
         }
         
-        if (!materno.isEmpty()) {
-        	qry.append(" and u.apellido_materno like '%" + materno + "%' ");
+        if (!asistenciaBusquedaUtil.getMaterno().isEmpty()) {
+        	qry.append(" and u.apellido_materno like '%" + asistenciaBusquedaUtil.getMaterno() + "%' ");
         }
         
-        if (!unidadAdministrativa.isEmpty()) {
-        	qry.append(" and ua.id_unidad = " + unidadAdministrativa);
+        if (!asistenciaBusquedaUtil.getUnidadAdministrativa().isEmpty()) {
+        	qry.append(" and ua.id_unidad = " + asistenciaBusquedaUtil.getUnidadAdministrativa());
         }
         
-        if (!nivel.isEmpty()) {
-        	qry.append(" and u.nivel like '%" + nivel + "%' ");
+        if (!asistenciaBusquedaUtil.getNivel().isEmpty()) {
+        	qry.append(" and u.nivel like '%" + asistenciaBusquedaUtil.getNivel() + "%' ");
         }
         
-        if (tipo > 0) {
-        	qry.append(" and t.id_tipo_dia = " + tipo);
+        if (asistenciaBusquedaUtil.getTipo() != null) {
+        	qry.append(" and t.id_tipo_dia = " + asistenciaBusquedaUtil.getTipo());
         }
         
-        if (estado > 0) {
-        	qry.append(" and e.id_estatus = " + estado);
+        if (asistenciaBusquedaUtil.getEstado() != null) {
+        	qry.append(" and e.id_estatus = " + asistenciaBusquedaUtil.getEstado());
         }
         
         List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString());

@@ -18,6 +18,7 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.TipoDiaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionPeriodoDto;
+import mx.gob.segob.dgtic.comun.util.AsistenciaBusquedaUtil;
 import mx.gob.segob.dgtic.persistence.repository.ArchivoRepository;
 import mx.gob.segob.dgtic.persistence.repository.AsistenciaRepository;
 import mx.gob.segob.dgtic.persistence.repository.DetalleVacacionRepository;
@@ -201,10 +202,14 @@ public class DetalleVacacionRules extends RecursoBase {
 			} catch (ParseException e) {
 				logger.warn("Error al convertir la fecha en búsqueda de asistencia: {} ", e.getMessage());
 			}
+	    	
+	    AsistenciaBusquedaUtil asistenciaBusquedaUtil = new AsistenciaBusquedaUtil();
+	    asistenciaBusquedaUtil.setCveMusuario(usuario.getClaveUsuario());
+		asistenciaBusquedaUtil.setEstado(5);
+		asistenciaBusquedaUtil.setFechaInicialDate(fechaInicio);
+		asistenciaBusquedaUtil.setFechaFinalDate(fechaFin);
 		
-		List<AsistenciaDto> listaAsistencia= asistenciaRepository.buscaAsistenciaEmpleadoRangoDireccion(usuario.getClaveUsuario(), 
-				"", "", "", "", 5, 0, fechaInicio, fechaFin, 
-				"");
+		List<AsistenciaDto> listaAsistencia= asistenciaRepository.buscaAsistenciaEmpleadoRangoDireccion(asistenciaBusquedaUtil);
 		logger.info("resultado de consulta asistencia: {} ",listaAsistencia.size());
 		logger.info("filtros claveUsuario: {} ",usuario.getClaveUsuario());
 		logger.info(" fechaInicio: {} ",fechaInicio);

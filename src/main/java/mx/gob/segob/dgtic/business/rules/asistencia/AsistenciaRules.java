@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.IncidenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
+import mx.gob.segob.dgtic.comun.util.AsistenciaBusquedaUtil;
 import mx.gob.segob.dgtic.persistence.repository.AsistenciaRepository;
 import mx.gob.segob.dgtic.persistence.repository.UsuarioRepository;
 
@@ -32,27 +33,22 @@ public class AsistenciaRules {
 		return listaAsistencia;
 	}
 	
-	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(String cveMusuario, String nombre, String paterno,
-			String materno, String nivel, Integer tipo, Integer estado, Date fechaInicial, Date fechaFinal,
-			String unidadAdministrativa, String cveCoordinador) {
+	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoCoordinador(AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
 		
 		//se obtiene la unidad administrativa del coordinador
-		UsuarioDto coordinador = usuarioRepository.buscaUsuario(cveCoordinador);
+		UsuarioDto coordinador = usuarioRepository.buscaUsuario(asistenciaBusquedaUtil.getCveUsuarioLogeado());
+		asistenciaBusquedaUtil.setIdUnidadCoordinador(coordinador.getIdUnidad());
 		
 		List<AsistenciaDto> listaAsistencia;
-		listaAsistencia = asistenciaRepository.buscaAsistenciaEmpleadoRangoCoordinador(cveMusuario, nombre, 
-				paterno, materno, nivel, tipo, estado, fechaInicial, fechaFinal, unidadAdministrativa, coordinador.getIdUnidad());
+		listaAsistencia = asistenciaRepository.buscaAsistenciaEmpleadoRangoCoordinador(asistenciaBusquedaUtil);
 		
 		return listaAsistencia;
 	}
 	
-	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoDireccion(String cveMusuario, String nombre, String paterno,
-			String materno, String nivel, Integer tipo, Integer estado, Date fechaInicial, Date fechaFinal,
-			String unidadAdministrativa) {
+	public List<AsistenciaDto> buscaAsistenciaEmpleadoRangoDireccion(AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
 		
 		List<AsistenciaDto> listaAsistencia;
-		listaAsistencia = asistenciaRepository.buscaAsistenciaEmpleadoRangoDireccion(cveMusuario, nombre, 
-				paterno, materno, nivel, tipo, estado, fechaInicial, fechaFinal, unidadAdministrativa);
+		listaAsistencia = asistenciaRepository.buscaAsistenciaEmpleadoRangoDireccion(asistenciaBusquedaUtil);
 		
 		return listaAsistencia;
 	}
