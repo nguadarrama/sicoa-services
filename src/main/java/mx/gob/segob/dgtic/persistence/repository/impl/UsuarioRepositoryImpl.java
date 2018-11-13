@@ -155,28 +155,28 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 				+ ":nivel, :rfc, :nombreJefe ) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("idArea", usuarioDto.getIdArea());
-		parametros.addValue("clavePerfil", usuarioDto.getClavePerfil().getClavePerfil());
-		parametros.addValue("idHorario", usuarioDto.getIdHorario().getIdHorario());
-		parametros.addValue("idPuesto", usuarioDto.getIdPuesto());
-		parametros.addValue("claveUsuario", usuarioDto.getClaveUsuario());
-		parametros.addValue("nombre", usuarioDto.getNombre());
-		parametros.addValue("apellidoPaterno", usuarioDto.getApellidoPaterno());
-		parametros.addValue("apellidoMaterno", usuarioDto.getApellidoMaterno());
-		parametros.addValue("fechaIngreso", usuarioDto.getFechaIngreso());
-		parametros.addValue("password", usuarioDto.getPassword());
-		parametros.addValue("activo", usuarioDto.getActivo());
-		parametros.addValue("nuevo", usuarioDto.getNuevo());
-		parametros.addValue("enSesion", usuarioDto.getEnSesion());
-		parametros.addValue("ultimoAcceso", usuarioDto.getUltimoAcceso());
-		parametros.addValue("numeroIntentos", usuarioDto.getNumeroIntentos());
-		parametros.addValue("bloqueado", usuarioDto.getBloqueado());
-		parametros.addValue("fechaBloqueo", usuarioDto.getFechaBloqueo());
-		parametros.addValue("primeraVez", usuarioDto.getPrimeraVez());
-		parametros.addValue("estatus", usuarioDto.getEstatus());
-		parametros.addValue("nivel", usuarioDto.getNivel());
-		parametros.addValue("rfc", usuarioDto.getRfc());
-		parametros.addValue("nombreJefe", usuarioDto.getNombreJefe());
+		parametros.addValue(RepositoryConstants.ID_AREA2, usuarioDto.getIdArea());
+		parametros.addValue(RepositoryConstants.CLAVE_PERFIL2, usuarioDto.getClavePerfil().getClavePerfil());
+		parametros.addValue(RepositoryConstants.ID_HORARIO2, usuarioDto.getIdHorario().getIdHorario());
+		parametros.addValue(RepositoryConstants.ID_PUESTO2, usuarioDto.getIdPuesto());
+		parametros.addValue(RepositoryConstants.CLAVE_USUARIO2, usuarioDto.getClaveUsuario());
+		parametros.addValue(RepositoryConstants.NOMBRE, usuarioDto.getNombre());
+		parametros.addValue(RepositoryConstants.APELLIDO_PATERNO2, usuarioDto.getApellidoPaterno());
+		parametros.addValue(RepositoryConstants.APELLIDO_MATERNO2, usuarioDto.getApellidoMaterno());
+		parametros.addValue(RepositoryConstants.FECHA_INGRESO2, usuarioDto.getFechaIngreso());
+		parametros.addValue(RepositoryConstants.PASS_WORD, usuarioDto.getPassword());
+		parametros.addValue(RepositoryConstants.ACTIVO, usuarioDto.getActivo());
+		parametros.addValue(RepositoryConstants.NUEVO, usuarioDto.getNuevo());
+		parametros.addValue(RepositoryConstants.EN_SESION2, usuarioDto.getEnSesion());
+		parametros.addValue(RepositoryConstants.ULTIMO_ACCESO2, usuarioDto.getUltimoAcceso());
+		parametros.addValue(RepositoryConstants.NUMERO_INTENTOS2, usuarioDto.getNumeroIntentos());
+		parametros.addValue(RepositoryConstants.BLOQUEADO, usuarioDto.getBloqueado());
+		parametros.addValue(RepositoryConstants.FECHA_BLOQUEO2, usuarioDto.getFechaBloqueo());
+		parametros.addValue(RepositoryConstants.PRIMERA_VEZ2, usuarioDto.getPrimeraVez());
+		parametros.addValue(RepositoryConstants.ESTATUS, usuarioDto.getEstatus());
+		parametros.addValue(RepositoryConstants.NIVEL, usuarioDto.getNivel());
+		parametros.addValue(RepositoryConstants.RFC, usuarioDto.getRfc());
+		parametros.addValue(RepositoryConstants.NOMBRE_JEFE2, usuarioDto.getNombreJefe());
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 	}
 
@@ -187,7 +187,7 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 		qry.append("delete from m_usuario where cve_m_usuario = :claveUsuario");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("claveUsuario", claveUsuario);
+		parametros.addValue(RepositoryConstants.CLAVE_USUARIO2, claveUsuario);
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);	
 	}
 
@@ -212,7 +212,8 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("claveUsuario", claveUsuario);
 		String nuevaContrasenia=HashUtils.md5(claveUsuario);
-		System.out.println("Datos idUsuario "+claveUsuario+" contrasenia "+nuevaContrasenia);
+		logger.info("Datos idUsuario: {} ",claveUsuario);
+		logger.info("contrasenia:  ",nuevaContrasenia);
 		parametros.addValue("nuevaContrasenia", nuevaContrasenia);
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);	
 	}
@@ -220,7 +221,7 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 	@Override
 	public List<UsuarioDto> obtenerListaUsuariosActivos(String fecha) {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		System.out.println("fecha method-UsuarioRepoImpl: "+fecha);
+		logger.info("fecha method-UsuarioRepoImpl: {} ",fecha);
 		
 		StringBuilder qry = new StringBuilder();
         qry.append("select id_usuario, id_area, cve_c_perfil, id_horario, id_puesto,"
@@ -235,37 +236,32 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
         parametros.addValue("fecha", fecha);
-        System.out.println(gson.toJson("parametros: "+parametros));
+        logger.info("parametros: {} ",gson.toJson(parametros));
         List<Map<String, Object>> usuarios = jdbcTemplate.queryForList(qry.toString());
         List<UsuarioDto> listaUsuario = new ArrayList<>();      
         for (Map<String, Object> usuario : usuarios) {
     		UsuarioDto usuarioDto = new UsuarioDto();
-    		usuarioDto.setIdUsuario((Integer)usuario.get("id_usuario"));
-    		usuarioDto.setIdArea((Integer)usuario.get("id_area"));
-    		//usuarioDto.setIdIncidencia ((Integer)usuario.get("id_incidencia"));
-    		//usuarioDto.setClavePerfil(PerfilDto)usuario.get("cve_c_perfil"));
-    		usuarioDto.setIdPuesto((String)usuario.get("id_puesto"));
-    		usuarioDto.setClaveUsuario((String)usuario.get("cve_m_usuario"));
-    		usuarioDto.setNombre((String)usuario.get("nombre"));
-    		usuarioDto.setApellidoPaterno((String)usuario.get("apellido_paterno"));
-    		usuarioDto.setApellidoMaterno((String)usuario.get("apellido_materno"));
-    		usuarioDto.setFechaIngreso((Date)usuario.get("fecha_ingreso"));
-    		//usuarioDto.setPassword((String)usuario.get("password"));
-    		usuarioDto.setActivo((Boolean)usuario.get("activo"));
-    		usuarioDto.setNuevo((Boolean)usuario.get("nuevo"));
-    		usuarioDto.setEnSesion((String)usuario.get("en_sesion"));
-    		usuarioDto.setUltimoAcceso((Date)usuario.get("ultimo_acceso"));
-    		usuarioDto.setNumeroIntentos((Integer)usuario.get("numero_intentos"));
-    		usuarioDto.setBloqueado((String)usuario.get("bloqueado"));
-    		usuarioDto.setActivo((Boolean)usuario.get("activo"));
-    		usuarioDto.setFechaBloqueo((Date)usuario.get("fecha_bloqueo"));
-    		usuarioDto.setPrimeraVez((String)usuario.get("primera_vez"));
-    		usuarioDto.setEstatus((String)usuario.get("estatus"));
-    		//usuarioDto.setRfc((String)usuario.get("rfc"));
-    		//usuarioDto.setNivel((String)usuario.get("nivel"));
+    		usuarioDto.setIdUsuario((Integer)usuario.get(RepositoryConstants.ID_USUARIO));
+    		usuarioDto.setIdArea((Integer)usuario.get(RepositoryConstants.ID_AREA));
+    		usuarioDto.setIdPuesto((String)usuario.get(RepositoryConstants.ID_PUESTO));
+    		usuarioDto.setClaveUsuario((String)usuario.get(RepositoryConstants.CLAVE_M_USUARIO));
+    		usuarioDto.setNombre((String)usuario.get(RepositoryConstants.NOMBRE));
+    		usuarioDto.setApellidoPaterno((String)usuario.get(RepositoryConstants.APELLIDO_PATERNO));
+    		usuarioDto.setApellidoMaterno((String)usuario.get(RepositoryConstants.APELLIDO_MATERNO));
+    		usuarioDto.setFechaIngreso((Date)usuario.get(RepositoryConstants.FECHA_INGRESO));
+    		usuarioDto.setActivo((Boolean)usuario.get(RepositoryConstants.ACTIVO));
+    		usuarioDto.setNuevo((Boolean)usuario.get(RepositoryConstants.NUEVO));
+    		usuarioDto.setEnSesion((String)usuario.get(RepositoryConstants.EN_SESION));
+    		usuarioDto.setUltimoAcceso((Date)usuario.get(RepositoryConstants.ULTIMO_ACCESO));
+    		usuarioDto.setNumeroIntentos((Integer)usuario.get(RepositoryConstants.NUMERO_INTENTOS));
+    		usuarioDto.setBloqueado((String)usuario.get(RepositoryConstants.BLOQUEADO));
+    		usuarioDto.setActivo((Boolean)usuario.get(RepositoryConstants.ACTIVO));
+    		usuarioDto.setFechaBloqueo((Date)usuario.get(RepositoryConstants.FECHA_BLOQUEO));
+    		usuarioDto.setPrimeraVez((String)usuario.get(RepositoryConstants.PRIMERA_VEZ));
+    		usuarioDto.setEstatus((String)usuario.get(RepositoryConstants.ESTATUS));
     		listaUsuario.add(usuarioDto);
     	}        
-        logger.info(listaUsuario.size() + " usuarios encontrados method--UsuarioRepoImpl.");       
+        logger.info("usuarios encontrados method--UsuarioRepoImpl: {} ",listaUsuario.size());       
 		return listaUsuario;
 	}
 	
@@ -299,10 +295,8 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
         UsuarioDto usuario = new UsuarioDto();
         
         usuario.setIdUsuario((Integer) informacionConsulta.get("id_usuario"));
-//        usuario.setIdArea(area);
         usuario.setClavePerfil(perfil);
         usuario.setIdHorario(horario);
-//        usuario.setIdPuesto(puesto);
         usuario.setIdPuesto((String) informacionConsulta.get("id_puesto"));
         usuario.setClaveUsuario((String) informacionConsulta.get("cve_m_usuario"));
         usuario.setNombre((String) informacionConsulta.get("nombre"));
@@ -321,10 +315,7 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
         usuario.setNivel((String) informacionConsulta.get("nivel"));
         usuario.setRfc((String) informacionConsulta.get("rfc"));
         usuario.setIdUnidad((Integer)informacionConsulta.get("id_unidad"));
-        usuario.setNombreUnidad((String)informacionConsulta.get("nombre_unidad"));
-        //System.out.println("uniddAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAd "+informacionConsulta.get("nombre_unidad"));
-        
-        
+        usuario.setNombreUnidad((String)informacionConsulta.get("nombre_unidad"));  
         return usuario;
 	}
 	

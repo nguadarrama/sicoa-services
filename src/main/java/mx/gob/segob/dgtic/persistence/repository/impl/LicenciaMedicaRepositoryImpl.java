@@ -155,13 +155,13 @@ public class LicenciaMedicaRepositoryImpl extends RepositoryBase implements Lice
 			qry.append("VALUES (:idUsuario, :idEstatus, :fechaInicio, :fechaFin, :dias, :padecimiento, :fechaRegistro) ");
 			
 			MapSqlParameterSource parametros = new MapSqlParameterSource();
-			parametros.addValue("idUsuario", licenciaMedicaDto.getIdUsuario().getIdUsuario());
-			parametros.addValue("idEstatus", licenciaMedicaDto.getIdEstatus().getIdEstatus());
-			parametros.addValue("fechaInicio", licenciaMedicaDto.getFechaInicio());
-			parametros.addValue("fechaFin", licenciaMedicaDto.getFechaFin());
-			parametros.addValue("dias", licenciaMedicaDto.getDias());
-			parametros.addValue("padecimiento", licenciaMedicaDto.getPadecimiento());
-			parametros.addValue("fechaRegistro", licenciaMedicaDto.getFechaRegistro());
+			parametros.addValue(RepositoryConstants.ID_USUARIO2, licenciaMedicaDto.getIdUsuario().getIdUsuario());
+			parametros.addValue(RepositoryConstants.ID_ESTATUS2, licenciaMedicaDto.getIdEstatus().getIdEstatus());
+			parametros.addValue(RepositoryConstants.FECHA_INICIO2, licenciaMedicaDto.getFechaInicio());
+			parametros.addValue(RepositoryConstants.FECHA_FIN2, licenciaMedicaDto.getFechaFin());
+			parametros.addValue(RepositoryConstants.DIAS, licenciaMedicaDto.getDias());
+			parametros.addValue(RepositoryConstants.PADECIMIENTO, licenciaMedicaDto.getPadecimiento());
+			parametros.addValue(RepositoryConstants.FECHA_REGISTRO2, licenciaMedicaDto.getFechaRegistro());
 	
 			try{
 				i= nameParameterJdbcTemplate.update(qry.toString(), parametros);
@@ -221,28 +221,28 @@ public class LicenciaMedicaRepositoryImpl extends RepositoryBase implements Lice
         for (Map<String, Object> licencias : consulta) {
         	LicenciaMedicaDto licencia= new LicenciaMedicaDto();
         	UsuarioDto usuario= new UsuarioDto();
-        	usuario.setIdUsuario((Integer)licencias.get("id_usuario"));
-        	usuario.setClaveUsuario((String)licencias.get("cve_m_usuario"));
-        	usuario.setNombre((String)licencias.get("nombre"));
-        	usuario.setApellidoPaterno((String)licencias.get("apellido_paterno"));
-        	usuario.setApellidoMaterno((String)licencias.get("apellido_materno"));
+        	usuario.setIdUsuario((Integer)licencias.get(RepositoryConstants.ID_USUARIO));
+        	usuario.setClaveUsuario((String)licencias.get(RepositoryConstants.CLAVE_M_USUARIO));
+        	usuario.setNombre((String)licencias.get(RepositoryConstants.NOMBRE));
+        	usuario.setApellidoPaterno((String)licencias.get(RepositoryConstants.APELLIDO_PATERNO));
+        	usuario.setApellidoMaterno((String)licencias.get(RepositoryConstants.APELLIDO_MATERNO));
         	licencia.setIdUsuario(usuario);
         	EstatusDto estatus= new EstatusDto();
-        	estatus.setIdEstatus((Integer)licencias.get("id_estatus"));
-        	estatus.setEstatus((String)licencias.get("estatus"));
+        	estatus.setIdEstatus((Integer)licencias.get(RepositoryConstants.ID_ESTATUS));
+        	estatus.setEstatus((String)licencias.get(RepositoryConstants.ESTATUS));
         	licencia.setIdEstatus(estatus);
         	ArchivoDto archivo= new ArchivoDto();
-        	archivo.setIdArchivo((Integer)licencias.get("id_archivo"));
-        	archivo.setUrl((String)licencias.get("url"));
-        	archivo.setNombre((String)licencias.get("nombre_archivo"));
+        	archivo.setIdArchivo((Integer)licencias.get(RepositoryConstants.ID_ARCHIVO));
+        	archivo.setUrl((String)licencias.get(RepositoryConstants.URL));
+        	archivo.setNombre((String)licencias.get(RepositoryConstants.NOMBRE_ARCHIVO));
         	licencia.setIdArchivo(archivo);
-        	licencia.setIdLicencia((Integer)licencias.get("id_licencia"));
-        	logger.info("Dato recuperado: {} ",licencias.get("id_licencia"));
-        	licencia.setDias((Integer)licencias.get("dias"));
-        	licencia.setFechaFin((Date)licencias.get("fecha_fin"));
-        	licencia.setFechaInicio((Date)licencias.get("fecha_Inicio"));
-        	licencia.setIdResponsable((Integer)licencias.get("id_responsable"));
-        	licencia.setPadecimiento((String)licencias.get("padecimiento"));
+        	licencia.setIdLicencia((Integer)licencias.get(RepositoryConstants.ID_LICENCIA));
+        	logger.info("Dato recuperado: {} ",licencias.get(RepositoryConstants.ID_LICENCIA));
+        	licencia.setDias((Integer)licencias.get(RepositoryConstants.DIAS));
+        	licencia.setFechaFin((Date)licencias.get(RepositoryConstants.FECHA_FIN));
+        	licencia.setFechaInicio((Date)licencias.get(RepositoryConstants.FECHA_INICIO));
+        	licencia.setIdResponsable((Integer)licencias.get(RepositoryConstants.ID_RESPONSABLE));
+        	licencia.setPadecimiento((String)licencias.get(RepositoryConstants.PADECIMIENTO));
         	listaLicencias.add(licencia);
         }
         return listaLicencias;

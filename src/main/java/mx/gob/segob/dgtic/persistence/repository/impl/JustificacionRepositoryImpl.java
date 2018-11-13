@@ -24,13 +24,13 @@ public class JustificacionRepositoryImpl extends RepositoryBase implements Justi
 	
 	@Autowired
     private NamedParameterJdbcTemplate nameParameterJdbcTemplate;
-	
+	private static final String FROM_C_JUSTIFICACION = "FROM c_justificacion ";
 	@Override
 	public List<JustificacionDto> obtenerListaJustificaciones(){
 	
 		StringBuilder qry = new StringBuilder();
         qry.append("SELECT clave, id_justificacion, justificacion, activo ");
-        qry.append("FROM c_justificacion ")
+        qry.append(FROM_C_JUSTIFICACION)
         .append("WHERE activo = true ");
         
         List<Map<String, Object>> justificaciones = jdbcTemplate.queryForList(qry.toString());
@@ -38,10 +38,10 @@ public class JustificacionRepositoryImpl extends RepositoryBase implements Justi
         
         for (Map<String, Object> justificacion : justificaciones) {
     		JustificacionDto justificacionDto = new JustificacionDto();
-    		justificacionDto.setClave((String)justificacion.get("clave"));
-    		justificacionDto.setIdJustificacion((Integer)justificacion.get("id_justificacion"));
-    		justificacionDto.setJustificacion((String)justificacion.get("justificacion"));
-    		justificacionDto.setActivo((Boolean)justificacion.get("activo"));
+    		justificacionDto.setClave((String)justificacion.get(RepositoryConstants.CLAVE));
+    		justificacionDto.setIdJustificacion((Integer)justificacion.get(RepositoryConstants.ID_JUSTIFICACION));
+    		justificacionDto.setJustificacion((String)justificacion.get(RepositoryConstants.JUSTIFICACION));
+    		justificacionDto.setActivo((Boolean)justificacion.get(RepositoryConstants.ACTIVO));
     		listaJustificacion.add(justificacionDto);
     	}
      return listaJustificacion;
@@ -52,17 +52,17 @@ public class JustificacionRepositoryImpl extends RepositoryBase implements Justi
 	
 		StringBuilder qry = new StringBuilder();
         qry.append("SELECT clave, id_justificacion, justificacion, activo ");
-        qry.append("FROM c_justificacion ");
+        qry.append(FROM_C_JUSTIFICACION);
         
         List<Map<String, Object>> justificaciones = jdbcTemplate.queryForList(qry.toString());
         List<JustificacionDto> listaJustificacion = new ArrayList<>();
         
         for (Map<String, Object> justificacion : justificaciones) {
     		JustificacionDto justificacionDto = new JustificacionDto();
-    		justificacionDto.setClave((String)justificacion.get("clave"));
-    		justificacionDto.setIdJustificacion((Integer)justificacion.get("id_justificacion"));
-    		justificacionDto.setJustificacion((String)justificacion.get("justificacion"));
-    		justificacionDto.setActivo((Boolean)justificacion.get("activo"));
+    		justificacionDto.setClave((String)justificacion.get(RepositoryConstants.CLAVE));
+    		justificacionDto.setIdJustificacion((Integer)justificacion.get(RepositoryConstants.ID_JUSTIFICACION));
+    		justificacionDto.setJustificacion((String)justificacion.get(RepositoryConstants.JUSTIFICACION));
+    		justificacionDto.setActivo((Boolean)justificacion.get(RepositoryConstants.ACTIVO));
     		listaJustificacion.add(justificacionDto);
     	}
      return listaJustificacion;
@@ -73,11 +73,11 @@ public class JustificacionRepositoryImpl extends RepositoryBase implements Justi
 		
 		StringBuilder qry = new StringBuilder();
 		qry.append("SELECT id_justificacion, clave, justificacion, activo ");
-        qry.append("FROM c_justificacion ");
+        qry.append(FROM_C_JUSTIFICACION);
         qry.append("WHERE id_justificacion = :idJustificacion");
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
-        parametros.addValue("idJustificacion", idJustificacion);
+        parametros.addValue(RepositoryConstants.ID_JUSTIFICACION2, idJustificacion);
 
         return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<JustificacionDto>(JustificacionDto.class));
 	}
@@ -100,7 +100,7 @@ public class JustificacionRepositoryImpl extends RepositoryBase implements Justi
 			else
 				justificacionDto.setMensaje("Se ha generado un error al guardar, revise la información");
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.warn("Warn: {} ", e);
 			justificacionDto.setMensaje("El registro ya existe en el sistema, favor de validar");
 		}
 		return justificacionDto;
