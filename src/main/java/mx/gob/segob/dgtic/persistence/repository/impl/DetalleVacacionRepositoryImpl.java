@@ -99,7 +99,7 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 	public DetalleVacacionDto buscaDetalleVacacion(Integer idDetalle) {
 		StringBuilder qry = new StringBuilder();
 		
-		qry.append("select detalle.id_detalle, detalle.fecha_registro, detalle.id_responsable, detalle.fecha_registro, detalle.id_usuario, detalle.id_vacacion, detalle.id_archivo, detalle.id_estatus, detalle.fecha_inicio, detalle.fecha_fin, detalle.dias, unidad.id_unidad, unidad.nombre nombre_unidad, ");
+		qry.append("select distinct(detalle.id_detalle) id_detalle, detalle.id_responsable, detalle.fecha_registro, detalle.id_usuario, detalle.id_vacacion, detalle.id_archivo, detalle.id_estatus, detalle.fecha_inicio, detalle.fecha_fin, detalle.dias, unidad.id_unidad, unidad.nombre nombre_unidad, ");
         qry.append("usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, usuario.rfc, usuario.id_puesto, usuario.fecha_ingreso, estatus.id_estatus, estatus.estatus,  periodo.descripcion ");
 		qry.append("from d_detalle_vacacion detalle, m_usuario usuario, m_estatus estatus, r_periodo periodo, m_vacacion_periodo vacacion_periodo,c_unidad_administrativa unidad, usuario_unidad_administrativa relacion ");
         qry.append("where usuario.id_usuario=detalle.id_usuario and detalle.id_estatus=estatus.id_estatus and periodo.id_periodo=vacacion_periodo.id_periodo and unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario and vacacion_periodo.id_vacacion=detalle.id_vacacion and id_detalle = :idDetalle ");
@@ -138,23 +138,6 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
         logger.info("Id Estatussssssssssssssssssssssss: {} ",informacionConsulta.get(RepositoryConstants.ID_ESTATUS)+" "+informacionConsulta.get(RepositoryConstants.FECHA_INICIO));
         estatusDto.setEstatus((String)informacionConsulta.get(RepositoryConstants.ESTATUS));
         detalleVacacionDto.setIdEstatus(estatusDto);
-        SimpleDateFormat sdf = new SimpleDateFormat(RepositoryConstants.YYYY_MM_DD);
-
-    	String fechaIni=""+informacionConsulta.get(RepositoryConstants.FECHA_INICIO);
-    	String fechaFine=""+informacionConsulta.get(RepositoryConstants.FECHA_FIN);
-    	String fechaRe=""+informacionConsulta.get(RepositoryConstants.FECHA_REGISTRO);
-    	Date fechaRegistro=null;
-    	Date fechaInic=null;
-    	Date fechaFinal=null;
-    	try {
-    		fechaInicio = sdf.parse(fechaIni);
-    		fechaFinal = sdf.parse(fechaFine);
-    		fechaRegistro=sdf.parse(fechaRe);
-		} catch (ParseException e) {
-			logger.warn("Error: {} ", e);
-		}
-    	logger.info("informacionConsulta.get: {} ",fechaInic);
-    	logger.info(" FechaFin: {} ", fechaFine);
     	detalleVacacionDto.setFechaInicio((Date)informacionConsulta.get(RepositoryConstants.FECHA_INICIO));
     	detalleVacacionDto.setFechaFin((Date)informacionConsulta.get(RepositoryConstants.FECHA_FIN));
     	detalleVacacionDto.setFechaRegistro((Date)informacionConsulta.get(RepositoryConstants.FECHA_REGISTRO));
