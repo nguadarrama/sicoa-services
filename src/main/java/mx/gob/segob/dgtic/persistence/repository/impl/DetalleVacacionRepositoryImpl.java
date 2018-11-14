@@ -106,7 +106,7 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
         parametros.addValue(RepositoryConstants.ID_DETALLE2, idDetalle);
-        
+        System.out.println("Consulta "+qry.toString());
         Map<String, Object> informacionConsulta = nameParameterJdbcTemplate.queryForMap(qry.toString(), parametros);
         DetalleVacacionDto detalleVacacionDto = new DetalleVacacionDto();
         detalleVacacionDto.setIdDetalle((Integer)informacionConsulta.get(RepositoryConstants.ID_DETALLE));
@@ -135,7 +135,7 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
         detalleVacacionDto.setIdVacacion(vacacionDto);
         EstatusDto estatusDto= new EstatusDto();
         estatusDto.setIdEstatus((Integer)informacionConsulta.get(RepositoryConstants.ID_ESTATUS));
-        logger.info("Id Estatussssssssssssssssssssssss: {} ",informacionConsulta.get(RepositoryConstants.ID_ESTATUS));
+        logger.info("Id Estatussssssssssssssssssssssss: {} ",informacionConsulta.get(RepositoryConstants.ID_ESTATUS)+" "+informacionConsulta.get(RepositoryConstants.FECHA_INICIO));
         estatusDto.setEstatus((String)informacionConsulta.get(RepositoryConstants.ESTATUS));
         detalleVacacionDto.setIdEstatus(estatusDto);
         SimpleDateFormat sdf = new SimpleDateFormat(RepositoryConstants.YYYY_MM_DD);
@@ -155,9 +155,9 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 		}
     	logger.info("informacionConsulta.get: {} ",fechaInic);
     	logger.info(" FechaFin: {} ", fechaFine);
-    	detalleVacacionDto.setFechaInicio(fechaInic);
-    	detalleVacacionDto.setFechaFin(fechaFinal);
-    	detalleVacacionDto.setFechaRegistro(fechaRegistro);
+    	detalleVacacionDto.setFechaInicio((Date)informacionConsulta.get(RepositoryConstants.FECHA_INICIO));
+    	detalleVacacionDto.setFechaFin((Date)informacionConsulta.get(RepositoryConstants.FECHA_FIN));
+    	detalleVacacionDto.setFechaRegistro((Date)informacionConsulta.get(RepositoryConstants.FECHA_REGISTRO));
         logger.info("informacionConsulta.get: {} ",detalleVacacionDto.getFechaInicio());
         detalleVacacionDto.setDias((Integer)informacionConsulta.get("dias"));
         
