@@ -290,6 +290,9 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 		}catch(Exception e){
 			logger.warn("Wrn . {} ",e);
 		}
+		detalleVacacionDto.setFechaRegistro(null);
+		detalleVacacionDto.setFechaFin(null);
+		detalleVacacionDto.setFechaInicio(null);
 		return detalleVacacionDto;
 		
 	}
