@@ -64,72 +64,25 @@ public class ComisionRules extends RecursoBase {
       UsuarioDto usuarioDto =
           usuarioRepository.buscaUsuarioPorId(comisionDto.getIdUsuario().getIdUsuario());
 
+      /** Obtener lista de Asistencias **/
+      List<AsistenciaDto> listaAsistencias =
+          asistenciaRepository.buscaAsistenciaEmpleado(usuarioDto.getClaveUsuario(), 0, 0,
+              new Timestamp(fechaInicio.getTime()), new Timestamp(fechaFin.getTime()));
+      logger.info("listaAsistencias: {}", listaAsistencias.size());
 
-      /** Obtener lista de inasistencias **/
-      List<AsistenciaDto> listaAsistencias = asistenciaRepository.buscaAsistenciaEmpleado(
-          usuarioDto.getClaveUsuario(), 0, 0, new Timestamp(fechaInicio.getTime()),
-          new Timestamp(fechaFin.getTime()));
-      logger.info("listaInasistencias: {}", listaAsistencias.size());
-      
-      Date fechaActual = new Date();
-      /** Elimina las inasistencias obtenidas en el periodo de la comision **/
+      /** Si lista de Asistencias no es vacia entra a verificar de que tipo son **/
       if (!listaAsistencias.isEmpty()) {
-        if (fechaActual.after(comisionDto.getFechaFin())) {
-          logger.info("Fecha actual es mayor a fecha fin");
-          for (Date date : listaFechas) {
-            for (AsistenciaDto asistencia : listaAsistencias) {
-              if (date.getTime() == asistencia.getEntrada().getTime()) {
-                if (asistencia.getIdTipoDia().getIdTipoDia() == 8) {
-                  /** Eliminar inasistencia **/
-                  asistenciaRepository.eliminaAsistencia(asistencia.getIdAsistencia());
-                  /** Agregar asistencia tipo comision **/
-                  AsistenciaDto asistenciaDto = new AsistenciaDto();
-                  logger.info("Registro insertado Fecha..: {}", date);
-                  asistenciaDto.setEntrada(new Timestamp(date.getTime()));
-                  asistenciaDto.setSalida(new Timestamp(date.getTime()));
-                  logger.info("idUsuario--: {}", comisionDto.getIdUsuario().getIdUsuario());
-                  asistenciaDto.setUsuarioDto(usuarioDto);
-                  asistenciaDto.setIdEstatus(estatusDto);
-                  asistenciaDto.setIdTipoDia(tipoDiaDto);
-                  asistenciaRepository.agregaAsistencia(asistenciaDto);
-                } 
-              }
-            }
-          }
-        } else {
-           logger.info("La comision esta corriendo {}", listaFechas.size());
-            listaFechas = listaFechasLimpia(listaFechas, listaAsistencias);
-            logger.info("Lista comision final {}", listaFechas.size());
-            for(Date date: listaFechas) {
-              AsistenciaDto asistenciaDto = new AsistenciaDto();
-              asistenciaDto.setEntrada(new Timestamp(date.getTime()));
-              asistenciaDto.setSalida(new Timestamp(date.getTime()));
-              logger.info("idUsuario: {}", comisionDto.getIdUsuario().getIdUsuario());
-              asistenciaDto.setUsuarioDto(usuarioDto);
-              asistenciaDto.setIdEstatus(estatusDto);
-              asistenciaDto.setIdTipoDia(tipoDiaDto);
-              asistenciaRepository.agregaAsistencia(asistenciaDto);
-              logger.info("Registro insertado Fecha: {}", date);
-            }
-        }
-        
+        logger.info("La comision esta corriendo {}", listaFechas.size());
+        List<Date> fechasSinAsistencias = listaFechasLimpia(listaFechas, listaAsistencias);
+        logger.info("Lista comision final {}", fechasSinAsistencias.size());
+
+        agregarFechasAsistencias(fechasSinAsistencias, usuarioDto, estatusDto, tipoDiaDto);
         comisionAux = comisionRepository.modificaComisionEstatusArchivo(comisionDto);
         return comisionAux;
-     }
-
-      for (Iterator<Date> it = listaFechas.iterator(); it.hasNext();) {
-        Date date = it.next();
-        AsistenciaDto asistenciaDto = new AsistenciaDto();
-        asistenciaDto.setEntrada(new Timestamp(date.getTime()));
-        asistenciaDto.setSalida(new Timestamp(date.getTime()));
-        logger.info("idUsuario: {}", comisionDto.getIdUsuario().getIdUsuario());
-        asistenciaDto.setUsuarioDto(usuarioDto);
-        asistenciaDto.setIdEstatus(estatusDto);
-        asistenciaDto.setIdTipoDia(tipoDiaDto);
-        asistenciaRepository.agregaAsistencia(asistenciaDto);
-        logger.info("Registro insertado Fecha: {}", date);
-        comisionAux = comisionRepository.modificaComisionEstatusArchivo(comisionDto);
       }
+
+      agregarFechasAsistencias(listaFechas, usuarioDto, estatusDto, tipoDiaDto);
+      comisionAux = comisionRepository.modificaComisionEstatusArchivo(comisionDto);
 
     } else if (comisionDto.getIdEstatus().getIdEstatus() == 3) {
       comisionAux = comisionRepository.modificaComisionEstatusArchivo(comisionDto);
@@ -232,6 +185,13 @@ public class ComisionRules extends RecursoBase {
     return comisionAux;
   }
 
+  /**
+   * Elimina fines de semana y dias festivos de un periodo dado.
+   * 
+   * @param fechaInicio
+   * @param fechaFin
+   * @return
+   */
   private List<Date> removerFinesDeSemana(Date fechaInicio, Date fechaFin) {
     List<Date> listaFechas = new ArrayList<>();
     List<DiaFestivoDto> listaDiasFestivos = diaFestivoRepository.obtenerDiasFestivosActivos();
@@ -261,6 +221,14 @@ public class ComisionRules extends RecursoBase {
     return listaFechas;
   }
   
+  /**
+   * Compara la lista de fechas con la lista de asistencias eliminando las fechas de listaFechas
+   * que contengan asistencias o retardos.
+   * 
+   * @param listaFechas
+   * @param listaAsistencias
+   * @return listaFechas Lista de fechas sin asistencias o retardos.
+   */
   private List<Date> listaFechasLimpia(List<Date> listaFechas,
       List<AsistenciaDto> listaAsistencias) {
     List<Date> aEliminar = new ArrayList<>();
@@ -279,5 +247,27 @@ public class ComisionRules extends RecursoBase {
     listaFechas.removeAll(aEliminar);
 
     return listaFechas;
+  }
+  
+  /**
+   * Agrega asistencias de tipo comision con las fechas dadas.
+   * 
+   * @param listaFechas
+   * @param usuarioDto
+   * @param estatusDto
+   * @param tipoDiaDto
+   */
+  private void agregarFechasAsistencias(List<Date> listaFechas, UsuarioDto usuarioDto, EstatusDto estatusDto,
+      TipoDiaDto tipoDiaDto) {
+    for (Date date : listaFechas) {
+      AsistenciaDto asistenciaDto = new AsistenciaDto();
+      asistenciaDto.setEntrada(new Timestamp(date.getTime()));
+      asistenciaDto.setSalida(new Timestamp(date.getTime()));
+      asistenciaDto.setUsuarioDto(usuarioDto);
+      asistenciaDto.setIdEstatus(estatusDto);
+      asistenciaDto.setIdTipoDia(tipoDiaDto);
+      asistenciaRepository.agregaAsistencia(asistenciaDto);
+      logger.info("Registro insertado Fecha: {}", date);
+    }
   }
 }
