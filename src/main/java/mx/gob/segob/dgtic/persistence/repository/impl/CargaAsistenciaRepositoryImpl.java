@@ -10,14 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
-import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
-import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.persistence.repository.CargaAsistenciaRepository;
 import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 
@@ -26,9 +22,6 @@ public class CargaAsistenciaRepositoryImpl extends RecursoBase implements CargaA
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
-	@Autowired
-    private NamedParameterJdbcTemplate nameParameterJdbcTemplate;
 	
 	@Autowired
 	@Qualifier("jdbcTemplateSqlServer")
@@ -56,10 +49,10 @@ public class CargaAsistenciaRepositoryImpl extends RecursoBase implements CargaA
 	    		listaAsistencia.add(asistencia);
 	    	}
         } catch (Exception e) {
-        	logger.warn("No se recuperaron las asistencias del sistema de asistencias: " + e.getMessage());
+        	logger.warn("No se recuperaron las asistencias del sistema de asistencias: {} ",e.getMessage());
         }
         
-        logger.info(listaAsistencia.size() + " eventos en ASISTENCIAS");
+        logger.info("eventos en ASISTENCIAS-- {} ",listaAsistencia.size());
         
 		return listaAsistencia;
 	}
@@ -93,10 +86,12 @@ public class CargaAsistenciaRepositoryImpl extends RecursoBase implements CargaA
 			});
 			
 		} catch (Exception e) {
-			logger.warn("No se insertaron las asistencias: " + e.getMessage());
+			logger.warn("No se insertaron las asistencias: {} ",e.getMessage());
 		}
-			
-		logger.info(inserciones.length + " asistencias guardadas");
+		
+		if (inserciones != null) {
+			logger.info("asistencias guardadas.: {} ",inserciones.length);
+		}
 	}
 	
 }

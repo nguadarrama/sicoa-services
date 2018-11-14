@@ -27,7 +27,9 @@ public class Horario {
 	private String mensaje;
 
 	public Horario() {
-
+		/**
+		 * 
+		 */
 	}
 
 	public Integer getIdHorario() {

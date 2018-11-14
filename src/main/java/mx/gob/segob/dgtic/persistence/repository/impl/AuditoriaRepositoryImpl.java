@@ -55,7 +55,7 @@ public class AuditoriaRepositoryImpl extends RepositoryBase implements Auditoria
 		parametros.addValue("codigoRespuesta", auditoriaBitacora.getEstatusRespuesta());
 		parametros.addValue("contentTypeRespuesta", auditoriaBitacora.getContentTypeRespuesta());
 		parametros.addValue("respuesta", auditoriaBitacora.getRespuesta());
-		logger.debug(qry.toString());
+		logger.debug("query- {}",qry);
 		 jdbcTemplate.update(qry.toString(), parametros);	
 	}
 }

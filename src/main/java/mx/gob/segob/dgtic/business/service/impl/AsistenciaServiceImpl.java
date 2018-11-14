@@ -97,7 +97,7 @@ public class AsistenciaServiceImpl extends ServiceBase implements AsistenciaServ
 				c.add(Calendar.DAY_OF_MONTH, 1);  
 				asistenciaBusquedaUtil.getFechaFinalDate().setTime(c.getTimeInMillis());
 			} catch (ParseException e) {
-				logger.warn("Error al convertir la fecha en búsqueda de asistencia: {} ", e.getMessage());
+				logger.warn("Error al convertir la fecha en búsqueda de asistencia--: {} ", e.getMessage());
 			}
 		}
 		
@@ -124,7 +124,7 @@ public class AsistenciaServiceImpl extends ServiceBase implements AsistenciaServ
 				c.add(Calendar.DAY_OF_MONTH, 1);  
 				asistenciaBusquedaUtil.getFechaFinalDate().setTime(c.getTimeInMillis());
 			} catch (ParseException e) {
-				logger.warn("Error al convertir la fecha en búsqueda de asistencia: {} ", e.getMessage());
+				logger.warn("Error al convertir la fecha en búsqueda de asistencia...: {} ", e.getMessage());
 			}
 		}
 		
@@ -191,6 +191,9 @@ public class AsistenciaServiceImpl extends ServiceBase implements AsistenciaServ
 		reporte repo = new reporte();
 		byte[] output= null;
 		String f = "/documentos/sicoa/jasper/asistencia/descuento/descuento_incidencias.jrxml";
+		
+		String[] fechaIncidencia = generaReporteArchivo.getFechaIncidencia().split("-");
+		
 		try {
 			InputStream template = null;
 		
@@ -203,12 +206,15 @@ public class AsistenciaServiceImpl extends ServiceBase implements AsistenciaServ
 			parametros.put("nombre", generaReporteArchivo.getNombre());
 			parametros.put("fechaActual", generaReporteArchivo.getFechaActual());
 			parametros.put("cve_m_usuario", generaReporteArchivo.getCve_m_usuario());
+			parametros.put("diaIncidencia", fechaIncidencia[0]);
+			parametros.put("mesIncidencia", fechaIncidencia[1]);
+			parametros.put("anioIncidencia", fechaIncidencia[2]);
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
 			output = JasperExportManager.exportReportToPdf (jasperPrint); 
 			repo.setNombre(output);
 			
 		} catch (JRException e) {
-			logger.warn("Errora al generar formato descuento ->: {} ",this.getClass());
+			logger.warn("Error al generar formato descuento ->: {} ",this.getClass());
 			logger.error("Error: {}", e);
 		}
 		return repo;

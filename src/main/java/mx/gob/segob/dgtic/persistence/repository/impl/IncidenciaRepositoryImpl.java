@@ -87,7 +87,7 @@ public class IncidenciaRepositoryImpl implements IncidenciaRepository {
         
         IncidenciaDto incidencia = nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<IncidenciaDto>(IncidenciaDto.class));
 
-        return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<IncidenciaDto>(IncidenciaDto.class));
+        return incidencia;
 	}
 
 	@Override

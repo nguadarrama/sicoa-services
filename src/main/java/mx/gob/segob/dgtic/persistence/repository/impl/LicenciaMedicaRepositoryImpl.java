@@ -26,6 +26,8 @@ public class LicenciaMedicaRepositoryImpl extends RepositoryBase implements Lice
 	
 	@Autowired
     private NamedParameterJdbcTemplate nameParameterJdbcTemplate;
+	
+	private static final String AND = "' and '"; 
 
 	@Override
 	public List<LicenciaMedicaDto> obtenerListaLicenciaMedica() {
@@ -139,17 +141,18 @@ public class LicenciaMedicaRepositoryImpl extends RepositoryBase implements Lice
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String fechaIni=sdf.format(licenciaMedicaDto.getFechaInicio());
 		String fechaF=sdf.format(licenciaMedicaDto.getFechaFin());
-		String query="select id_licencia from m_licencia_medica where (((fecha_inicio between '"+fechaIni+"' and '"+fechaF+"') "
-				+ "or (fecha_fin between '"+fechaIni+"' and '"+fechaF+"' )) "+
+		String query="select id_licencia from m_licencia_medica where (((fecha_inicio between '"+fechaIni+AND+fechaF+"') "
+				+ "or (fecha_fin between '"+fechaIni+AND+fechaF+"' )) "+
 				" or('"+fechaIni+"'>fecha_inicio and fecha_inicio<'"+fechaF+"' and fecha_fin>'"+fechaF+"'))"
 						+ "and id_usuario='"+licenciaMedicaDto.getIdUsuario().getIdUsuario()+"' ";
 		logger.info("query: {} ",query);
         List<Map<String, Object>> detalleLicencia = jdbcTemplate.queryForList(query);
         logger.info("Datos de la consulta: {} ",detalleLicencia.size());
-        if(detalleLicencia.size()==0 || detalleLicencia==null){
+        if(detalleLicencia.isEmpty()){
 			StringBuilder qry = new StringBuilder();
 			Date fechaActual = new Date();
-			logger.info("Fecha actual: {} ",fechaActual+" idUsuario "+licenciaMedicaDto.getIdUsuario().getIdUsuario());
+			logger.info("Fecha actual: {} ",fechaActual);
+			logger.info(" idUsuario: {} ",licenciaMedicaDto.getIdUsuario().getIdUsuario());
 			licenciaMedicaDto.setFechaRegistro(fechaActual);
 			qry.append("INSERT INTO m_licencia_medica (id_usuario, id_estatus, fecha_inicio, fecha_fin, dias, padecimiento, fecha_registro ) ");
 			qry.append("VALUES (:idUsuario, :idEstatus, :fechaInicio, :fechaFin, :dias, :padecimiento, :fechaRegistro) ");
@@ -204,7 +207,7 @@ public class LicenciaMedicaRepositoryImpl extends RepositoryBase implements Lice
 
         }
         if((fechaInicio!=null && !fechaInicio.trim().isEmpty())&& (fechaFin!=null && !fechaFin.trim().isEmpty())){
-        	qry+="and licencia.fecha_inicio between '"+fechaInicio+"' and '"+fechaFin+"' ";
+        	qry+="and licencia.fecha_inicio between '"+fechaInicio+AND+fechaFin+"' ";
         }else if(fechaInicio!=null && !fechaInicio.trim().isEmpty()){
         	qry+="and licencia.fecha_inicio='"+fechaInicio+"'";
         }else if(fechaFin!=null && !fechaFin.trim().isEmpty()){

@@ -102,7 +102,7 @@ public  class  RowAnnotationBeanMapper<T> implements RowMapper<T> {
     	if(rs == null) {
             throw new SQLException("ResultSet no valido rs: "+rs+" rowNum : "+rowNum);
         }
-    	logger.trace("Iterando resultado : "+rowNum);
+    	logger.trace("Iterando resultado : {} ",rowNum);
 
     	//Se crea la instancia del objeto definido como de retorno
     	T beanReturn = org.springframework.beans.BeanUtils.instantiateClass(this.beanTypeToMap);
@@ -116,7 +116,8 @@ public  class  RowAnnotationBeanMapper<T> implements RowMapper<T> {
         for(Entry<String, Object> columnaRowRs : columnasRowRs.entrySet()) {
         	Object valorColumna = columnaRowRs.getValue();
         	String nombreColumna = columnaRowRs.getKey();
-        	logger.trace("========> Columna ResultSet "+nombreColumna+" : "+valorColumna);
+        	logger.trace("========> Columna ResultSet: {} ",nombreColumna);
+        	logger.trace("valorColumna : {} ",valorColumna);
         	
         	try{
         		//Se estable o asigna el valor de la columna a el atributo si no existe relacion se evalua si se debe verificar a un mapeo interno
@@ -146,7 +147,7 @@ public  class  RowAnnotationBeanMapper<T> implements RowMapper<T> {
 	 * @throws SQLException Error de SQL
 	 */
 	private void inspeccionaColumnaInterna(String nombreColumna, Object valorColumna, Object bean) throws ReflectiveOperationException, SQLException{
-		logger.trace("==Inspeccion de columna interna "+nombreColumna);
+		logger.trace("==Inspeccion de columna interna: {} ",nombreColumna);
 		Map<String, List<String>> propiedadesMapeoInterno = obtenerPropiedadesMapeaColumnaInterna(bean.getClass());    	
     	for(Entry<String, List<String>> columnaRowRs : propiedadesMapeoInterno.entrySet()) {
     		List<String> columnasInternas = columnaRowRs.getValue();
@@ -185,7 +186,8 @@ public  class  RowAnnotationBeanMapper<T> implements RowMapper<T> {
 		boolean columnaMapeada = propiedadesBeanMapeadas.containsKey(nombreColumna);
 		if(columnaMapeada){
 			String nombrePropiedadBean = propiedadesBeanMapeadas.get(nombreColumna);
-	    	logger.trace("=======> Bean propiedad "+beanToSet.getClass().getSimpleName()+"."+nombrePropiedadBean);
+	    	logger.trace("=======> Bean propiedad: {} ",beanToSet.getClass().getSimpleName());
+	    	logger.trace("NameProperties: {} ",nombrePropiedadBean);
 	    	if(StringUtils.isNotBlank(nombrePropiedadBean) && valorColumna != null){	            	
 	    		asignaValorBean(beanToSet, nombrePropiedadBean, valorColumna);	    		        		  
 	    	}
@@ -203,7 +205,9 @@ public  class  RowAnnotationBeanMapper<T> implements RowMapper<T> {
 	 */
 	private void asignaValorBean(Object bean, String propiedad, Object valor) 
 		throws ReflectiveOperationException	{
-    	logger.trace(" Seteando : "+bean.toString()+ "."+propiedad+ " - Valor : "+valor);
+    	logger.trace("Seteando : {} ",bean);
+    	logger.trace("Propiedad: {} ",propiedad);
+    	logger.trace(" - Valor : {} ",valor);
     	
     	Class classType;
 		classType = org.apache.commons.beanutils.BeanUtilsBean.getInstance().getPropertyUtils().getPropertyType(bean, propiedad);

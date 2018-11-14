@@ -302,7 +302,8 @@ public class AutenticacionRepositoryImpl extends RepositoryBase implements Auten
 
 	@Override
 	public Integer cambiarPassword(String password, String claveUsuario) {
-		System.out.println("actualizado "+claveUsuario+"clave "+password);
+		logger.info("actualizado: {} ",claveUsuario);
+		logger.info("clave: {} ",password);
 		StringBuilder qry = new StringBuilder();
 		qry.append("UPDATE m_usuario SET password = :password, primera_vez='N' ");
 		qry.append("WHERE cve_m_usuario = :claveUsuario");

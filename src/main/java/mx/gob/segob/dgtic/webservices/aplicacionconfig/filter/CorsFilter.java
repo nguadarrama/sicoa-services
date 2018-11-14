@@ -58,9 +58,9 @@ public class CorsFilter implements Filter {
 		httpResponse.setHeader("Access-Control-Allow-Headers", HEADERS_ALLOW);
 		httpResponse.setHeader("Access-Control-Max-Age", "3600");
 
-		logger.debug("Peticion:"+((HttpServletRequest) request).getMethod());
-		logger.debug(",Recurso:"+((HttpServletRequest) request).getPathInfo());
-		logger.debug(",ip:"+((HttpServletRequest) request).getRemoteHost());
+		logger.debug("Peticion: {} ",((HttpServletRequest) request).getMethod());
+		logger.debug("Recurso: {} ",((HttpServletRequest) request).getPathInfo());
+		logger.debug("ip: {}",((HttpServletRequest) request).getRemoteHost());
 
 		chain.doFilter(request, response);
 	}
@@ -71,7 +71,7 @@ public class CorsFilter implements Filter {
 	 */
 	@Override
 	public void destroy() {
-		logger.info("destroy "+getClass().getCanonicalName());
+		logger.info("destroy: {} ",getClass().getCanonicalName());
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class CorsFilter implements Filter {
 	 */
 	@Override
 	public void init(FilterConfig filterConfig) {
-		logger.info(getClass().getCanonicalName()+"\" =========>>>>> Inicializando Filtro CORS \"");
+		logger.info("=========>>>>> Inicializando Filtro CORS: {} ",getClass().getCanonicalName());
 		logger.info("Metodos permitidos : "+METHODS_ALLOW);
 		logger.info("Headers permitidos : "+HEADERS_ALLOW);
 		this.filterConfig = filterConfig;

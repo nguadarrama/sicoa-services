@@ -68,7 +68,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 			List<AsistenciaDto> listaAsistenciaEntradaSalida = calculaEntradasSalidas(listaAsistenciaFiltrada);
 			
 			//Se calculan las incidencias con base a las entradas y salidas
-			List<AsistenciaDto> listaAsistenciaCalculada = calculaIncidencias(listaAsistenciaEntradaSalida, listaAsistenciaFiltrada);
+			List<AsistenciaDto> listaAsistenciaCalculada = calculaIncidencias(listaAsistenciaEntradaSalida);
 		
 			//la asistencia se guarda
 			cargaAsistenciaRepository.guardaAsistencia(listaAsistenciaCalculada);
@@ -90,7 +90,6 @@ public class CargaAsistenciaRules extends RecursoBase {
 		listaUsuarios = new ArrayList<>();
 		listaUsuarios = usuarioService.obtenerListaUsuarios();
 		listaIdusuariosAsistencia = new HashSet<>();
-		
 		//obtiene asistencia del sistema de asistencias (biométricos - ASISTENCIA)
 		List<AsistenciaDto> listaAsistenciaCompleta = cargaAsistenciaRepository.obtieneAsistencia(configuracionRepository.obtieneUltimaFechaCargaAsistencia());
 		
@@ -274,7 +273,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 		return listaAsistenciaCalculada;
 	}
 	
-	private List<AsistenciaDto> calculaIncidencias(List<AsistenciaDto> listaAsistencia, List<AsistenciaDto> listaAsistenciaFiltrada) {
+	private List<AsistenciaDto> calculaIncidencias(List<AsistenciaDto> listaAsistencia) {
 		logger.info("calculando incidencias: {} ",listaAsistencia.size());
 		
 		for (AsistenciaDto a : listaAsistencia) {
@@ -299,11 +298,9 @@ public class CargaAsistenciaRules extends RecursoBase {
 					TipoDiaDto tipoDia = obtieneTipoDia(4);				// "Incidencia por permanencia"
 					a.setIdTipoDia(tipoDia);
 				}
-			} else if (a.getEntrada() == null) { 											
-				if (a.getSalida() != null) {
+			} else if (a.getEntrada() == null && a.getSalida() != null) { 											
 					TipoDiaDto tipoDia = obtieneTipoDia(2);				//no checó entrada: "Omisión de Entrada"
 					a.setIdTipoDia(tipoDia);
-				}
 			}
 		}
 		
@@ -327,9 +324,9 @@ public class CargaAsistenciaRules extends RecursoBase {
 		List<String> listaEmpleadosDeVacacionesHoy = asistenciaRepository.obtieneListaEmpleadosDeVacacionesHoy();
 		List<String> listaEmpleadosDeComisionHoy = asistenciaRepository.obtieneListaEmpleadosDeComisionHoy();
 		List<String> listaEmpleadosDeLicenciaHoy = asistenciaRepository.obtieneListaEmpleadosDeLicenciaHoy();
-		logger.info(asistenciaRepository.obtieneListaEmpleadosDeVacacionesHoy().size() + " empleados de vacaciones (" + new Date()  + ")");
+		/**logger.info(asistenciaRepository.obtieneListaEmpleadosDeVacacionesHoy().size() + " empleados de vacaciones (" + new Date()  + ")");
 		logger.info(asistenciaRepository.obtieneListaEmpleadosDeComisionHoy().size() + " empleados de comision (" + new Date()  + ")");
-		logger.info(asistenciaRepository.obtieneListaEmpleadosDeLicenciaHoy().size() + " empleados de licencia (" + new Date()  + ")");
+		logger.info(asistenciaRepository.obtieneListaEmpleadosDeLicenciaHoy().size() + " empleados de licencia (" + new Date()  + ")"); **/
 		List<String> listaEmpleadosConPermiso = new ArrayList<>();
 		List<DiaFestivoDto> listaDiaFestivo = diaFestivoRepository.obtenerListaDiasFestivos();
 		
@@ -509,15 +506,15 @@ public class CargaAsistenciaRules extends RecursoBase {
 		
 		for (String usuarioAsistencia : listaIdusuariosAsistencia) {
 			if (!listaClaveUsuariosEnSicoa.contains(usuarioAsistencia)) {
-				logger.info("->, {} ", usuarioAsistencia, " usuario nuevo detectado en asistencias");
-				UsuarioDto usuarioSIRNO = cargaInicialRepository.obtieneUsuarioPorCve_m_usuario(usuarioAsistencia);
+				logger.info("usuario nuevo detectado en asistencias: {} ", usuarioAsistencia);
+				UsuarioDto usuarioSIRNO = cargaInicialRepository.obtieneUsuarioPorCveMusuario(usuarioAsistencia);
 				
 				if (usuarioSIRNO != null) {
 					usuarioSIRNO.setPassword(HashUtils.md5(usuarioSIRNO.getClaveUsuario()));
 					usuarioService.agregaUsuario(usuarioSIRNO);
-					logger.info("   " + usuarioAsistencia + " existe en SIRNO, se procede a registrarlo en SICOA");
+					logger.info("existe en SIRNO, se procede a registrarlo en SICOA: {} ",usuarioAsistencia);
 				} else {
-					logger.info("   " + usuarioAsistencia + " NO existe en SIRNO, NO se procede a registrarlo en SICOA");
+					logger.info(" NO existe en SIRNO, NO se procede a registrarlo en SICOA: {}",usuarioAsistencia);
 				}
 			}
 		}

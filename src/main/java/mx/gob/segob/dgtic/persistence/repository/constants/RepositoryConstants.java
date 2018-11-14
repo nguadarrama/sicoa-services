@@ -9,12 +9,13 @@ public class RepositoryConstants {
 	}
 	
 	public static final String ID_ARCHIVO = "id_archivo";
-	
 	public static final String ID_ASISTENCIA = "id_asistencia";
 	public static final String ID_ASISTENCIA2 = "idAsistencia";
 	public static final String ID_AREA = "id_area";
 	public static final String ID_AREA2 = "idArea";
 	public static final String ID_ARCHIVO2 = "idArchivo";
+	public static final String ID_CONFIGURACION = "id_configuracion";
+	public static final String ID_CONFIGURACION2 = "idConfiguracion";
 	public static final String ID_DETALLE = "id_detalle";
 	public static final String ID_DETALLE2 = "idDetalle";
 	public static final String ID_DIA2 = "idDia"; 
@@ -33,38 +34,43 @@ public class RepositoryConstants {
 	public static final String ID_NIVEL2 = "idNivel";
 	public static final String ID_PUESTO = "id_puesto";
 	public static final String ID_PUESTO2 = "idPuesto";
+	public static final String ID_PERFIL = "id_perfil";
+	public static final String ID_PERFIL2 = "idPerfil";
 	public static final String ID_PERIODO = "id_periodo";
 	public static final String ID_PERIODO2 = "idPeriodo";
+	public static final String ID_PERMISO = "id_permiso";
+	public static final String ID_PERMISO2 = "idPermiso";
 	public static final String ID_RESPONSABLE = "id_responsable";
+	public static final String ID_RESPONSABLE2 = "idResponsable";
 	public static final String ID_TIPO_DIA = "id_tipo_dia";
 	public static final String ID_TIPO_DIA2 = "idTipoDia";
 	public static final String ID_UNIDAD = "id_unidad";
 	public static final String ID_USUARIO = "id_usuario";
 	public static final String ID_USUARIO2 = "idUsuario";
+	public static final String ID_USUARIO_PERFIL = "id_usuario_perfil";
 	public static final String ID_VACACION = "id_vacacion";
 	public static final String ID_VACACION2 = "idVacacion";
 	
-	
-	
-	
-	
-	
+
 	public static final String APELLIDO_PATERNO = "apellido_paterno";
 	public static final String APELLIDO_PATERNO2 = "apellidoPaterno";
 	public static final String APELLIDO_MATERNO = "apellido_materno";
 	public static final String APELLIDO_MATERNO2 = "apellidoMaterno";
+	public static final String ASISTENCIA_BUSQUEDA2 = "asistenciaBusqueda";
 	public static final String ACTIVO = "activo";
 	public static final String BLOQUEADO = "bloqueado";
 	public static final String COMISION = "comision";
 	public static final String CLAVE = "clave";
 	public static final String CLAVE_USUARIO2 = "claveUsuario";
 	public static final String CLAVE_PERFIL2 = "clavePerfil";
+	public static final String CVE_C_PERMISO = "cve_c_permiso";
 	public static final String CVE_C_PERFIL = "cve_c_perfil";
 	public static final String CLAVE_M_USUARIO = "cve_m_usuario";
 	public static final String DESCUENTO = "descuento";
 	public static final String DESCRIPCION = "descripcion";
 	public static final String DESCRIPCION_PERIODO = "descripcion_periodo";
 	public static final String DIAS = "dias";
+	public static final String DIAS_DISPONIBLES = "dias_disponibles";
 	public static final String DD_MM_YYYY = "dd-MM-yyyy";
 	public static final String ESTATUS = "estatus";
 	public static final String ESTATUS_USUARIO = "estatus_usuario";
@@ -114,6 +120,8 @@ public class RepositoryConstants {
 	public static final String SALIDA = "salida";
 	public static final String TOTAL_LICENCIAS = "total_licencias";
 	public static final String URL = "url";
+	public static final String ULTIMA_FECHA = "ultima_fecha";
+	public static final String ULTIMA_FECHA2 = "ultimaFecha";
 	public static final String ULTIMO_ACCESO = "ultimo_acceso";
 	public static final String ULTIMO_ACCESO2 = "ultimoAcceso";
 	public static final String VACACION = "vacacion";
@@ -122,7 +130,7 @@ public class RepositoryConstants {
 	 * PERIODOREPOSITORYIMPL
 	 * QUERY buscaPeriodo
 	 */
-	public static final String L90 = "select id_periodo, fecha_inicio, fecha_fin, descripcion, activo ";
+	public static final String L90= "select id_periodo, fecha_inicio, fecha_fin, descripcion, activo ";
 	public static final String L91 = "from r_periodo ";
 	public static final String L92 = "where id_periodo = :idPeriodo";
 	/**
@@ -203,16 +211,26 @@ public class RepositoryConstants {
 	 * ASISTENCIAREPOSITORYIMPL
 	 * QUERY buscaAsistenciaEmpleadoRangoCoordinador
 	 */
-	public static final String ARIL144 = "SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus, e.id_estatus, ua.nombre as nombre_unidad, ";
-	public static final String ARIL145 = "i.id_estatus, i.descuento ";
-	public static final String ARIL146 = "FROM m_asistencia a ";
-	public static final String ARIL147 = "inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ";
-	public static final String ARIL148 = "left join m_incidencia i on a.id_asistencia = i.id_asistencia ";
-	public static final String ARIL149 = "left join m_estatus e on e.id_estatus = i.id_estatus ";
-	public static final String ARIL150 = "inner join m_usuario u on u.cve_m_usuario = a.id_usuario ";
-	public static final String ARIL151 = "inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ";
-	public static final String ARIL152 = "inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ";
-	public static final String ARIL153 = "where uua.id_unidad = ";
+	public static final String ARIL142 = "SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus, e.id_estatus, ua.nombre as nombre_unidad, ";
+	public static final String ARIL143 = "i.id_estatus, i.descuento ";
+	public static final String ARIL144 = "FROM m_asistencia a ";
+	public static final String ARIL145 = "inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ";
+	public static final String ARIL146 = "left join m_incidencia i on a.id_asistencia = i.id_asistencia ";
+	public static final String ARIL147 = "left join m_estatus e on e.id_estatus = i.id_estatus ";
+	public static final String ARIL148 = "inner join m_usuario u on u.cve_m_usuario = a.id_usuario ";
+	public static final String ARIL149 = "inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ";
+	public static final String ARIL150 = "inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ";
+	public static final String ARIL151 = "where uua.id_unidad = ";
+	public static final String ARIL154 = " and entrada >= '";
+	public static final String ARIL155 = " and entrada < '";
+	public static final String ARIL159 = " and a.id_usuario = ";
+	public static final String ARIL163 = " and u.nombre like '%";
+	public static final String ARIL167 = " and u.apellido_paterno like '%";
+	public static final String ARIL171 = " and u.apellido_materno like '%";
+	public static final String ARIL175 = " and ua.nombre like '' ";
+	public static final String ARIL179 = " and u.nivel like '%";
+	public static final String ARIL183 = " and t.id_tipo_dia = ";
+	public static final String ARIL187 = " and e.id_estatus = ";
 	/**
 	 * PERIODOREPOSITORYIMPL
 	 * QUERY modificaPeriodo		
@@ -246,8 +264,90 @@ public class RepositoryConstants {
 	public static final String ARL244 = "inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ";
 	public static final String ARL245 = "inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ";
 	public static final String ARL246 = "where 1 = 1";
-//	public static final String
-//	public static final String
+	/**
+	 * PERIODO REPOSITORYIMPL
+	 * QUERY obtenerListaPeriodos
+	 */
+	public static final String PRL41 = "select id_periodo, fecha_inicio, fecha_fin, descripcion, activo ";
+	public static final String PRL42 = "from r_periodo where activo = true ";
+	/**
+	 * ASISTENCIAREPOSITORYIMPL
+	 * QUERY buscaAsistenciaEmpleadoRangoDireccion
+	 */
+	public static final String ARIL233 = "SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus, ";
+	public static final String ARIL234 = "i.id_estatus, i.descuento ";
+	public static final String ARIL235 = "FROM m_asistencia a ";
+	public static final String ARIL236 = "inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ";
+	public static final String ARIL237 = "left join m_incidencia i on a.id_asistencia = i.id_asistencia ";
+	public static final String ARIL238 = "left join m_estatus e on e.id_estatus = i.id_estatus ";
+	public static final String ARIL239 = "inner join m_usuario u on u.cve_m_usuario = a.id_usuario ";
+	public static final String ARIL240 = "inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ";
+	public static final String ARIL241 = "inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ";
+	public static final String ARIL242 = "where 1 = 1";
+	public static final String ARIL245 = " and entrada >= '";
+	public static final String ARIL246 = " and entrada < '";
+	public static final String ARIL250 = " and a.id_usuario = ";
+	public static final String ARIL254 = " and u.nombre like '%";
+	public static final String ARIL258 = " and u.apellido_paterno like '%";
+	public static final String ARIL262 = " and u.apellido_materno like '%";
+	public static final String ARIL266 = " and ua.id_unidad = ";
+	public static final String ARIL270 = " and u.nivel like '%";
+	public static final String ARIL274 = " and t.id_tipo_dia = ";
+	public static final String ARIL278 = " and e.id_estatus = ";
+	/**
+	 * ASISTENCIAREPOSITORYIMPL
+	 * QUERY buscaAsistenciaPorId
+	 */
+	public static final String ARIL323 = "SELECT a.id_asistencia, a.entrada, a.id_tipo_dia, t.nombre as nombre_tipo, e.estatus, e.id_estatus, ";
+	public static final String ARIL324 = "i.id_incidencia, j.id_justificacion, j.justificacion, u.nombre as nombre_usuario, u.apellido_paterno, u.apellido_materno, ";
+	public static final String ARIL325 = "u.fecha_ingreso, u.cve_m_usuario, u.nombre_jefe, p.descripcion, u.id_puesto, u.rfc, u.nivel, ua.nombre as nombre_unidad, i.id_archivo, ch.url, ch.nombre as nombre_archivo ";
+	public static final String ARIL326 = "FROM m_asistencia a ";
+	public static final String ARIL327 = "inner join m_usuario u on u.cve_m_usuario = a.id_usuario ";
+	public static final String ARIL328 = "inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ";
+	public static final String ARIL329 = "inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ";
+	public static final String ARIL330 = "inner join c_perfil p on p.cve_c_perfil = u.cve_c_perfil ";
+	public static final String ARIL331 = "inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ";
+	public static final String ARIL332 = "left join m_incidencia i on a.id_asistencia = i.id_asistencia ";
+	public static final String ARIL333 = "left join m_estatus e on e.id_estatus = i.id_estatus ";
+	public static final String ARIL334 = "left join c_justificacion j on j.id_justificacion = i.id_justificacion ";
+	public static final String ARIL335 = "left join m_archivo ch on ch.id_archivo = i.id_archivo ";
+	public static final String ARIL336 = "WHERE a.id_asistencia = :idAsistencia ";
+	/**
+	 * ASISTENCIAREPOSITORYIMPL
+	 * QUERY reporteDireccion
+	 */
+	public static final String ARIL646 = "SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus, ";
+	public static final String ARIL647 = "i.id_estatus, i.descuento ";
+	public static final String ARIL648 = "FROM m_asistencia a ";
+	public static final String ARIL649 = "inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ";
+	public static final String ARIL650 = "left join m_incidencia i on a.id_asistencia = i.id_asistencia ";
+	public static final String ARIL651 = "left join m_estatus e on e.id_estatus = i.id_estatus ";
+	public static final String ARIL652 = "inner join m_usuario u on u.cve_m_usuario = a.id_usuario ";
+	public static final String ARIL653 = "inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ";
+	public static final String ARIL654 = "inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ";
+	public static final String ARIL655 = "left join m_licencia_medica l on l.id_usuario = u.id_usuario ";
+	public static final String ARIL656 = "left join m_comision c on c.id_usuario = u.id_usuario ";
+	public static final String ARIL657 = "left join d_detalle_vacacion v on v.id_usuario = u.id_usuario ";
+	public static final String ARIL658 = "where 1 = 1";
+	public static final String ARIL661 = " and entrada >= '";
+	public static final String ARIL662 = " and entrada < '";
+	public static final String ARIL666 = " and a.id_usuario = ";
+
+	public static final String ARIL670 = " and u.nombre like '%";
+	public static final String ARIL674 = " and u.apellido_paterno like '%";
+	public static final String ARIL678 = " and u.apellido_materno like '%";
+	public static final String ARIL682 = " and ua.id_unidad = ";
+	public static final String ARIL686 = " and u.nivel like '%";
+	public static final String ARIL690 = " and t.id_tipo_dia = ";
+	public static final String ARIL694 = " and e.id_estatus = ";
+//	public static final String ARIL6
+//	public static final String ARIL6
+//	public static final String ARIL6
+//	public static final String ARIL6
+//	public static final String ARIL6
+//	public static final String ARIL6
+//	public static final String ARIL6
+	
 //	public static final String
 //	public static final String
 //	public static final String

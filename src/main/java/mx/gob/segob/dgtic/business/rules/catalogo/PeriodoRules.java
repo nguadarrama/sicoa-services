@@ -5,11 +5,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import mx.gob.segob.dgtic.business.service.base.ServiceBase;
 import mx.gob.segob.dgtic.comun.sicoa.dto.PeriodoDto;
 import mx.gob.segob.dgtic.persistence.repository.PeriodoRepository;
 
 @Component
-public class PeriodoRules {
+public class PeriodoRules extends ServiceBase{
 
 	@Autowired
 	private PeriodoRepository periodoRepository;
@@ -33,7 +34,7 @@ public class PeriodoRules {
 	}
 	
 	public PeriodoDto agregaPeriodo(PeriodoDto periodoDto){
-		PeriodoDto periodo = new PeriodoDto();
+		PeriodoDto periodo;
 		periodo = periodoRepository.agregaPeriodo(periodoDto);
 		return periodo;
 	}
@@ -66,7 +67,7 @@ public class PeriodoRules {
 	public boolean existePeriodo(String fecha) {
 		boolean existe = false;
 		existe = periodoRepository.existePeriodo(fecha);
-		System.out.println("PeriodoRules method-- existePeriodo= "+existe);
+		logger.info("PeriodoRules method-- existePeriodo= {} ",existe);
 		return existe;
 	}
 }

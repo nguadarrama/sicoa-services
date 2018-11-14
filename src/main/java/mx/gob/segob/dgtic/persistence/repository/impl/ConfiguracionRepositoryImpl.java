@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ConfiguracionDto;
 import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.persistence.repository.ConfiguracionRepository;
+import mx.gob.segob.dgtic.persistence.repository.constants.RepositoryConstants;
 import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 
 @Repository
@@ -24,16 +25,10 @@ public class ConfiguracionRepositoryImpl extends RecursoBase implements Configur
         int idConfiguracion = 1; //Última asistencia procesada
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
-        parametros.addValue("idConfiguracion", idConfiguracion);
+        parametros.addValue(RepositoryConstants.ID_CONFIGURACION2, idConfiguracion);
         
-        ConfiguracionDto configuracion = null;
-        
-        try {
-        	configuracion = nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<ConfiguracionDto>(ConfiguracionDto.class));
-        } catch (Exception e) {
-        	logger.error("No se logró cargar la configuración <última fecha de carga> " + e.getMessage());
-        }
-        
+        ConfiguracionDto configuracion;
+        configuracion = nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<ConfiguracionDto>(ConfiguracionDto.class));
         return configuracion.getFecha();
 	}
 
@@ -48,8 +43,8 @@ public class ConfiguracionRepositoryImpl extends RecursoBase implements Configur
 		Timestamp ultimaFechaCargaAsistencia = new Timestamp(System.currentTimeMillis());
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("ultimaFecha", ultimaFechaCargaAsistencia);
-		parametros.addValue("idConfiguracion", idConfiguracion);
+		parametros.addValue(RepositoryConstants.ULTIMA_FECHA2, ultimaFechaCargaAsistencia);
+		parametros.addValue(RepositoryConstants.ID_CONFIGURACION2, idConfiguracion);
 
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
         
@@ -63,12 +58,12 @@ public class ConfiguracionRepositoryImpl extends RecursoBase implements Configur
         int idConfiguracion = 2; //Última asistencia procesada
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
-        parametros.addValue("idConfiguracion", idConfiguracion);
+        parametros.addValue(RepositoryConstants.ID_CONFIGURACION2, idConfiguracion);
         
         ConfiguracionDto configuracion = null;
         
         	configuracion = nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<ConfiguracionDto>(ConfiguracionDto.class));
-        	System.out.println("Fecha "+configuracion.getFecha());
+        	logger.info("Fecha: {} ",configuracion.getFecha());
         	if(configuracion.getFecha()!=null && configuracion.getFecha().toString()!=""){
         		return "S";	
         	}else{
@@ -89,8 +84,8 @@ public class ConfiguracionRepositoryImpl extends RecursoBase implements Configur
 		Timestamp ultimaFechaCargaAsistencia = new Timestamp(System.currentTimeMillis());
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("ultimaFecha", ultimaFechaCargaAsistencia);
-		parametros.addValue("idConfiguracion", idConfiguracion);
+		parametros.addValue(RepositoryConstants.ULTIMA_FECHA2, ultimaFechaCargaAsistencia);
+		parametros.addValue(RepositoryConstants.ID_CONFIGURACION2, idConfiguracion);
 
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 		

@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="descuento_incidencias" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2775dccf-cbaa-4bb1-974d-683ac5cf5e9d">
-	<property name="ireport.zoom" value="0.75"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.zoom" value="1.0980750000000004"/>
+	<property name="ireport.x" value="6"/>
+	<property name="ireport.y" value="272"/>
 	<parameter name="fechaActual" class="java.lang.String"/>
 	<parameter name="cve_m_usuario" class="java.lang.String"/>
 	<parameter name="nombre" class="java.lang.String"/>
+	<parameter name="diaIncidencia" class="java.lang.String"/>
+	<parameter name="mesIncidencia" class="java.lang.String"/>
+	<parameter name="anioIncidencia" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -83,7 +86,7 @@
 			<staticText>
 				<reportElement x="19" y="333" width="520" height="107" uuid="7468863d-bf26-4c55-a8e4-83759289809c"/>
 				<textElement textAlignment="Justified"/>
-				<text><![CDATA[Con fundamento en lo dispuesto por el numeral 71 Capítulo IV, Sección III, del Acuerdo por el que se emiten las Disposiciones en materia de Recursos Humanos y del Servicio Profesional de Carrera así como el Manual Administrativo de Aplicación General en dicha materia, emitido por la Secretaría de la Función Pública el 23 de agosto de 2013 y últimas actualizaciones, así como de los Lineamientos para el Registro y Control de Asistencia de los Trabajadores de la Secretaría de Gobernación, emitidos el 2 de mayo de 2014 por la Directora General de Recursos Humanos, en su numeral 4, incisos a, b y c, y tomando en consideración que usted no asistió a laborar y no presentó justificante alguno, le comunico que ese procederá a la retención del salario y demás prestaciones, del día _ del mes _ de 201_]]></text>
+				<text><![CDATA[Con fundamento en lo dispuesto por el numeral 71 Capítulo IV, Sección III, del Acuerdo por el que se emiten las Disposiciones en materia de Recursos Humanos y del Servicio Profesional de Carrera así como el Manual Administrativo de Aplicación General en dicha materia, emitido por la Secretaría de la Función Pública el 23 de agosto de 2013 y últimas actualizaciones, así como de los Lineamientos para el Registro y Control de Asistencia de los Trabajadores de la Secretaría de Gobernación, emitidos el 2 de mayo de 2014 por la Directora General de Recursos Humanos, en su numeral 4, incisos a, b y c, y tomando en consideración que usted no asistió a laborar y no presentó justificante alguno, le comunico que ese procederá a la retención del salario y demás prestaciones, del día __ del mes __ de ____]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="36" y="485" width="199" height="39" uuid="8f60fcf9-4566-40c8-88cd-add89bfac9fb"/>
@@ -132,8 +135,20 @@
 			</textField>
 			<image>
 				<reportElement x="16" y="59" width="253" height="93" uuid="48dfdbd7-f45b-4afc-80f1-e600c329a4b0"/>
-				<imageExpression><![CDATA["documentos/sicoa/jasper/vacacion/secretariado.png"]]></imageExpression>
+				<imageExpression><![CDATA["/documentos/sicoa/jasper/vacacion/secretariado.png"]]></imageExpression>
 			</image>
+			<textField>
+				<reportElement x="41" y="420" width="15" height="20" uuid="a7b6ced9-12d9-46bf-8d56-e34ae1dc5295"/>
+				<textFieldExpression><![CDATA[$P{diaIncidencia}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="87" y="420" width="22" height="20" uuid="e5b5ed61-b7c7-4f2f-90fc-d82980e0153f"/>
+				<textFieldExpression><![CDATA[$P{mesIncidencia}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="420" width="31" height="20" uuid="de571e6f-006d-47e0-9d39-ebbb58062d7e"/>
+				<textFieldExpression><![CDATA[$P{anioIncidencia}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 </jasperReport>

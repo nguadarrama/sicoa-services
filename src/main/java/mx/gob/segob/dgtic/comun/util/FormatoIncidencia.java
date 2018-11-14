@@ -6,6 +6,7 @@ public class FormatoIncidencia {
 	private String fechaActual;
 	private String codigoIncidencia;
 	private String cve_m_usuario;
+	private String fechaIncidencia;
 	
 	public FormatoIncidencia(String nombre, String unidadAdministrativa, String fechaActual, String codigoIncidencia, String cve_m_usuario) {
 		super();
@@ -43,9 +44,14 @@ public class FormatoIncidencia {
 	public String getCve_m_usuario() {
 		return cve_m_usuario;
 	}
-
 	public void setCve_m_usuario(String cve_m_usuario) {
 		this.cve_m_usuario = cve_m_usuario;
+	}
+	public String getFechaIncidencia() {
+		return fechaIncidencia;
+	}
+	public void setFechaIncidencia(String fechaIncidencia) {
+		this.fechaIncidencia = fechaIncidencia;
 	}
 }
 

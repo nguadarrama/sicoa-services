@@ -84,10 +84,10 @@ public class ComisionRules extends RecursoBase {
                   asistenciaRepository.eliminaAsistencia(asistencia.getIdAsistencia());
                   /** Agregar asistencia tipo comision **/
                   AsistenciaDto asistenciaDto = new AsistenciaDto();
-                  logger.info("Registro insertado Fecha: {}", date);
+                  logger.info("Registro insertado Fecha..: {}", date);
                   asistenciaDto.setEntrada(new Timestamp(date.getTime()));
                   asistenciaDto.setSalida(new Timestamp(date.getTime()));
-                  logger.info("idUsuario: {}", comisionDto.getIdUsuario().getIdUsuario());
+                  logger.info("idUsuario--: {}", comisionDto.getIdUsuario().getIdUsuario());
                   asistenciaDto.setUsuarioDto(usuarioDto);
                   asistenciaDto.setIdEstatus(estatusDto);
                   asistenciaDto.setIdTipoDia(tipoDiaDto);

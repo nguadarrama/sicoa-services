@@ -11,6 +11,6 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.DashBoardDto;
  */
 public interface DashBoardRepository {
 
-	public DashBoardDto dashBoard(Integer id_usuario);
+	public DashBoardDto dashBoard(Integer idUsuario);
 
 }

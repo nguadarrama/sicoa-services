@@ -13,9 +13,11 @@ import org.springframework.stereotype.Repository;
 import mx.gob.segob.dgtic.comun.sicoa.dto.PerfilDto;
 import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
 import mx.gob.segob.dgtic.persistence.repository.PerfilRepository;
+import mx.gob.segob.dgtic.persistence.repository.base.RepositoryBase;
+import mx.gob.segob.dgtic.persistence.repository.constants.RepositoryConstants;
 
 @Repository
-public class PerfilRepositoryImpl implements PerfilRepository {
+public class PerfilRepositoryImpl extends RepositoryBase implements PerfilRepository {
 	
 	@Autowired
     private JdbcTemplate jdbcTemplate;
@@ -35,10 +37,10 @@ public class PerfilRepositoryImpl implements PerfilRepository {
 	        
 	        for (Map<String, Object> perfil : perfiles) {
 	    		PerfilDto perfilDto = new PerfilDto();
-	    		System.out.println("Perfiles "+perfil.get("descripcion"));
-	    		perfilDto.setClavePerfil((String)perfil.get("cve_c_perfil"));
-	    		perfilDto.setDescripcion((String)perfil.get("descripcion"));
-	    		perfilDto.setEstatus((String)perfil.get("estatus"));
+	    		logger.info("Perfiles: {} ",perfil.get(RepositoryConstants.DESCRIPCION));
+	    		perfilDto.setClavePerfil((String)perfil.get(RepositoryConstants.CVE_C_PERFIL));
+	    		perfilDto.setDescripcion((String)perfil.get(RepositoryConstants.DESCRIPCION));
+	    		perfilDto.setEstatus((String)perfil.get(RepositoryConstants.ESTATUS));
 	    		listaPerfil.add(perfilDto);
 	    	}
 	     return listaPerfil;	
@@ -54,7 +56,7 @@ public class PerfilRepositoryImpl implements PerfilRepository {
         qry.append("WHERE cve_c_perfil = :idPerfil");
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
-        parametros.addValue("idPerfil", idPerfil);
+        parametros.addValue(RepositoryConstants.ID_PERFIL2, idPerfil);
 
         return nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<PerfilDto>(PerfilDto.class));
 		
@@ -68,9 +70,9 @@ public class PerfilRepositoryImpl implements PerfilRepository {
 		qry.append("WHERE cve_c_perfil = :idPerfil");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("idPerfil", perfilDto.getClavePerfil());
-		parametros.addValue("descripcion", perfilDto.getDescripcion());
-		parametros.addValue("estatus", perfilDto.getEstatus());
+		parametros.addValue(RepositoryConstants.ID_PERFIL2, perfilDto.getClavePerfil());
+		parametros.addValue(RepositoryConstants.DESCRIPCION, perfilDto.getDescripcion());
+		parametros.addValue(RepositoryConstants.ESTATUS, perfilDto.getEstatus());
 
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 	}
@@ -83,9 +85,9 @@ public class PerfilRepositoryImpl implements PerfilRepository {
 		qry.append("VALUES (:cve_c_perfil, :descripcion, :estatus) ");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("cve_c_perfil", perfilDto.getClavePerfil());
-		parametros.addValue("descripcion", perfilDto.getDescripcion());
-		parametros.addValue("estatus", perfilDto.getEstatus());
+		parametros.addValue(RepositoryConstants.CVE_C_PERFIL, perfilDto.getClavePerfil());
+		parametros.addValue(RepositoryConstants.DESCRIPCION, perfilDto.getDescripcion());
+		parametros.addValue(RepositoryConstants.ESTATUS, perfilDto.getEstatus());
 
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 	}
@@ -97,7 +99,7 @@ public class PerfilRepositoryImpl implements PerfilRepository {
 		qry.append("DELETE FROM c_perfil WHERE cve_c_perfil = :idPerfil");
 		
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
-		parametros.addValue("idPerfil", idPerfil);
+		parametros.addValue(RepositoryConstants.ID_PERFIL2, idPerfil);
 
 		nameParameterJdbcTemplate.update(qry.toString(), parametros);
 	}
