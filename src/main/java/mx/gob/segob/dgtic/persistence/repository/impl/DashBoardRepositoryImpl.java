@@ -79,7 +79,7 @@ public class DashBoardRepositoryImpl extends RecursoBase implements DashBoardRep
         	.append("FROM m_vacacion_periodo v left join r_periodo p on v.id_periodo = p.id_periodo ")
         	.append("where v.dias > 0  and p.activo = true and v.id_usuario = ")
         	.append(idUsuario)
-        	.append(" order by id_vacacion desc ");
+        	.append(" order by v.fecha_inicio asc ");
         List<Map<String, Object>> vacaciones = jdbcTemplate.queryForList(qry1.toString());
         List<DashVacDto> listaVacaciones = new ArrayList<>();
         
