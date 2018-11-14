@@ -362,11 +362,11 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
     query.append("relacion.cve_m_usuario, relacion.id_unidad, unidad.nombre nombre_unidad, comision.id_comision, ");
     query.append("comision.id_responsable, comision.id_estatus, estatus.estatus, comision.fecha_inicio, ");
     query.append("comision.fecha_fin, comision.dias, comision.comision, comision.dias, comision.fecha_registro ");
-    query.append("FROM ds_sicoa.m_comision comision ");
-    query.append("INNER JOIN ds_sicoa.m_usuario usuario ON usuario.id_usuario = comision.id_usuario ");
-    query.append("INNER JOIN ds_sicoa.usuario_unidad_administrativa relacion on usuario.cve_m_usuario=relacion.cve_m_usuario ");
-    query.append("INNER JOIN ds_sicoa.m_estatus estatus ON estatus.id_estatus = comision.id_estatus ");
-    query.append("INNER JOIN ds_sicoa.c_unidad_administrativa unidad ON unidad.id_unidad = relacion.id_unidad ");
+    query.append("FROM m_comision comision ");
+    query.append("INNER JOIN m_usuario usuario ON usuario.id_usuario = comision.id_usuario ");
+    query.append("INNER JOIN usuario_unidad_administrativa relacion on usuario.cve_m_usuario=relacion.cve_m_usuario ");
+    query.append("INNER JOIN m_estatus estatus ON estatus.id_estatus = comision.id_estatus ");
+    query.append("INNER JOIN c_unidad_administrativa unidad ON unidad.id_unidad = relacion.id_unidad ");
 
     if (idUnidad != null && !idUnidad.trim().isEmpty()) {
       query.append(" where unidad.id_unidad ='" + idUnidad + "' ");
