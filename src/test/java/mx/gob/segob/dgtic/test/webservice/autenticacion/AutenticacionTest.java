@@ -18,6 +18,7 @@ import mx.gob.segob.dgtic.webservices.aplicacionconfig.exception.ConfiguracionEx
 import javax.naming.NamingException;
 
 import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -181,6 +182,13 @@ public class AutenticacionTest {
 			logger.info("Acceso "+headerTokenAcceso);
 			
 			return headerTokenAcceso; 
+		}
+		
+		@Test
+		public void anything() {
+			/**
+			 * 
+			 */
 		}
 		
 }

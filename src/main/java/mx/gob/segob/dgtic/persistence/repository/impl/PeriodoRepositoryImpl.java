@@ -16,9 +16,6 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import mx.gob.segob.dgtic.business.service.constants.ServiceConstants;
 import mx.gob.segob.dgtic.comun.sicoa.dto.PeriodoDto;
 import mx.gob.segob.dgtic.comun.util.mapper.RowAnnotationBeanMapper;
@@ -53,8 +50,7 @@ public class PeriodoRepositoryImpl extends RepositoryBase implements PeriodoRepo
     		periodoDto.setActivo((Boolean)periodo.get(RepositoryConstants.ACTIVO));
     		listaPeriodo.add(periodoDto);
     	}
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        logger.info("listaPeriodo: {} ",gson.toJson(listaPeriodo));
+        logger.info("listaPeriodo.: [{}] ",listaPeriodo);
      return listaPeriodo;	
 	}
 
@@ -77,8 +73,7 @@ public class PeriodoRepositoryImpl extends RepositoryBase implements PeriodoRepo
     		periodoDto.setActivo((Boolean)periodo.get(RepositoryConstants.ACTIVO));
     		listaPeriodo.add(periodoDto);
     	}
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        logger.info("listaPeriodo: {} ",gson.toJson(listaPeriodo));
+        logger.info("listaPeriodo: [{}] ",listaPeriodo);
      return listaPeriodo;	
 	}
 	
@@ -139,8 +134,7 @@ public class PeriodoRepositoryImpl extends RepositoryBase implements PeriodoRepo
 			logger.warn("Warn: {} ",e);
 			periodoDto.setMensaje("El periodo con fecha de inicio: "+periodoDto.getFechaInicio()+" ya existe. ");
 		}
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		logger.info("PeriodoRepoImpl-- method--agregaPeriodo: {} ",gson.toJson(periodoDto));
+		logger.info("PeriodoRepoImpl-- method--agregaPeriodo: [{}] ",periodoDto);
 		return periodoDto;
 	}
 
@@ -217,8 +211,7 @@ public class PeriodoRepositoryImpl extends RepositoryBase implements PeriodoRepo
     		periodoDto.setActivo((Boolean)periodo.get("activo"));
     		topPeriodo.add(periodoDto);
     	}
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        logger.info("listaPeriodo: {} ",gson.toJson(topPeriodo));
+        logger.info("listaPeriodo: [{}] ",topPeriodo);
      return topPeriodo;	
 	}
 
@@ -241,8 +234,7 @@ public class PeriodoRepositoryImpl extends RepositoryBase implements PeriodoRepo
 		} catch (Exception e) {
 			logger.warn("Error: {} ", e);
 		}
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		logger.info("periodoRepoImpl--method--cambioEstatusPeriodo: {} ",gson.toJson(periodo));
+		logger.info("periodoRepoImpl--method--cambioEstatusPeriodo: [{}] ",periodo);
 		return periodo;
 	}
 

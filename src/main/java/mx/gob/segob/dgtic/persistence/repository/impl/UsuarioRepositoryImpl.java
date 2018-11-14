@@ -218,7 +218,6 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 
 	@Override
 	public List<UsuarioDto> obtenerListaUsuariosActivos(String fecha) {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		logger.info("fecha method-UsuarioRepoImpl: {} ",fecha);
 		
 		StringBuilder qry = new StringBuilder();
@@ -234,7 +233,7 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
         parametros.addValue("fecha", fecha);
-        logger.info("parametros: {} ",gson.toJson(parametros));
+        logger.info("parametros: {} ",parametros);
         List<Map<String, Object>> usuarios = jdbcTemplate.queryForList(qry.toString());
         List<UsuarioDto> listaUsuario = new ArrayList<>();      
         for (Map<String, Object> usuario : usuarios) {

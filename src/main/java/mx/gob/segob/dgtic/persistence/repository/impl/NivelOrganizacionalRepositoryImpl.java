@@ -12,8 +12,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import mx.gob.segob.dgtic.comun.sicoa.dto.NivelOrganizacionalDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
@@ -51,7 +49,6 @@ public class NivelOrganizacionalRepositoryImpl extends RepositoryBase implements
      return listaNiveles;
 	}
 
-	@SuppressWarnings("null")
 	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_COMMITTED)
 	@Override
 	public NivelOrganizacionalDto buscaNivel(Integer idNivel) {
@@ -68,23 +65,19 @@ public class NivelOrganizacionalRepositoryImpl extends RepositoryBase implements
 			nivelDto = nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<NivelOrganizacionalDto>(NivelOrganizacionalDto.class));
 			if(nivelDto != null) {
 				nivelDto.setMensaje("");
-			} else {
-				nivelDto.setMensaje("Error al obtener la consulta. ");
 			}
 		} catch (Exception e) {
 			logger.warn("Error: {} ", e);
 			nivelDto.setMensaje("Error al obtener la consulta. ");
 		}
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		logger.info("PeriodoRepoImpl-- method--buscaNivel: {} ",gson.toJson(nivelDto));
+		logger.info("PeriodoRepoImpl-- method--buscaNivel: [{}] ",nivelDto);
 		return nivelDto;
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_COMMITTED)
 	@Override
 	public NivelOrganizacionalDto modificaNivel(NivelOrganizacionalDto nivelDto) {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		logger.info("NivelOrgRepoImpl--method--modificaNivel: {} ",gson.toJson(nivelDto));
+		logger.info("NivelOrgRepoImpl--method--modificaNivel: {} ",nivelDto);
 		StringBuilder qry = new StringBuilder();
 		qry.append("update c_nivel_organizacional ");
 		qry.append(" set id_horario = :idHorario, horario = :horario ");
@@ -106,7 +99,7 @@ public class NivelOrganizacionalRepositoryImpl extends RepositoryBase implements
 			nivelDto.setMensaje("Error al modificar el horario, verifiqure la información. ");
 		}
 		
-		logger.info("PeriodoRepoImpl-- method--modificaNivel: {} ",gson.toJson(nivelDto));
+		logger.info("PeriodoRepoImpl-- method--modificaNivel: {} ",nivelDto);
 		return nivelDto;
 	}
 
@@ -131,8 +124,7 @@ public class NivelOrganizacionalRepositoryImpl extends RepositoryBase implements
 			logger.error("Error: ", e);
 			nivelDto.setMensaje("El horario: "+nivelDto.getHorario()+" ya se encuentra asignado al Nivel Organizacional, verifique por favor. ");
 		}
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		logger.info("PeriodoRepoImpl-- method--agregaNivel: {} ",gson.toJson(nivelDto));
+		logger.info("PeriodoRepoImpl-- method--agregaNivel: {} ",nivelDto);
 		return nivelDto;
 	}
 
@@ -156,8 +148,7 @@ public class NivelOrganizacionalRepositoryImpl extends RepositoryBase implements
 			logger.error("Error-- {} ",e);
 			nivelDto.setMensaje("Error al elimiar el horario al Nivel Organizacional. ");
 		}
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		logger.info("PeriodoRepoImpl-- method--eliminaPeriodo: {} ",gson.toJson(nivelDto));
+		logger.info("PeriodoRepoImpl-- method--eliminaPeriodo: {} ",nivelDto);
 		return nivelDto;
 	}
 	
@@ -249,8 +240,7 @@ public class NivelOrganizacionalRepositoryImpl extends RepositoryBase implements
 		} catch (Exception e) {
 			logger.error("warn: {} ", e);
 		}
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		logger.info("PeriodoRepoImpl-- method--modificaNivel: {} ",gson.toJson(exitoso));
+		logger.info("PeriodoRepoImpl-- method--modificaNivel: {} ",exitoso);
 		return exitoso;
 	}
 	

@@ -41,6 +41,7 @@ public class RepositoryConstants {
 	public static final String ID_PERMISO = "id_permiso";
 	public static final String ID_PERMISO2 = "idPermiso";
 	public static final String ID_RESPONSABLE = "id_responsable";
+	public static final String ID_RESPONSABLE2 = "idResponsable";
 	public static final String ID_TIPO_DIA = "id_tipo_dia";
 	public static final String ID_TIPO_DIA2 = "idTipoDia";
 	public static final String ID_UNIDAD = "id_unidad";
@@ -55,6 +56,7 @@ public class RepositoryConstants {
 	public static final String APELLIDO_PATERNO2 = "apellidoPaterno";
 	public static final String APELLIDO_MATERNO = "apellido_materno";
 	public static final String APELLIDO_MATERNO2 = "apellidoMaterno";
+	public static final String ASISTENCIA_BUSQUEDA2 = "asistenciaBusqueda";
 	public static final String ACTIVO = "activo";
 	public static final String BLOQUEADO = "bloqueado";
 	public static final String COMISION = "comision";

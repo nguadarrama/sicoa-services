@@ -68,7 +68,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 			List<AsistenciaDto> listaAsistenciaEntradaSalida = calculaEntradasSalidas(listaAsistenciaFiltrada);
 			
 			//Se calculan las incidencias con base a las entradas y salidas
-			List<AsistenciaDto> listaAsistenciaCalculada = calculaIncidencias(listaAsistenciaEntradaSalida, listaAsistenciaFiltrada);
+			List<AsistenciaDto> listaAsistenciaCalculada = calculaIncidencias(listaAsistenciaEntradaSalida);
 		
 			//la asistencia se guarda
 			cargaAsistenciaRepository.guardaAsistencia(listaAsistenciaCalculada);
@@ -90,7 +90,6 @@ public class CargaAsistenciaRules extends RecursoBase {
 		listaUsuarios = new ArrayList<>();
 		listaUsuarios = usuarioService.obtenerListaUsuarios();
 		listaIdusuariosAsistencia = new HashSet<>();
-		
 		//obtiene asistencia del sistema de asistencias (biométricos - ASISTENCIA)
 		List<AsistenciaDto> listaAsistenciaCompleta = cargaAsistenciaRepository.obtieneAsistencia(configuracionRepository.obtieneUltimaFechaCargaAsistencia());
 		
@@ -274,7 +273,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 		return listaAsistenciaCalculada;
 	}
 	
-	private List<AsistenciaDto> calculaIncidencias(List<AsistenciaDto> listaAsistencia, List<AsistenciaDto> listaAsistenciaFiltrada) {
+	private List<AsistenciaDto> calculaIncidencias(List<AsistenciaDto> listaAsistencia) {
 		logger.info("calculando incidencias: {} ",listaAsistencia.size());
 		
 		for (AsistenciaDto a : listaAsistencia) {
@@ -299,11 +298,9 @@ public class CargaAsistenciaRules extends RecursoBase {
 					TipoDiaDto tipoDia = obtieneTipoDia(4);				// "Incidencia por permanencia"
 					a.setIdTipoDia(tipoDia);
 				}
-			} else if (a.getEntrada() == null) { 											
-				if (a.getSalida() != null) {
+			} else if (a.getEntrada() == null && a.getSalida() != null) { 											
 					TipoDiaDto tipoDia = obtieneTipoDia(2);				//no checó entrada: "Omisión de Entrada"
 					a.setIdTipoDia(tipoDia);
-				}
 			}
 		}
 		

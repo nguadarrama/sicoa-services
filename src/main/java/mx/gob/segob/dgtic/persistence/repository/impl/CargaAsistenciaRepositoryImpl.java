@@ -49,10 +49,10 @@ public class CargaAsistenciaRepositoryImpl extends RecursoBase implements CargaA
 	    		listaAsistencia.add(asistencia);
 	    	}
         } catch (Exception e) {
-        	logger.warn("No se recuperaron las asistencias del sistema de asistencias: " + e.getMessage());
+        	logger.warn("No se recuperaron las asistencias del sistema de asistencias: {} ",e.getMessage());
         }
         
-        logger.info(listaAsistencia.size() + " eventos en ASISTENCIAS");
+        logger.info("eventos en ASISTENCIAS-- {} ",listaAsistencia.size());
         
 		return listaAsistencia;
 	}
@@ -86,11 +86,11 @@ public class CargaAsistenciaRepositoryImpl extends RecursoBase implements CargaA
 			});
 			
 		} catch (Exception e) {
-			logger.warn("No se insertaron las asistencias: " + e.getMessage());
+			logger.warn("No se insertaron las asistencias: {} ",e.getMessage());
 		}
 		
 		if (inserciones != null) {
-			logger.info(inserciones.length + " asistencias guardadas");
+			logger.info("asistencias guardadas.: {} ",inserciones.length);
 		}
 	}
 	

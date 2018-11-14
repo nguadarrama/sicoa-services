@@ -173,7 +173,7 @@ public class VacacionPeriodoRepositoryImpl extends RepositoryBase implements Vac
 	        
 	        try{
 	         informacionConsulta = nameParameterJdbcTemplate.queryForMap(qry.toString(), parametros);
-	         if( informacionConsulta!=null || !informacionConsulta.isEmpty()){
+	         if( informacionConsulta!=null){
 	         	UsuarioDto usuario= new UsuarioDto();
 	     		vacacion.setIdVacacion((Integer)informacionConsulta.get("id_vacacion"));
 	     		vacacion.setDias((Integer)informacionConsulta.get("dias"));

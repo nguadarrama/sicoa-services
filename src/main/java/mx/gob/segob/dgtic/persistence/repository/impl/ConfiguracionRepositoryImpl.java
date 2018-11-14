@@ -27,14 +27,8 @@ public class ConfiguracionRepositoryImpl extends RecursoBase implements Configur
         MapSqlParameterSource parametros = new MapSqlParameterSource();
         parametros.addValue(RepositoryConstants.ID_CONFIGURACION2, idConfiguracion);
         
-        ConfiguracionDto configuracion = null;
-        
-        try {
-        	configuracion = nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<ConfiguracionDto>(ConfiguracionDto.class));
-        } catch (Exception e) {
-        	logger.error("No se logró cargar la configuración <última fecha de carga>, {} ",e.getMessage());
-        }
-        
+        ConfiguracionDto configuracion;
+        configuracion = nameParameterJdbcTemplate.queryForObject(qry.toString(), parametros, new RowAnnotationBeanMapper<ConfiguracionDto>(ConfiguracionDto.class));
         return configuracion.getFecha();
 	}
 

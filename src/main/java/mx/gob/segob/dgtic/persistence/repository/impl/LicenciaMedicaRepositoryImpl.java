@@ -148,7 +148,7 @@ public class LicenciaMedicaRepositoryImpl extends RepositoryBase implements Lice
 		logger.info("query: {} ",query);
         List<Map<String, Object>> detalleLicencia = jdbcTemplate.queryForList(query);
         logger.info("Datos de la consulta: {} ",detalleLicencia.size());
-        if(detalleLicencia.size()==0 || detalleLicencia==null){
+        if(detalleLicencia.isEmpty()){
 			StringBuilder qry = new StringBuilder();
 			Date fechaActual = new Date();
 			logger.info("Fecha actual: {} ",fechaActual);

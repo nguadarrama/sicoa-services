@@ -23,10 +23,10 @@ public class UsuarioPerfilRules  extends ServiceBase{
 		Integer r = null;
 		List<UsuarioPerfilDto> listaUsuarioPerfil;
 		Integer[] arreglo = usuarioPerfilDto.getIdsPerfil();
-		System.out.println("Arreglo " + arreglo[0] == null ? " 0 " : arreglo[0]);
+		logger.info("Arreglo: {} ", arreglo[0] == null ? " 0 " : arreglo[0]);
 		listaUsuarioPerfil=usuarioPerfilRepository.consultaUsuarioPerfil(usuarioPerfilDto.getClaveUsuario().getClaveUsuario());
 		for(UsuarioPerfilDto usuarioPer: listaUsuarioPerfil){
-			System.out.println("ENTRA");
+			logger.info("ENTRA");
 			usuarioPerfilRepository.eliminarUsuarioPerfil(usuarioPer.getIdUsuarioPerfil());
 		}
 		for(int i=0; i<arreglo.length;i++){

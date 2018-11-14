@@ -123,7 +123,7 @@ public class CargaInicialRepositoryImpl extends RecursoBase implements CargaInic
     		listaUsuario.add(usuarioDto);
     	}
         
-        if (listaUsuario.size() > 0) {
+        if (!listaUsuario.isEmpty()) {
         	return listaUsuario.get(0);
         } else {
         	return null;

@@ -18,7 +18,7 @@ public class CargaInicialRules {
 	private CargaInicialRepository cargaInicialRepository;
 	
 	public List<UsuarioDto>  recuperarUsuariosCargaInicial(){
-		List<UsuarioDto> listaUsuariosRecuperados = new ArrayList<UsuarioDto>();
+		List<UsuarioDto> listaUsuariosRecuperados;
 		
 		
 		listaUsuariosRecuperados= cargaInicialRepository.recuperarUsuariosCargaInicial();
