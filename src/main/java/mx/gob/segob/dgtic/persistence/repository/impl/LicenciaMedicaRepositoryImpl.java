@@ -143,7 +143,7 @@ public class LicenciaMedicaRepositoryImpl extends RepositoryBase implements Lice
 		String fechaF=sdf.format(licenciaMedicaDto.getFechaFin());
 		String query="select id_licencia from m_licencia_medica where (((fecha_inicio between '"+fechaIni+AND+fechaF+"') "
 				+ "or (fecha_fin between '"+fechaIni+AND+fechaF+"' )) "+
-				" or('"+fechaIni+"'>fecha_inicio and fecha_inicio<'"+fechaF+"' and fecha_fin>'"+fechaF+"'))"
+				" or('"+fechaIni+"'>fecha_inicio and fecha_inicio<'"+fechaF+"' and fecha_fin>'"+fechaF+"')) and id_estatus != 3 "
 						+ "and id_usuario='"+licenciaMedicaDto.getIdUsuario().getIdUsuario()+"' ";
 		logger.info("query: {} ",query);
         List<Map<String, Object>> detalleLicencia = jdbcTemplate.queryForList(query);

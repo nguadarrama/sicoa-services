@@ -199,7 +199,7 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 		String fechaF=sdf.format(detalleVacacionDto.getFechaFin());
 		String query="select id_detalle from d_detalle_vacacion where (((fecha_inicio between '"+fechaIni+AND+fechaF+"') "
 				+ "or (fecha_fin between '"+fechaIni+AND+fechaF+"' )) "+
-				" or('"+fechaIni+"'>fecha_inicio and fecha_inicio<'"+fechaF+"' and fecha_fin>'"+fechaF+"')) and id_estatus != 3 "
+				" or('"+fechaIni+"'>fecha_inicio and fecha_inicio<'"+fechaF+"' and fecha_fin>'"+fechaF+"')) and (id_estatus != 3 or id_estatus != 4) "
 						+ "and id_usuario='"+detalleVacacionDto.getIdUsuario().getIdUsuario()+"' ";
 		logger.info("query.. {} ",query);
         List<Map<String, Object>> detalleVacaciones = jdbcTemplate.queryForList(query);
