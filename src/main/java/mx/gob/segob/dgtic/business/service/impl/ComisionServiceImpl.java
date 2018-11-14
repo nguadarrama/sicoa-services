@@ -24,7 +24,7 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.ComisionDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.GenerarReporteArchivoComision;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
-import mx.gob.segob.dgtic.comun.sicoa.dto.reporte;
+import mx.gob.segob.dgtic.comun.sicoa.dto.Reporte;
 import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JREmptyDataSource;
@@ -164,8 +164,8 @@ public class ComisionServiceImpl extends ServiceBase implements ComisionService 
   }
 
   @Override
-  public reporte generaReporteComisiones(GenerarReporteArchivoComision generarReporteArchivo) {
-    reporte repo = new reporte();
+  public Reporte generaReporteComisiones(GenerarReporteArchivoComision generarReporteArchivo) {
+    Reporte repo = new Reporte();
     byte[] output = null;
     try {
       InputStream template = null;

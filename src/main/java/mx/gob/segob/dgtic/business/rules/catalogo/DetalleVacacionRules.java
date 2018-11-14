@@ -60,19 +60,13 @@ public class DetalleVacacionRules extends RecursoBase {
 	public DetalleVacacionDto agregaDetalleVacacion(DetalleVacacionDto detalleVacacionDto){
 		UsuarioDto usuario=usuarioRepository.buscaUsuarioPorId(detalleVacacionDto.getIdUsuario().getIdUsuario());
 		detalleVacacionDto.setIdUsuario(usuario);
-		//detalleVacacionRepository.agregaDetalleVacacion(detalleVacacionDto);
-		System.out.println("idVacacion en rules "+detalleVacacionDto.getIdVacacion().getIdVacacion());
-	    //ArchivoDto archivoDto = new ArchivoDto();
-	    
-	    //Integer idArchivo=archivoRepository.agregaArchivo(archivoDto);
-	    //archivoDto.setIdArchivo(idArchivo);
-	    //detalleVacacionDto.setIdArchivo(archivoDto);
-	    //
-	    VacacionPeriodoDto vacacionPeriodoDto= new VacacionPeriodoDto();
+		logger.info("idVacacion en rules: {} ",detalleVacacionDto.getIdVacacion().getIdVacacion());
+	    VacacionPeriodoDto vacacionPeriodoDto;
 	    //se obtienen los datos de la tabla vacacion_periodo
 	    vacacionPeriodoDto=vacacionPeriodoRepository.buscaVacacionPeriodo(detalleVacacionDto.getIdVacacion().getIdVacacion());
 	    //Resta de los dias disponibles menos los dias que se han pedido
-	    System.out.println("Dias del periodo "+vacacionPeriodoDto.getDias()+" dias pedidos "+ detalleVacacionDto.getDias());
+	   logger.info("Dias del periodo- {} ",vacacionPeriodoDto.getDias());
+	   logger.info("dias pedidos - {} ", detalleVacacionDto.getDias());
 	    Integer resta=vacacionPeriodoDto.getDias()-detalleVacacionDto.getDias();
 	    //setea el nueo numero de dias disponibles
 	    vacacionPeriodoDto.setDias(resta);	    
@@ -94,8 +88,8 @@ public class DetalleVacacionRules extends RecursoBase {
 	
 	public DetalleVacacionDto aceptaORechazaDetalleVacacion(DetalleVacacionDto detalleVacacionDto){
 		DetalleVacacionDto aux= new DetalleVacacionDto();
-		System.out.println("idDetalle en el rules "+detalleVacacionDto.getIdDetalle());
-		DetalleVacacionDto detalleAux= new DetalleVacacionDto();
+		logger.info("idDetalle en el rules: {} ",detalleVacacionDto.getIdDetalle());
+		DetalleVacacionDto detalleAux;
 		detalleAux=detalleVacacionRepository.buscaDetalleVacacion(detalleVacacionDto.getIdDetalle());
 		detalleVacacionDto.setFechaInicio(detalleAux.getFechaInicio());
 		detalleVacacionDto.setFechaFin(detalleAux.getFechaFin());
@@ -115,30 +109,30 @@ public class DetalleVacacionRules extends RecursoBase {
 				 parsedInicial = formatter.parse(parsedInicio);
 			     parsedFinal = formatter.parse(parsedFin);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Error. {} ",e);
 			}
 			
 			
 			fechaInicioDate = new java.sql.Date(parsedInicial.getTime());
-			//feActual= new java.sql.Date(fechaActual.getTime());
 			fechaFinDate = new java.sql.Date(parsedFinal.getTime());
 			Calendar c = Calendar.getInstance();
 			c.setTime(fechaFinDate);
 			c.add(Calendar.DAY_OF_MONTH, 1);  
 			fechaFinDate.setTime(c.getTimeInMillis());
-			UsuarioDto usuarioDto= new UsuarioDto();
+			UsuarioDto usuarioDto;
 		    usuarioDto=usuarioRepository.buscaUsuarioPorId(detalleVacacionDto.getIdUsuario().getIdUsuario());
-		    System.out.println("FechaInicial "+parsedInicial+" fechaActual "+fechaActual);
+		    logger.info("FechaInicial: {} ",parsedInicial);
+		    logger.info("fechaActual: {} ",fechaActual);
 			if((fechaActual.before(parsedInicial) || fechaActual.equals(parsedInicial))){
-				System.out.println("FechaInicial "+parsedInicial+" fechaActual "+fechaActual);
+				logger.info("FechaInicial. {} ",parsedInicial);
+				logger.info("fechaActual. {} ",fechaActual);
 					Date fechaInicio=detalleVacacionDto.getFechaInicio();
 					Date fechaFin=detalleVacacionDto.getFechaFin();
 					Calendar c1 = Calendar.getInstance();
 				    c1.setTime(fechaInicio);
 				    Calendar c2 = Calendar.getInstance();
 				    c2.setTime(fechaFin);
-				    List<Date> listaFechas = new ArrayList<>();
+				    List<Date> listaFechas;
 				    listaFechas=removerFinesDeSemana(fechaInicio, fechaFin);
 				    EstatusDto estatusDto = new EstatusDto();
 				    estatusDto.setIdEstatus(2);
@@ -156,18 +150,21 @@ public class DetalleVacacionRules extends RecursoBase {
 				    }
 				    aux= detalleVacacionRepository.aceptaORechazaDetalleVacacion(detalleVacacionDto); 
 			}else{
-				System.out.println("3FechaInicial "+parsedInicial+" fechaActual "+fechaActual);
+				logger.info("3FechaInicial: {} ",parsedInicial);
+				logger.info("3fechaActual: {} ",fechaActual);
 				List<AsistenciaDto> listaAsistencia= asistenciaRepository.buscaAsistenciaEmpleado(usuarioDto.getClaveUsuario(), 0, 0, fechaInicioDate, fechaFinDate);
 				Boolean bandera=false;
 				for(AsistenciaDto asistencia: listaAsistencia){
-					System.out.println("entrada "+fechaInicioDate+" "+asistencia.getEntrada()+" tipoDia "+asistencia.getIdTipoDia().getIdTipoDia().toString());
+					logger.info("entrada . {} ",fechaInicioDate);
+					logger.debug("entrada.. {} ",asistencia.getEntrada());
+					logger.info("tipoDia -- {}",asistencia.getIdTipoDia());
 					if(fechaInicioDate.equals(asistencia.getEntrada()) && !asistencia.getIdTipoDia().getIdTipoDia().toString().equals("6")){
 						bandera=true;
 					}
 				}
-				if(bandera==false){
+				if(bandera){
 					for(AsistenciaDto asistencia2: listaAsistencia){
-						System.out.println("idAsistencia "+asistencia2.getIdAsistencia());
+						logger.info("idAsistencia: {} ",asistencia2.getIdAsistencia());
 						if(asistencia2.getIdTipoDia().getIdTipoDia().toString().equals("6")){
 							asistenciaRepository.eliminaAsistencia(asistencia2.getIdAsistencia());
 							TipoDiaDto tipoDia= new TipoDiaDto();
@@ -187,9 +184,8 @@ public class DetalleVacacionRules extends RecursoBase {
 			}
 			
 		}else if(detalleVacacionDto.getIdEstatus().getIdEstatus()==3){
-			//detalleVacacionRepository.eliminaDetalleVacacion(detalleVacacionDto.getIdDetalle());
 			aux = detalleVacacionRepository.aceptaORechazaDetalleVacacion(detalleVacacionDto);
-			VacacionPeriodoDto vacacionPeriodoDto= new VacacionPeriodoDto();
+			VacacionPeriodoDto vacacionPeriodoDto;
 		    //se obtienen los datos de la tabla vacacion_periodo
 		    vacacionPeriodoDto=vacacionPeriodoRepository.buscaVacacionPeriodo(detalleVacacionDto.getIdVacacion().getIdVacacion());
 		    //Suma los dias pedidos que ya no se necesitan
@@ -211,7 +207,7 @@ public class DetalleVacacionRules extends RecursoBase {
 	}
 	
 	public DetalleVacacionDto cancelaVacaciones(Integer idDetalle){
-		DetalleVacacionDto detalleVacacionDto = new DetalleVacacionDto();
+		DetalleVacacionDto detalleVacacionDto;
 		DetalleVacacionDto detalleAux = new DetalleVacacionDto();
 		detalleVacacionDto = buscaDetalleVacacion(idDetalle);
 		UsuarioDto usuario = usuarioRepository.buscaUsuarioPorId(detalleVacacionDto.getIdUsuario().getIdUsuario());
@@ -230,27 +226,26 @@ public class DetalleVacacionRules extends RecursoBase {
 				String parsedInicio = formatter.format(detalleVacacionDto.getFechaInicio());
 				Date parsedInicial = formatter.parse(parsedInicio);
 				fechaInicio = new java.sql.Date(parsedInicial.getTime());
-				//feActual= new java.sql.Date(fechaActual.getTime());
 				fechaFin = new java.sql.Date(parsedFinal.getTime());
 				if((fechaActual.before(parsedInicial) || fechaActual.equals(parsedInicial))){
-					//System.out.println("fecha Actual "+feActual+" fechaInicio "+fechaInicio);
-					//se suma un día a la fecha fin para incluirla en la búsqueda
 					Calendar c = Calendar.getInstance();
 					c.setTime(fechaFin);
 					c.add(Calendar.DAY_OF_MONTH, 1);  
 					fechaFin.setTime(c.getTimeInMillis());
 					List<AsistenciaDto> listaAsistencia= asistenciaRepository.buscaAsistenciaEmpleado(usuario.getClaveUsuario(), 5, 0, fechaInicio, fechaFin); 
-					System.out.println("resultado de consulta asistencia "+listaAsistencia.size()+" filtros claveUsuario "+usuario.getClaveUsuario()
-					+" fechaInicio "+fechaInicio+" fechaFin "+fechaFin);
+					logger.info("resultado de consulta asistencia - {}",listaAsistencia.size());
+					logger.info("filtros claveUsuario- {} ",usuario.getClaveUsuario());
+					logger.info("fechaInicio . {}",fechaInicio);
+					logger.info("fechaFin.- {} ",fechaFin);
 					for(AsistenciaDto asistencia: listaAsistencia){
-						System.out.println("idAsistencia "+asistencia.getIdAsistencia());
+						logger.info("idAsistencia-- {} ",asistencia.getIdAsistencia());
 						asistenciaRepository.eliminaAsistencia(asistencia.getIdAsistencia());
 					}
 					EstatusDto estatus= new EstatusDto();
 					estatus.setIdEstatus(4);
 					detalleVacacionDto.setIdEstatus(estatus);
 					detalleAux=detalleVacacionRepository.aceptaORechazaDetalleVacacion(detalleVacacionDto);
-					VacacionPeriodoDto vacacionPeriodoDto= new VacacionPeriodoDto();
+					VacacionPeriodoDto vacacionPeriodoDto;
 				    //se obtienen los datos de la tabla vacacion_periodo
 				    vacacionPeriodoDto=vacacionPeriodoRepository.buscaVacacionPeriodo(detalleVacacionDto.getIdVacacion().getIdVacacion());
 				    //Suma los dias pedidos que ya no se necesitan
@@ -263,7 +258,9 @@ public class DetalleVacacionRules extends RecursoBase {
 					List<AsistenciaDto> listaAsistencia= asistenciaRepository.buscaAsistenciaEmpleado(usuario.getClaveUsuario(), 0, 0, fechaInicio, fechaFin);
 					Boolean bandera=false;
 					for(AsistenciaDto asistencia: listaAsistencia){
-						System.out.println("entrada "+fechaInicio+" "+asistencia.getEntrada()+" tipoDia "+asistencia.getIdTipoDia().getIdTipoDia().toString());
+						logger.info("entrada.- {} ",fechaInicio);
+						logger.info("Entrada.- {} ",asistencia.getEntrada());
+						logger.info("tipoDia.- {} ",asistencia.getIdTipoDia());
 						if(fechaInicio.equals(asistencia.getEntrada()) && !asistencia.getIdTipoDia().getIdTipoDia().toString().equals("6")){
 							
 							bandera=true;
@@ -271,7 +268,7 @@ public class DetalleVacacionRules extends RecursoBase {
 					}
 					if(bandera==true){
 						for(AsistenciaDto asistencia2: listaAsistencia){
-							System.out.println("idAsistencia "+asistencia2.getIdAsistencia());
+							logger.info("idAsistencia -- {}",asistencia2.getIdAsistencia());
 							if(asistencia2.getIdTipoDia().getIdTipoDia().toString().equals("5")){
 								asistenciaRepository.eliminaAsistencia(asistencia2.getIdAsistencia());
 							}
@@ -281,7 +278,7 @@ public class DetalleVacacionRules extends RecursoBase {
 						estatus.setIdEstatus(4);
 						detalleVacacionDto.setIdEstatus(estatus);
 						detalleAux=detalleVacacionRepository.aceptaORechazaDetalleVacacion(detalleVacacionDto);
-						VacacionPeriodoDto vacacionPeriodoDto= new VacacionPeriodoDto();
+						VacacionPeriodoDto vacacionPeriodoDto;
 					    //se obtienen los datos de la tabla vacacion_periodo
 					    vacacionPeriodoDto=vacacionPeriodoRepository.buscaVacacionPeriodo(detalleVacacionDto.getIdVacacion().getIdVacacion());
 					    //Suma los dias pedidos que ya no se necesitan
@@ -296,7 +293,7 @@ public class DetalleVacacionRules extends RecursoBase {
 					}
 					
 				}
-//				if(fechaActual.after(parsedInicial) && fechaActual.after(parsedFinal)){
+/**				if(fechaActual.after(parsedInicial) && fechaActual.after(parsedFinal)){
 //					Integer contadorDias=0;
 ////					se suma un día a la fecha fin para incluirla en la búsqueda
 //					Calendar c = Calendar.getInstance();
@@ -334,14 +331,11 @@ public class DetalleVacacionRules extends RecursoBase {
 //				    vacacionPeriodoDto.setDias(resta);
 //				    //modificamos el numero de vacaciones en la tabla vacacion_periodo
 //				    vacacionPeriodoRepository.modificaVacacionPeriodo(vacacionPeriodoDto);
-//				}
+//				} **/
 				
 			} catch (ParseException e) {
 				logger.warn("Error al convertir la fecha en búsqueda de asistencia: {} ", e.getMessage());
-			}
-		
-//		
-		
+			}	
 		return detalleAux;
 	}
 	

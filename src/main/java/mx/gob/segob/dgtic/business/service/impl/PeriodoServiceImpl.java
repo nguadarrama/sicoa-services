@@ -103,7 +103,7 @@ public class PeriodoServiceImpl extends RecursoBase implements PeriodoService {
 				 * AGREGANDO PERIODOS A LOS USUARIOS ENCONTRADOS
 				 *************************************************************/
 				int idUltimo = periodos.get(0).getIdPeriodo();
-				/** System.out.println("ultimoIdPeriodo: "+idUltimo); **/
+				logger.info("ultimoIdPeriodo: {}  ",idUltimo);
 				vacacionRules.generarVacacionesTodos(user.getIdUsuario(), idUltimo , estatusPeriodo, sdf.format(fechaInicio), 10, periodoDto.getActivo());
 			}
 		}

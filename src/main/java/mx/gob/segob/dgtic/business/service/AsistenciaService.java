@@ -5,7 +5,7 @@ import java.util.List;
 
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.IncidenciaDto;
-import mx.gob.segob.dgtic.comun.sicoa.dto.reporte;
+import mx.gob.segob.dgtic.comun.sicoa.dto.Reporte;
 import mx.gob.segob.dgtic.comun.util.AsistenciaBusquedaUtil;
 import mx.gob.segob.dgtic.comun.util.FormatoIncidencia;
 
@@ -19,8 +19,8 @@ public interface AsistenciaService {
 	public Integer creaDescuento(IncidenciaDto incidencia);
 	public Integer dictaminaIncidencia(IncidenciaDto incidencia);
 	public Integer aplicaDescuento(IncidenciaDto incidencia);
-	public reporte generaFormatoJustificacion(FormatoIncidencia generaReporteArchivo) throws FileNotFoundException;
-	public reporte generaFormatoDescuento(FormatoIncidencia generaReporteArchivo) throws FileNotFoundException;
+	public Reporte generaFormatoJustificacion(FormatoIncidencia generaReporteArchivo) throws FileNotFoundException;
+	public Reporte generaFormatoDescuento(FormatoIncidencia generaReporteArchivo) throws FileNotFoundException;
 	public List<AsistenciaDto> reporteDireccion(AsistenciaBusquedaUtil asistenciaBusquedaUtil);
 	public List<AsistenciaDto> reporteCoordinador(AsistenciaBusquedaUtil asistenciaBusquedaUtil);
 }

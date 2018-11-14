@@ -26,7 +26,7 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.GeneraReporteArchivo;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionPeriodoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionesAux;
-import mx.gob.segob.dgtic.comun.sicoa.dto.reporte;
+import mx.gob.segob.dgtic.comun.sicoa.dto.Reporte;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
@@ -123,8 +123,8 @@ public class DetalleVacacionServiceImpl extends ServiceBase implements DetalleVa
 	}
 	
 	@Override
-	public reporte generaReporteVacaciones(GeneraReporteArchivo generaReporteArchivo ) throws FileNotFoundException, ParseException, JRException {
-		reporte repo = new reporte();
+	public Reporte generaReporteVacaciones(GeneraReporteArchivo generaReporteArchivo ) throws FileNotFoundException, ParseException, JRException {
+		Reporte repo = new Reporte();
 		String jasper = "/documentos/sicoa/jasper/vacacion/Vacaciones.jrxml";
 		byte[] output = null;
 		VacacionPeriodoDto vacacion;

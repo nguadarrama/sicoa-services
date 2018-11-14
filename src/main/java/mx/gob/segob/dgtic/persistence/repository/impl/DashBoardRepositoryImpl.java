@@ -85,7 +85,7 @@ public class DashBoardRepositoryImpl extends RecursoBase implements DashBoardRep
         
         for (Map<String, Object> aux : vacaciones) {
         	DashVacDto vac = new DashVacDto();
-    		vac.setId_periodo((Integer)aux.get("id_periodo"));
+    		vac.setIdPeriodo((Integer)aux.get("id_periodo"));
     		vac.setDias((Integer)aux.get("dias"));
     		vac.setDescripcion((String)aux.get("descripcion"));
     		listaVacaciones.add(vac);

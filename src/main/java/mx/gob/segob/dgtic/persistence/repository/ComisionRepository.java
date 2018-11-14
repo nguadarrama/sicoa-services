@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import mx.gob.segob.dgtic.comun.sicoa.dto.ComisionDto;
-import mx.gob.segob.dgtic.comun.sicoa.dto.LicenciaMedicaDto;
 
 public interface ComisionRepository {
 

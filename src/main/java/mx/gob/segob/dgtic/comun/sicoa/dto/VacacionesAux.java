@@ -1,10 +1,5 @@
 package mx.gob.segob.dgtic.comun.sicoa.dto;
 
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.web.multipart.MultipartFile;
-
 public class VacacionesAux {
 
 		
@@ -24,7 +19,7 @@ public class VacacionesAux {
     	
     }
     public VacacionesAux(Integer idUsuario, Integer idVacacion, Integer idResponsable, Integer idEstatus, String fechaInicio, String fechaFin, 
-    	Integer Dias	){
+    	Integer dias){
     	
     }
 	public Integer getIdDetalle() {

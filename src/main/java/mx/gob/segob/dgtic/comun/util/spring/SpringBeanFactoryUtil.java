@@ -43,7 +43,7 @@ public class SpringBeanFactoryUtil {
 	 * @throws BeansException Una excepcion al asignar la fabrica de beans
 	 */
 	@Autowired
-	public synchronized void setApplicationContext(ApplicationContext beanFactory) throws BeansException {
+	public synchronized void setApplicationContext(ApplicationContext beanFactory)  {
 		//Se obtiene una instancia de la clase de apoyo para instanciar la clase estatica para acceso singleton
 		if(factory == null){
 			factory = beanFactory.getBean(SpringBeanFactoryUtil.class);

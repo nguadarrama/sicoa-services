@@ -297,7 +297,7 @@ public class PeriodoRepositoryImpl extends RepositoryBase implements PeriodoRepo
     		parametros.addValue(RepositoryConstants.ID_PERIODO2, idPeriodo);
     		parametros.addValue(RepositoryConstants.ACTIVO, false);
     		nameParameterJdbcTemplate.update(qry.toString(), parametros);
-        	valida = false;
+        	
         }
         }catch(Exception e){
         	logger.warn("Warn -- {} ", e);

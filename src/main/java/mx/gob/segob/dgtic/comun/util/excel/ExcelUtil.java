@@ -733,8 +733,9 @@ public class ExcelUtil {
             File loFile = new File(lnombreArchivo);
             if (loFile.exists()) {
                 boolean fueBorrado = loFile.delete();
-                if(!fueBorrado)
+                if(!fueBorrado) {
                     logger.debug("No se pudo eliminar el archivo");
+                }
             }
             archivoSalida = new FileOutputStream(loFile);
             libro.write(archivoSalida);

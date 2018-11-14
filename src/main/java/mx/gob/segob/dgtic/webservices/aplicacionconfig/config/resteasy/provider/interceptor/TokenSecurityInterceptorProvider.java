@@ -117,7 +117,7 @@ public class TokenSecurityInterceptorProvider implements PreProcessInterceptor {
 	 */
 	@Override
 	public ServerResponse preProcess(HttpRequest request, ResourceMethod methodInvoked)
-			throws WebApplicationException {
+			 {
 		
 		logger.trace("Evaluando token de seguridad ");
 		

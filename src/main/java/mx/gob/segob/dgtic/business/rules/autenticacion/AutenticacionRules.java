@@ -237,7 +237,7 @@ public class AutenticacionRules extends ServiceBase{
 				Calendar tiempoActual = Calendar.getInstance();
 				if(tiempoActual.after(tiempo)){
 					esUsuarioAutenticado = Boolean.FALSE;	
-					usuario.setLogueado(DecisionEnum.N);;
+					usuario.setLogueado(DecisionEnum.N);
 					repositorioAutenticacion.cerrarSession(usuario.getClaveUsuario());
 				}
 			}

@@ -7,7 +7,7 @@ import java.util.List;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DetalleVacacionDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.GeneraReporteArchivo;
 import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionesAux;
-import mx.gob.segob.dgtic.comun.sicoa.dto.reporte;
+import mx.gob.segob.dgtic.comun.sicoa.dto.Reporte;
 import net.sf.jasperreports.engine.JRException;
 
 public interface DetalleVacacionService {
@@ -20,6 +20,6 @@ public interface DetalleVacacionService {
 	public DetalleVacacionDto aceptaORechazaDetalleVacacion(DetalleVacacionDto detalleVacacionDto);
 	public List<DetalleVacacionDto> obtenerVacacionesPorFiltros(String claveUsuario, String nombre, String apellidoPaterno, String apellidoMaterno, String idUnidad, String idEstatus);
 	public List<DetalleVacacionDto> consultaVacacionesPropiasPorFiltros(String claveUsuario, String idPeriodo, String idEstatus, String pfechaInicio, String pfechaFin );
-	public reporte generaReporteVacaciones(GeneraReporteArchivo generaReporteArchivo) throws FileNotFoundException, ParseException, JRException;
+	public Reporte generaReporteVacaciones(GeneraReporteArchivo generaReporteArchivo) throws FileNotFoundException, ParseException, JRException;
 	public DetalleVacacionDto cancelaVacaciones(Integer idDetalle);
 }

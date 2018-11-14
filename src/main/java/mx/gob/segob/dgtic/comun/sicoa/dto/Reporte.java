@@ -1,6 +1,6 @@
 package mx.gob.segob.dgtic.comun.sicoa.dto;
 
-public class reporte {
+public class Reporte {
 	private byte[] nombre;
 
 	/**

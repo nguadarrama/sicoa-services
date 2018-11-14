@@ -21,7 +21,7 @@ import mx.gob.segob.dgtic.business.service.base.ServiceBase;
 import mx.gob.segob.dgtic.business.service.constants.ServiceConstants;
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.IncidenciaDto;
-import mx.gob.segob.dgtic.comun.sicoa.dto.reporte;
+import mx.gob.segob.dgtic.comun.sicoa.dto.Reporte;
 import mx.gob.segob.dgtic.comun.util.AsistenciaBusquedaUtil;
 import mx.gob.segob.dgtic.comun.util.FormatoIncidencia;
 import net.sf.jasperreports.engine.JRDataSource;
@@ -157,8 +157,8 @@ public class AsistenciaServiceImpl extends ServiceBase implements AsistenciaServ
 	}
 
 	@Override
-	public reporte generaFormatoJustificacion(FormatoIncidencia generaReporteArchivo) throws FileNotFoundException {
-		reporte repo = new reporte();
+	public Reporte generaFormatoJustificacion(FormatoIncidencia generaReporteArchivo) throws FileNotFoundException {
+		Reporte repo = new Reporte();
 		byte[] output= null;
 		String f = "/documentos/sicoa/jasper/asistencia/justificacion/justificacion_incidencias.jrxml";
 		try {
@@ -187,8 +187,8 @@ public class AsistenciaServiceImpl extends ServiceBase implements AsistenciaServ
 	}
 	
 	@Override
-	public reporte generaFormatoDescuento(FormatoIncidencia generaReporteArchivo) throws FileNotFoundException {
-		reporte repo = new reporte();
+	public Reporte generaFormatoDescuento(FormatoIncidencia generaReporteArchivo) throws FileNotFoundException {
+		Reporte repo = new Reporte();
 		byte[] output= null;
 		String f = "/documentos/sicoa/jasper/asistencia/descuento/descuento_incidencias.jrxml";
 		
@@ -205,7 +205,7 @@ public class AsistenciaServiceImpl extends ServiceBase implements AsistenciaServ
 			Map<String,Object> parametros = new HashMap<>();
 			parametros.put("nombre", generaReporteArchivo.getNombre());
 			parametros.put("fechaActual", generaReporteArchivo.getFechaActual());
-			parametros.put("cve_m_usuario", generaReporteArchivo.getCve_m_usuario());
+			parametros.put("cve_m_usuario", generaReporteArchivo.getCveMusuario());
 			parametros.put("diaIncidencia", fechaIncidencia[0]);
 			parametros.put("mesIncidencia", fechaIncidencia[1]);
 			parametros.put("anioIncidencia", fechaIncidencia[2]);

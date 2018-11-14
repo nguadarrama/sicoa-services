@@ -44,7 +44,7 @@ public class FormatoFuenteBean implements Serializable {
      */
     public FormatoFuenteBean(Workbook poLibro) {
         super();
-        this.fuente = (HSSFFont)poLibro.createFont();
+        this.fuente = poLibro.createFont();
     }
 
     /**

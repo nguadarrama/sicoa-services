@@ -130,7 +130,7 @@ public class AuditoriaInterceptor implements PreProcessInterceptor,  PostProcess
 	 */
 	@Override
 	public ServerResponse preProcess(HttpRequest httpRequest, ResourceMethod methodInvoked)
-			throws WebApplicationException {
+			 {
 		
 		logger.trace("preProcess Preparando informacion a auditar ");
 		request.set(httpRequest);

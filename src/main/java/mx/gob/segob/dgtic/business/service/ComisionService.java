@@ -4,7 +4,7 @@ import java.util.List;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ComisionAux;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ComisionDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.GenerarReporteArchivoComision;
-import mx.gob.segob.dgtic.comun.sicoa.dto.reporte;
+import mx.gob.segob.dgtic.comun.sicoa.dto.Reporte;
 
 public interface ComisionService {
 
@@ -29,5 +29,5 @@ public interface ComisionService {
   public List<ComisionDto> obtenerComisionesPorUnidad(String idUnidad, String claveUsuario,
       String nombre, String apellidoPaterno, String apellidoMaterno);
   
-  public reporte generaReporteComisiones(GenerarReporteArchivoComision generarReporteArchivo);
+  public Reporte generaReporteComisiones(GenerarReporteArchivoComision generarReporteArchivo);
 }

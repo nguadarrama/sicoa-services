@@ -1,7 +1,6 @@
 package mx.gob.segob.dgtic.comun.sicoa.dto;
 
 import mx.gob.segob.dgtic.comun.util.mapper.annotations.MapeaColumna;
-import mx.gob.segob.dgtic.comun.util.mapper.annotations.MapeaColumnasInternas;
 
 public class UnidadAdministrativaDto {
 
