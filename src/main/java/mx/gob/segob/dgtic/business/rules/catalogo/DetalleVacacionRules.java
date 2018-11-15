@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import mx.gob.segob.dgtic.business.service.constants.ServiceConstants;
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.BusquedaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DetalleVacacionDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DiaFestivoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
@@ -198,12 +199,12 @@ public class DetalleVacacionRules extends RecursoBase {
 		return aux;
 	}
 	
-	public List<DetalleVacacionDto> obtenerVacacionesPorFiltros(String claveUsuario, String nombre, String apellidoPaterno, String apellidoMaterno, String idUnidad, String idEstatus){
-		return detalleVacacionRepository.obtenerVacacionesPorFiltros(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, idUnidad, idEstatus);
+	public List<DetalleVacacionDto> obtenerVacacionesPorFiltros(BusquedaDto busquedaDto){
+		return detalleVacacionRepository.obtenerVacacionesPorFiltros(busquedaDto);
 	}
 	
-	public List<DetalleVacacionDto> consultaVacacionesPropiasPorFiltros(String claveUsuario, String idPeriodo, String idEstatus, String pfechaInicio, String pfechaFin ){
-		return detalleVacacionRepository.consultaVacacionesPropiasPorFiltros(claveUsuario, idPeriodo, idEstatus, pfechaInicio, pfechaFin);
+	public List<DetalleVacacionDto> consultaVacacionesPropiasPorFiltros(BusquedaDto busquedaDto){
+		return detalleVacacionRepository.consultaVacacionesPropiasPorFiltros(busquedaDto);
 	}
 	
 	public DetalleVacacionDto cancelaVacaciones(Integer idDetalle){

@@ -20,6 +20,7 @@ import mx.gob.segob.dgtic.business.service.DetalleVacacionService;
 import mx.gob.segob.dgtic.business.service.VacacionPeriodoService;
 import mx.gob.segob.dgtic.business.service.base.ServiceBase;
 import mx.gob.segob.dgtic.business.service.constants.ServiceConstants;
+import mx.gob.segob.dgtic.comun.sicoa.dto.BusquedaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DetalleVacacionDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.GeneraReporteArchivo;
@@ -111,15 +112,13 @@ public class DetalleVacacionServiceImpl extends ServiceBase implements DetalleVa
 	}
 
 	@Override
-	public List<DetalleVacacionDto> obtenerVacacionesPorFiltros(String claveUsuario, String nombre,
-			String apellidoPaterno, String apellidoMaterno, String idUnidad, String idEstatus) {
-		return detalleVacacionRules.obtenerVacacionesPorFiltros(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, idUnidad, idEstatus);
+	public List<DetalleVacacionDto> obtenerVacacionesPorFiltros(BusquedaDto busquedaDto) {
+		return detalleVacacionRules.obtenerVacacionesPorFiltros(busquedaDto);
 	}
 
 	@Override
-	public List<DetalleVacacionDto> consultaVacacionesPropiasPorFiltros(String claveUsuario, String idPeriodo,
-			String idEstatus, String pfechaInicio, String pfechaFin) {
-		return detalleVacacionRules.consultaVacacionesPropiasPorFiltros(claveUsuario, idPeriodo, idEstatus, pfechaInicio, pfechaFin);
+	public List<DetalleVacacionDto> consultaVacacionesPropiasPorFiltros(BusquedaDto busquedaDto) {
+		return detalleVacacionRules.consultaVacacionesPropiasPorFiltros(busquedaDto);
 	}
 	
 	@Override

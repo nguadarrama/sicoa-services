@@ -13,6 +13,7 @@ import mx.gob.segob.dgtic.business.rules.catalogo.LicenciaMedicaRules;
 import mx.gob.segob.dgtic.business.service.LicenciaMedicaService;
 import mx.gob.segob.dgtic.business.service.base.ServiceBase;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.BusquedaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.LicenciaMedicaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.LicenciaMedicaDtoAux;
@@ -88,23 +89,20 @@ public class LicenciaMedicaServiceImpl extends ServiceBase implements LicenciaMe
 	}
 
 	@Override
-	public List<LicenciaMedicaDto> obtenerListaLicenciaMedicaPorFiltros(String claveUsuario, String fechaInicio,
-			String fechaFin, String idEstatus) {
+	public List<LicenciaMedicaDto> obtenerListaLicenciaMedicaPorFiltros(BusquedaDto busquedaDto) {
 		
-		return licenciaMedicaRules.obtenerListaLicenciaMedicaPorFiltros(claveUsuario, fechaInicio, fechaFin, idEstatus);
+		return licenciaMedicaRules.obtenerListaLicenciaMedicaPorFiltros(busquedaDto);
 	}
 
 	@Override
-	public List<LicenciaMedicaDto> obtenerListaLicenciaMedicaEmpleados(String claveUsuario, String nombre,
-			String apellidoPaterno, String apellidoMaterno, String idEstatus, String idUnidad) {
+	public List<LicenciaMedicaDto> obtenerListaLicenciaMedicaEmpleados(BusquedaDto busquedaDto) {
 		
-		return licenciaMedicaRules.obtenerListaLicenciaMedicaEmpleados(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, idEstatus, idUnidad);
+		return licenciaMedicaRules.obtenerListaLicenciaMedicaEmpleados(busquedaDto);
 	}
 
 	@Override
-	public List<LicenciaMedicaDto> obtenerLicenciasPorUnidad(String idUnidad, String claveUsuario, String nombre,
-			String apellidoPaterno, String apellidoMaterno) {
-		return licenciaMedicaRules.obtenerLicenciasPorUnidad(idUnidad, claveUsuario, nombre, apellidoPaterno, apellidoMaterno);
+	public List<LicenciaMedicaDto> obtenerLicenciasPorUnidad(BusquedaDto busquedaDto) {
+		return licenciaMedicaRules.obtenerLicenciasPorUnidad(busquedaDto);
 	}
 
 	@Override

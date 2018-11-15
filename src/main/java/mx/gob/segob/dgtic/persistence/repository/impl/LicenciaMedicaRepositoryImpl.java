@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
-import mx.gob.segob.dgtic.comun.sicoa.dto.ComisionDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.BusquedaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.LicenciaMedicaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
@@ -196,24 +196,24 @@ public class LicenciaMedicaRepositoryImpl extends RepositoryBase implements Lice
 	}
 
 	@Override
-	public List<LicenciaMedicaDto> obtenerListaLicenciaMedicaPorFiltros(String claveUsuario, String fechaInicio, String fechaFin, String idEstatus) {
-		String qry="select usuario.id_usuario, usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, licencia.id_licencia, ";
-		qry+="licencia.id_responsable, estatus.id_estatus, estatus.estatus, licencia.fecha_inicio, ";
-		qry+="licencia.fecha_fin, licencia.dias, licencia.padecimiento, licencia.dias ";
-		qry+="from m_usuario usuario, m_licencia_medica licencia, m_estatus estatus ";
-		qry+="where usuario.id_usuario=licencia.id_usuario and estatus.id_estatus=licencia.id_estatus and usuario.cve_m_usuario='"+claveUsuario+"'";
-		logger.info("Fechas para la consulta fechaInicio: {} ",fechaInicio);
-		logger.info("fechaFin: {} ",fechaFin);
-		if(idEstatus!=null && !idEstatus.trim().isEmpty()){
-			qry+="and estatus.id_estatus = +'"+idEstatus+"' ";
+	public List<LicenciaMedicaDto> obtenerListaLicenciaMedicaPorFiltros(BusquedaDto busquedaDto) {
+		String qry="select usuario.id_usuario, usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, licencia.id_licencia, "
+		+"licencia.id_responsable, estatus.id_estatus, estatus.estatus, licencia.fecha_inicio, "
+		+"licencia.fecha_fin, licencia.dias, licencia.padecimiento, licencia.dias "
+		+"from m_usuario usuario, m_licencia_medica licencia, m_estatus estatus "
+		+"where usuario.id_usuario=licencia.id_usuario and estatus.id_estatus=licencia.id_estatus and usuario.cve_m_usuario='"+busquedaDto.getClaveUsuario()+"'";
+		logger.info("Fechas para la consulta fechaInicio: {} ",busquedaDto.getFechaInicio());
+		logger.info("fechaFin: {} ",busquedaDto.getFechaFin());
+		if(busquedaDto.getIdEstatus()!=null && !busquedaDto.getIdEstatus().trim().isEmpty()){
+			qry+="and estatus.id_estatus = +'"+busquedaDto.getIdEstatus()+"' ";
 
         }
-        if((fechaInicio!=null && !fechaInicio.trim().isEmpty())&& (fechaFin!=null && !fechaFin.trim().isEmpty())){
-        	qry+="and licencia.fecha_inicio between '"+fechaInicio+AND+fechaFin+"' ";
-        }else if(fechaInicio!=null && !fechaInicio.trim().isEmpty()){
-        	qry+="and licencia.fecha_inicio='"+fechaInicio+"'";
-        }else if(fechaFin!=null && !fechaFin.trim().isEmpty()){
-        	qry+="and licencia.fecha_fin='"+fechaInicio+"'";
+        if((busquedaDto.getFechaInicio()!=null && !busquedaDto.getFechaInicio().trim().isEmpty())&& (busquedaDto.getFechaFin()!=null && !busquedaDto.getFechaFin().trim().isEmpty())){
+        	qry+="and licencia.fecha_inicio between '"+busquedaDto.getFechaInicio()+AND+busquedaDto.getFechaFin()+"' ";
+        }else if(busquedaDto.getFechaInicio()!=null && !busquedaDto.getFechaInicio().trim().isEmpty()){
+        	qry+="and licencia.fecha_inicio='"+busquedaDto.getFechaInicio()+"'";
+        }else if(busquedaDto.getFechaFin()!=null && !busquedaDto.getFechaFin().trim().isEmpty()){
+        	qry+="and licencia.fecha_fin='"+busquedaDto.getFechaFin()+"'";
         }
         /**if(idEstatus!=null && idEstatus!=""){
         if(idEstatus!=null && !idEstatus.trim().isEmpty()){
@@ -254,35 +254,34 @@ public class LicenciaMedicaRepositoryImpl extends RepositoryBase implements Lice
 	}
 
 	@Override
-	public List<LicenciaMedicaDto> obtenerListaLicenciaMedicaEmpleados(String claveUsuario, String nombre,
-		String apellidoPaterno, String apellidoMaterno, String idEstatus, String idUnidad) {
-		String qry="select usuario.id_usuario, usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, licencia.id_licencia, ";
-		qry+="licencia.id_responsable, estatus.id_estatus, estatus.estatus, licencia.fecha_inicio, ";
-		qry+="licencia.fecha_fin, licencia.dias, licencia.padecimiento, licencia.dias ";
-		qry+="from m_usuario usuario, m_licencia_medica licencia, m_estatus estatus, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion ";
-		qry+="where usuario.id_usuario=licencia.id_usuario and estatus.id_estatus=licencia.id_estatus and unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario ";
-		if(claveUsuario!=null && !claveUsuario.trim().isEmpty()){
-			qry+="and usuario.cve_m_usuario like '%"+removerGuionBajo(claveUsuario)+"%' ";
+	public List<LicenciaMedicaDto> obtenerListaLicenciaMedicaEmpleados(BusquedaDto busquedaDto) {
+		String qry="select usuario.id_usuario, usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, licencia.id_licencia, "
+		+"licencia.id_responsable, estatus.id_estatus, estatus.estatus, licencia.fecha_inicio, "
+		+"licencia.fecha_fin, licencia.dias, licencia.padecimiento, licencia.dias "
+		+"from m_usuario usuario, m_licencia_medica licencia, m_estatus estatus, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion "
+		+"where usuario.id_usuario=licencia.id_usuario and estatus.id_estatus=licencia.id_estatus and unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario ";
+		if(busquedaDto.getClaveUsuario()!=null && !busquedaDto.getClaveUsuario().trim().isEmpty()){
+			qry+="and usuario.cve_m_usuario like '%"+busquedaDto.getClaveUsuario()+"%' ";
 	    }
-	    if(nombre!=null && !nombre.trim().isEmpty()){
-	    	qry+="and usuario.nombre like '%"+nombre+"%' ";
+	    if(busquedaDto.getNombre()!=null && !busquedaDto.getNombre().trim().isEmpty()){
+	    	qry+="and usuario.nombre like '%"+busquedaDto.getNombre()+"%' ";
 	    }
-	    if(apellidoPaterno!=null && !apellidoPaterno.trim().isEmpty()){
-	    	qry+="and usuario.apellido_paterno like '%"+removerGuionBajo(apellidoPaterno)+"%' ";
+	    if(busquedaDto.getApellidoPaterno()!=null && !busquedaDto.getApellidoPaterno().trim().isEmpty()){
+	    	qry+="and usuario.apellido_paterno like '%"+busquedaDto.getApellidoPaterno()+"%' ";
 	    }
-	    if(apellidoMaterno!=null && !apellidoMaterno.trim().isEmpty()){
-	    	qry+="and usuario.apellido_materno like '%"+removerGuionBajo(apellidoMaterno)+"%' ";
+	    if(busquedaDto.getApellidoMaterno()!=null && !busquedaDto.getApellidoMaterno().trim().isEmpty()){
+	    	qry+="and usuario.apellido_materno like '%"+busquedaDto.getApellidoMaterno()+"%' ";
 	    }
-	    if(idUnidad!=null && !idUnidad.trim().isEmpty()){
-	    	qry+="and unidad.id_unidad='"+idUnidad+"' ";
+	    if(busquedaDto.getIdUnidad()!=null && !busquedaDto.getIdUnidad().trim().isEmpty()){
+	    	qry+="and unidad.id_unidad='"+busquedaDto.getIdUnidad()+"' ";
 	    }
 	   
-	    if(idEstatus!=null && !idEstatus.trim().isEmpty()){
-	    	qry+="and estatus.id_estatus='"+idEstatus+"' ";
+	    if(busquedaDto.getIdEstatus()!=null && !busquedaDto.getIdEstatus().trim().isEmpty()){
+	    	qry+="and estatus.id_estatus='"+busquedaDto.getIdEstatus()+"' ";
 	    }
         logger.info("query de licencias empleados: {} ",qry);
-        logger.info("idUnidad: {} ",idUnidad);
-        List<Map<String, Object>> consulta = jdbcTemplate.queryForList(qry);
+        logger.info("idUnidad: {} ",busquedaDto.getIdUnidad());
+        List<Map<String, Object>> consulta = jdbcTemplate.queryForList(qry.toString());
         List<LicenciaMedicaDto> listaLicencias = new ArrayList<>();
         
         for (Map<String, Object> licencias : consulta) {
@@ -319,24 +318,24 @@ public class LicenciaMedicaRepositoryImpl extends RepositoryBase implements Lice
 	public List<LicenciaMedicaDto> obtenerLicenciasPorUnidad(String idUnidad,String claveUsuario, String nombre,
 			String apellidoPaterno, String apellidoMaterno) {
 		String qry="";
-		qry+="select sum(licencia.dias) suma_dias, count(licencia.id_licencia) total_licencias, usuario.id_usuario ,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno ";
-		qry+="from m_licencia_medica licencia right join m_usuario usuario on usuario.id_usuario=licencia.id_usuario, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion ";
-		qry+="where usuario.cve_m_usuario=relacion.cve_m_usuario and unidad.id_unidad=relacion.id_unidad and unidad.id_unidad ='"+idUnidad+"' ";
+		qry="select sum(licencia.dias) suma_dias, count(licencia.id_licencia) total_licencias, usuario.id_usuario ,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno "
+		+"from m_licencia_medica licencia right join m_usuario usuario on usuario.id_usuario=licencia.id_usuario, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion "
+		+"where usuario.cve_m_usuario=relacion.cve_m_usuario and unidad.id_unidad=relacion.id_unidad and unidad.id_unidad ='"+idUnidad+"' ";
 		if(claveUsuario!=null && !claveUsuario.trim().isEmpty()){
-			qry+="and usuario.cve_m_usuario = '"+removerGuionBajo(claveUsuario)+"' ";
+			qry+="and usuario.cve_m_usuario = '"+claveUsuario+"' ";
 	    }
 	    if(nombre!=null && !nombre.trim().isEmpty()){
-	    	qry+="and usuario.nombre like '%"+removerGuionBajo(nombre)+"%' ";
+	    	qry+="and usuario.nombre like '%"+nombre+"%' ";
 	    }
 	    if(apellidoPaterno!=null && !apellidoPaterno.trim().isEmpty()){
-	    	qry+="and usuario.apellido_paterno like '%"+removerGuionBajo(apellidoPaterno)+"%' ";
+	    	qry+="and usuario.apellido_paterno like '%"+apellidoPaterno+"%' ";
 	    }
 	    if(apellidoMaterno!=null && !apellidoMaterno.trim().isEmpty()){
-	    	qry+="and usuario.apellido_materno like '%"+removerGuionBajo(apellidoMaterno)+"%' ";
+	    	qry+="and usuario.apellido_materno like '%"+apellidoMaterno+"%' ";
 	    }
 	    qry+="group by usuario.id_usuario ";
 		logger.info("sqy: {} ",qry);
-		 List<Map<String, Object>> consulta = jdbcTemplate.queryForList(qry);
+		 List<Map<String, Object>> consulta = jdbcTemplate.queryForList(qry.toString());
 	        List<LicenciaMedicaDto> listaLicencias = new ArrayList<>();
 	        
 	        for (Map<String, Object> licencias : consulta) {
@@ -385,10 +384,6 @@ public class LicenciaMedicaRepositoryImpl extends RepositoryBase implements Lice
     	return licencia;
 		
 	}
-	
-	private String removerGuionBajo(String string) {
-	    return string.replace("_", " ");
-	  }
 	
 	@Override
 	public List<LicenciaMedicaDto> buscaLicenciaMedicaReporteCoordinador(AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
@@ -535,5 +530,4 @@ public class LicenciaMedicaRepositoryImpl extends RepositoryBase implements Lice
 
       return listaLicencia;
 	}
-
 }

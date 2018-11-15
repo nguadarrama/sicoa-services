@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.BusquedaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DetalleVacacionDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DiaFestivoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
@@ -285,30 +286,30 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 	}
 
 	@Override
-	public List<DetalleVacacionDto> consultaVacacionesPropiasPorFiltros(String claveUsuario, String idPeriodo, String idEstatus, String pFechaInicio, String pFechaFinal) {
+	public List<DetalleVacacionDto> consultaVacacionesPropiasPorFiltros(BusquedaDto busquedaDto) {
 		String query="";
-		query+="select distinct(detalle.id_detalle) id_detalle, usuario.id_usuario,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, detalle.id_vacacion, detalle.fecha_registro ,detalle.id_responsable, detalle.id_archivo, detalle.id_estatus, estatus.estatus, detalle.fecha_inicio, detalle.fecha_fin, detalle.dias, unidad.id_unidad, unidad.nombre nombre_unidad, periodo.descripcion descripcion_periodo, periodo.id_periodo ";
-        query+="from d_detalle_vacacion detalle, m_usuario usuario, m_estatus estatus, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion, m_vacacion_periodo vacacionPeriodo, r_periodo periodo ";
-        query+="where usuario.id_usuario=detalle.id_usuario and estatus.id_estatus=detalle.id_estatus and unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario and detalle.id_vacacion=vacacionPeriodo.id_vacacion and vacacionPeriodo.id_periodo=periodo.id_periodo and usuario.cve_m_usuario='"+claveUsuario+"' ";
+		query+="select distinct(detalle.id_detalle) id_detalle, usuario.id_usuario,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, detalle.id_vacacion, detalle.fecha_registro ,detalle.id_responsable, detalle.id_archivo, detalle.id_estatus, estatus.estatus, detalle.fecha_inicio, detalle.fecha_fin, detalle.dias, unidad.id_unidad, unidad.nombre nombre_unidad, periodo.descripcion descripcion_periodo, periodo.id_periodo "
+        +"from d_detalle_vacacion detalle, m_usuario usuario, m_estatus estatus, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion, m_vacacion_periodo vacacionPeriodo, r_periodo periodo "
+        +"where usuario.id_usuario=detalle.id_usuario and estatus.id_estatus=detalle.id_estatus and unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario and detalle.id_vacacion=vacacionPeriodo.id_vacacion and vacacionPeriodo.id_periodo=periodo.id_periodo and usuario.cve_m_usuario='"+busquedaDto.getClaveUsuario()+"' ";
 
-        if(idPeriodo!=null && !idPeriodo.trim().isEmpty()){
-        	query+="and periodo.id_periodo = +'"+idPeriodo+"' ";
+        if(busquedaDto.getIdPeriodo()!=null && !busquedaDto.getIdPeriodo().trim().isEmpty()){
+        	query+="and periodo.id_periodo = +'"+busquedaDto.getIdPeriodo()+"' ";
         }
-        if((pFechaInicio!=null && !pFechaInicio.trim().isEmpty())&& (pFechaFinal!=null && !pFechaFinal.trim().isEmpty())){
-        	query+="and detalle.fecha_inicio between '"+pFechaInicio+AND+pFechaFinal+"' ";
-        }else if(pFechaInicio!=null && !pFechaInicio.trim().isEmpty()){
-        	query+="and detalle.fecha_inicio='"+pFechaInicio+"'";
-        }else if(pFechaFinal!=null && !pFechaFinal.trim().isEmpty()){
-        	query+="and detalle.fecha_fin='"+pFechaInicio+"'";
+        if((busquedaDto.getFechaInicio()!=null && !busquedaDto.getFechaInicio().trim().isEmpty())&& (busquedaDto.getFechaFin()!=null && !busquedaDto.getFechaFin().trim().isEmpty())){
+        	query+="and detalle.fecha_inicio between '"+busquedaDto.getFechaInicio()+AND+busquedaDto.getFechaFin()+"' ";
+        }else if(busquedaDto.getFechaInicio()!=null && !busquedaDto.getFechaInicio().trim().isEmpty()){
+        	query+="and detalle.fecha_inicio='"+busquedaDto.getFechaInicio()+"'";
+        }else if(busquedaDto.getFechaFin()!=null && !busquedaDto.getFechaFin().trim().isEmpty()){
+        	query+="and detalle.fecha_fin='"+busquedaDto.getFechaFin()+"'";
         }
 
-        if(idEstatus!=null && !idEstatus.trim().isEmpty()){
-        	query+="and detalle.id_estatus='"+idEstatus+"' ";
+        if(busquedaDto.getIdEstatus()!=null && !busquedaDto.getIdEstatus().trim().isEmpty()){
+        	query+="and detalle.id_estatus='"+busquedaDto.getIdEstatus()+"' ";
         }
   
        /** System.out.println("query "+query+" datos de consulta ");
 		System.out.println("Datos para la consulta claveUsuario "+claveUsuario+" fechaInicio "+pFechaInicio+" fechaFinal "+pFechaFinal+" idEstatus "+idEstatus); **/
-        List<Map<String, Object>> detalleVacaciones = jdbcTemplate.queryForList(query);
+        List<Map<String, Object>> detalleVacaciones = jdbcTemplate.queryForList(query.toString());
         List<DetalleVacacionDto> listaDetalleVacacion = new ArrayList<>();
         
         for (Map<String, Object> detalleVacacion : detalleVacaciones) {
@@ -364,43 +365,37 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 	}
 
 	@Override
-	public List<DetalleVacacionDto> obtenerVacacionesPorFiltros(String claveUsuario, String nombre,
-			String apellidoPaterno, String apellidoMaterno, String idUnidad, String idEstatus) {
-		nombre.trim().replace("_", " ");
-	    claveUsuario.trim().replace("_", " ");
-	    apellidoPaterno.trim().replace("_", " ");
-	    apellidoMaterno.trim().replace("_", " ");
-		logger.info("idUnidad en consulta: {} ",idUnidad);
+	public List<DetalleVacacionDto> obtenerVacacionesPorFiltros(BusquedaDto busquedaDto) {
 		String query="";
-		query+="select distinct(detalle.id_detalle) id_detalle, detalle.fecha_registro, usuario.id_usuario,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, detalle.id_vacacion, detalle.id_responsable, detalle.id_archivo, detalle.id_estatus, estatus.estatus, detalle.fecha_inicio, detalle.fecha_fin, detalle.dias, unidad.id_unidad, unidad.nombre nombre_unidad, vacacionPeriodo.dias dias_disponibles, periodo.descripcion descripcion_periodo, periodo.id_periodo ";
-        query+="from d_detalle_vacacion detalle, m_usuario usuario, m_estatus estatus, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion, m_vacacion_periodo vacacionPeriodo, r_periodo periodo ";
-        query+="where usuario.id_usuario=detalle.id_usuario and estatus.id_estatus=detalle.id_estatus and unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario and relacion.cve_m_usuario=usuario.cve_m_usuario and detalle.id_vacacion=vacacionPeriodo.id_vacacion and vacacionPeriodo.id_periodo=periodo.id_periodo ";
-        if(claveUsuario!=null && !claveUsuario.trim().isEmpty()){
-        	query+="and usuario.cve_m_usuario like '%"+removerGuionBajo(claveUsuario)+"%' ";
+		query="select distinct(detalle.id_detalle) id_detalle, detalle.fecha_registro, usuario.id_usuario,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, detalle.id_vacacion, detalle.id_responsable, detalle.id_archivo, detalle.id_estatus, estatus.estatus, detalle.fecha_inicio, detalle.fecha_fin, detalle.dias, unidad.id_unidad, unidad.nombre nombre_unidad, vacacionPeriodo.dias dias_disponibles, periodo.descripcion descripcion_periodo, periodo.id_periodo "
+        +"from d_detalle_vacacion detalle, m_usuario usuario, m_estatus estatus, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion, m_vacacion_periodo vacacionPeriodo, r_periodo periodo "
+        +"where usuario.id_usuario=detalle.id_usuario and estatus.id_estatus=detalle.id_estatus and unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario and relacion.cve_m_usuario=usuario.cve_m_usuario and detalle.id_vacacion=vacacionPeriodo.id_vacacion and vacacionPeriodo.id_periodo=periodo.id_periodo ";
+        if(busquedaDto.getClaveUsuario()!=null && !busquedaDto.getClaveUsuario().trim().isEmpty()){
+        	query+="and usuario.cve_m_usuario like '%"+busquedaDto.getClaveUsuario()+"%' ";
         }
-        if(nombre!=null && !nombre.trim().isEmpty()){
-        	query+="and usuario.nombre like '%"+removerGuionBajo(nombre)+"%' ";
+        if(busquedaDto.getNombre()!=null && !busquedaDto.getNombre().trim().isEmpty()){
+        	query+="and usuario.nombre like '%"+busquedaDto.getNombre()+"%' ";
         }
-        if(apellidoPaterno!=null && !apellidoPaterno.trim().isEmpty()){
-        	query+="and usuario.apellido_paterno like '%"+removerGuionBajo(apellidoPaterno)+"%' ";
+        if(busquedaDto.getApellidoPaterno()!=null && !busquedaDto.getApellidoPaterno().trim().isEmpty()){
+        	query+="and usuario.apellido_paterno like '%"+busquedaDto.getApellidoPaterno()+"%' ";
         }
-        if(apellidoMaterno!=null && !apellidoMaterno.trim().isEmpty()){
-        	query+="and usuario.apellido_materno like '%"+removerGuionBajo(apellidoMaterno)+"%' ";
+        if(busquedaDto.getApellidoMaterno()!=null && !busquedaDto.getApellidoMaterno().trim().isEmpty()){
+        	query+="and usuario.apellido_materno like '%"+busquedaDto.getApellidoMaterno()+"%' ";
         }
-        if(idUnidad!=null && !idUnidad.trim().isEmpty()){
-        	query+="and unidad.id_unidad='"+idUnidad+"' ";
+        if(busquedaDto.getIdUnidad()!=null && !busquedaDto.getIdUnidad().trim().isEmpty()){
+        	query+="and unidad.id_unidad='"+busquedaDto.getIdUnidad()+"' ";
         }
        
-        if(idEstatus!=null && !idEstatus.trim().isEmpty()){
-        	query+="and estatus.id_estatus='"+idEstatus+"' ";
+        if(busquedaDto.getIdEstatus()!=null && !busquedaDto.getIdEstatus().trim().isEmpty()){
+        	query+="and estatus.id_estatus='"+busquedaDto.getIdEstatus()+"' ";
         }
        logger.info("Query: {} ",query);
        logger.info("Datos para la consulta claveUsuario: {} ",claveUsuario);
-       logger.info(" nombre- {} ",nombre);
-       logger.info(" apellidoPaterno--  {} ",apellidoPaterno);
-       logger.info("apellidoMaterno.. {} ",apellidoMaterno);
-       logger.info("idEstatus.. {} ",idEstatus);
-		List<Map<String, Object>> detalleVacaciones = jdbcTemplate.queryForList(query);
+       logger.info(" nombre- {} ",busquedaDto.getNombre());
+       logger.info(" apellidoPaterno--  {} ",busquedaDto.getApellidoPaterno());
+       logger.info("apellidoMaterno.. {} ",busquedaDto.getApellidoMaterno());
+       logger.info("idEstatus.. {} ",busquedaDto.getIdEstatus());
+		List<Map<String, Object>> detalleVacaciones = jdbcTemplate.queryForList(query.toString());
         List<DetalleVacacionDto> listaDetalleVacacion = new ArrayList<>();
         
         for (Map<String, Object> detalleVacacion : detalleVacaciones) {
@@ -462,7 +457,7 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 	
 	String claveUsuario=null; 
 	Date fechaInicio = null;
-	Integer dias = null;
+	Integer dias = 0;
 	Date fechaFin = null; 
 	Boolean bandera = false; 
 	Integer diasTotales = 0;
@@ -471,7 +466,7 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 		this.claveUsuario=claveUsuario;
 		this.fechaInicio=fechaInicio;
 		this.fechaFin=fechaFin;
-		this.dias=dias;
+		diasTotales=dias;
 		String respuesta = "";
 		Integer contador = 0;
 
@@ -493,9 +488,14 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 	
 	
 	private String validaFechasVacaciones(String claveUsuario, Date fechaInicio, Integer dias, Date fechaFin){
-		diasTotales+=dias;
 		List<DiaFestivoDto> listaDiasFestivos=diaFestivoRepository.obtenerDiasFestivosActivos();
-		List<DetalleVacacionDto> listaDiasVacaciones=consultaVacacionesPropiasPorFiltros(claveUsuario, "","","", "");
+		BusquedaDto busquedaDto = new BusquedaDto();
+		busquedaDto.setClaveUsuario(claveUsuario);
+		busquedaDto.setFechaFin("");
+		busquedaDto.setFechaInicio("");
+		busquedaDto.setIdPeriodo("");
+		busquedaDto.setIdEstatus("");
+		List<DetalleVacacionDto> listaDiasVacaciones=consultaVacacionesPropiasPorFiltros(busquedaDto);
 		logger.info("comprobando días ");
     
 		Calendar c1 = Calendar.getInstance();

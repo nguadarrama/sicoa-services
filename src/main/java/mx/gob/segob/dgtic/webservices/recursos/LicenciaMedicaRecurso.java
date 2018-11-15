@@ -19,6 +19,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import mx.gob.segob.dgtic.business.service.LicenciaMedicaService;
+import mx.gob.segob.dgtic.comun.sicoa.dto.BusquedaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.LicenciaMedicaDtoAux;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
 import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
@@ -79,35 +80,43 @@ public class LicenciaMedicaRecurso extends RecursoBase{
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, "");
 	}
 	
-	@GET
+	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("obtieneListaLicenciaMedicaPorFiltros")	
-	public Response obtieneListaLicenciaMedicaPorFiltros(@QueryParam("claveUsuario") String claveUsuario,
-			@QueryParam("idEstatus") String idEstatus, 
-			@QueryParam("fechaInicio") String fechaInicio, @QueryParam("fechaFin") String fechaFin) {
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, licenciaMedicaService.obtenerListaLicenciaMedicaPorFiltros(claveUsuario, fechaInicio, fechaFin, idEstatus));
+	public Response obtieneListaLicenciaMedicaPorFiltros(@RequestParam String jsonBusqueda) {
+		jsonBusqueda = this.cambiaCaracter(jsonBusqueda);
+		JsonObject jsonObject = new JsonParser().parse(jsonBusqueda).getAsJsonObject();	
+		GsonBuilder builder = new GsonBuilder();
+		Gson gson = builder.create();
+		BusquedaDto busquedaDto = gson.fromJson(jsonObject.get("busqueda"), BusquedaDto.class);
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, licenciaMedicaService.obtenerListaLicenciaMedicaPorFiltros(busquedaDto));
 	}
 	
-	@GET
+	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("obtieneListaLicenciaMedicaEmpleados")	
-	public Response obtieneListaLicenciaMedicaEmpleados(@QueryParam("claveUsuario") String claveUsuario,
-			@QueryParam("idEstatus") String idEstatus, 
-			@QueryParam("nombre") String nombre, @QueryParam("apellidoPaterno") String apellidoPaterno,
-			@QueryParam("apellidoMaterno") String apellidoMaterno,
-			@QueryParam("idUnidad") String idUnidad) {
-			logger.info("idUnidad para busqueda: {} ",idUnidad);
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, licenciaMedicaService.obtenerListaLicenciaMedicaEmpleados(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, idEstatus, idUnidad));
+	public Response obtieneListaLicenciaMedicaEmpleados(@RequestParam String jsonBusqueda) {
+		jsonBusqueda = this.cambiaCaracter(jsonBusqueda);
+		JsonObject jsonObject = new JsonParser().parse(jsonBusqueda).getAsJsonObject();	
+		GsonBuilder builder = new GsonBuilder();
+		Gson gson = builder.create();
+		BusquedaDto busquedaDto = gson.fromJson(jsonObject.get("busqueda"), BusquedaDto.class);
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, licenciaMedicaService.obtenerListaLicenciaMedicaEmpleados(busquedaDto));
 	}
 	
-	@GET
+	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("obtieneLicenciasPorUnidad")	
-	public Response obtieneLicenciasPorUnidad(@QueryParam("idUnidad") String idUnidad,
-			@QueryParam("claveUsuario") String claveUsuario,
-			@QueryParam("nombre") String nombre, @QueryParam("apellidoPaterno") String apellidoPaterno,
-			@QueryParam("apellidoMaterno")String apellidoMaterno) {
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, licenciaMedicaService.obtenerLicenciasPorUnidad(idUnidad, claveUsuario, nombre, apellidoPaterno, apellidoMaterno));
+	public Response obtieneLicenciasPorUnidad(@RequestParam String jsonBusqueda) {
+		jsonBusqueda = this.cambiaCaracter(jsonBusqueda);
+		JsonObject jsonObject = new JsonParser().parse(jsonBusqueda).getAsJsonObject();	
+		GsonBuilder builder = new GsonBuilder();
+		Gson gson = builder.create();
+		BusquedaDto busquedaDto = gson.fromJson(jsonObject.get("busqueda"), BusquedaDto.class);
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, licenciaMedicaService.obtenerLicenciasPorUnidad(busquedaDto));
 	}
 	
 	@GET

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import mx.gob.segob.dgtic.comun.sicoa.dto.AsistenciaDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.BusquedaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DiaFestivoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.LicenciaMedicaDto;
@@ -118,18 +119,19 @@ public class LicenciaMedicaRules extends RepositoryBase{
 	public void eliminaLicenciaMedica(Integer idLicencia){
 		licenciaMedicaRepository.eliminaLicenciaMedica(idLicencia);
 	}
-	public List<LicenciaMedicaDto> obtenerListaLicenciaMedicaPorFiltros(String claveUsuario, String fechaInicio, String fechaFin, String idEstatus) {
-		return licenciaMedicaRepository.obtenerListaLicenciaMedicaPorFiltros(claveUsuario, fechaInicio, fechaFin, idEstatus);
+	public List<LicenciaMedicaDto> obtenerListaLicenciaMedicaPorFiltros(BusquedaDto busquedaDto) {
+		System.out.println("feh "+busquedaDto.getFechaFin());
+		return licenciaMedicaRepository.obtenerListaLicenciaMedicaPorFiltros(busquedaDto);
+		
 	}
 	
-	public List<LicenciaMedicaDto> obtenerListaLicenciaMedicaEmpleados(String claveUsuario ,String nombre,String apellidoPaterno, String apellidoMaterno, 
-			String idEstatus,String idUnidad){
-		return licenciaMedicaRepository.obtenerListaLicenciaMedicaEmpleados(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, idEstatus, idUnidad);
+	public List<LicenciaMedicaDto> obtenerListaLicenciaMedicaEmpleados(BusquedaDto busquedaDto){
+		return licenciaMedicaRepository.obtenerListaLicenciaMedicaEmpleados(busquedaDto);
 	}
 	
-	public List<LicenciaMedicaDto> obtenerLicenciasPorUnidad(String idUnidad,String claveUsuario, String nombre,
-			String apellidoPaterno, String apellidoMaterno) {
-		return licenciaMedicaRepository.obtenerLicenciasPorUnidad(idUnidad, claveUsuario, nombre, apellidoPaterno, apellidoMaterno);
+	public List<LicenciaMedicaDto> obtenerLicenciasPorUnidad(BusquedaDto busquedaDto) {
+		return licenciaMedicaRepository.obtenerLicenciasPorUnidad(busquedaDto.getIdUnidad(), busquedaDto.getClaveUsuario(),busquedaDto.getNombre(), 
+				busquedaDto.getApellidoPaterno(), busquedaDto.getApellidoPaterno());
 	}
 	
 	public LicenciaMedicaDto consultaDiasLicenciaMedica(String claveUsuario){

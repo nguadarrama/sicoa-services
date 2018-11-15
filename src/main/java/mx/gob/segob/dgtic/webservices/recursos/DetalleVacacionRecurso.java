@@ -27,6 +27,7 @@ import mx.gob.segob.dgtic.business.service.DetalleVacacionService;
 import mx.gob.segob.dgtic.business.service.base.ServiceBase;
 import mx.gob.segob.dgtic.business.service.constants.ServiceConstants;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.BusquedaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DetalleVacacionDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.GeneraReporteArchivo;
 import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionesAux;
@@ -121,43 +122,30 @@ public class DetalleVacacionRecurso extends ServiceBase{
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.aceptaORechazaDetalleVacacion(detalleVacacionDto));
 	}
 	
-	@GET
+	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("consultaVacacionesPropiasPorFiltros")	
-	public Response consultaVacacionesPropiasPorFiltros(@QueryParam("claveUsuario") String claveUsuario, @QueryParam("idEstatus") String idEstatus, @QueryParam("idPeriodo") String idPeriodo, @QueryParam("fechaInicio") String fechaInicio, @QueryParam("fechaFin") String fechaFin) {
-	/**	Integer nuevoIdPeriodo=null;
-		Integer nuevoIdEstatus=null;
-		if(idPeriodo!=null && !idPeriodo.toString().isEmpty()){
-				try{
-					nuevoIdPeriodo=Integer.parseInt(idPeriodo);
-					
-				}catch(Exception e){
-					e.printStackTrace();
-					nuevoIdPeriodo=null;
-					
-				}
-		}
-		if(idEstatus!=null && !idEstatus.toString().isEmpty()){
-			try{
-				
-				nuevoIdEstatus=Integer.parseInt(idEstatus);
-			}catch(Exception e){
-				e.printStackTrace();
-				
-				nuevoIdEstatus=null;
-			}
-		} **/
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.consultaVacacionesPropiasPorFiltros(claveUsuario, idPeriodo, idEstatus, fechaInicio, fechaFin));
+	public Response consultaVacacionesPropiasPorFiltros(@RequestParam String jsonBusqueda) {
+		jsonBusqueda = this.cambiaCaracter(jsonBusqueda);
+		JsonObject jsonObject = new JsonParser().parse(jsonBusqueda).getAsJsonObject();	
+		GsonBuilder builder = new GsonBuilder();
+		Gson gson = builder.create();
+		BusquedaDto busquedaDto = gson.fromJson(jsonObject.get("busqueda"), BusquedaDto.class);
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.consultaVacacionesPropiasPorFiltros(busquedaDto));
 	}
 	
-	@GET
+	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("obtenerVacacionesPorFiltros")	
-	public Response obtenerVacacionesPorFiltros(@QueryParam("claveUsuario") String claveUsuario,
-			@QueryParam("nombre") String nombre, @QueryParam("apellidoPaterno") String apellidoPaterno,
-			@QueryParam("apellidoMaterno") String apellidoMaterno, @QueryParam("idUnidad") String idUnidad,
-			@QueryParam("idEstatus") String idEstatus) {	
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.obtenerVacacionesPorFiltros(claveUsuario, nombre, apellidoPaterno, apellidoMaterno, idUnidad, idEstatus));
+	public Response obtenerVacacionesPorFiltros(@RequestParam String jsonBusqueda) {
+		jsonBusqueda = this.cambiaCaracter(jsonBusqueda);
+		JsonObject jsonObject = new JsonParser().parse(jsonBusqueda).getAsJsonObject();	
+		GsonBuilder builder = new GsonBuilder();
+		Gson gson = builder.create();
+		BusquedaDto busquedaDto = gson.fromJson(jsonObject.get("busqueda"), BusquedaDto.class);
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.obtenerVacacionesPorFiltros(busquedaDto));
 	}
 	
 	@PUT
