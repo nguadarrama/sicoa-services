@@ -260,16 +260,16 @@ public class LicenciaMedicaRepositoryImpl extends RepositoryBase implements Lice
 		qry+="from m_usuario usuario, m_licencia_medica licencia, m_estatus estatus, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion ";
 		qry+="where usuario.id_usuario=licencia.id_usuario and estatus.id_estatus=licencia.id_estatus and unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario ";
 		if(claveUsuario!=null && !claveUsuario.trim().isEmpty()){
-			qry+="and usuario.cve_m_usuario like '%"+claveUsuario+"%' ";
+			qry+="and usuario.cve_m_usuario like '%"+removerGuionBajo(claveUsuario)+"%' ";
 	    }
 	    if(nombre!=null && !nombre.trim().isEmpty()){
 	    	qry+="and usuario.nombre like '%"+nombre+"%' ";
 	    }
 	    if(apellidoPaterno!=null && !apellidoPaterno.trim().isEmpty()){
-	    	qry+="and usuario.apellido_paterno like '%"+apellidoPaterno+"%' ";
+	    	qry+="and usuario.apellido_paterno like '%"+removerGuionBajo(apellidoPaterno)+"%' ";
 	    }
 	    if(apellidoMaterno!=null && !apellidoMaterno.trim().isEmpty()){
-	    	qry+="and usuario.apellido_materno like '%"+apellidoMaterno+"%' ";
+	    	qry+="and usuario.apellido_materno like '%"+removerGuionBajo(apellidoMaterno)+"%' ";
 	    }
 	    if(idUnidad!=null && !idUnidad.trim().isEmpty()){
 	    	qry+="and unidad.id_unidad='"+idUnidad+"' ";
@@ -321,16 +321,16 @@ public class LicenciaMedicaRepositoryImpl extends RepositoryBase implements Lice
 		qry+="from m_licencia_medica licencia right join m_usuario usuario on usuario.id_usuario=licencia.id_usuario, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion ";
 		qry+="where usuario.cve_m_usuario=relacion.cve_m_usuario and unidad.id_unidad=relacion.id_unidad and unidad.id_unidad ='"+idUnidad+"' ";
 		if(claveUsuario!=null && !claveUsuario.trim().isEmpty()){
-			qry+="and usuario.cve_m_usuario = '"+claveUsuario+"' ";
+			qry+="and usuario.cve_m_usuario = '"+removerGuionBajo(claveUsuario)+"' ";
 	    }
 	    if(nombre!=null && !nombre.trim().isEmpty()){
-	    	qry+="and usuario.nombre like '%"+nombre+"%' ";
+	    	qry+="and usuario.nombre like '%"+removerGuionBajo(nombre)+"%' ";
 	    }
 	    if(apellidoPaterno!=null && !apellidoPaterno.trim().isEmpty()){
-	    	qry+="and usuario.apellido_paterno like '%"+apellidoPaterno+"%' ";
+	    	qry+="and usuario.apellido_paterno like '%"+removerGuionBajo(apellidoPaterno)+"%' ";
 	    }
 	    if(apellidoMaterno!=null && !apellidoMaterno.trim().isEmpty()){
-	    	qry+="and usuario.apellido_materno like '%"+apellidoMaterno+"%' ";
+	    	qry+="and usuario.apellido_materno like '%"+removerGuionBajo(apellidoMaterno)+"%' ";
 	    }
 	    qry+="group by usuario.id_usuario ";
 		logger.info("sqy: {} ",qry);
@@ -383,4 +383,8 @@ public class LicenciaMedicaRepositoryImpl extends RepositoryBase implements Lice
     	return licencia;
 		
 	}
+	
+	private String removerGuionBajo(String string) {
+	    return string.replace("_", " ");
+	  }
 }

@@ -235,16 +235,16 @@ public class VacacionPeriodoRepositoryImpl extends RepositoryBase implements Vac
         query+="where periodo.id_periodo=vacacionPeriodo.id_periodo and usuario.id_usuario=vacacionPeriodo.id_usuario and vacacionPeriodo.dias>0 "
         		+ "and date_add(periodo.fecha_fin, interval 1 year) >= '"+fechaCadena+"' and periodo.fecha_inicio <= '"+fechaCadena+"' and usuario.fecha_ingreso <= '"+fechaCadena1+"' and unidad.id_unidad = relacion.id_unidad ";
         if(claveUsuario!=null && !claveUsuario.isEmpty()){
-        	query+="and usuario.cve_m_usuario like '%"+claveUsuario+"%' ";
+        	query+="and usuario.cve_m_usuario like '%"+removerGuionBajo(claveUsuario)+"%' ";
         }
         if(nombre!=null && !nombre.isEmpty()){
-        	query+="and usuario.nombre like '%"+nombre+"%' ";
+        	query+="and usuario.nombre like '%"+removerGuionBajo(nombre)+"%' ";
         }
         if(apellidoPaterno!=null && !apellidoPaterno.isEmpty()){
-        	query+="and usuario.apellido_paterno like '%"+apellidoPaterno+"%' ";
+        	query+="and usuario.apellido_paterno like '%"+removerGuionBajo(apellidoPaterno)+"%' ";
         }
         if(apellidoMaterno!=null && !apellidoMaterno.isEmpty()){
-        	query+="and usuario.apellido_materno like '%"+apellidoMaterno+"%' ";
+        	query+="and usuario.apellido_materno like '%"+removerGuionBajo(apellidoMaterno)+"%' ";
         }
         if(idUnidad!=null && !idUnidad.isEmpty()){
         	query+="and unidad.id_unidad ='"+idUnidad+"' ";
@@ -273,5 +273,9 @@ public class VacacionPeriodoRepositoryImpl extends RepositoryBase implements Vac
 		return listaVacacionPeriodo;
 			
 	}
+	
+	private String removerGuionBajo(String string) {
+	    return string.replace("_", " ");
+	  }
 
 }

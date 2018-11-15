@@ -153,7 +153,7 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 		StringBuilder qry = new StringBuilder();
 		qry.append("UPDATE d_detalle_vacacion SET id_archivo= :idArchivo ");
 		qry.append("WHERE id_detalle = :idDetalle");
-		
+		logger.warn("Vamos a actualizar el archivo ", detalleVacacionDto.getIdDetalle()," ",detalleVacacionDto.getIdArchivo().getIdArchivo() );
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue(RepositoryConstants.ID_DETALLE2, detalleVacacionDto.getIdDetalle());
 		parametros.addValue(RepositoryConstants.ID_ARCHIVO2, detalleVacacionDto.getIdArchivo().getIdArchivo());
@@ -362,22 +362,26 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 	@Override
 	public List<DetalleVacacionDto> obtenerVacacionesPorFiltros(String claveUsuario, String nombre,
 			String apellidoPaterno, String apellidoMaterno, String idUnidad, String idEstatus) {
+		nombre.trim().replace("_", " ");
+	    claveUsuario.trim().replace("_", " ");
+	    apellidoPaterno.trim().replace("_", " ");
+	    apellidoMaterno.trim().replace("_", " ");
 		logger.info("idUnidad en consulta: {} ",idUnidad);
 		String query="";
 		query+="select distinct(detalle.id_detalle) id_detalle, detalle.fecha_registro, usuario.id_usuario,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, detalle.id_vacacion, detalle.id_responsable, detalle.id_archivo, detalle.id_estatus, estatus.estatus, detalle.fecha_inicio, detalle.fecha_fin, detalle.dias, unidad.id_unidad, unidad.nombre nombre_unidad, vacacionPeriodo.dias dias_disponibles, periodo.descripcion descripcion_periodo, periodo.id_periodo ";
         query+="from d_detalle_vacacion detalle, m_usuario usuario, m_estatus estatus, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion, m_vacacion_periodo vacacionPeriodo, r_periodo periodo ";
         query+="where usuario.id_usuario=detalle.id_usuario and estatus.id_estatus=detalle.id_estatus and unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario and relacion.cve_m_usuario=usuario.cve_m_usuario and detalle.id_vacacion=vacacionPeriodo.id_vacacion and vacacionPeriodo.id_periodo=periodo.id_periodo ";
         if(claveUsuario!=null && !claveUsuario.trim().isEmpty()){
-        	query+="and usuario.cve_m_usuario like '%"+claveUsuario+"%' ";
+        	query+="and usuario.cve_m_usuario like '%"+removerGuionBajo(claveUsuario)+"%' ";
         }
         if(nombre!=null && !nombre.trim().isEmpty()){
-        	query+="and usuario.nombre like '%"+nombre+"%' ";
+        	query+="and usuario.nombre like '%"+removerGuionBajo(nombre)+"%' ";
         }
         if(apellidoPaterno!=null && !apellidoPaterno.trim().isEmpty()){
-        	query+="and usuario.apellido_paterno like '%"+apellidoPaterno+"%' ";
+        	query+="and usuario.apellido_paterno like '%"+removerGuionBajo(apellidoPaterno)+"%' ";
         }
         if(apellidoMaterno!=null && !apellidoMaterno.trim().isEmpty()){
-        	query+="and usuario.apellido_materno like '%"+apellidoMaterno+"%' ";
+        	query+="and usuario.apellido_materno like '%"+removerGuionBajo(apellidoMaterno)+"%' ";
         }
         if(idUnidad!=null && !idUnidad.trim().isEmpty()){
         	query+="and unidad.id_unidad='"+idUnidad+"' ";
@@ -563,6 +567,8 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 		return"Dias totales "+diasTotales;
 	}
 	
-	
+	private String removerGuionBajo(String string) {
+	    return string.replace("_", " ");
+	  }
 	
 }
