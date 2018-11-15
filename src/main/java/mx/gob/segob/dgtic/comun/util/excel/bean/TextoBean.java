@@ -7,17 +7,11 @@
 */
 package mx.gob.segob.dgtic.comun.util.excel.bean;
 
-import java.io.Serializable;
-
 /**
  * Clase que contiene los atributos para un texto.
  */
-public class TextoBean implements Serializable {
+public class TextoBean {
     
-    /**
-     * The Constant serialVersionUID.
-     */
-    private static final long serialVersionUID = -5866287201646362682L;
 
     /** El texto. */
     private String texto;
