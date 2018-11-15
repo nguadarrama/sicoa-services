@@ -182,7 +182,7 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 		String fechaF=sdf.format(detalleVacacionDto.getFechaFin());
 		String query="select id_detalle from d_detalle_vacacion where (((fecha_inicio between '"+fechaIni+AND+fechaF+"') "
 				+ "or (fecha_fin between '"+fechaIni+AND+fechaF+"' )) "+
-				" or('"+fechaIni+"'>fecha_inicio and fecha_inicio<'"+fechaF+"' and fecha_fin>'"+fechaF+"')) and (id_estatus != 3 or id_estatus != 4) "
+				" or('"+fechaIni+"'>fecha_inicio and fecha_inicio<'"+fechaF+"' and fecha_fin>'"+fechaF+"')) and (id_estatus != 3 or id_estatus != 6) "
 						+ "and id_usuario='"+detalleVacacionDto.getIdUsuario().getIdUsuario()+"' ";
 		logger.info("query.. {} ",query);
         List<Map<String, Object>> detalleVacaciones = jdbcTemplate.queryForList(query);
@@ -255,6 +255,7 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 	@Override
 	public DetalleVacacionDto aceptaORechazaDetalleVacacion(DetalleVacacionDto detalleVacacionDto) {
 		StringBuilder qry = new StringBuilder();
+		Integer i=0;
 		qry.append("UPDATE d_detalle_vacacion SET id_estatus= :idEstatus ");
 		qry.append("WHERE id_detalle = :idDetalle");
 		
@@ -263,7 +264,8 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 		parametros.addValue("idDetalle", detalleVacacionDto.getIdDetalle());
 		
 		try{
-			Integer i= nameParameterJdbcTemplate.update(qry.toString(), parametros);
+			 i= nameParameterJdbcTemplate.update(qry.toString(), parametros);
+			
 			if(i == 1){
 				detalleVacacionDto.setMensaje("El cambio en vacaciones se realizó correctamente.");
 			}else{

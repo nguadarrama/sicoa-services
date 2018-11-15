@@ -158,14 +158,14 @@ public class DetalleVacacionRules extends RecursoBase {
 					logger.info("entrada . {} ",fechaInicioDate);
 					logger.debug("entrada.. {} ",asistencia.getEntrada());
 					logger.info("tipoDia -- {}",asistencia.getIdTipoDia());
-					if(fechaInicioDate.equals(asistencia.getEntrada()) && !asistencia.getIdTipoDia().getIdTipoDia().toString().equals("6")){
+					if(fechaInicioDate.equals(asistencia.getEntrada()) && !asistencia.getIdTipoDia().getIdTipoDia().toString().equals("8")){
 						bandera=true;
 					}
 				}
 				if(bandera){
 					for(AsistenciaDto asistencia2: listaAsistencia){
 						logger.info("idAsistencia: {} ",asistencia2.getIdAsistencia());
-						if(asistencia2.getIdTipoDia().getIdTipoDia().toString().equals("6")){
+						if(asistencia2.getIdTipoDia().getIdTipoDia().toString().equals("8")){
 							asistenciaRepository.eliminaAsistencia(asistencia2.getIdAsistencia());
 							TipoDiaDto tipoDia= new TipoDiaDto();
 							tipoDia.setIdTipoDia(5);
@@ -242,7 +242,7 @@ public class DetalleVacacionRules extends RecursoBase {
 						asistenciaRepository.eliminaAsistencia(asistencia.getIdAsistencia());
 					}
 					EstatusDto estatus= new EstatusDto();
-					estatus.setIdEstatus(4);
+					estatus.setIdEstatus(6);
 					detalleVacacionDto.setIdEstatus(estatus);
 					detalleAux=detalleVacacionRepository.aceptaORechazaDetalleVacacion(detalleVacacionDto);
 					VacacionPeriodoDto vacacionPeriodoDto;
@@ -261,12 +261,11 @@ public class DetalleVacacionRules extends RecursoBase {
 						logger.info("entrada.- {} ",fechaInicio);
 						logger.info("Entrada.- {} ",asistencia.getEntrada());
 						logger.info("tipoDia.- {} ",asistencia.getIdTipoDia());
-						if(fechaInicio.equals(asistencia.getEntrada()) && !asistencia.getIdTipoDia().getIdTipoDia().toString().equals("6")){
-							
+						if(fechaInicio.equals(asistencia.getEntrada()) && !asistencia.getIdTipoDia().getIdTipoDia().toString().equals("8")){
 							bandera=true;
 						}
 					}
-					if(bandera==true){
+					if(bandera){
 						for(AsistenciaDto asistencia2: listaAsistencia){
 							logger.info("idAsistencia -- {}",asistencia2.getIdAsistencia());
 							if(asistencia2.getIdTipoDia().getIdTipoDia().toString().equals("5")){
@@ -275,7 +274,7 @@ public class DetalleVacacionRules extends RecursoBase {
 							
 						}
 						EstatusDto estatus =new EstatusDto();
-						estatus.setIdEstatus(4);
+						estatus.setIdEstatus(8);
 						detalleVacacionDto.setIdEstatus(estatus);
 						detalleAux=detalleVacacionRepository.aceptaORechazaDetalleVacacion(detalleVacacionDto);
 						VacacionPeriodoDto vacacionPeriodoDto;

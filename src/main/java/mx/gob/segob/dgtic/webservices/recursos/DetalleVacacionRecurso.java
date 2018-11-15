@@ -19,12 +19,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import mx.gob.segob.dgtic.business.service.DetalleVacacionService;
 import mx.gob.segob.dgtic.business.service.base.ServiceBase;
 import mx.gob.segob.dgtic.business.service.constants.ServiceConstants;
+import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DetalleVacacionDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.GeneraReporteArchivo;
 import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionesAux;
@@ -68,10 +70,20 @@ public class DetalleVacacionRecurso extends ServiceBase{
 	@Path("modificaDetalleVacacion")	
 	public Response modificaDetalleVacacion(@RequestParam String jsonDetalleVacacion) {
 		jsonDetalleVacacion = this.cambiaCaracter(jsonDetalleVacacion);
-		JsonObject jsonObject = new JsonParser().parse(jsonDetalleVacacion).getAsJsonObject();		
+		JsonObject jsonObject = new JsonParser().parse(jsonDetalleVacacion).getAsJsonObject();	
+		JsonObject detalle = jsonObject.getAsJsonObject("detalleVacacion");
+		JsonElement idDetalle  =  detalle.get("idDetalle");
+		JsonObject archivo = (JsonObject) detalle.getAsJsonObject("idArchivo");
+		JsonElement idArchivo  =  archivo.get("idArchivo");
+		idArchivo.getAsInt();
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
-		DetalleVacacionDto detalleVacacionDto = gson.fromJson(jsonObject.get(ServiceConstants.DETALLE_VACACION), DetalleVacacionDto.class);
+		DetalleVacacionDto detalleVacacionDto = new DetalleVacacionDto();//gson.fromJson(jsonObject.get("detalleVacacion"), DetalleVacacionDto.class);
+		ArchivoDto archivo1= new ArchivoDto();
+		archivo1.setIdArchivo(idArchivo.getAsInt());
+		detalleVacacionDto.setIdDetalle(idDetalle.getAsInt());
+		detalleVacacionDto.setIdArchivo(archivo1);
+		logger.info("Datos ", detalleVacacionDto.getIdArchivo().getIdArchivo());
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.modificaDetalleVacacion(detalleVacacionDto));
 	}
 	
