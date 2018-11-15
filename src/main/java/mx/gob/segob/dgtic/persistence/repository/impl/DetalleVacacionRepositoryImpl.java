@@ -21,6 +21,7 @@ import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.PeriodoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionPeriodoDto;
+import mx.gob.segob.dgtic.comun.util.AsistenciaBusquedaUtil;
 import mx.gob.segob.dgtic.persistence.repository.DetalleVacacionRepository;
 import mx.gob.segob.dgtic.persistence.repository.DiaFestivoRepository;
 import mx.gob.segob.dgtic.persistence.repository.base.RepositoryBase;
@@ -573,5 +574,197 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 	private String removerGuionBajo(String string) {
 	    return string.replace("_", " ");
 	  }
+
+	@Override
+	public List<DetalleVacacionDto> buscaDetalleVacacionReporteCoordinador(AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
+		StringBuilder qry = new StringBuilder();
+	       
+        qry.append("select u.cve_m_usuario, u.nombre, u.apellido_paterno, u.apellido_materno, u.nivel, "); 
+		qry.append("ua.nombre as unidad_administrativa, d.id_estatus, d.fecha_inicio, d.fecha_fin, e.estatus ");
+		qry.append("from d_detalle_vacacion d ");
+		qry.append("inner join m_usuario u on d.id_usuario = u.id_usuario ");
+		qry.append("inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ");
+		qry.append("inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ");
+		qry.append("left join m_estatus e on e.id_estatus = d.id_estatus ");
+		qry.append("where uua.id_unidad = " + asistenciaBusquedaUtil.getIdUnidadCoordinador());
+
+        if (!asistenciaBusquedaUtil.getCveMusuario().isEmpty()) {
+        	qry.append(" and u.cve_m_usuario = " + asistenciaBusquedaUtil.getCveMusuario());
+    	}
+        
+        if (!asistenciaBusquedaUtil.getNombre().isEmpty()) {
+        	qry.append(" and u.nombre like '%" + asistenciaBusquedaUtil.getNombre() + "%' ");
+        }
+        
+        if (!asistenciaBusquedaUtil.getPaterno().isEmpty()) {
+        	qry.append(" and u.apellido_paterno like '%" + asistenciaBusquedaUtil.getPaterno() + "%' ");
+        }
+        
+        if (!asistenciaBusquedaUtil.getMaterno().isEmpty()) {
+        	qry.append(" and u.apellido_materno like '%" + asistenciaBusquedaUtil.getMaterno() + "%' ");
+        }
+        
+        if (!asistenciaBusquedaUtil.getNivel().isEmpty()) {
+        	qry.append(" and u.nivel like '%" + asistenciaBusquedaUtil.getNivel() + "%' ");
+        }
+        
+        if (asistenciaBusquedaUtil.getEstado() != null) {
+        	qry.append(" and e.id_estatus = " + asistenciaBusquedaUtil.getEstado());
+        }
+        
+        if (asistenciaBusquedaUtil.getFechaInicialDate() != null && asistenciaBusquedaUtil.getFechaFinalDate() != null) {
+    		qry.append(" and d.fecha_inicio between '" + asistenciaBusquedaUtil.getFechaInicialDate() + "' and '" + asistenciaBusquedaUtil.getFechaFinalDate() + "'");
+        }
+
+        List<Map<String, Object>> detalleVacaciones = jdbcTemplate.queryForList(qry.toString());
+        List<DetalleVacacionDto> listaDetalleVacacion = new ArrayList<>();
+        
+        for (Map<String, Object> detalleVacacion : detalleVacaciones) {
+        	DetalleVacacionDto detalleVacacionDto = new DetalleVacacionDto();
+        	detalleVacacionDto.setIdDetalle((Integer)detalleVacacion.get(RepositoryConstants.ID_DETALLE));
+        	UsuarioDto usuarioDto= new UsuarioDto();
+        	usuarioDto.setIdUsuario((Integer)detalleVacacion.get(RepositoryConstants.ID_USUARIO));
+        	usuarioDto.setClaveUsuario((String)detalleVacacion.get(RepositoryConstants.CLAVE_M_USUARIO));
+        	usuarioDto.setNombre((String)detalleVacacion.get(RepositoryConstants.NOMBRE));
+        	usuarioDto.setApellidoPaterno((String)detalleVacacion.get(RepositoryConstants.APELLIDO_PATERNO));
+        	usuarioDto.setApellidoMaterno((String)detalleVacacion.get(RepositoryConstants.APELLIDO_MATERNO));
+        	usuarioDto.setNombreUnidad((String)detalleVacacion.get(RepositoryConstants.NOMBRE_UNIDAD));
+        	usuarioDto.setIdUnidad((Integer)detalleVacacion.get(RepositoryConstants.ID_UNIDAD));
+        	usuarioDto.setNombreUnidad((String) detalleVacacion.get(RepositoryConstants.UNIDAD_ADMINISTRATIVA));
+        	usuarioDto.setNivel((String) detalleVacacion.get(RepositoryConstants.NIVEL));
+        	detalleVacacionDto.setIdUsuario(usuarioDto);
+        	
+        	VacacionPeriodoDto vacacionPeriodoDto = new VacacionPeriodoDto();
+        	vacacionPeriodoDto.setIdVacacion((Integer)detalleVacacion.get(RepositoryConstants.ID_VACACION));
+        	PeriodoDto periodoDto = new PeriodoDto();
+        	periodoDto.setIdPeriodo((Integer)detalleVacacion.get(RepositoryConstants.ID_PERIODO));
+        	periodoDto.setDescripcion((String)detalleVacacion.get(RepositoryConstants.DESCRIPCION_PERIODO));
+        	vacacionPeriodoDto.setIdPeriodo(periodoDto);
+        	detalleVacacionDto.setIdVacacion(vacacionPeriodoDto);
+        	detalleVacacionDto.setIdVacacion(vacacionPeriodoDto);
+        	detalleVacacionDto.setIdResponsable((Integer)detalleVacacion.get(RepositoryConstants.ID_RESPONSABLE));
+        	
+        	EstatusDto estatusDto = new EstatusDto();
+        	estatusDto.setIdEstatus((Integer)detalleVacacion.get(RepositoryConstants.ID_ESTATUS));
+        	estatusDto.setEstatus((String)detalleVacacion.get(RepositoryConstants.ESTATUS));
+        	detalleVacacionDto.setIdEstatus(estatusDto);
+        	
+        	SimpleDateFormat sdf = new SimpleDateFormat(RepositoryConstants.YYYY_MM_DD);
+        	String fechaIni=""+detalleVacacion.get(RepositoryConstants.FECHA_INICIO);
+        	String fechaFinss=""+detalleVacacion.get(RepositoryConstants.FECHA_FIN);
+
+        	Date fechaInicioe=null;
+        	Date fechaFinal=null;
+
+        	try {
+        		fechaInicioe = sdf.parse(fechaIni);
+        		fechaFinal = sdf.parse(fechaFinss);
+			} catch (ParseException e) {
+				logger.warn("Error: {} ", e);
+			}
+        	detalleVacacionDto.setFechaInicio(fechaInicioe);
+        	detalleVacacionDto.setFechaFin(fechaFinal);
+        	detalleVacacionDto.setDias((Integer)detalleVacacion.get("dias"));
+    		listaDetalleVacacion.add(detalleVacacionDto);
+    	}
+        
+        return listaDetalleVacacion;
+	}
+	
+	@Override
+	public List<DetalleVacacionDto> buscaDetalleVacacionReporteDirector(AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
+		StringBuilder qry = new StringBuilder();
+	       
+        qry.append("select u.cve_m_usuario, u.nombre, u.apellido_paterno, u.apellido_materno, u.nivel, "); 
+		qry.append("ua.nombre as unidad_administrativa, d.id_estatus, d.fecha_inicio, d.fecha_fin, e.estatus ");
+		qry.append("from d_detalle_vacacion d ");
+		qry.append("inner join m_usuario u on d.id_usuario = u.id_usuario ");
+		qry.append("inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ");
+		qry.append("inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ");
+		qry.append("left join m_estatus e on e.id_estatus = d.id_estatus ");
+		qry.append("where 1 = 1");
+
+        if (!asistenciaBusquedaUtil.getCveMusuario().isEmpty()) {
+        	qry.append(" and u.cve_m_usuario = " + asistenciaBusquedaUtil.getCveMusuario());
+    	}
+        
+        if (!asistenciaBusquedaUtil.getNombre().isEmpty()) {
+        	qry.append(" and u.nombre like '%" + asistenciaBusquedaUtil.getNombre() + "%' ");
+        }
+        
+        if (!asistenciaBusquedaUtil.getPaterno().isEmpty()) {
+        	qry.append(" and u.apellido_paterno like '%" + asistenciaBusquedaUtil.getPaterno() + "%' ");
+        }
+        
+        if (!asistenciaBusquedaUtil.getMaterno().isEmpty()) {
+        	qry.append(" and u.apellido_materno like '%" + asistenciaBusquedaUtil.getMaterno() + "%' ");
+        }
+        
+        if (!asistenciaBusquedaUtil.getNivel().isEmpty()) {
+        	qry.append(" and u.nivel like '%" + asistenciaBusquedaUtil.getNivel() + "%' ");
+        }
+        
+        if (asistenciaBusquedaUtil.getEstado() != null) {
+        	qry.append(" and e.id_estatus = " + asistenciaBusquedaUtil.getEstado());
+        }
+        
+        if (asistenciaBusquedaUtil.getFechaInicialDate() != null && asistenciaBusquedaUtil.getFechaFinalDate() != null) {
+    		qry.append(" and d.fecha_inicio between '" + asistenciaBusquedaUtil.getFechaInicialDate() + "' and '" + asistenciaBusquedaUtil.getFechaFinalDate() + "'");
+        }
+
+        List<Map<String, Object>> detalleVacaciones = jdbcTemplate.queryForList(qry.toString());
+        List<DetalleVacacionDto> listaDetalleVacacion = new ArrayList<>();
+        
+        for (Map<String, Object> detalleVacacion : detalleVacaciones) {
+        	DetalleVacacionDto detalleVacacionDto = new DetalleVacacionDto();
+        	detalleVacacionDto.setIdDetalle((Integer)detalleVacacion.get(RepositoryConstants.ID_DETALLE));
+        	UsuarioDto usuarioDto= new UsuarioDto();
+        	usuarioDto.setIdUsuario((Integer)detalleVacacion.get(RepositoryConstants.ID_USUARIO));
+        	usuarioDto.setClaveUsuario((String)detalleVacacion.get(RepositoryConstants.CLAVE_M_USUARIO));
+        	usuarioDto.setNombre((String)detalleVacacion.get(RepositoryConstants.NOMBRE));
+        	usuarioDto.setApellidoPaterno((String)detalleVacacion.get(RepositoryConstants.APELLIDO_PATERNO));
+        	usuarioDto.setApellidoMaterno((String)detalleVacacion.get(RepositoryConstants.APELLIDO_MATERNO));
+        	usuarioDto.setNombreUnidad((String)detalleVacacion.get(RepositoryConstants.NOMBRE_UNIDAD));
+        	usuarioDto.setIdUnidad((Integer)detalleVacacion.get(RepositoryConstants.ID_UNIDAD));
+        	usuarioDto.setNombreUnidad((String) detalleVacacion.get(RepositoryConstants.UNIDAD_ADMINISTRATIVA));
+        	usuarioDto.setNivel((String) detalleVacacion.get(RepositoryConstants.NIVEL));
+        	detalleVacacionDto.setIdUsuario(usuarioDto);
+        	
+        	VacacionPeriodoDto vacacionPeriodoDto = new VacacionPeriodoDto();
+        	vacacionPeriodoDto.setIdVacacion((Integer)detalleVacacion.get(RepositoryConstants.ID_VACACION));
+        	PeriodoDto periodoDto = new PeriodoDto();
+        	periodoDto.setIdPeriodo((Integer)detalleVacacion.get(RepositoryConstants.ID_PERIODO));
+        	periodoDto.setDescripcion((String)detalleVacacion.get(RepositoryConstants.DESCRIPCION_PERIODO));
+        	vacacionPeriodoDto.setIdPeriodo(periodoDto);
+        	detalleVacacionDto.setIdVacacion(vacacionPeriodoDto);
+        	detalleVacacionDto.setIdVacacion(vacacionPeriodoDto);
+        	detalleVacacionDto.setIdResponsable((Integer)detalleVacacion.get(RepositoryConstants.ID_RESPONSABLE));
+        	
+        	EstatusDto estatusDto = new EstatusDto();
+        	estatusDto.setIdEstatus((Integer)detalleVacacion.get(RepositoryConstants.ID_ESTATUS));
+        	estatusDto.setEstatus((String)detalleVacacion.get(RepositoryConstants.ESTATUS));
+        	detalleVacacionDto.setIdEstatus(estatusDto);
+        	
+        	SimpleDateFormat sdf = new SimpleDateFormat(RepositoryConstants.YYYY_MM_DD);
+        	String fechaIni=""+detalleVacacion.get(RepositoryConstants.FECHA_INICIO);
+        	String fechaFinss=""+detalleVacacion.get(RepositoryConstants.FECHA_FIN);
+
+        	Date fechaInicioe=null;
+        	Date fechaFinal=null;
+
+        	try {
+        		fechaInicioe = sdf.parse(fechaIni);
+        		fechaFinal = sdf.parse(fechaFinss);
+			} catch (ParseException e) {
+				logger.warn("Error: {} ", e);
+			}
+        	detalleVacacionDto.setFechaInicio(fechaInicioe);
+        	detalleVacacionDto.setFechaFin(fechaFinal);
+        	detalleVacacionDto.setDias((Integer)detalleVacacion.get("dias"));
+    		listaDetalleVacacion.add(detalleVacacionDto);
+    	}
+        
+        return listaDetalleVacacion;
+	}
 	
 }

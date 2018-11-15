@@ -13,10 +13,16 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ComisionDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.DetalleVacacionDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.PeriodoDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.TipoDiaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionPeriodoDto;
 import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
+import mx.gob.segob.dgtic.comun.util.AsistenciaBusquedaUtil;
 import mx.gob.segob.dgtic.persistence.repository.ComisionRepository;
+import mx.gob.segob.dgtic.persistence.repository.constants.RepositoryConstants;
 import mx.gob.segob.dgtic.webservices.recursos.base.RecursoBase;
 
 @Repository
@@ -26,6 +32,7 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
   private static final String COLUMNA_ID_USUARIO = "id_usuario";
   private static final String COLUMNA_ID_RESPONSABLE = "id_responsable";
   private static final String COLUMNA_ID_ARCHIVO = "id_archivo";
+  private static final String COLUMNA_ID_TIPO_DIA = "id_tipo_dia";
   private static final String COLUMNA_URL = "url";
   private static final String COLUMNA_NOMBRE_ARCHIVO = "nombre_archivo";
   private static final String COLUMNA_ID_ESTATUS = "id_estatus";
@@ -65,6 +72,7 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
   private static final String PARAMETRO_ID_RESPONSABLE = "idResponsable";
   private static final String PARAMETRO_FECHA_REGISTRO = "fechaRegistro";
   private static final String FROM_M_COMISION_COMISION = "FROM m_comision comision ";
+  private static final String UNIDAD_ADMINISTRATIVA = "unidad_administrativa";
 
 
   @Autowired
@@ -509,5 +517,151 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
   private String removerGuionBajo(String string) {
     return string.replace("_", " ");
   }
+  
+  @Override
+	public List<ComisionDto> buscaComisionReporteCoordinador(AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
+		StringBuilder qry = new StringBuilder();
+	       
+      qry.append("select u.cve_m_usuario, u.nombre, u.apellido_paterno, u.apellido_materno, u.nivel, "); 
+		qry.append("ua.nombre as unidad_administrativa, c.id_estatus, c.fecha_inicio, c.fecha_fin, e.estatus ");
+		qry.append("from m_comision c ");
+		qry.append("inner join m_usuario u on c.id_usuario = u.id_usuario ");
+		qry.append("inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ");
+		qry.append("inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ");
+		qry.append("left join m_estatus e on e.id_estatus = c.id_estatus ");
+		qry.append("where uua.id_unidad = " + asistenciaBusquedaUtil.getIdUnidadCoordinador());
+
+      if (!asistenciaBusquedaUtil.getCveMusuario().isEmpty()) {
+      	qry.append(" and u.cve_m_usuario = " + asistenciaBusquedaUtil.getCveMusuario());
+  	}
+      
+      if (!asistenciaBusquedaUtil.getNombre().isEmpty()) {
+      	qry.append(" and u.nombre like '%" + asistenciaBusquedaUtil.getNombre() + "%' ");
+      }
+      
+      if (!asistenciaBusquedaUtil.getPaterno().isEmpty()) {
+      	qry.append(" and u.apellido_paterno like '%" + asistenciaBusquedaUtil.getPaterno() + "%' ");
+      }
+      
+      if (!asistenciaBusquedaUtil.getMaterno().isEmpty()) {
+      	qry.append(" and u.apellido_materno like '%" + asistenciaBusquedaUtil.getMaterno() + "%' ");
+      }
+      
+      if (!asistenciaBusquedaUtil.getNivel().isEmpty()) {
+      	qry.append(" and u.nivel like '%" + asistenciaBusquedaUtil.getNivel() + "%' ");
+      }
+      
+      if (asistenciaBusquedaUtil.getEstado() != null) {
+      	qry.append(" and e.id_estatus = " + asistenciaBusquedaUtil.getEstado());
+      }
+      
+      if (asistenciaBusquedaUtil.getFechaInicialDate() != null && asistenciaBusquedaUtil.getFechaFinalDate() != null) {
+  		qry.append(" and c.fecha_inicio between '" + asistenciaBusquedaUtil.getFechaInicialDate() + "' and '" + asistenciaBusquedaUtil.getFechaFinalDate() + "'");
+
+      }
+
+      List<Map<String, Object>> consulta = jdbcTemplate.queryForList(qry.toString());
+      List<ComisionDto> listaComisiones = new ArrayList<>();
+
+      for (Map<String, Object> comisiones : consulta) {
+        UsuarioDto usuarioDto = new UsuarioDto();
+        usuarioDto.setIdUsuario((Integer) comisiones.get(COLUMNA_ID_USUARIO));
+        usuarioDto.setClaveUsuario((String) comisiones.get(COLUMNA_CVE_M_USUARIO));
+        usuarioDto.setNombre((String) comisiones.get(COLUMNA_NOMBRE));
+        usuarioDto.setApellidoPaterno((String) comisiones.get(COLUMNA_APELLIDO_PATERNO));
+        usuarioDto.setApellidoMaterno((String) comisiones.get(COLUMNA_APELLIDO_MATERNO));
+        usuarioDto.setNivel((String) comisiones.get(COLUMNA_NIVEL));
+        usuarioDto.setNombreUnidad((String) comisiones.get(UNIDAD_ADMINISTRATIVA));
+        
+        EstatusDto estatus = new EstatusDto();
+        estatus.setIdEstatus((Integer) comisiones.get(COLUMNA_ID_ESTATUS));
+        estatus.setEstatus((String) comisiones.get(RepositoryConstants.ESTATUS));
+        
+        ComisionDto comisionDto = new ComisionDto();
+        comisionDto.setIdUsuario(usuarioDto);
+        comisionDto.setIdEstatus(estatus);
+        comisionDto.setFechaInicio((Date) comisiones.get(COLUMNA_FECHA_INICIO));
+        comisionDto.setFechaFin((Date) comisiones.get(COLUMNA_FECHA_FIN));
+        comisionDto.setDias((Integer) comisiones.get(COLUMNA_DIAS));
+        
+        
+        listaComisiones.add(comisionDto);
+      }
+
+      return listaComisiones;
+	}
+  
+  @Override
+	public List<ComisionDto> buscaComisionReporteDirector(AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
+		StringBuilder qry = new StringBuilder();
+	       
+    qry.append("select u.cve_m_usuario, u.nombre, u.apellido_paterno, u.apellido_materno, u.nivel, "); 
+		qry.append("ua.nombre as unidad_administrativa, c.id_estatus, c.fecha_inicio, c.fecha_fin, e.estatus ");
+		qry.append("from m_comision c ");
+		qry.append("inner join m_usuario u on c.id_usuario = u.id_usuario ");
+		qry.append("inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ");
+		qry.append("inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ");
+		qry.append("left join m_estatus e on e.id_estatus = c.id_estatus ");
+		qry.append("where 1 = 1");
+
+    if (!asistenciaBusquedaUtil.getCveMusuario().isEmpty()) {
+    	qry.append(" and u.cve_m_usuario = " + asistenciaBusquedaUtil.getCveMusuario());
+	}
+    
+    if (!asistenciaBusquedaUtil.getNombre().isEmpty()) {
+    	qry.append(" and u.nombre like '%" + asistenciaBusquedaUtil.getNombre() + "%' ");
+    }
+    
+    if (!asistenciaBusquedaUtil.getPaterno().isEmpty()) {
+    	qry.append(" and u.apellido_paterno like '%" + asistenciaBusquedaUtil.getPaterno() + "%' ");
+    }
+    
+    if (!asistenciaBusquedaUtil.getMaterno().isEmpty()) {
+    	qry.append(" and u.apellido_materno like '%" + asistenciaBusquedaUtil.getMaterno() + "%' ");
+    }
+    
+    if (!asistenciaBusquedaUtil.getNivel().isEmpty()) {
+    	qry.append(" and u.nivel like '%" + asistenciaBusquedaUtil.getNivel() + "%' ");
+    }
+    
+    if (asistenciaBusquedaUtil.getEstado() != null) {
+    	qry.append(" and e.id_estatus = " + asistenciaBusquedaUtil.getEstado());
+    }
+    
+    if (asistenciaBusquedaUtil.getFechaInicialDate() != null && asistenciaBusquedaUtil.getFechaFinalDate() != null) {
+		qry.append(" and c.fecha_inicio between '" + asistenciaBusquedaUtil.getFechaInicialDate() + "' and '" + asistenciaBusquedaUtil.getFechaFinalDate() + "'");
+
+    }
+
+    List<Map<String, Object>> consulta = jdbcTemplate.queryForList(qry.toString());
+    List<ComisionDto> listaComisiones = new ArrayList<>();
+
+    for (Map<String, Object> comisiones : consulta) {
+      UsuarioDto usuarioDto = new UsuarioDto();
+      usuarioDto.setIdUsuario((Integer) comisiones.get(COLUMNA_ID_USUARIO));
+      usuarioDto.setClaveUsuario((String) comisiones.get(COLUMNA_CVE_M_USUARIO));
+      usuarioDto.setNombre((String) comisiones.get(COLUMNA_NOMBRE));
+      usuarioDto.setApellidoPaterno((String) comisiones.get(COLUMNA_APELLIDO_PATERNO));
+      usuarioDto.setApellidoMaterno((String) comisiones.get(COLUMNA_APELLIDO_MATERNO));
+      usuarioDto.setNivel((String) comisiones.get(COLUMNA_NIVEL));
+      usuarioDto.setNombreUnidad((String) comisiones.get(UNIDAD_ADMINISTRATIVA));
+      
+      EstatusDto estatus = new EstatusDto();
+      estatus.setIdEstatus((Integer) comisiones.get(COLUMNA_ID_ESTATUS));
+      estatus.setEstatus((String) comisiones.get(RepositoryConstants.ESTATUS));
+      
+      ComisionDto comisionDto = new ComisionDto();
+      comisionDto.setIdUsuario(usuarioDto);
+      comisionDto.setIdEstatus(estatus);
+      comisionDto.setFechaInicio((Date) comisiones.get(COLUMNA_FECHA_INICIO));
+      comisionDto.setFechaFin((Date) comisiones.get(COLUMNA_FECHA_FIN));
+      comisionDto.setDias((Integer) comisiones.get(COLUMNA_DIAS));
+      
+      
+      listaComisiones.add(comisionDto);
+    }
+
+    return listaComisiones;
+	}
 
 }

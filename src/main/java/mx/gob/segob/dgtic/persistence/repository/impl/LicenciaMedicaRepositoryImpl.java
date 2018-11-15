@@ -11,9 +11,11 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.ComisionDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.LicenciaMedicaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
+import mx.gob.segob.dgtic.comun.util.AsistenciaBusquedaUtil;
 import mx.gob.segob.dgtic.persistence.repository.LicenciaMedicaRepository;
 import mx.gob.segob.dgtic.persistence.repository.base.RepositoryBase;
 import mx.gob.segob.dgtic.persistence.repository.constants.RepositoryConstants;
@@ -387,4 +389,151 @@ public class LicenciaMedicaRepositoryImpl extends RepositoryBase implements Lice
 	private String removerGuionBajo(String string) {
 	    return string.replace("_", " ");
 	  }
+	
+	@Override
+	public List<LicenciaMedicaDto> buscaLicenciaMedicaReporteCoordinador(AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
+		StringBuilder qry = new StringBuilder();
+	       
+      qry.append("select u.cve_m_usuario, u.nombre, u.apellido_paterno, u.apellido_materno, u.nivel, "); 
+		qry.append("ua.nombre as unidad_administrativa, l.id_estatus, l.fecha_inicio, l.fecha_fin, e.estatus ");
+		qry.append("from m_licencia_medica l ");
+		qry.append("inner join m_usuario u on l.id_usuario = u.id_usuario ");
+		qry.append("inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ");
+		qry.append("inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ");
+		qry.append("left join m_estatus e on e.id_estatus = l.id_estatus ");
+		qry.append("where uua.id_unidad = " + asistenciaBusquedaUtil.getIdUnidadCoordinador());
+
+      if (!asistenciaBusquedaUtil.getCveMusuario().isEmpty()) {
+      	qry.append(" and u.cve_m_usuario = " + asistenciaBusquedaUtil.getCveMusuario());
+      }
+      
+      if (!asistenciaBusquedaUtil.getNombre().isEmpty()) {
+      	qry.append(" and u.nombre like '%" + asistenciaBusquedaUtil.getNombre() + "%' ");
+      }
+      
+      if (!asistenciaBusquedaUtil.getPaterno().isEmpty()) {
+      	qry.append(" and u.apellido_paterno like '%" + asistenciaBusquedaUtil.getPaterno() + "%' ");
+      }
+      
+      if (!asistenciaBusquedaUtil.getMaterno().isEmpty()) {
+      	qry.append(" and u.apellido_materno like '%" + asistenciaBusquedaUtil.getMaterno() + "%' ");
+      }
+      
+      if (!asistenciaBusquedaUtil.getNivel().isEmpty()) {
+      	qry.append(" and u.nivel like '%" + asistenciaBusquedaUtil.getNivel() + "%' ");
+      }
+      
+      if (asistenciaBusquedaUtil.getEstado() != null) {
+      	qry.append(" and e.id_estatus = " + asistenciaBusquedaUtil.getEstado());
+      }
+      
+      if (asistenciaBusquedaUtil.getFechaInicialDate() != null && asistenciaBusquedaUtil.getFechaFinalDate() != null) {
+  		qry.append(" and l.fecha_inicio between '" + asistenciaBusquedaUtil.getFechaInicialDate() + "' and '" + asistenciaBusquedaUtil.getFechaFinalDate() + "'");
+
+      }
+
+      List<Map<String, Object>> consulta = jdbcTemplate.queryForList(qry.toString());
+      List<LicenciaMedicaDto> listaLicencia = new ArrayList<>();
+
+      for (Map<String, Object> licencia : consulta) {
+        UsuarioDto usuarioDto = new UsuarioDto();
+        usuarioDto.setIdUsuario((Integer) licencia.get(RepositoryConstants.ID_USUARIO));
+        usuarioDto.setClaveUsuario((String) licencia.get(RepositoryConstants.CLAVE_M_USUARIO));
+        usuarioDto.setNombre((String) licencia.get(RepositoryConstants.NOMBRE));
+        usuarioDto.setApellidoPaterno((String) licencia.get(RepositoryConstants.APELLIDO_PATERNO));
+        usuarioDto.setApellidoMaterno((String) licencia.get(RepositoryConstants.APELLIDO_MATERNO));
+        usuarioDto.setNivel((String) licencia.get(RepositoryConstants.NIVEL));
+        usuarioDto.setNombreUnidad((String) licencia.get(RepositoryConstants.UNIDAD_ADMINISTRATIVA));
+        
+        EstatusDto estatus = new EstatusDto();
+        estatus.setIdEstatus((Integer) licencia.get(RepositoryConstants.ID_ESTATUS));
+        estatus.setEstatus((String) licencia.get(RepositoryConstants.ESTATUS));
+        
+        LicenciaMedicaDto licenciaDto = new LicenciaMedicaDto();
+        licenciaDto.setIdUsuario(usuarioDto);
+        licenciaDto.setIdEstatus(estatus);
+        licenciaDto.setFechaInicio((Date) licencia.get(RepositoryConstants.FECHA_INICIO));
+        licenciaDto.setFechaFin((Date) licencia.get(RepositoryConstants.FECHA_FIN));
+        licenciaDto.setDias((Integer) licencia.get(RepositoryConstants.DIAS));
+        
+        
+        listaLicencia.add(licenciaDto);
+      }
+
+      return listaLicencia;
+	}
+	
+	@Override
+	public List<LicenciaMedicaDto> buscaLicenciaMedicaReporteDirector(AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
+		StringBuilder qry = new StringBuilder();
+	       
+      qry.append("select u.cve_m_usuario, u.nombre, u.apellido_paterno, u.apellido_materno, u.nivel, "); 
+		qry.append("ua.nombre as unidad_administrativa, l.id_estatus, l.fecha_inicio, l.fecha_fin, e.estatus ");
+		qry.append("from m_licencia_medica l ");
+		qry.append("inner join m_usuario u on l.id_usuario = u.id_usuario ");
+		qry.append("inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ");
+		qry.append("inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ");
+		qry.append("left join m_estatus e on e.id_estatus = l.id_estatus ");
+		qry.append("where 1 = 1");
+
+      if (!asistenciaBusquedaUtil.getCveMusuario().isEmpty()) {
+      	qry.append(" and u.cve_m_usuario = " + asistenciaBusquedaUtil.getCveMusuario());
+      }
+      
+      if (!asistenciaBusquedaUtil.getNombre().isEmpty()) {
+      	qry.append(" and u.nombre like '%" + asistenciaBusquedaUtil.getNombre() + "%' ");
+      }
+      
+      if (!asistenciaBusquedaUtil.getPaterno().isEmpty()) {
+      	qry.append(" and u.apellido_paterno like '%" + asistenciaBusquedaUtil.getPaterno() + "%' ");
+      }
+      
+      if (!asistenciaBusquedaUtil.getMaterno().isEmpty()) {
+      	qry.append(" and u.apellido_materno like '%" + asistenciaBusquedaUtil.getMaterno() + "%' ");
+      }
+      
+      if (!asistenciaBusquedaUtil.getNivel().isEmpty()) {
+      	qry.append(" and u.nivel like '%" + asistenciaBusquedaUtil.getNivel() + "%' ");
+      }
+      
+      if (asistenciaBusquedaUtil.getEstado() != null) {
+      	qry.append(" and e.id_estatus = " + asistenciaBusquedaUtil.getEstado());
+      }
+      
+      if (asistenciaBusquedaUtil.getFechaInicialDate() != null && asistenciaBusquedaUtil.getFechaFinalDate() != null) {
+  		qry.append(" and l.fecha_inicio between '" + asistenciaBusquedaUtil.getFechaInicialDate() + "' and '" + asistenciaBusquedaUtil.getFechaFinalDate() + "'");
+
+      }
+
+      List<Map<String, Object>> consulta = jdbcTemplate.queryForList(qry.toString());
+      List<LicenciaMedicaDto> listaLicencia = new ArrayList<>();
+
+      for (Map<String, Object> licencia : consulta) {
+        UsuarioDto usuarioDto = new UsuarioDto();
+        usuarioDto.setIdUsuario((Integer) licencia.get(RepositoryConstants.ID_USUARIO));
+        usuarioDto.setClaveUsuario((String) licencia.get(RepositoryConstants.CLAVE_M_USUARIO));
+        usuarioDto.setNombre((String) licencia.get(RepositoryConstants.NOMBRE));
+        usuarioDto.setApellidoPaterno((String) licencia.get(RepositoryConstants.APELLIDO_PATERNO));
+        usuarioDto.setApellidoMaterno((String) licencia.get(RepositoryConstants.APELLIDO_MATERNO));
+        usuarioDto.setNivel((String) licencia.get(RepositoryConstants.NIVEL));
+        usuarioDto.setNombreUnidad((String) licencia.get(RepositoryConstants.UNIDAD_ADMINISTRATIVA));
+        
+        EstatusDto estatus = new EstatusDto();
+        estatus.setIdEstatus((Integer) licencia.get(RepositoryConstants.ID_ESTATUS));
+        estatus.setEstatus((String) licencia.get(RepositoryConstants.ESTATUS));
+        
+        LicenciaMedicaDto licenciaDto = new LicenciaMedicaDto();
+        licenciaDto.setIdUsuario(usuarioDto);
+        licenciaDto.setIdEstatus(estatus);
+        licenciaDto.setFechaInicio((Date) licencia.get(RepositoryConstants.FECHA_INICIO));
+        licenciaDto.setFechaFin((Date) licencia.get(RepositoryConstants.FECHA_FIN));
+        licenciaDto.setDias((Integer) licencia.get(RepositoryConstants.DIAS));
+        
+        
+        listaLicencia.add(licenciaDto);
+      }
+
+      return listaLicencia;
+	}
+
 }

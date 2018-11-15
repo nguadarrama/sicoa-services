@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import mx.gob.segob.dgtic.comun.sicoa.dto.ComisionDto;
+import mx.gob.segob.dgtic.comun.util.AsistenciaBusquedaUtil;
 
 public interface ComisionRepository {
 
@@ -31,4 +32,7 @@ public interface ComisionRepository {
   
   public List<ComisionDto> obtenerComisionesPorUsuarioRango(Integer idUsuario, Date fechaInicio,
       Date fechaFin);
+  
+  public List<ComisionDto> buscaComisionReporteCoordinador(AsistenciaBusquedaUtil asistenciaBusquedaUtil);
+  public List<ComisionDto> buscaComisionReporteDirector(AsistenciaBusquedaUtil asistenciaBusquedaUtil);
 }

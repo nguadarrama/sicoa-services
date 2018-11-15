@@ -3,6 +3,7 @@ package mx.gob.segob.dgtic.persistence.repository;
 import java.util.List;
 
 import mx.gob.segob.dgtic.comun.sicoa.dto.LicenciaMedicaDto;
+import mx.gob.segob.dgtic.comun.util.AsistenciaBusquedaUtil;
 
 public interface LicenciaMedicaRepository {
 
@@ -17,4 +18,6 @@ public interface LicenciaMedicaRepository {
 			String idEstatus,String idUnidad);
 	public List<LicenciaMedicaDto> obtenerLicenciasPorUnidad(String idUnidad, String claveUsuario, String nombre,
 			String apellidoPaterno, String apellidoMaterno);
+	public List<LicenciaMedicaDto> buscaLicenciaMedicaReporteCoordinador(AsistenciaBusquedaUtil asistenciaBusquedaUtil);
+	public List<LicenciaMedicaDto> buscaLicenciaMedicaReporteDirector(AsistenciaBusquedaUtil asistenciaBusquedaUtil);
 }

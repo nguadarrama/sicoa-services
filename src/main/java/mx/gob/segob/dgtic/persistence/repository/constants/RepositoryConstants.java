@@ -124,6 +124,7 @@ public class RepositoryConstants {
 	public static final String ULTIMA_FECHA2 = "ultimaFecha";
 	public static final String ULTIMO_ACCESO = "ultimo_acceso";
 	public static final String ULTIMO_ACCESO2 = "ultimoAcceso";
+	public static final String UNIDAD_ADMINISTRATIVA = "unidad_administrativa";
 	public static final String VACACION = "vacacion";
 	public static final String YYYY_MM_DD = "yyyy-MM-dd";
 	/**

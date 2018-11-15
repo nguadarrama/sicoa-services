@@ -685,10 +685,6 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         	qry.append(RepositoryConstants.ARIL686 + asistenciaBusquedaUtil.getNivel() + "%' ");
         }
         
-        if (asistenciaBusquedaUtil.getTipo() != null) {
-        	qry.append(RepositoryConstants.ARIL690 + asistenciaBusquedaUtil.getTipo());
-        }
-        
         if (asistenciaBusquedaUtil.getEstado() != null) {
         	qry.append(RepositoryConstants.ARIL694 + asistenciaBusquedaUtil.getEstado());
         }
@@ -697,55 +693,14 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         if (!asistenciaBusquedaUtil.getPermisos().isEmpty()) {
         	String[] arrayPermisos = asistenciaBusquedaUtil.getPermisos().split(",");
             List<String> listaPermisos = new ArrayList<>(Arrays.asList(arrayPermisos));
-            String condicionVacacion = "or";
-            String condicionComision = "or";
-            String condicionLicencia = "or";
-            String condicionDescuento = "or";
             
-            //verificando que permisos hay para definir que el primero no llevará 'or' y los demás sí
             for (String permiso : listaPermisos) {
-	        	if (permiso.contains(RepositoryConstants.VACACION)) {
-	        		condicionVacacion = "";
-	        		break;
-	        	} 
-	        	
-	        	if (permiso.contains(RepositoryConstants.COMISION)) {
-	        		condicionComision = "";
-	        		break;
-	        	}
-	        	
-	        	if (permiso.contains(RepositoryConstants.LICENCIA)) {
-	        		condicionLicencia = "";
-	        		break;
-	        	} 
-	        	
-	        	if (permiso.contains(RepositoryConstants.DESCUENTO)) {
-	        		condicionDescuento = "";
-	        		break;
+	        	if (permiso.contains("descuento")) {
+	        		//descuento: validada y la bandera descuento
+	        		qry.append(" and ((e.id_estatus = 2 and i.descuento = 1))");
 	        	} 
         	}
         	
-        	//se arma la sentencia de la consulta
-        	qry.append( " and (");
-        	
-    		if (listaPermisos.contains(RepositoryConstants.VACACION)) {
-    			qry.append(condicionVacacion + " a.id_tipo_dia = 5 ");
-    		}
-    		
-    		if (listaPermisos.contains(RepositoryConstants.COMISION)) {
-    			qry.append(condicionComision + " a.id_tipo_dia = 7 ");
-    		}
-    		
-    		if (listaPermisos.contains(RepositoryConstants.LICENCIA)) {
-    			qry.append(condicionLicencia + " a.id_tipo_dia = 6 ");
-    		}
-    		
-    		//descuento: validada y la bandera descuento
-    		if (listaPermisos.contains(RepositoryConstants.DESCUENTO)) {
-    			qry.append(condicionDescuento + " (e.id_estatus = 2 and i.descuento = 1)");
-    		}
-        	
-        	qry.append(")");
         }
         
         List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString());
@@ -829,10 +784,6 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         	qry.append(" and u.nivel like '%" + asistenciaBusquedaUtil.getNivel() + "%' ");
         }
         
-        if (asistenciaBusquedaUtil.getTipo() != null) {
-        	qry.append(" and t.id_tipo_dia = " + asistenciaBusquedaUtil.getTipo());
-        }
-        
         if (asistenciaBusquedaUtil.getEstado() != null) {
         	qry.append(" and e.id_estatus = " + asistenciaBusquedaUtil.getEstado());
         }
@@ -841,55 +792,14 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         if (!asistenciaBusquedaUtil.getPermisos().isEmpty()) {
         	String[] arrayPermisos = asistenciaBusquedaUtil.getPermisos().split(",");
             List<String> listaPermisos = new ArrayList<>(Arrays.asList(arrayPermisos));
-            String condicionVacacion = "or";
-            String condicionComision = "or";
-            String condicionLicencia = "or";
-            String condicionDescuento = "or";
             
-            //verificando que permisos hay para definir que el primero no llevará 'or' y los demás sí
             for (String permiso : listaPermisos) {
-	        	if (permiso.contains("vacacion")) {
-	        		condicionVacacion = "";
-	        		break;
-	        	} 
-	        	
-	        	if (permiso.contains("comision")) {
-	        		condicionComision = "";
-	        		break;
-	        	}
-	        	
-	        	if (permiso.contains("licencia")) {
-	        		condicionLicencia = "";
-	        		break;
-	        	} 
-	        	
 	        	if (permiso.contains("descuento")) {
-	        		condicionDescuento = "";
-	        		break;
+	        		//descuento: validada y la bandera descuento
+	        		qry.append(" and ((e.id_estatus = 2 and i.descuento = 1))");
 	        	} 
         	}
         	
-        	//se arma la sentencia de la consulta
-        	qry.append( " and (");
-        	
-    		if (listaPermisos.contains("vacacion")) {
-    			qry.append(condicionVacacion + " a.id_tipo_dia = 5 ");
-    		}
-    		
-    		if (listaPermisos.contains("comision")) {
-    			qry.append(condicionComision + " a.id_tipo_dia = 7 ");
-    		}
-    		
-    		if (listaPermisos.contains("licencia")) {
-    			qry.append(condicionLicencia + " a.id_tipo_dia = 6 ");
-    		}
-    		
-    		//descuento: validada y la bandera descuento
-    		if (listaPermisos.contains("descuento")) {
-    			qry.append(condicionDescuento + " (e.id_estatus = 2 and i.descuento = 1)");
-    		}
-        	
-        	qry.append(")");
         }
         
         List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString());
