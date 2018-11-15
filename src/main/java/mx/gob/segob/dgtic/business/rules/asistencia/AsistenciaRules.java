@@ -105,10 +105,12 @@ public class AsistenciaRules {
 	
 	public List<AsistenciaDto> reporteDireccion(AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
 		
-		List<AsistenciaDto> listaAsistencia;
-		listaAsistencia = asistenciaRepository.reporteDireccion(asistenciaBusquedaUtil);
-		
-		if (!asistenciaBusquedaUtil.getPermisos().isEmpty() || asistenciaBusquedaUtil.getTipo() != null) {
+		List<AsistenciaDto> listaAsistencia = new ArrayList<>();
+
+		//si no existe filtro de permiso, entonces sólo extrae la información de asistencias
+		if (asistenciaBusquedaUtil.getPermisos().isEmpty() && asistenciaBusquedaUtil.getTipo() == null) {
+			listaAsistencia = asistenciaRepository.reporteDireccion(asistenciaBusquedaUtil);
+		} else { //si existe filtro de permiso, sólo trae la información de los permisos
         	String[] arrayPermisos = asistenciaBusquedaUtil.getPermisos().split(",");
             List<String> listaPermisos = new ArrayList<>(Arrays.asList(arrayPermisos));
             
@@ -150,12 +152,12 @@ public class AsistenciaRules {
 		UsuarioDto coordinador = usuarioRepository.buscaUsuario(asistenciaBusquedaUtil.getCveUsuarioLogeado());
 		asistenciaBusquedaUtil.setIdUnidadCoordinador((coordinador.getIdUnidad()));
 		
-		//se obtienen las incidencias
-		List<AsistenciaDto> listaAsistencia;
-		listaAsistencia = asistenciaRepository.reporteCoordinador(asistenciaBusquedaUtil);
-		
-		//se agregan al reporte vacaciones, licencias y comisiones
-		if (!asistenciaBusquedaUtil.getPermisos().isEmpty() || asistenciaBusquedaUtil.getTipo() != null) {
+		List<AsistenciaDto> listaAsistencia = new ArrayList<>();
+
+		//si no existe filtro de permiso, entonces sólo extrae la información de asistencias
+		if (asistenciaBusquedaUtil.getPermisos().isEmpty() && asistenciaBusquedaUtil.getTipo() == null) {
+			listaAsistencia = asistenciaRepository.reporteCoordinador(asistenciaBusquedaUtil);
+		} else {
         	String[] arrayPermisos = asistenciaBusquedaUtil.getPermisos().split(",");
             List<String> listaPermisos = new ArrayList<>(Arrays.asList(arrayPermisos));
             
