@@ -274,7 +274,7 @@ public class DetalleVacacionRules extends RecursoBase {
 							
 						}
 						EstatusDto estatus =new EstatusDto();
-						estatus.setIdEstatus(8);
+						estatus.setIdEstatus(6);
 						detalleVacacionDto.setIdEstatus(estatus);
 						detalleAux=detalleVacacionRepository.aceptaORechazaDetalleVacacion(detalleVacacionDto);
 						VacacionPeriodoDto vacacionPeriodoDto;
