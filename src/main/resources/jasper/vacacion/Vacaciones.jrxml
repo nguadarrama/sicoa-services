@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Vacaciones" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f165d569-c59e-418b-8f22-e606d38f4bc2">
 	<property name="ireport.zoom" value="1.3636363636363635"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="331"/>
+	<property name="ireport.y" value="283"/>
 	<parameter name="nombre" class="java.lang.String"/>
 	<parameter name="apellidoPaterno" class="java.lang.String"/>
 	<parameter name="apellidoMaterno" class="java.lang.String"/>
@@ -146,7 +146,7 @@
 				<textFieldExpression><![CDATA[$P{fechaFin}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="305" y="140" width="231" height="20" uuid="df9fa642-4144-4010-af9a-38b697b8425e"/>
+				<reportElement x="305" y="140" width="231" height="20" isPrintWhenDetailOverflows="true" uuid="df9fa642-4144-4010-af9a-38b697b8425e"/>
 				<textElement>
 					<font size="9" isItalic="true"/>
 				</textElement>
@@ -164,7 +164,7 @@
 				<text><![CDATA[Motivo por el que no se pueden disfrutar:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="10" y="140" width="268" height="20" uuid="b65d1ea1-89d5-42ef-a030-442cbccd5381"/>
+				<reportElement x="10" y="140" width="289" height="20" isPrintWhenDetailOverflows="true" uuid="b65d1ea1-89d5-42ef-a030-442cbccd5381"/>
 				<textElement>
 					<font size="9" isItalic="true"/>
 				</textElement>
@@ -255,7 +255,7 @@
 				<text><![CDATA[NOMBRE]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="10" y="120" width="268" height="20" forecolor="#333333" uuid="ff6dd741-77e0-4bbb-bf2d-94b194bed661"/>
+				<reportElement x="10" y="120" width="289" height="20" forecolor="#333333" uuid="ff6dd741-77e0-4bbb-bf2d-94b194bed661"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
