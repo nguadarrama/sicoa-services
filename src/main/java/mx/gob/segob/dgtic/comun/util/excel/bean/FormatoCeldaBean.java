@@ -7,17 +7,12 @@
 */
 package mx.gob.segob.dgtic.comun.util.excel.bean;
 
-import java.io.Serializable;
-
 /**
  * The Class FormatoCeldaBean.
  */
-public class FormatoCeldaBean implements Serializable {
+public class FormatoCeldaBean {
     
-    /**
-     * The Constant serialVersionUID.
-     */
-    private static final long serialVersionUID = -7509879531081916818L;
+  
     
     /**
      * The componenete excel.

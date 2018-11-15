@@ -10,15 +10,11 @@ package mx.gob.segob.dgtic.comun.util.excel.bean;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import java.io.Serializable;
-
 /**
  * Clase que contiene los atributos para dar estilo a una celda
  */
-public class EstiloCeldaBean implements Serializable {
+public class EstiloCeldaBean  {
 
-    /** The Constant serialVersionUID. */
-    private static final long serialVersionUID = -8319415573256252538L;
 
     /** La alineaci&oacute;n. */
     private short alinear;

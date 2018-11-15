@@ -7,20 +7,15 @@
 */
 package mx.gob.segob.dgtic.comun.util.excel.bean;
 
-import java.io.Serializable;
-
-import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Workbook;
 
 /**
  * Clase que contiene los atributos de una fuente
  */
-public class FormatoFuenteBean implements Serializable {
+public class FormatoFuenteBean {
 
-    /** The Constant serialVersionUID. */
-    private static final long serialVersionUID = 6199460299460456783L;
-
+  
     /** La fuente. */
     private Font fuente;
 

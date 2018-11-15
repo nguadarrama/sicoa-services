@@ -83,14 +83,14 @@ public class PersistenceConfig {
     }
     
     @Bean(name = "sqlServer")
-    public DataSource dataSourceSqlServer() throws NamingException {
+    public DataSource dataSourceSqlServer(){
     	final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
         dsLookup.setResourceRef(true);
         return dsLookup.getDataSource(jndiDataSourceSqlServer);
     }
     
     @Bean(name = "oracle")
-    public DataSource dataSourceOracle() throws NamingException {
+    public DataSource dataSourceOracle(){
     	final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
         dsLookup.setResourceRef(true);
         return dsLookup.getDataSource(jndiDataSourceOracle);

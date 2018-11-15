@@ -73,17 +73,15 @@ public class DetalleVacacionRecurso extends ServiceBase{
 		JsonObject jsonObject = new JsonParser().parse(jsonDetalleVacacion).getAsJsonObject();	
 		JsonObject detalle = jsonObject.getAsJsonObject("detalleVacacion");
 		JsonElement idDetalle  =  detalle.get("idDetalle");
-		JsonObject archivo = (JsonObject) detalle.getAsJsonObject("idArchivo");
+		JsonObject archivo = detalle.getAsJsonObject("idArchivo");
 		JsonElement idArchivo  =  archivo.get("idArchivo");
 		idArchivo.getAsInt();
-		GsonBuilder builder = new GsonBuilder();
-		Gson gson = builder.create();
-		DetalleVacacionDto detalleVacacionDto = new DetalleVacacionDto();//gson.fromJson(jsonObject.get("detalleVacacion"), DetalleVacacionDto.class);
+		DetalleVacacionDto detalleVacacionDto = new DetalleVacacionDto();
 		ArchivoDto archivo1= new ArchivoDto();
 		archivo1.setIdArchivo(idArchivo.getAsInt());
 		detalleVacacionDto.setIdDetalle(idDetalle.getAsInt());
 		detalleVacacionDto.setIdArchivo(archivo1);
-		logger.info("Datos ", detalleVacacionDto.getIdArchivo().getIdArchivo());
+		logger.info("Datos: {} ", detalleVacacionDto.getIdArchivo().getIdArchivo());
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.modificaDetalleVacacion(detalleVacacionDto));
 	}
 	

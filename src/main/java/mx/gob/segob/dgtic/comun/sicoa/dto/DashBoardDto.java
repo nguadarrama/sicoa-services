@@ -1,20 +1,15 @@
 package mx.gob.segob.dgtic.comun.sicoa.dto;
 
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Transient;
 
 import mx.gob.segob.dgtic.comun.util.mapper.annotations.MapeaColumna;
 
-public class DashBoardDto implements Serializable {
+public class DashBoardDto {
 	
-	    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -8131614104530576096L;
-
+	
 		@MapeaColumna 
 		private Long asistencia;
 		

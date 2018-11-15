@@ -1,6 +1,5 @@
 package mx.gob.segob.dgtic.persistence.repository.impl;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,11 +7,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+
 import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DetalleVacacionDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DiaFestivoDto;
@@ -106,7 +107,7 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
         
         MapSqlParameterSource parametros = new MapSqlParameterSource();
         parametros.addValue(RepositoryConstants.ID_DETALLE2, idDetalle);
-        System.out.println("Consulta "+qry.toString());
+        logger.info("Consulta: {} ",qry);
         Map<String, Object> informacionConsulta = nameParameterJdbcTemplate.queryForMap(qry.toString(), parametros);
         DetalleVacacionDto detalleVacacionDto = new DetalleVacacionDto();
         detalleVacacionDto.setIdDetalle((Integer)informacionConsulta.get(RepositoryConstants.ID_DETALLE));
@@ -153,7 +154,7 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 		StringBuilder qry = new StringBuilder();
 		qry.append("UPDATE d_detalle_vacacion SET id_archivo= :idArchivo ");
 		qry.append("WHERE id_detalle = :idDetalle");
-		logger.warn("Vamos a actualizar el archivo ", detalleVacacionDto.getIdDetalle()," ",detalleVacacionDto.getIdArchivo().getIdArchivo() );
+		logger.warn("Vamos a actualizar el archivo: {} ", detalleVacacionDto.getIdDetalle()+" detalleVacacion: {} "+detalleVacacionDto.getIdArchivo().getIdArchivo() );
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue(RepositoryConstants.ID_DETALLE2, detalleVacacionDto.getIdDetalle());
 		parametros.addValue(RepositoryConstants.ID_ARCHIVO2, detalleVacacionDto.getIdArchivo().getIdArchivo());
@@ -472,11 +473,11 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 		this.dias=dias;
 		String respuesta = "";
 		Integer contador = 0;
-		if(contador == 0){
+
 		validaFechasVacaciones(this.claveUsuario, this.fechaInicio,this.dias , this.fechaFin);
 		contador++;
-		}
-		while(bandera!=false){
+
+		while(!bandera){
 			contador++;
 			validaFechasVacaciones(this.claveUsuario, this.fechaInicio,this.dias , this.fechaFin);
 		}

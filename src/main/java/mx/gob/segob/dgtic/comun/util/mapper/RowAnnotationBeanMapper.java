@@ -146,7 +146,7 @@ public  class  RowAnnotationBeanMapper<T> implements RowMapper<T> {
 	 * @throws ReflectiveOperationException Excepci&oacute;n de reflexion.
 	 * @throws SQLException Error de SQL
 	 */
-	private void inspeccionaColumnaInterna(String nombreColumna, Object valorColumna, Object bean) throws ReflectiveOperationException, SQLException{
+	private void inspeccionaColumnaInterna(String nombreColumna, Object valorColumna, Object bean) throws ReflectiveOperationException{
 		logger.trace("==Inspeccion de columna interna: {} ",nombreColumna);
 		Map<String, List<String>> propiedadesMapeoInterno = obtenerPropiedadesMapeaColumnaInterna(bean.getClass());    	
     	for(Entry<String, List<String>> columnaRowRs : propiedadesMapeoInterno.entrySet()) {
@@ -249,7 +249,7 @@ public  class  RowAnnotationBeanMapper<T> implements RowMapper<T> {
 	 * 
 	 * @throws SQLException Excepci&oacute;n SQL
 	 */
-	private Map<String, String> obtenerPropiedadesMapeaColumna(Class clazz) throws SQLException {
+	private Map<String, String> obtenerPropiedadesMapeaColumna(Class clazz) {
     	Map<String, String> beanProperties = new HashMap<>(0);
     	
     	Field[] propertiesClass = clazz.getDeclaredFields();

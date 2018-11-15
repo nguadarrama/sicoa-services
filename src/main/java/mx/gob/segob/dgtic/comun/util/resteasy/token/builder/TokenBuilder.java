@@ -93,7 +93,7 @@ public class TokenBuilder {
      * @return La informaci&oacute;n que conforma el token
      * @throws SignatureException Excepcion de al firmar el token
      */
-    public TokenDto buildTokenHeaderToDto(String tokenHeader) throws SignatureException {
+    public TokenDto buildTokenHeaderToDto(String tokenHeader){
         Gson gson = new Gson();
         JsonParser jsonParser = new JsonParser();
         
