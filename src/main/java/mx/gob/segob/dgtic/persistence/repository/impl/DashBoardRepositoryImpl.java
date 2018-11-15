@@ -21,27 +21,27 @@ public class DashBoardRepositoryImpl extends RecursoBase implements DashBoardRep
 	
 	
 	@Override
-	public DashBoardDto dashBoard(Integer idUsuario) {
+	public DashBoardDto dashBoard(Integer idUsuario, String  clave) {
 		DashBoardDto dash = new DashBoardDto();
 		StringBuilder qry = new StringBuilder();
 		qry.append("SELECT ")
-			.append("(SELECT count(*) asistencia FROM m_asistencia a inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia WHERE id_usuario = ")
-			.append(idUsuario)
-			.append(" and t.incidencia = false and year(a.entrada) = year(current_date)  and month(a.entrada) = month(current_date)  ) as asistencia ,  ")
+			.append("(SELECT count(*) asistencia FROM m_asistencia a inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia WHERE id_usuario = '")
+			.append(clave)
+			.append("' and t.incidencia = false and year(a.entrada) = year(current_date)  and month(a.entrada) = month(current_date)  ) as asistencia ,  ")
 			.append("(SELECT count(*) incidencias FROM m_asistencia a inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ")
-			.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia WHERE id_usuario = ")
-			.append(idUsuario)
-			.append(" and t.incidencia = true ")
+			.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia WHERE id_usuario = '")
+			.append(clave)
+			.append("' and t.incidencia = true ")
 			.append("and i.descuento = null and year(a.entrada) = year(current_date) and month(a.entrada) = month(current_date) ) as incidencias, ")  
 			.append("(SELECT count(*) justificaciones FROM m_asistencia a inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ")
-			.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia WHERE id_usuario = ")
-			.append(idUsuario)
-			.append(" and t.incidencia = true ")
+			.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia WHERE id_usuario = '")
+			.append(clave)
+			.append("' and t.incidencia = true ")
 			.append("and i.descuento = false and year(a.entrada) = year(current_date) and month(a.entrada) = month(current_date)) as justificaciones, ")
 			.append("(SELECT count(*) descuentos FROM m_asistencia a inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia left join m_incidencia i on a.id_asistencia = i.id_asistencia ") 
-			.append("WHERE id_usuario = ")
-			.append(idUsuario)
-			.append(" and t.incidencia = true and i.descuento = true and year(a.entrada) = year(current_date)  ")
+			.append("WHERE id_usuario = '")
+			.append(clave)
+			.append("' and t.incidencia = true and i.descuento = true and year(a.entrada) = year(current_date)  ")
 			.append("and month(a.entrada) = month(current_date)) as descuentos,  ")
 			.append("(SELECT count(*) incapacidades FROM m_licencia_medica l where id_usuario = ")
 			.append(idUsuario)

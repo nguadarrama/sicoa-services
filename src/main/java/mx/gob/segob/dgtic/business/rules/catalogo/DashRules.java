@@ -13,8 +13,8 @@ public class DashRules {
 	@Autowired
 	private DashBoardRepository dashBoardRepository;
 	
-	public DashBoardDto dashBoard(Integer id_usuario) {
-		return dashBoardRepository.dashBoard(id_usuario);
+	public DashBoardDto dashBoard(Integer id_usuario, String clave) {
+		return dashBoardRepository.dashBoard(id_usuario, clave);
 	}
 
 }
