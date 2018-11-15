@@ -655,6 +655,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         qry.append(RepositoryConstants.ARIL656);
         qry.append(RepositoryConstants.ARIL657);
         qry.append(RepositoryConstants.ARIL658);
+        qry.append(RepositoryConstants.ARIL659);
         
         if (asistenciaBusquedaUtil.getFechaInicialDate() != null && asistenciaBusquedaUtil.getFechaFinalDate() != null) {
         	qry.append(RepositoryConstants.ARIL661 + asistenciaBusquedaUtil.getFechaInicialDate() + "'");
@@ -758,6 +759,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         qry.append("left join m_comision c on c.id_usuario = u.id_usuario ");
         qry.append("left join d_detalle_vacacion v on v.id_usuario = u.id_usuario ");
         qry.append("where uua.id_unidad = " + asistenciaBusquedaUtil.getIdUnidadCoordinador());
+        qry.append(" and (t.id_tipo_dia != 5 && t.id_tipo_dia != 6 && t.id_tipo_dia != 7)"); //no registros de vacaciones, comisiones y licencias
         
         if (asistenciaBusquedaUtil.getFechaInicialDate() != null && asistenciaBusquedaUtil.getFechaFinalDate() != null) {
         	qry.append(" and entrada >= '" + asistenciaBusquedaUtil.getFechaInicialDate() + "'");

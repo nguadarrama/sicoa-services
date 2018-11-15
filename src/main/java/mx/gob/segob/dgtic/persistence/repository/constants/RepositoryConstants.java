@@ -330,6 +330,7 @@ public class RepositoryConstants {
 	public static final String ARIL656 = "left join m_comision c on c.id_usuario = u.id_usuario ";
 	public static final String ARIL657 = "left join d_detalle_vacacion v on v.id_usuario = u.id_usuario ";
 	public static final String ARIL658 = "where 1 = 1";
+	public static final String ARIL659 = " and (t.id_tipo_dia != 5 && t.id_tipo_dia != 6 && t.id_tipo_dia != 7)";
 	public static final String ARIL661 = " and entrada >= '";
 	public static final String ARIL662 = " and entrada < '";
 	public static final String ARIL666 = " and a.id_usuario = ";
