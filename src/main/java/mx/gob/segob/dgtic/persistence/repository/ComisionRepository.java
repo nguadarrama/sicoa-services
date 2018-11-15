@@ -13,7 +13,7 @@ public interface ComisionRepository {
   public ComisionDto buscaComision(Integer idComision);
 
   public ComisionDto modificaComision(ComisionDto comisionDto);
-  
+
   public ComisionDto modificaComisionEstatusArchivo(ComisionDto comisionDto);
 
   public ComisionDto agregaComision(ComisionDto comisionDto);
@@ -26,13 +26,16 @@ public interface ComisionRepository {
   public List<ComisionDto> obtenerListaComisionPorFiltrosEmpleados(String claveUsuario,
       String nombre, String apellidoPaterno, String apellidoMaterno, String idEstatus,
       String idUnidad);
-  
-  public List<ComisionDto> obtenerComisionesPorUnidad(String idUnidad, String claveUsuario, String nombre,
-      String apellidoPaterno, String apellidoMaterno);
-  
+
+  public List<ComisionDto> obtenerComisionesPorUnidad(String idUnidad, String claveUsuario,
+      String nombre, String apellidoPaterno, String apellidoMaterno);
+
   public List<ComisionDto> obtenerComisionesPorUsuarioRango(Integer idUsuario, Date fechaInicio,
       Date fechaFin);
-  
-  public List<ComisionDto> buscaComisionReporteCoordinador(AsistenciaBusquedaUtil asistenciaBusquedaUtil);
-  public List<ComisionDto> buscaComisionReporteDirector(AsistenciaBusquedaUtil asistenciaBusquedaUtil);
+
+  public List<ComisionDto> buscaComisionReporteCoordinador(
+      AsistenciaBusquedaUtil asistenciaBusquedaUtil);
+
+  public List<ComisionDto> buscaComisionReporteDirector(
+      AsistenciaBusquedaUtil asistenciaBusquedaUtil);
 }

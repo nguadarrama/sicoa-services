@@ -13,12 +13,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ComisionDto;
-import mx.gob.segob.dgtic.comun.sicoa.dto.DetalleVacacionDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
-import mx.gob.segob.dgtic.comun.sicoa.dto.PeriodoDto;
-import mx.gob.segob.dgtic.comun.sicoa.dto.TipoDiaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
-import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionPeriodoDto;
 import mx.gob.segob.dgtic.comun.transport.dto.catalogo.Horario;
 import mx.gob.segob.dgtic.comun.util.AsistenciaBusquedaUtil;
 import mx.gob.segob.dgtic.persistence.repository.ComisionRepository;
@@ -32,7 +28,6 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
   private static final String COLUMNA_ID_USUARIO = "id_usuario";
   private static final String COLUMNA_ID_RESPONSABLE = "id_responsable";
   private static final String COLUMNA_ID_ARCHIVO = "id_archivo";
-  private static final String COLUMNA_ID_TIPO_DIA = "id_tipo_dia";
   private static final String COLUMNA_URL = "url";
   private static final String COLUMNA_NOMBRE_ARCHIVO = "nombre_archivo";
   private static final String COLUMNA_ID_ESTATUS = "id_estatus";
@@ -73,8 +68,9 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
   private static final String PARAMETRO_FECHA_REGISTRO = "fechaRegistro";
   private static final String FROM_M_COMISION_COMISION = "FROM m_comision comision ";
   private static final String UNIDAD_ADMINISTRATIVA = "unidad_administrativa";
+  private static final String AND = "' and '";
 
-
+  
   @Autowired
   private JdbcTemplate jdbcTemplate;
 
@@ -320,7 +316,7 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
     }
     if ((fechaInicio != null && !fechaInicio.trim().isEmpty())
         && (fechaFin != null && !fechaFin.trim().isEmpty())) {
-      qry2.append("and comision.fecha_inicio between '" + fechaInicio + "' and '" + fechaFin + "' ");
+      qry2.append("and comision.fecha_inicio between '" + fechaInicio + AND + fechaFin + "' ");
     } else if (fechaInicio != null && !fechaInicio.trim().isEmpty()) {
       qry2.append("and comision.fecha_inicio='" + fechaInicio + "'");
     } else if (fechaFin != null && !fechaFin.trim().isEmpty()) {
@@ -371,7 +367,7 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
     query.append("relacion.cve_m_usuario, relacion.id_unidad, unidad.nombre nombre_unidad, comision.id_comision, ");
     query.append("comision.id_responsable, comision.id_estatus, estatus.estatus, comision.fecha_inicio, ");
     query.append("comision.fecha_fin, comision.dias, comision.comision, comision.dias, comision.fecha_registro ");
-    query.append("FROM m_comision comision ");
+    query.append(FROM_M_COMISION_COMISION);
     query.append("INNER JOIN m_usuario usuario ON usuario.id_usuario = comision.id_usuario ");
     query.append("INNER JOIN usuario_unidad_administrativa relacion on usuario.cve_m_usuario=relacion.cve_m_usuario ");
     query.append("INNER JOIN m_estatus estatus ON estatus.id_estatus = comision.id_estatus ");
@@ -556,7 +552,7 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
       }
       
       if (asistenciaBusquedaUtil.getFechaInicialDate() != null && asistenciaBusquedaUtil.getFechaFinalDate() != null) {
-  		qry.append(" and c.fecha_inicio between '" + asistenciaBusquedaUtil.getFechaInicialDate() + "' and '" + asistenciaBusquedaUtil.getFechaFinalDate() + "'");
+  		qry.append(" and c.fecha_inicio between '" + asistenciaBusquedaUtil.getFechaInicialDate() + AND + asistenciaBusquedaUtil.getFechaFinalDate() + "'");
 
       }
 
@@ -629,7 +625,7 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
     }
     
     if (asistenciaBusquedaUtil.getFechaInicialDate() != null && asistenciaBusquedaUtil.getFechaFinalDate() != null) {
-		qry.append(" and c.fecha_inicio between '" + asistenciaBusquedaUtil.getFechaInicialDate() + "' and '" + asistenciaBusquedaUtil.getFechaFinalDate() + "'");
+		qry.append(" and c.fecha_inicio between '" + asistenciaBusquedaUtil.getFechaInicialDate() + AND + asistenciaBusquedaUtil.getFechaFinalDate() + "'");
 
     }
 
