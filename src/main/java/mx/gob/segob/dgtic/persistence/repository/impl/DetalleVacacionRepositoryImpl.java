@@ -462,6 +462,7 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 	Boolean bandera = false; 
 	Integer diasTotales = 0;
 	
+	
 	private String repetirValidaciones(String claveUsuario, Date fechaInicio, Integer dias, Date fechaFin){
 		this.claveUsuario=claveUsuario;
 		this.fechaInicio=fechaInicio;
@@ -469,11 +470,11 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 		diasTotales=dias;
 		String respuesta = "";
 		Integer contador = 0;
-
+		if(contador == 0){
 		validaFechasVacaciones(this.claveUsuario, this.fechaInicio,this.dias , this.fechaFin);
 		contador++;
-
-		while(!bandera){
+		}
+		while(bandera!=false){
 			contador++;
 			validaFechasVacaciones(this.claveUsuario, this.fechaInicio,this.dias , this.fechaFin);
 		}
@@ -486,8 +487,8 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 		return respuesta;
 	}
 	
-	
 	private String validaFechasVacaciones(String claveUsuario, Date fechaInicio, Integer dias, Date fechaFin){
+		//diasTotales+=dias;
 		List<DiaFestivoDto> listaDiasFestivos=diaFestivoRepository.obtenerDiasFestivosActivos();
 		BusquedaDto busquedaDto = new BusquedaDto();
 		busquedaDto.setClaveUsuario(claveUsuario);
@@ -570,10 +571,6 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 		logger.info("Dias totales: {} ",diasTotales);
 		return"Dias totales "+diasTotales;
 	}
-	
-	private String removerGuionBajo(String string) {
-	    return string.replace("_", " ");
-	  }
 
 	@Override
 	public List<DetalleVacacionDto> buscaDetalleVacacionReporteCoordinador(AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
