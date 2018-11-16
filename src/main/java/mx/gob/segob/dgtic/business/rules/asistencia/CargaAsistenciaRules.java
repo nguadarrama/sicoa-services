@@ -62,7 +62,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 		//Filtra asistencia, sólo se procesa aquella asistencia en la que el empleado se encuentra en nómina 
 		List<AsistenciaDto> listaAsistenciaFiltrada = filtraAsistencia();
 		
-		if (listaAsistenciaFiltrada != null) {
+		if (!listaAsistenciaFiltrada.isEmpty()) {
 		
 			//Se calculan las entradas y salidas
 			List<AsistenciaDto> listaAsistenciaEntradaSalida = calculaEntradasSalidas(listaAsistenciaFiltrada);
@@ -116,11 +116,11 @@ public class CargaAsistenciaRules extends RecursoBase {
 				
 			} else {
 				logger.info("Entre asistencia y nómina NO se encontraron empleados coincidentes");
-				return null;
+				return new ArrayList<>();
 			}
 		} else {
 			logger.info("No se encontró asistencia en el sistema de Asistencias");
-			return null;
+			return new ArrayList<>();
 		}
 
 	}
@@ -131,32 +131,10 @@ public class CargaAsistenciaRules extends RecursoBase {
 		List<UsuarioChecada> listaUsuarioChecadas = new ArrayList<>();
 		List<AsistenciaDto> listaAsistenciaCalculada = new ArrayList<>();
 		listaClaveUsuariosEnAsistencia = new ArrayList<>();
+		Calendar calendar = Calendar.getInstance();
 		
-		//recupera de la asistencia los id's de usuarios: sin repetidos
-		for(AsistenciaDto a : listaAsistencia) {
-			hashSetIdUsuarios.add(a.getUsuarioDto().getClaveUsuario());
-		}
-		
-		//agrupa las asistencias de cada id de usuario
-		for (String idUsuario : hashSetIdUsuarios) {
-			
-			//guarda las claves de los usuarios en la asistencia para otro proceso más adelante
-			listaClaveUsuariosEnAsistencia.add(idUsuario);
-			
-			UsuarioChecada usuarioChecadas = new UsuarioChecada();
-			usuarioChecadas.setIdUsuario(idUsuario);
-			
-			for(AsistenciaDto a : listaAsistencia) {
-				if (idUsuario.equals(a.getUsuarioDto().getClaveUsuario())) {
-					usuarioChecadas.setListaChecadas(a.getEntrada());
-				}
-			}
-
-			listaUsuarioChecadas.add(usuarioChecadas);
-		}
-		
-		
-		logger.info("Usuarios coincidentes en ASISTENCIA y SIRNO. Calculando entrada y salida: {} ",listaUsuarioChecadas.size() );
+		//recupera de la asistencia los id's de usuarios: sin repetidos y les agrupa sus asistencias a cada uno
+		listaUsuarioChecadas = ligaAsistenciasAUsuario(listaAsistencia, hashSetIdUsuarios, listaUsuarioChecadas);
 		
 		//recorre usuarios
 		for (UsuarioChecada usuarioChecada : listaUsuarioChecadas) {		
@@ -168,7 +146,6 @@ public class CargaAsistenciaRules extends RecursoBase {
 			for (int i = 0; i < usuarioChecada.getListaChecadas().size(); i++) {			
 				AsistenciaDto asistenciaCalculada = new AsistenciaDto();
 				asistenciaCalculada.setUsuarioDto(usuarioDto);
-				
 				
 				Timestamp fechaEvento = usuarioChecada.getListaChecadas().get(i);
 				Timestamp fechaEventoSiguiente = null;
@@ -186,70 +163,44 @@ public class CargaAsistenciaRules extends RecursoBase {
 				
 				//null: no hay evento siguiente
 				if (fechaEventoSiguiente != null) {
+					//se configura en ceros la hora de las fechas del evento actual y siguiente
+					calendar.setTime(new Date(fechaEvento.getTime()));
+					calendar.set(Calendar.HOUR_OF_DAY, 0);
+					calendar.set(Calendar.MINUTE, 0);
+					calendar.set(Calendar.SECOND, 0);
+					calendar.set(Calendar.MILLISECOND, 0);
+					 
+					Date fechaEventoSinHora = calendar.getTime();
+					
+					calendar.setTime(new Date(fechaEventoSiguiente.getTime()));
+					calendar.set(Calendar.HOUR_OF_DAY, 0);
+					calendar.set(Calendar.MINUTE, 0);
+					calendar.set(Calendar.SECOND, 0);
+					calendar.set(Calendar.MILLISECOND, 0);
+					
+					Date fechaEventoSiguienteSinHora = calendar.getTime();
 					
 					/*
 					 * definición de entrada y salida
 					 */
 					
 					//¿ocurrieron varios eventos en el mismo día? entonces se puede calcular entrada y salida
-					if (fechaEvento.getYear() == fechaEventoSiguiente.getYear()) {
-						if (fechaEvento.getMonth() == fechaEventoSiguiente.getMonth()) {
-							if (fechaEvento.getDate() == fechaEventoSiguiente.getDate()) {							
-								//el primer evento del día se coloca como entrada
-								asistenciaCalculada.setEntrada(fechaEvento);
-								
-								//se guarda en la lista el segundo evento en el mismo día
-								listaEventosMultiples.add(fechaEventoSiguiente);
-								
-								//se continúa buscando eventos en el mismo día y se guardan en la lista
-								for (int y = 2; true ; y++) {
-									
-									//¿la búsqueda hacia adelante de los eventos está dentro del tamaño de la lista de eventos?
-									if ((i + y) < usuarioChecada.getListaChecadas().size()) {
-										if (fechaEvento.getYear() == fechaEventoSiguiente.getYear()) {
-											if (fechaEvento.getMonth() == fechaEventoSiguiente.getMonth()) {
-												if (fechaEventoSiguiente.getDate() == usuarioChecada.getListaChecadas().get(i + y).getDate()) {
-													//se guardan en la lista los demás eventos del mismo día
-													listaEventosMultiples.add(usuarioChecada.getListaChecadas().get(i + y));
-												} else {
-													break; //si no encuentra más eventos en el mismo día, rompe for
-												}
-											} else {
-												break; //si no encuentra más eventos en el mismo día, rompe for
-											}
-										} else {
-											break; //si no encuentra más eventos en el mismo día, rompe for
-										}
-									} else {
-										break; //si no encuentra más eventos en el mismo día, rompe for
-									}
-								}
-								
-								
-								
-								//el último evento del día se coloca como salida
-								int ultimoEventoDelDia = listaEventosMultiples.size() - 1;
-								asistenciaCalculada.setSalida(listaEventosMultiples.get(ultimoEventoDelDia));
-								
-								if (!listaEventosMultiples.contains(fechaEvento)) { 
-									listaAsistenciaCalculada.add(asistenciaCalculada);
-								}							
-							} else {
-								//Evento que sólo tiene entrada
-								asistenciaCalculada.setEntrada(fechaEvento);
-								asistenciaCalculada.setSalida(null);
-								if (!listaEventosMultiples.contains(fechaEvento)) { 
-									listaAsistenciaCalculada.add(asistenciaCalculada);
-								}	
-							}
-						} else {
-							//Evento que sólo tiene entrada
-							asistenciaCalculada.setEntrada(fechaEvento);
-							asistenciaCalculada.setSalida(null);
-							if (!listaEventosMultiples.contains(fechaEvento)) { 
-								listaAsistenciaCalculada.add(asistenciaCalculada);
-							}	
-						}
+					if (fechaEventoSinHora.compareTo(fechaEventoSiguienteSinHora) == 0) {							
+						//el primer evento del día se coloca como entrada
+						asistenciaCalculada.setEntrada(fechaEvento);
+						
+						//se guarda en la lista el segundo evento en el mismo día
+						listaEventosMultiples.add(fechaEventoSiguiente);
+						
+						listaEventosMultiples = buscaMasEventosDelDia(usuarioChecada, fechaEvento, fechaEventoSiguiente, listaEventosMultiples, i);
+						
+						//el último evento del día se coloca como salida
+						int ultimoEventoDelDia = listaEventosMultiples.size() - 1;
+						asistenciaCalculada.setSalida(listaEventosMultiples.get(ultimoEventoDelDia));
+						
+						if (!listaEventosMultiples.contains(fechaEvento)) { 
+							listaAsistenciaCalculada.add(asistenciaCalculada);
+						}							
 					} else {
 						//Evento que sólo tiene entrada
 						asistenciaCalculada.setEntrada(fechaEvento);
@@ -518,6 +469,62 @@ public class CargaAsistenciaRules extends RecursoBase {
 				}
 			}
 		}
+	}
+	
+	private List<UsuarioChecada> ligaAsistenciasAUsuario(List<AsistenciaDto> listaAsistencia, Set<String> hashSetIdUsuarios, List<UsuarioChecada> listaUsuarioChecadas) {
+		for(AsistenciaDto a : listaAsistencia) {
+			hashSetIdUsuarios.add(a.getUsuarioDto().getClaveUsuario());
+		}
+		
+		//agrupa las asistencias de cada id de usuario
+		for (String idUsuario : hashSetIdUsuarios) {
+			
+			//guarda las claves de los usuarios en la asistencia para otro proceso más adelante
+			listaClaveUsuariosEnAsistencia.add(idUsuario);
+			
+			UsuarioChecada usuarioChecadas = new UsuarioChecada();
+			usuarioChecadas.setIdUsuario(idUsuario);
+			
+			for(AsistenciaDto a : listaAsistencia) {
+				if (idUsuario.equals(a.getUsuarioDto().getClaveUsuario())) {
+					usuarioChecadas.setListaChecadas(a.getEntrada());
+				}
+			}
+
+			listaUsuarioChecadas.add(usuarioChecadas);
+		}
+		
+		logger.info("Usuarios coincidentes en ASISTENCIA y SIRNO. Calculando entrada y salida: {} ",listaUsuarioChecadas.size() );
+		
+		return listaUsuarioChecadas;
+	}
+	
+	private List<Timestamp> buscaMasEventosDelDia(UsuarioChecada usuarioChecada, Timestamp fechaEvento, Timestamp fechaEventoSiguiente, List<Timestamp> listaEventosMultiples, int i) {
+		//se continúa buscando eventos en el mismo día y se guardan en la lista
+		for (int y = 2; true ; y++) {
+			
+			//¿la búsqueda hacia adelante de los eventos está dentro del tamaño de la lista de eventos?
+			if ((i + y) < usuarioChecada.getListaChecadas().size()) {
+				if (fechaEvento.getYear() == fechaEventoSiguiente.getYear()) {
+					if (fechaEvento.getMonth() == fechaEventoSiguiente.getMonth()) {
+						if (fechaEventoSiguiente.getDate() == usuarioChecada.getListaChecadas().get(i + y).getDate()) {
+							//se guardan en la lista los demás eventos del mismo día
+							listaEventosMultiples.add(usuarioChecada.getListaChecadas().get(i + y));
+						} else {
+							break; //si no encuentra más eventos en el mismo día, rompe for
+						}
+					} else {
+						break; //si no encuentra más eventos en el mismo día, rompe for
+					}
+				} else {
+					break; //si no encuentra más eventos en el mismo día, rompe for
+				}
+			} else {
+				break; //si no encuentra más eventos en el mismo día, rompe for
+			}
+		}
+		
+		return listaEventosMultiples;
 	}
 }
 
