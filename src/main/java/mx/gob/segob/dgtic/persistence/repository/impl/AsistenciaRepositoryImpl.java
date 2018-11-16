@@ -670,6 +670,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         qry.append(RepositoryConstants.ARIL659);
         
         condicionesReporteDireccion(qry, asistenciaBusquedaUtil);
+        condicionesReporteDireccionPermisos(qry, asistenciaBusquedaUtil);
         
         List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString());
         List<AsistenciaDto> listaAsistencia = new ArrayList<>();
@@ -729,6 +730,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         qry.append(" and (t.id_tipo_dia != 5 && t.id_tipo_dia != 6 && t.id_tipo_dia != 7)"); //no registros de vacaciones, comisiones y licencias
         
         condicionesReporteCoordinador(qry, asistenciaBusquedaUtil);
+        condicionesReporteCoordinadorPermisos(qry, asistenciaBusquedaUtil);
         
         List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString());
         List<AsistenciaDto> listaAsistencia = new ArrayList<>();
@@ -890,18 +892,6 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
     	  qry.append(RepositoryConstants.ARIL690 + asistenciaBusquedaUtil.getTipo());
       }
       
-      //reglas para condiciones de permisos 
-      if (!asistenciaBusquedaUtil.getPermisos().isEmpty()) {
-      	String[] arrayPermisos = asistenciaBusquedaUtil.getPermisos().split(",");
-          List<String> listaPermisos = new ArrayList<>(Arrays.asList(arrayPermisos));
-          
-          for (String permiso : listaPermisos) {
-	         if (permiso.contains("descuento")) {
-	            //descuento: validada y la bandera descuento
-	        	qry.append(" and ((e.id_estatus = 2 and i.descuento = 1))");
-	         } 
-      	  }
-      }
    }
    
    private void condicionesReporteCoordinador(StringBuilder qry, AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
@@ -938,7 +928,26 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
      	  qry.append(RepositoryConstants.ARIL690 + asistenciaBusquedaUtil.getTipo());
        }
        
-       //reglas para condiciones de permisos 
+       
+   }
+   
+   private void condicionesReporteDireccionPermisos(StringBuilder qry, AsistenciaBusquedaUtil asistenciaBusquedaUtil) { 
+	 //reglas para condiciones de permisos 
+	      if (!asistenciaBusquedaUtil.getPermisos().isEmpty()) {
+	      	String[] arrayPermisos = asistenciaBusquedaUtil.getPermisos().split(",");
+	          List<String> listaPermisos = new ArrayList<>(Arrays.asList(arrayPermisos));
+	          
+	          for (String permiso : listaPermisos) {
+		         if (permiso.contains("descuento")) {
+		            //descuento: validada y la bandera descuento
+		        	qry.append(" and ((e.id_estatus = 2 and i.descuento = 1))");
+		         } 
+	      	  }
+	      }
+   }
+   
+   private void condicionesReporteCoordinadorPermisos(StringBuilder qry, AsistenciaBusquedaUtil asistenciaBusquedaUtil) { 
+	   //reglas para condiciones de permisos 
        if (!asistenciaBusquedaUtil.getPermisos().isEmpty()) {
     	   String[] arrayPermisos = asistenciaBusquedaUtil.getPermisos().split(",");
            List<String> listaPermisos = new ArrayList<>(Arrays.asList(arrayPermisos));
@@ -949,7 +958,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         		   qry.append(" and ((e.id_estatus = 2 and i.descuento = 1))");
         	   } 
        		}
-       	}
+       }
    }
 
 }

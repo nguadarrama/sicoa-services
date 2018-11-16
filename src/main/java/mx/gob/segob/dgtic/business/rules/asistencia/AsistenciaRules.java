@@ -116,36 +116,7 @@ public class AsistenciaRules {
 		if (asistenciaBusquedaUtil.getPermisos().isEmpty() && !hayPermisoCombo) {
 			listaAsistencia = asistenciaRepository.reporteDireccion(asistenciaBusquedaUtil);
 		} else { //si existe filtro de permiso, sólo trae la información de los permisos
-        	String[] arrayPermisos = asistenciaBusquedaUtil.getPermisos().split(",");
-            List<String> listaPermisos = new ArrayList<>(Arrays.asList(arrayPermisos));
-            
-            if (listaPermisos.contains("vacacion") || (asistenciaBusquedaUtil.getTipo() != null && asistenciaBusquedaUtil.getTipo() == 5)) { //vacación
-            	//extrae vacaciones
-        		List<AsistenciaDto> listaAsistenciaVacaciones = buscaVacacionesReporteDirector(asistenciaBusquedaUtil);
-        		
-        		for (AsistenciaDto asistenciaVacacion : listaAsistenciaVacaciones) {
-        			listaAsistencia.add(asistenciaVacacion);
-        		}
-        		
-            }
-            
-            if (listaPermisos.contains("comision") || (asistenciaBusquedaUtil.getTipo() != null && asistenciaBusquedaUtil.getTipo() == 7)) { //comisión
-            	//extrae comision
-            	List<AsistenciaDto> listaAsistenciaComision = buscaComisionesReporteDirector(asistenciaBusquedaUtil);
-        		
-        		for (AsistenciaDto asistenciaComision : listaAsistenciaComision) {
-        			listaAsistencia.add(asistenciaComision);
-        		}
-            }
-            
-            if (listaPermisos.contains("licencia") || (asistenciaBusquedaUtil.getTipo() != null && asistenciaBusquedaUtil.getTipo() == 6)) { //licencia
-            	//extrae licencia
-            	List<AsistenciaDto> listaAsistenciaLicencia = buscaLicenciasReporteDirector(asistenciaBusquedaUtil);
-        		
-        		for (AsistenciaDto asistenciaLicencia : listaAsistenciaLicencia) {
-        			listaAsistencia.add(asistenciaLicencia);
-        		}
-            }
+        	reporteDireccionPermisos(listaAsistencia, asistenciaBusquedaUtil);
 		}
 		
 		return listaAsistencia;
@@ -168,36 +139,7 @@ public class AsistenciaRules {
 		if (asistenciaBusquedaUtil.getPermisos().isEmpty() && !hayPermisoCombo) {
 			listaAsistencia = asistenciaRepository.reporteCoordinador(asistenciaBusquedaUtil);
 		} else {
-        	String[] arrayPermisos = asistenciaBusquedaUtil.getPermisos().split(",");
-            List<String> listaPermisos = new ArrayList<>(Arrays.asList(arrayPermisos));
-            
-            if (listaPermisos.contains("vacacion") || (asistenciaBusquedaUtil.getTipo() != null && asistenciaBusquedaUtil.getTipo() == 5)) { //vacación
-            	//extrae vacaciones
-        		List<AsistenciaDto> listaAsistenciaVacaciones = buscaVacacionesReporteCoordinador(asistenciaBusquedaUtil);
-        		
-        		for (AsistenciaDto asistenciaVacacion : listaAsistenciaVacaciones) {
-        			listaAsistencia.add(asistenciaVacacion);
-        		}
-        		
-            }
-            
-            if (listaPermisos.contains("comision") || (asistenciaBusquedaUtil.getTipo() != null && asistenciaBusquedaUtil.getTipo() == 7)) { //comisión
-            	//extrae comision
-            	List<AsistenciaDto> listaAsistenciaComision = buscaComisionesReporteCoordinador(asistenciaBusquedaUtil);
-        		
-        		for (AsistenciaDto asistenciaComision : listaAsistenciaComision) {
-        			listaAsistencia.add(asistenciaComision);
-        		}
-            }
-            
-            if (listaPermisos.contains("licencia") || (asistenciaBusquedaUtil.getTipo() != null && asistenciaBusquedaUtil.getTipo() == 6)) { //licencia
-            	//extrae licencia
-            	List<AsistenciaDto> listaAsistenciaLicencia = buscaLicenciasReporteCoordinador(asistenciaBusquedaUtil);
-        		
-        		for (AsistenciaDto asistenciaLicencia : listaAsistenciaLicencia) {
-        			listaAsistencia.add(asistenciaLicencia);
-        		}
-            }
+			reporteCoordinadorPermisos(listaAsistencia, asistenciaBusquedaUtil);
 		}
 		
 		return listaAsistencia;
@@ -359,5 +301,70 @@ public class AsistenciaRules {
 		return listaAsistenciaLicencias;
 	}
 	
+	private void reporteDireccionPermisos(List<AsistenciaDto> listaAsistencia, AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
+		String[] arrayPermisos = asistenciaBusquedaUtil.getPermisos().split(",");
+        List<String> listaPermisos = new ArrayList<>(Arrays.asList(arrayPermisos));
+        
+        if (listaPermisos.contains("vacacion") || (asistenciaBusquedaUtil.getTipo() != null && asistenciaBusquedaUtil.getTipo() == 5)) { //vacación
+        	//extrae vacaciones
+    		List<AsistenciaDto> listaAsistenciaVacaciones = buscaVacacionesReporteDirector(asistenciaBusquedaUtil);
+    		
+    		for (AsistenciaDto asistenciaVacacion : listaAsistenciaVacaciones) {
+    			listaAsistencia.add(asistenciaVacacion);
+    		}
+    		
+        }
+        
+        if (listaPermisos.contains("comision") || (asistenciaBusquedaUtil.getTipo() != null && asistenciaBusquedaUtil.getTipo() == 7)) { //comisión
+        	//extrae comision
+        	List<AsistenciaDto> listaAsistenciaComision = buscaComisionesReporteDirector(asistenciaBusquedaUtil);
+    		
+    		for (AsistenciaDto asistenciaComision : listaAsistenciaComision) {
+    			listaAsistencia.add(asistenciaComision);
+    		}
+        }
+        
+        if (listaPermisos.contains("licencia") || (asistenciaBusquedaUtil.getTipo() != null && asistenciaBusquedaUtil.getTipo() == 6)) { //licencia
+        	//extrae licencia
+        	List<AsistenciaDto> listaAsistenciaLicencia = buscaLicenciasReporteDirector(asistenciaBusquedaUtil);
+    		
+    		for (AsistenciaDto asistenciaLicencia : listaAsistenciaLicencia) {
+    			listaAsistencia.add(asistenciaLicencia);
+    		}
+        }
+	}
+	
+	private void reporteCoordinadorPermisos(List<AsistenciaDto> listaAsistencia, AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
+		String[] arrayPermisos = asistenciaBusquedaUtil.getPermisos().split(",");
+        List<String> listaPermisos = new ArrayList<>(Arrays.asList(arrayPermisos));
+        
+        if (listaPermisos.contains("vacacion") || (asistenciaBusquedaUtil.getTipo() != null && asistenciaBusquedaUtil.getTipo() == 5)) { //vacación
+        	//extrae vacaciones
+    		List<AsistenciaDto> listaAsistenciaVacaciones = buscaVacacionesReporteCoordinador(asistenciaBusquedaUtil);
+    		
+    		for (AsistenciaDto asistenciaVacacion : listaAsistenciaVacaciones) {
+    			listaAsistencia.add(asistenciaVacacion);
+    		}
+    		
+        }
+        
+        if (listaPermisos.contains("comision") || (asistenciaBusquedaUtil.getTipo() != null && asistenciaBusquedaUtil.getTipo() == 7)) { //comisión
+        	//extrae comision
+        	List<AsistenciaDto> listaAsistenciaComision = buscaComisionesReporteCoordinador(asistenciaBusquedaUtil);
+    		
+    		for (AsistenciaDto asistenciaComision : listaAsistenciaComision) {
+    			listaAsistencia.add(asistenciaComision);
+    		}
+        }
+        
+        if (listaPermisos.contains("licencia") || (asistenciaBusquedaUtil.getTipo() != null && asistenciaBusquedaUtil.getTipo() == 6)) { //licencia
+        	//extrae licencia
+        	List<AsistenciaDto> listaAsistenciaLicencia = buscaLicenciasReporteCoordinador(asistenciaBusquedaUtil);
+    		
+    		for (AsistenciaDto asistenciaLicencia : listaAsistenciaLicencia) {
+    			listaAsistencia.add(asistenciaLicencia);
+    		}
+        }
+	}
 	
 }
