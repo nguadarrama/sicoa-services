@@ -28,6 +28,7 @@ import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
 @Path("licencia")
 @Component
 public class LicenciaMedicaRecurso extends RecursoBase{
+	private static final String BUSQUEDA = "busqueda";
 	
 	@Autowired
 	private LicenciaMedicaService licenciaMedicaService;
@@ -89,7 +90,7 @@ public class LicenciaMedicaRecurso extends RecursoBase{
 		JsonObject jsonObject = new JsonParser().parse(jsonBusqueda).getAsJsonObject();	
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
-		BusquedaDto busquedaDto = gson.fromJson(jsonObject.get("busqueda"), BusquedaDto.class);
+		BusquedaDto busquedaDto = gson.fromJson(jsonObject.get(BUSQUEDA), BusquedaDto.class);
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, licenciaMedicaService.obtenerListaLicenciaMedicaPorFiltros(busquedaDto));
 	}
 	
@@ -102,7 +103,7 @@ public class LicenciaMedicaRecurso extends RecursoBase{
 		JsonObject jsonObject = new JsonParser().parse(jsonBusqueda).getAsJsonObject();	
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
-		BusquedaDto busquedaDto = gson.fromJson(jsonObject.get("busqueda"), BusquedaDto.class);
+		BusquedaDto busquedaDto = gson.fromJson(jsonObject.get(BUSQUEDA), BusquedaDto.class);
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, licenciaMedicaService.obtenerListaLicenciaMedicaEmpleados(busquedaDto));
 	}
 	
@@ -115,7 +116,7 @@ public class LicenciaMedicaRecurso extends RecursoBase{
 		JsonObject jsonObject = new JsonParser().parse(jsonBusqueda).getAsJsonObject();	
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
-		BusquedaDto busquedaDto = gson.fromJson(jsonObject.get("busqueda"), BusquedaDto.class);
+		BusquedaDto busquedaDto = gson.fromJson(jsonObject.get(BUSQUEDA), BusquedaDto.class);
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, licenciaMedicaService.obtenerLicenciasPorUnidad(busquedaDto));
 	}
 	
