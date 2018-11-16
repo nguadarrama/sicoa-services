@@ -423,7 +423,7 @@ public class LicenciaMedicaRepositoryImpl extends RepositoryBase implements Lice
       }
       
       if (asistenciaBusquedaUtil.getFechaInicialDate() != null && asistenciaBusquedaUtil.getFechaFinalDate() != null) {
-  		qry.append(" and l.fecha_inicio between '" + asistenciaBusquedaUtil.getFechaInicialDate() + "' and '" + asistenciaBusquedaUtil.getFechaFinalDate() + "'");
+  		qry.append(" and l.fecha_inicio between '" + asistenciaBusquedaUtil.getFechaInicialDate() + AND + asistenciaBusquedaUtil.getFechaFinalDate() + "'");
 
       }
 
@@ -496,7 +496,7 @@ public class LicenciaMedicaRepositoryImpl extends RepositoryBase implements Lice
       }
       
       if (asistenciaBusquedaUtil.getFechaInicialDate() != null && asistenciaBusquedaUtil.getFechaFinalDate() != null) {
-  		qry.append(" and l.fecha_inicio between '" + asistenciaBusquedaUtil.getFechaInicialDate() + "' and '" + asistenciaBusquedaUtil.getFechaFinalDate() + "'");
+  		qry.append(" and l.fecha_inicio between '" + asistenciaBusquedaUtil.getFechaInicialDate() +AND + asistenciaBusquedaUtil.getFechaFinalDate() + "'");
 
       }
 

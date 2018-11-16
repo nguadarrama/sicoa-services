@@ -120,7 +120,7 @@ public class LicenciaMedicaRules extends RepositoryBase{
 		licenciaMedicaRepository.eliminaLicenciaMedica(idLicencia);
 	}
 	public List<LicenciaMedicaDto> obtenerListaLicenciaMedicaPorFiltros(BusquedaDto busquedaDto) {
-		System.out.println("feh "+busquedaDto.getFechaFin());
+		logger.info("feh-- {} ",busquedaDto.getFechaFin());
 		return licenciaMedicaRepository.obtenerListaLicenciaMedicaPorFiltros(busquedaDto);
 		
 	}

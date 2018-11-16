@@ -113,13 +113,13 @@ public class UnidadAdministrativaRepositoryImpl extends RepositoryBase implement
 	@Override
 	public List<UsuarioUnidadAdministrativaDto> consultaResponsable(String claveUsuario) {
 		
-		String query="select usuario.id_usuario, usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, unidad.id_unidad, unidad.nombre nombre_unidad ";
-		query+="from c_unidad_administrativa unidad, m_usuario usuario, usuario_unidad_administrativa relacion where usuario.cve_m_usuario=relacion.cve_m_usuario and unidad.id_unidad=relacion.id_unidad and relacion.encargado=true and unidad.id_unidad in ";
-		query+="(select unidad.id_unidad ";
-		query+="from c_unidad_administrativa unidad, m_usuario usuario, usuario_unidad_administrativa relacion ";
-		query+="where usuario.cve_m_usuario=relacion.cve_m_usuario and unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario ='"+claveUsuario+"');";
+		String query="select usuario.id_usuario, usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, unidad.id_unidad, unidad.nombre nombre_unidad "
+		+"from c_unidad_administrativa unidad, m_usuario usuario, usuario_unidad_administrativa relacion where usuario.cve_m_usuario=relacion.cve_m_usuario and unidad.id_unidad=relacion.id_unidad and relacion.encargado=true and unidad.id_unidad in "
+		+"(select unidad.id_unidad "
+		+"from c_unidad_administrativa unidad, m_usuario usuario, usuario_unidad_administrativa relacion "
+		+"where usuario.cve_m_usuario=relacion.cve_m_usuario and unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario ='"+claveUsuario+"');";
 		logger.info("query: {} ",query);
-		List<Map<String, Object>> unidadesArdminsitrativas = jdbcTemplate.queryForList(query);
+		List<Map<String, Object>> unidadesArdminsitrativas = jdbcTemplate.queryForList(query.toString());
         List<UsuarioUnidadAdministrativaDto> listaUnidadAdministrativa = new ArrayList<>();
         
         for (Map<String, Object> unidad : unidadesArdminsitrativas) {
