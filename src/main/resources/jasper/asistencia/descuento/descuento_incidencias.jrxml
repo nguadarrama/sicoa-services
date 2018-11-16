@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="descuento_incidencias" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2775dccf-cbaa-4bb1-974d-683ac5cf5e9d">
 	<property name="ireport.zoom" value="1.0980750000000004"/>
-	<property name="ireport.x" value="6"/>
-	<property name="ireport.y" value="272"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="fechaActual" class="java.lang.String"/>
 	<parameter name="cve_m_usuario" class="java.lang.String"/>
 	<parameter name="nombre" class="java.lang.String"/>
@@ -138,7 +138,7 @@
 				<imageExpression><![CDATA["/documentos/sicoa/jasper/vacacion/secretariado.png"]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement x="41" y="420" width="15" height="20" uuid="a7b6ced9-12d9-46bf-8d56-e34ae1dc5295"/>
+				<reportElement x="37" y="420" width="15" height="20" uuid="a7b6ced9-12d9-46bf-8d56-e34ae1dc5295"/>
 				<textFieldExpression><![CDATA[$P{diaIncidencia}]]></textFieldExpression>
 			</textField>
 			<textField>
