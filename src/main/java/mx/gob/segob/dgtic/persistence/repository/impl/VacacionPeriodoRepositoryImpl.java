@@ -233,7 +233,7 @@ public class VacacionPeriodoRepositoryImpl extends RepositoryBase implements Vac
 		query+="select distinct (usuario.id_usuario) id_usuario ,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, vacacionPeriodo.dias, periodo.descripcion, periodo.id_periodo, vacacionPeriodo.id_vacacion ";
         query+="from m_usuario usuario, m_vacacion_periodo vacacionPeriodo, r_periodo periodo, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion ";
         query+="where periodo.id_periodo=vacacionPeriodo.id_periodo and usuario.id_usuario=vacacionPeriodo.id_usuario and vacacionPeriodo.dias>0 "
-        		+ "and date_add(periodo.fecha_fin, interval 1 year) >= '"+fechaCadena+"' and periodo.fecha_inicio <= '"+fechaCadena+"' and usuario.fecha_ingreso <= '"+fechaCadena1+"' and unidad.id_unidad = relacion.id_unidad ";
+        		+ "and date_add(periodo.fecha_fin, interval 1 year) >= '"+fechaCadena+"' and periodo.fecha_inicio <= '"+fechaCadena+"' and usuario.fecha_ingreso <= '"+fechaCadena1+"' and unidad.id_unidad = relacion.id_unidad usuario.cve_m_usuario=relacion.cve_m_usuario ";
         if(claveUsuario!=null && !claveUsuario.isEmpty()){
         	query+="and usuario.cve_m_usuario like '%"+removerGuionBajo(claveUsuario)+"%' ";
         }
