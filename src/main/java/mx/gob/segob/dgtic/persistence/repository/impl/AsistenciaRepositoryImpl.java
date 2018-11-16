@@ -541,7 +541,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 						return 2;
 					}
 				} else if (!incidencia.getDescuento()) {
-					return 1;
+					return 1; 
 				}
 			}
 		} catch (Exception e) {
