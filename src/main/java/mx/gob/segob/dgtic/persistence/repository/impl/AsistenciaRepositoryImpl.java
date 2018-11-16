@@ -669,52 +669,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         qry.append(RepositoryConstants.ARIL658);
         qry.append(RepositoryConstants.ARIL659);
         
-        if (asistenciaBusquedaUtil.getFechaInicialDate() != null && asistenciaBusquedaUtil.getFechaFinalDate() != null) {
-        	qry.append(RepositoryConstants.ARIL661 + asistenciaBusquedaUtil.getFechaInicialDate() + "'");
-        	qry.append(RepositoryConstants.ARIL662 + asistenciaBusquedaUtil.getFechaFinalDate()  + "'");
-        }
-        
-    	if (!asistenciaBusquedaUtil.getCveMusuario().isEmpty()) {
-    		qry.append(RepositoryConstants.ARIL666 + asistenciaBusquedaUtil.getCveMusuario());
-    	}
-        
-        if (!asistenciaBusquedaUtil.getNombre().isEmpty()) {
-        	qry.append(RepositoryConstants.ARIL670 + asistenciaBusquedaUtil.getNombre() + "%' ");
-        }
-        
-        if (!asistenciaBusquedaUtil.getPaterno().isEmpty()) {
-        	qry.append(RepositoryConstants.ARIL674 + asistenciaBusquedaUtil.getPaterno() + "%' ");
-        }
-        
-        if (!asistenciaBusquedaUtil.getMaterno().isEmpty()) {
-        	qry.append(RepositoryConstants.ARIL678 + asistenciaBusquedaUtil.getMaterno() + "%' ");
-        }
-        
-        if (!asistenciaBusquedaUtil.getUnidadAdministrativa().isEmpty()) {
-        	qry.append(RepositoryConstants.ARIL682 + asistenciaBusquedaUtil.getUnidadAdministrativa());
-        }
-        
-        if (!asistenciaBusquedaUtil.getNivel().isEmpty()) {
-        	qry.append(RepositoryConstants.ARIL686 + asistenciaBusquedaUtil.getNivel() + "%' ");
-        }
-        
-        if (asistenciaBusquedaUtil.getEstado() != null) {
-        	qry.append(RepositoryConstants.ARIL694 + asistenciaBusquedaUtil.getEstado());
-        }
-        
-        //reglas para condiciones de permisos 
-        if (!asistenciaBusquedaUtil.getPermisos().isEmpty()) {
-        	String[] arrayPermisos = asistenciaBusquedaUtil.getPermisos().split(",");
-            List<String> listaPermisos = new ArrayList<>(Arrays.asList(arrayPermisos));
-            
-            for (String permiso : listaPermisos) {
-	        	if (permiso.contains("descuento")) {
-	        		//descuento: validada y la bandera descuento
-	        		qry.append(" and ((e.id_estatus = 2 and i.descuento = 1))");
-	        	} 
-        	}
-        	
-        }
+        condicionesReporteDireccion(qry, asistenciaBusquedaUtil);
         
         List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString());
         List<AsistenciaDto> listaAsistencia = new ArrayList<>();
@@ -773,48 +728,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         qry.append("where uua.id_unidad = " + asistenciaBusquedaUtil.getIdUnidadCoordinador());
         qry.append(" and (t.id_tipo_dia != 5 && t.id_tipo_dia != 6 && t.id_tipo_dia != 7)"); //no registros de vacaciones, comisiones y licencias
         
-        if (asistenciaBusquedaUtil.getFechaInicialDate() != null && asistenciaBusquedaUtil.getFechaFinalDate() != null) {
-        	qry.append(" and entrada >= '" + asistenciaBusquedaUtil.getFechaInicialDate() + "'");
-        	qry.append(" and entrada < '" + asistenciaBusquedaUtil.getFechaFinalDate()  + "'");
-        } 
-        
-    	if (!asistenciaBusquedaUtil.getCveMusuario().isEmpty()) {
-    		qry.append(" and a.id_usuario = " + asistenciaBusquedaUtil.getCveMusuario());
-    	}
-        
-        if (!asistenciaBusquedaUtil.getNombre().isEmpty()) {
-        	qry.append(" and u.nombre like '%" + asistenciaBusquedaUtil.getNombre() + "%' ");
-        }
-        
-        if (!asistenciaBusquedaUtil.getPaterno().isEmpty()) {
-        	qry.append(" and u.apellido_paterno like '%" + asistenciaBusquedaUtil.getPaterno() + "%' ");
-        }
-        
-        if (!asistenciaBusquedaUtil.getMaterno().isEmpty()) {
-        	qry.append(" and u.apellido_materno like '%" + asistenciaBusquedaUtil.getMaterno() + "%' ");
-        }
-        
-        if (!asistenciaBusquedaUtil.getNivel().isEmpty()) {
-        	qry.append(" and u.nivel like '%" + asistenciaBusquedaUtil.getNivel() + "%' ");
-        }
-        
-        if (asistenciaBusquedaUtil.getEstado() != null) {
-        	qry.append(" and e.id_estatus = " + asistenciaBusquedaUtil.getEstado());
-        }
-        
-        //reglas para condiciones de permisos 
-        if (!asistenciaBusquedaUtil.getPermisos().isEmpty()) {
-        	String[] arrayPermisos = asistenciaBusquedaUtil.getPermisos().split(",");
-            List<String> listaPermisos = new ArrayList<>(Arrays.asList(arrayPermisos));
-            
-            for (String permiso : listaPermisos) {
-	        	if (permiso.contains("descuento")) {
-	        		//descuento: validada y la bandera descuento
-	        		qry.append(" and ((e.id_estatus = 2 and i.descuento = 1))");
-	        	} 
-        	}
-        	
-        }
+        condicionesReporteCoordinador(qry, asistenciaBusquedaUtil);
         
         List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString());
         List<AsistenciaDto> listaAsistencia = new ArrayList<>();
@@ -866,84 +780,176 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		
 	}
 
-  @Override
-  public List<AsistenciaDto> buscaAsistenciaEmpleado(String claveUsuario, Integer tipo,
-      Integer estado, Date fechaInicial, Date fechaFinal) {
-    StringBuilder qry = new StringBuilder();
-    Boolean usuarioFueAgregadoAQuery = false;
+	@Override
+	public List<AsistenciaDto> buscaAsistenciaEmpleado(String claveUsuario, Integer tipo,
+			Integer estado, Date fechaInicial, Date fechaFinal) {
+		StringBuilder qry = new StringBuilder();
+	
+	    qry.append(
+	        "SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus, ");
+		qry.append("i.id_estatus, i.descuento ");
+		qry.append("FROM m_asistencia a ");
+		qry.append("inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ");
+		qry.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia ");
+		qry.append("left join m_estatus e on e.id_estatus = i.id_estatus ");
+		qry.append("inner join m_usuario u on u.cve_m_usuario = a.id_usuario ");
+		qry.append(
+		    "inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ");
+		qry.append("inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ");
+		qry.append("where 1 = 1");
+		
+		if (fechaInicial != null && fechaFinal != null) {
+		  qry.append(" and entrada >= '" + fechaInicial + "'");
+		  qry.append(" and entrada <= '" + fechaFinal + "'");
+		}
+                                 // esta sección
+		if (!claveUsuario.isEmpty()) {
+			qry.append(" and a.id_usuario = " + claveUsuario);
+		}
+		
+		if (tipo > 0) {
+			qry.append(" and t.id_tipo_dia = " + tipo);
+		}
+		
+		if (estado > 0) {
+		  qry.append(" and e.id_estatus = " + estado);
+		}
 
-    qry.append(
-        "SELECT a.id_asistencia, a.id_usuario, a.id_tipo_dia, a.entrada, a.salida, t.nombre, e.estatus, ");
-    qry.append("i.id_estatus, i.descuento ");
-    qry.append("FROM m_asistencia a ");
-    qry.append("inner join c_tipo_dia t on t.id_tipo_dia = a.id_tipo_dia ");
-    qry.append("left join m_incidencia i on a.id_asistencia = i.id_asistencia ");
-    qry.append("left join m_estatus e on e.id_estatus = i.id_estatus ");
-    qry.append("inner join m_usuario u on u.cve_m_usuario = a.id_usuario ");
-    qry.append(
-        "inner join usuario_unidad_administrativa uua on uua.cve_m_usuario = u.cve_m_usuario ");
-    qry.append("inner join c_unidad_administrativa ua on ua.id_unidad = uua.id_unidad ");
+	    List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString());
+	    List<AsistenciaDto> listaAsistencia = new ArrayList<>();
+	
+	    for (Map<String, Object> a : asistencias) {
+	      UsuarioDto usuario = usuarioRepository.buscaUsuario((String) a.get(RepositoryConstants.ID_USUARIO));
+	
+	      TipoDiaDto tipoDia = new TipoDiaDto();
+	      tipoDia.setIdTipoDia((Integer) a.get(RepositoryConstants.ID_TIPO_DIA));
+	      tipoDia.setNombre((String) a.get(RepositoryConstants.NOMBRE));
+	
+	      EstatusDto estatus = new EstatusDto();
+	      estatus.setEstatus((String) a.get(RepositoryConstants.ESTATUS));
+	
+	      IncidenciaDto incidencia = new IncidenciaDto();
+	      incidencia.setEstatus(estatus);
+	
+	      if ((Boolean) a.get(RepositoryConstants.DESCUENTO) != null) {
+	        incidencia.setDescuento((Boolean) a.get(RepositoryConstants.DESCUENTO));
+	      } else {
+	        incidencia.setDescuento(false);
+	      }
 
-    if (fechaInicial != null && fechaFinal != null) {
-      qry.append("where entrada >= '" + fechaInicial + "'");
-      qry.append(" and entrada <= '" + fechaFinal + "'");
-    } else {
-      if (!claveUsuario.isEmpty()) {
-        qry.append("where a.id_usuario = " + claveUsuario);
-        usuarioFueAgregadoAQuery = true;
+	      AsistenciaDto asistencia = new AsistenciaDto();
+	      asistencia.setIdAsistencia((Integer) a.get(RepositoryConstants.ID_ASISTENCIA));
+	      asistencia.setUsuarioDto(usuario);
+	      asistencia.setIdTipoDia(tipoDia);
+	      asistencia.setEntrada((Timestamp) a.get(RepositoryConstants.ENTRADA));
+	      asistencia.setSalida((Timestamp) a.get(RepositoryConstants.SALIDA));
+	      asistencia.setIdEstatus(estatus);
+	      asistencia.setIncidencia(incidencia);
+	
+	      listaAsistencia.add(asistencia);
+	    }
+	
+	      return listaAsistencia;
+   }
+  
+   private void condicionesReporteDireccion(StringBuilder qry, AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
+	  if (asistenciaBusquedaUtil.getFechaInicialDate() != null && asistenciaBusquedaUtil.getFechaFinalDate() != null) {
+		  qry.append(RepositoryConstants.ARIL661 + asistenciaBusquedaUtil.getFechaInicialDate() + "'");
+		  qry.append(RepositoryConstants.ARIL662 + asistenciaBusquedaUtil.getFechaFinalDate()  + "'");
       }
-    }
-
-    if (!usuarioFueAgregadoAQuery) { // si usuario ya fue agregado a la query, entonces ya no agrega
-                                     // esta sección
-      if (!claveUsuario.isEmpty()) {
-        qry.append(" and a.id_usuario = " + claveUsuario);
+      
+      if (!asistenciaBusquedaUtil.getCveMusuario().isEmpty()) {
+    	  qry.append(RepositoryConstants.ARIL666 + asistenciaBusquedaUtil.getCveMusuario());
+  	  }
+      
+      if (!asistenciaBusquedaUtil.getNombre().isEmpty()) {
+      	qry.append(RepositoryConstants.ARIL670 + asistenciaBusquedaUtil.getNombre() + "%' ");
       }
-    }
-
-    if (tipo > 0) {
-      qry.append(" and t.id_tipo_dia = " + tipo);
-    }
-
-    if (estado > 0) {
-      qry.append(" and e.id_estatus = " + estado);
-    }
-
-    List<Map<String, Object>> asistencias = jdbcTemplate.queryForList(qry.toString());
-    List<AsistenciaDto> listaAsistencia = new ArrayList<>();
-
-    for (Map<String, Object> a : asistencias) {
-      UsuarioDto usuario = usuarioRepository.buscaUsuario((String) a.get(RepositoryConstants.ID_USUARIO));
-
-      TipoDiaDto tipoDia = new TipoDiaDto();
-      tipoDia.setIdTipoDia((Integer) a.get(RepositoryConstants.ID_TIPO_DIA));
-      tipoDia.setNombre((String) a.get(RepositoryConstants.NOMBRE));
-
-      EstatusDto estatus = new EstatusDto();
-      estatus.setEstatus((String) a.get(RepositoryConstants.ESTATUS));
-
-      IncidenciaDto incidencia = new IncidenciaDto();
-      incidencia.setEstatus(estatus);
-
-      if ((Boolean) a.get(RepositoryConstants.DESCUENTO) != null) {
-        incidencia.setDescuento((Boolean) a.get(RepositoryConstants.DESCUENTO));
-      } else {
-        incidencia.setDescuento(false);
+      
+      if (!asistenciaBusquedaUtil.getPaterno().isEmpty()) {
+      	qry.append(RepositoryConstants.ARIL674 + asistenciaBusquedaUtil.getPaterno() + "%' ");
       }
-
-      AsistenciaDto asistencia = new AsistenciaDto();
-      asistencia.setIdAsistencia((Integer) a.get(RepositoryConstants.ID_ASISTENCIA));
-      asistencia.setUsuarioDto(usuario);
-      asistencia.setIdTipoDia(tipoDia);
-      asistencia.setEntrada((Timestamp) a.get(RepositoryConstants.ENTRADA));
-      asistencia.setSalida((Timestamp) a.get(RepositoryConstants.SALIDA));
-      asistencia.setIdEstatus(estatus);
-      asistencia.setIncidencia(incidencia);
-
-      listaAsistencia.add(asistencia);
-    }
-
-    return listaAsistencia;
-  }
+      
+      if (!asistenciaBusquedaUtil.getMaterno().isEmpty()) {
+      	qry.append(RepositoryConstants.ARIL678 + asistenciaBusquedaUtil.getMaterno() + "%' ");
+      }
+      
+      if (!asistenciaBusquedaUtil.getUnidadAdministrativa().isEmpty()) {
+      	qry.append(RepositoryConstants.ARIL682 + asistenciaBusquedaUtil.getUnidadAdministrativa());
+      }
+      
+      if (!asistenciaBusquedaUtil.getNivel().isEmpty()) {
+      	qry.append(RepositoryConstants.ARIL686 + asistenciaBusquedaUtil.getNivel() + "%' ");
+      }
+      
+      if (asistenciaBusquedaUtil.getEstado() != null) {
+      	qry.append(RepositoryConstants.ARIL694 + asistenciaBusquedaUtil.getEstado());
+      }
+      
+      if (asistenciaBusquedaUtil.getTipo() != null && (asistenciaBusquedaUtil.getTipo() != 5 || asistenciaBusquedaUtil.getTipo() != 6 || asistenciaBusquedaUtil.getTipo() != 7)) {
+    	  qry.append(RepositoryConstants.ARIL690 + asistenciaBusquedaUtil.getTipo());
+      }
+      
+      //reglas para condiciones de permisos 
+      if (!asistenciaBusquedaUtil.getPermisos().isEmpty()) {
+      	String[] arrayPermisos = asistenciaBusquedaUtil.getPermisos().split(",");
+          List<String> listaPermisos = new ArrayList<>(Arrays.asList(arrayPermisos));
+          
+          for (String permiso : listaPermisos) {
+	         if (permiso.contains("descuento")) {
+	            //descuento: validada y la bandera descuento
+	        	qry.append(" and ((e.id_estatus = 2 and i.descuento = 1))");
+	         } 
+      	  }
+      }
+   }
+   
+   private void condicionesReporteCoordinador(StringBuilder qry, AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
+	   if (asistenciaBusquedaUtil.getFechaInicialDate() != null && asistenciaBusquedaUtil.getFechaFinalDate() != null) {
+		   qry.append(" and entrada >= '" + asistenciaBusquedaUtil.getFechaInicialDate() + "'");
+		   qry.append(" and entrada < '" + asistenciaBusquedaUtil.getFechaFinalDate()  + "'");
+       } 
+       
+	   if (!asistenciaBusquedaUtil.getCveMusuario().isEmpty()) {
+		   qry.append(" and a.id_usuario = " + asistenciaBusquedaUtil.getCveMusuario());
+	   }
+       
+       if (!asistenciaBusquedaUtil.getNombre().isEmpty()) {
+    	   qry.append(" and u.nombre like '%" + asistenciaBusquedaUtil.getNombre() + "%' ");
+       }
+       
+       if (!asistenciaBusquedaUtil.getPaterno().isEmpty()) {
+    	   qry.append(" and u.apellido_paterno like '%" + asistenciaBusquedaUtil.getPaterno() + "%' ");
+       }
+       
+       if (!asistenciaBusquedaUtil.getMaterno().isEmpty()) {
+    	   qry.append(" and u.apellido_materno like '%" + asistenciaBusquedaUtil.getMaterno() + "%' ");
+       }
+       
+       if (!asistenciaBusquedaUtil.getNivel().isEmpty()) {
+    	   qry.append(" and u.nivel like '%" + asistenciaBusquedaUtil.getNivel() + "%' ");
+       }
+       
+       if (asistenciaBusquedaUtil.getEstado() != null) {
+    	   qry.append(" and e.id_estatus = " + asistenciaBusquedaUtil.getEstado());
+       }
+       
+       if (asistenciaBusquedaUtil.getTipo() != null && (asistenciaBusquedaUtil.getTipo() != 5 || asistenciaBusquedaUtil.getTipo() != 6 || asistenciaBusquedaUtil.getTipo() != 7)) {
+     	  qry.append(RepositoryConstants.ARIL690 + asistenciaBusquedaUtil.getTipo());
+       }
+       
+       //reglas para condiciones de permisos 
+       if (!asistenciaBusquedaUtil.getPermisos().isEmpty()) {
+    	   String[] arrayPermisos = asistenciaBusquedaUtil.getPermisos().split(",");
+           List<String> listaPermisos = new ArrayList<>(Arrays.asList(arrayPermisos));
+           
+           for (String permiso : listaPermisos) {
+        	   if (permiso.contains("descuento")) {
+        		   //descuento: validada y la bandera descuento
+        		   qry.append(" and ((e.id_estatus = 2 and i.descuento = 1))");
+        	   } 
+       		}
+       	}
+   }
 
 }

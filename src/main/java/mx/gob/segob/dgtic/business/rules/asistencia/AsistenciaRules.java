@@ -106,9 +106,14 @@ public class AsistenciaRules {
 	public List<AsistenciaDto> reporteDireccion(AsistenciaBusquedaUtil asistenciaBusquedaUtil) {
 		
 		List<AsistenciaDto> listaAsistencia = new ArrayList<>();
+		boolean hayPermisoCombo = false;
+		
+		if (asistenciaBusquedaUtil.getTipo() != null && (asistenciaBusquedaUtil.getTipo() == 5 || asistenciaBusquedaUtil.getTipo() == 6 || asistenciaBusquedaUtil.getTipo() == 7)) {
+			hayPermisoCombo = true;
+		}
 
 		//si no existe filtro de permiso, entonces sólo extrae la información de asistencias
-		if (asistenciaBusquedaUtil.getPermisos().isEmpty() && asistenciaBusquedaUtil.getTipo() == null) {
+		if (asistenciaBusquedaUtil.getPermisos().isEmpty() && !hayPermisoCombo) {
 			listaAsistencia = asistenciaRepository.reporteDireccion(asistenciaBusquedaUtil);
 		} else { //si existe filtro de permiso, sólo trae la información de los permisos
         	String[] arrayPermisos = asistenciaBusquedaUtil.getPermisos().split(",");
@@ -153,9 +158,14 @@ public class AsistenciaRules {
 		asistenciaBusquedaUtil.setIdUnidadCoordinador((coordinador.getIdUnidad()));
 		
 		List<AsistenciaDto> listaAsistencia = new ArrayList<>();
+		boolean hayPermisoCombo = false;
+		
+		if (asistenciaBusquedaUtil.getTipo() != null && (asistenciaBusquedaUtil.getTipo() == 5 || asistenciaBusquedaUtil.getTipo() == 6 || asistenciaBusquedaUtil.getTipo() == 7)) {
+			hayPermisoCombo = true;
+		}
 
 		//si no existe filtro de permiso, entonces sólo extrae la información de asistencias
-		if (asistenciaBusquedaUtil.getPermisos().isEmpty() && asistenciaBusquedaUtil.getTipo() == null) {
+		if (asistenciaBusquedaUtil.getPermisos().isEmpty() && !hayPermisoCombo) {
 			listaAsistencia = asistenciaRepository.reporteCoordinador(asistenciaBusquedaUtil);
 		} else {
         	String[] arrayPermisos = asistenciaBusquedaUtil.getPermisos().split(",");
