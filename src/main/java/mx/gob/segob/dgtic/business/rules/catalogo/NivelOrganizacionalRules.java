@@ -36,8 +36,8 @@ public class NivelOrganizacionalRules {
 		return nivelOrganizacionalRepository.eliminaNivel(idNivel);
 	}
 	
-	public boolean existeNivel (Integer idHorario) {
-		return nivelOrganizacionalRepository.existeNivel(idHorario);
+	public boolean existeNivel (Integer idHorario, String nivel) {
+		return nivelOrganizacionalRepository.existeNivel(idHorario, nivel);
 	}
 
 	public List<UsuarioDto> nivelesEmpleado(){

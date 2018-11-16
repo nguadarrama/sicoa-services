@@ -154,14 +154,15 @@ public class NivelOrganizacionalRepositoryImpl extends RepositoryBase implements
 	
 	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_COMMITTED)
 	@Override
-	public boolean existeNivel(Integer idHorario) {
+	public boolean existeNivel(Integer idHorario, String nivel) {
 		boolean existe = false;
 		StringBuilder qry = new StringBuilder();
 		qry.append(" select id_nivel, nivel, id_horario, horario ");
 		qry.append(" from c_nivel_organizacional ");
-		qry.append(" where id_horario =:idHorario ");
+		qry.append(" where id_horario =:idHorario and nivel= :nivel");
 		MapSqlParameterSource param = new MapSqlParameterSource();
 		param.addValue(RepositoryConstants.ID_HORARIO2, idHorario);
+		param.addValue(RepositoryConstants.NIVEL, nivel);
 		SqlRowSet rs = nameParameterJdbcTemplate.queryForRowSet(qry.toString(), param);
 		if(rs.next()) {
 			existe = true;

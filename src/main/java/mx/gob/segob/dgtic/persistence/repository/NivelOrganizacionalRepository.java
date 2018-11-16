@@ -13,7 +13,7 @@ public interface NivelOrganizacionalRepository {
 	public NivelOrganizacionalDto modificaNivel(NivelOrganizacionalDto nivelDto);
 	public NivelOrganizacionalDto agregaNivel(NivelOrganizacionalDto nivelDto);
 	public NivelOrganizacionalDto eliminaNivel(Integer idNivel);
-	public boolean existeNivel(Integer idHorario);
+	public boolean existeNivel(Integer idHorario, String nivel);
 	public List<UsuarioDto> nivelesEmpleado();
 	public List<UsuarioDto> empleadosNivel (String nivel);
 	public Integer actualizaHorarioEmpleado(Integer idHorario, String nivel);

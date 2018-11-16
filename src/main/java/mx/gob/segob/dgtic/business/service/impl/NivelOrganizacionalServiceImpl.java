@@ -26,7 +26,7 @@ public class NivelOrganizacionalServiceImpl extends ServiceBase implements Nivel
 		 * VERIFICANDO QUE NO EXISTA EL HORARIO EN EL NIVEL ORGANIZACIONAL A DAR DE ALTA
 		 ********************************************************************************/
 		boolean existe = false;
-		existe = nivelOrganizacionalRules.existeNivel(nivelDto.getIdHorario());
+		existe = nivelOrganizacionalRules.existeNivel(nivelDto.getIdHorario(), nivelDto.getNivel());
 		Horario horario = buscaHorario(nivelDto.getIdHorario());
 		
 		logger.info("Hora Entrada: {}", horario.getHoraEntrada());
