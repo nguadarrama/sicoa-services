@@ -173,7 +173,7 @@ public class AsistenciaServiceImpl extends ServiceBase implements AsistenciaServ
 			Map<String,Object> parametros = new HashMap<>();
 			parametros.put("nombre", generaReporteArchivo.getNombre());
 			parametros.put("unidad", generaReporteArchivo.getUnidadAdministrativa());
-			parametros.put("fechaActual", generaReporteArchivo.getFechaActual());
+			parametros.put("fechaIncidencia", generaReporteArchivo.getFechaIncidencia());
 			parametros.put("codigoIncidencia", generaReporteArchivo.getCodigoIncidencia());
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
 			output = JasperExportManager.exportReportToPdf (jasperPrint); 
