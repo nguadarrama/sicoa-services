@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Vacaciones" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f165d569-c59e-418b-8f22-e606d38f4bc2">
 	<property name="ireport.zoom" value="1.3636363636363635"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="733"/>
+	<property name="ireport.y" value="578"/>
 	<parameter name="nombre" class="java.lang.String"/>
 	<parameter name="apellidoPaterno" class="java.lang.String"/>
 	<parameter name="apellidoMaterno" class="java.lang.String"/>
@@ -340,14 +340,14 @@
 	<columnFooter>
 		<band height="177" splitType="Stretch">
 			<staticText>
-				<reportElement x="174" y="36" width="199" height="20" uuid="df35ea77-70ba-4a68-8ef0-2733d4eaf562"/>
+				<reportElement x="174" y="26" width="199" height="20" uuid="df35ea77-70ba-4a68-8ef0-2733d4eaf562"/>
 				<textElement>
 					<font isBold="false"/>
 				</textElement>
 				<text><![CDATA[SERVIDOR(A) PÚBLICO(A) SOLICITANTE]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="138" y="106" width="269" height="20" uuid="7597ed6f-ce0f-4e65-9154-7aa776941576"/>
+				<reportElement x="138" y="106" width="269" height="20" isPrintWhenDetailOverflows="true" uuid="7597ed6f-ce0f-4e65-9154-7aa776941576"/>
 				<textElement textAlignment="Center">
 					<font size="12" isUnderline="true"/>
 				</textElement>
@@ -358,7 +358,7 @@
 				<text><![CDATA[AUTORIZÓ]]></text>
 			</staticText>
 			<line>
-				<reportElement x="138" y="35" width="265" height="1" uuid="dcfbb3f6-381e-44bd-b82c-b076faefad5c"/>
+				<reportElement x="138" y="25" width="265" height="1" uuid="dcfbb3f6-381e-44bd-b82c-b076faefad5c"/>
 			</line>
 			<staticText>
 				<reportElement x="10" y="155" width="448" height="20" uuid="2a8df713-222e-43c1-bd86-cb55a93b2af6"/>
@@ -366,6 +366,20 @@
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[*En caso de que el periodo a disfrutar contemple dos meses anexar un formato por cada mes.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="53" width="536" height="20" isPrintWhenDetailOverflows="true" uuid="2789238a-6142-4a95-b214-71a6fe8c0b76"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[En mi caracter de superior jerarquico del servidor público solicitante y de conformidad con las disposiciones legales]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="73" width="536" height="20" isPrintWhenDetailOverflows="true" uuid="1916d2f5-428f-4322-b198-67e1fe332676"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[y administrativas, autorizo disfrutar el periodo vacacional señalado]]></text>
 			</staticText>
 		</band>
 	</columnFooter>
