@@ -125,7 +125,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 
 	}
 	
-	@SuppressWarnings({ "deprecation", "unused" })
+	@SuppressWarnings({ "unused" })
 	private List<AsistenciaDto> calculaEntradasSalidas(List<AsistenciaDto> listaAsistencia) {
 		Set<String> hashSetIdUsuarios = new HashSet<>();
 		List<UsuarioChecada> listaUsuarioChecadas = new ArrayList<>();
@@ -225,37 +225,12 @@ public class CargaAsistenciaRules extends RecursoBase {
 	}
 	
 	private List<AsistenciaDto> calculaIncidencias(List<AsistenciaDto> listaAsistencia) {
+		
+		//calcula incidencias y setea el tipo de incidencia a la lista de asistencias
 		logger.info("calculando incidencias: {} ",listaAsistencia.size());
+		calculoIncidencias(listaAsistencia);
 		
-		for (AsistenciaDto a : listaAsistencia) {
-			
-			UsuarioDto usuario = usuarioService.buscaUsuario(a.getUsuarioDto().getClaveUsuario());
-			
-			if (a.getEntrada() != null) {
-				if (esPuntualEntrada(a.getEntrada(), usuario.getIdHorario().getHoraEntrada())) {
-					if (a.getSalida() != null) { 
-						if (esPuntualSalida(a.getSalida(), usuario.getIdHorario().getHoraSalida())) { 
-							TipoDiaDto tipoDia = obtieneTipoDia(1); 	//Día normal. Fue puntual en entrada y salida
-							a.setIdTipoDia(tipoDia);
-						} else {
-							TipoDiaDto tipoDia = obtieneTipoDia(3);		//checó salida antes: "Omisión de Salida"
-							a.setIdTipoDia(tipoDia);
-						}
-					} else {																	
-						TipoDiaDto tipoDia = obtieneTipoDia(3);			//no checó salida: "Omisión de Salida"
-						a.setIdTipoDia(tipoDia);
-					}
-				} else {																	  
-					TipoDiaDto tipoDia = obtieneTipoDia(4);				// "Incidencia por permanencia"
-					a.setIdTipoDia(tipoDia);
-				}
-			} else if (a.getEntrada() == null && a.getSalida() != null) { 											
-					TipoDiaDto tipoDia = obtieneTipoDia(2);				//no checó entrada: "Omisión de Entrada"
-					a.setIdTipoDia(tipoDia);
-			}
-		}
-		
-		//calculo de inasistencias. son aquellas usurios que no tienen registro en el sistema de asistencias
+		//calculo de inasistencias. son aquellas usurios que no tienen registro en el sistema de asistencias y no están de permiso
 		logger.info("calculando y creando inasistencias: {} ",listaAsistencia.size());
 		
 		//obtiene la fecha de hoy
@@ -275,9 +250,6 @@ public class CargaAsistenciaRules extends RecursoBase {
 		List<String> listaEmpleadosDeVacacionesHoy = asistenciaRepository.obtieneListaEmpleadosDeVacacionesHoy();
 		List<String> listaEmpleadosDeComisionHoy = asistenciaRepository.obtieneListaEmpleadosDeComisionHoy();
 		List<String> listaEmpleadosDeLicenciaHoy = asistenciaRepository.obtieneListaEmpleadosDeLicenciaHoy();
-		/**logger.info(asistenciaRepository.obtieneListaEmpleadosDeVacacionesHoy().size() + " empleados de vacaciones (" + new Date()  + ")");
-		logger.info(asistenciaRepository.obtieneListaEmpleadosDeComisionHoy().size() + " empleados de comision (" + new Date()  + ")");
-		logger.info(asistenciaRepository.obtieneListaEmpleadosDeLicenciaHoy().size() + " empleados de licencia (" + new Date()  + ")"); **/
 		List<String> listaEmpleadosConPermiso = new ArrayList<>();
 		List<DiaFestivoDto> listaDiaFestivo = diaFestivoRepository.obtenerListaDiasFestivos();
 		
@@ -525,6 +497,42 @@ public class CargaAsistenciaRules extends RecursoBase {
 		}
 		
 		return listaEventosMultiples;
+	}
+	
+	private void calculoIncidencias(List<AsistenciaDto> listaAsistencia) {
+			
+		for (AsistenciaDto a : listaAsistencia) {
+			UsuarioDto usuario = usuarioService.buscaUsuario(a.getUsuarioDto().getClaveUsuario());
+			
+			//con base a las reglas y setea el tipo de la incidencia
+			reglasParaCrearIncidencias(a, usuario);
+			
+		}
+	}
+	
+	private void reglasParaCrearIncidencias(AsistenciaDto a, UsuarioDto usuario) {
+		if (a.getEntrada() != null) {
+			if (esPuntualEntrada(a.getEntrada(), usuario.getIdHorario().getHoraEntrada())) {
+				if (a.getSalida() != null) { 
+					if (esPuntualSalida(a.getSalida(), usuario.getIdHorario().getHoraSalida())) { 
+						TipoDiaDto tipoDia = obtieneTipoDia(1); 	//Día normal. Fue puntual en entrada y salida
+						a.setIdTipoDia(tipoDia);
+					} else {
+						TipoDiaDto tipoDia = obtieneTipoDia(3);		//checó salida antes: "Omisión de Salida"
+						a.setIdTipoDia(tipoDia);
+					}
+				} else {																	
+					TipoDiaDto tipoDia = obtieneTipoDia(3);			//no checó salida: "Omisión de Salida"
+					a.setIdTipoDia(tipoDia);
+				}
+			} else {																	  
+				TipoDiaDto tipoDia = obtieneTipoDia(4);				// "Incidencia por permanencia"
+				a.setIdTipoDia(tipoDia);
+			}
+		} else if (a.getEntrada() == null && a.getSalida() != null) { 											
+				TipoDiaDto tipoDia = obtieneTipoDia(2);				//no checó entrada: "Omisión de Entrada"
+				a.setIdTipoDia(tipoDia);
+		}
 	}
 }
 
