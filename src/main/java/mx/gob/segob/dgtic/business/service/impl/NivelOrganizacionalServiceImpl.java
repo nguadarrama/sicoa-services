@@ -47,8 +47,9 @@ public class NivelOrganizacionalServiceImpl extends ServiceBase implements Nivel
 		 *PARTE DEL NIVEL SELECCIONADO
 		 **********************************************************************/
 		actualizaHorarioEmpleado(nivelDto.getIdHorario(), nivelDto.getNivel());
-		} 	
-		logger.info("reutn periodoServiceImpl-- method--agregaPeriodo: {}",nivel);
+		} 
+		String gsonT = gson.toJson(nivel);
+		logger.info("reutn periodoServiceImpl-- method--agregaPeriodo: {}",gsonT);
 		return nivel;
 	}
 
