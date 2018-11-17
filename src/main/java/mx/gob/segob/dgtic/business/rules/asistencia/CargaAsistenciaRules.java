@@ -232,98 +232,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 		
 		//calculo de inasistencias. son aquellas usurios que no tienen registro en el sistema de asistencias y no están de permiso
 		logger.info("calculando y creando inasistencias: {} ",listaAsistencia.size());
-		
-		//obtiene la fecha de hoy
-		Timestamp diaAyer = new Timestamp(new Date().getTime());
-		
-		/**SimpleDateFormat sdf = new SimpleDateFormat(ServiceConstants.YYYY_MM_DD);**/
-		Calendar c = Calendar.getInstance();
-		
-		c.setTime(diaAyer);
-		c.add(Calendar.DAY_OF_MONTH, -1); //se resta un día a la fecha porque el servicio corre al día siguiente 
-		c.set(Calendar.HOUR, 0);          //no interesa la hora
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        diaAyer.setTime(c.getTimeInMillis());
-		
-		//se obtienen los usuarios que están de vacaciones, licencias, comisiones. Hoy
-		List<String> listaEmpleadosDeVacacionesHoy = asistenciaRepository.obtieneListaEmpleadosDeVacacionesHoy();
-		List<String> listaEmpleadosDeComisionHoy = asistenciaRepository.obtieneListaEmpleadosDeComisionHoy();
-		List<String> listaEmpleadosDeLicenciaHoy = asistenciaRepository.obtieneListaEmpleadosDeLicenciaHoy();
-		List<String> listaEmpleadosConPermiso = new ArrayList<>();
-		List<DiaFestivoDto> listaDiaFestivo = diaFestivoRepository.obtenerListaDiasFestivos();
-		
-		//los usuarios en vacaciones, comisión y licencia se agrupan en una sola lista
-		for (String permiso : listaEmpleadosDeVacacionesHoy) {
-			listaEmpleadosConPermiso.add(permiso);
-		}
-		
-		for (String permiso : listaEmpleadosDeComisionHoy) {
-			listaEmpleadosConPermiso.add(permiso);
-		}
-		
-		for (String permiso : listaEmpleadosDeLicenciaHoy) {
-			listaEmpleadosConPermiso.add(permiso);
-		}
-		
-		for (UsuarioDto usuario : listaUsuarios) {
-			if (!listaClaveUsuariosEnAsistencia.contains(usuario.getClaveUsuario())) {
-				AsistenciaDto asistencia = new AsistenciaDto();
-				
-				//empleados que faltaron justificadamente
-				if (!listaEmpleadosConPermiso.isEmpty()) {
-
-					//si el usuario no está de vacación, comision ó licencia se le genera inasistencia
-					if (!listaEmpleadosConPermiso.contains(usuario.getClaveUsuario())) {
-
-						//se revisa si es día inhábil y se crea día inhábil
-						if (esDiaInhabil(listaDiaFestivo)) {
-							TipoDiaDto tipoDiaInhabil = new TipoDiaDto();
-							tipoDiaInhabil.setIdTipoDia(9); //día inhábil
-							
-							asistencia.setEntrada(diaAyer);
-							asistencia.setUsuarioDto(usuario);
-							asistencia.setIdTipoDia(tipoDiaInhabil); 	
-							
-							listaAsistencia.add(asistencia);
-						} else { //si no es día festivo, coloca la inasistencia
-							TipoDiaDto tipoDiaInasistencia = obtieneTipoDia(8);
-							
-							asistencia.setEntrada(diaAyer);
-							asistencia.setUsuarioDto(usuario);
-							asistencia.setIdTipoDia(tipoDiaInasistencia);
-							
-							listaAsistencia.add(asistencia);
-						}
-					} else {
-						//cuando el empleado que faltó sí se encuentra de vacaciones no se requiere ninguna acción
-						logger.info("el empleado se encuentra con permiso: {} ","* " + usuario.getClaveUsuario() );
-					}
-					
-				} else { //si no hay ningún usuario que esté de vacación, de comisión ó licencia, entonces se revisa si es día inhábil
-						
-						//se revisa si es día inhábil y se crea día inhábil
-						if (esDiaInhabil(listaDiaFestivo)) {
-							TipoDiaDto tipoDiaInhabil = new TipoDiaDto();
-							tipoDiaInhabil.setIdTipoDia(9); //día inhábil
-							
-							asistencia.setEntrada(diaAyer);
-							asistencia.setUsuarioDto(usuario);
-							asistencia.setIdTipoDia(tipoDiaInhabil); 	
-							
-							listaAsistencia.add(asistencia);
-						} else { //si no es día festivo, coloca la inasistencia
-							TipoDiaDto tipoDiaInasistencia = obtieneTipoDia(8);
-							
-							asistencia.setEntrada(diaAyer);
-							asistencia.setUsuarioDto(usuario);
-							asistencia.setIdTipoDia(tipoDiaInasistencia);
-							
-							listaAsistencia.add(asistencia);
-						}
-				}
-			} 
-		}
+		calculoInasistencia(listaAsistencia);
 		
 		logger.info("asistencias procesadas. Termina cálculo de incidencias: {} ",listaAsistencia.size());
 		
@@ -389,33 +298,6 @@ public class CargaAsistenciaRules extends RecursoBase {
 		} else {
 			return false;
 		}
-	}
-	
-	private Boolean esDiaInhabil(List<DiaFestivoDto> listaDiaFestivo) {
-		
-		//obtiene día de ayer
-		Boolean esInhabil = false;
-		Date diaAyer = new Date();
-		Calendar c = Calendar.getInstance(); 
-		c.setLenient(false);
-	    c.setTime(diaAyer);
-	    c.add(Calendar.DATE, -1);
-	    c.set(Calendar.HOUR_OF_DAY, 0);
-	    c.set(Calendar.MINUTE,0);
-	    c.set(Calendar.SECOND,0);
-	    c.set(Calendar.MILLISECOND,0);
-	    diaAyer = c.getTime();
-		
-		//compara los días festivos con el día de ayer		
-		for (DiaFestivoDto diaFestivo : listaDiaFestivo) {
-			
-			//si el día de ayer está en la lista de día inhábil, entonces es día inhábil
-			if (diaAyer.compareTo(diaFestivo.getFecha()) == 0) {
-				esInhabil = true;
-			}
-		}
-		
-		return esInhabil;
 	}
 	
 	private void actualizaNomina() {
@@ -532,6 +414,118 @@ public class CargaAsistenciaRules extends RecursoBase {
 		} else if (a.getEntrada() == null && a.getSalida() != null) { 											
 				TipoDiaDto tipoDia = obtieneTipoDia(2);				//no checó entrada: "Omisión de Entrada"
 				a.setIdTipoDia(tipoDia);
+		}
+	}
+	
+	private void calculoInasistencia(List<AsistenciaDto> listaAsistencia) {
+		//obtiene la fecha de hoy
+		Timestamp diaAyer = new Timestamp(new Date().getTime());
+		
+		/**SimpleDateFormat sdf = new SimpleDateFormat(ServiceConstants.YYYY_MM_DD);**/
+		Calendar c = Calendar.getInstance();
+		
+		c.setTime(diaAyer);
+		c.add(Calendar.DAY_OF_MONTH, -1); //se resta un día a la fecha porque el servicio corre al día siguiente 
+		c.set(Calendar.HOUR, 0);          //no interesa la hora
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        diaAyer.setTime(c.getTimeInMillis());
+		
+		//se obtienen los usuarios que están de vacaciones, licencias, comisiones. Hoy
+		List<String> listaEmpleadosDeVacacionesHoy = asistenciaRepository.obtieneListaEmpleadosDeVacacionesHoy();
+		List<String> listaEmpleadosDeComisionHoy = asistenciaRepository.obtieneListaEmpleadosDeComisionHoy();
+		List<String> listaEmpleadosDeLicenciaHoy = asistenciaRepository.obtieneListaEmpleadosDeLicenciaHoy();
+		List<String> listaEmpleadosConPermiso = new ArrayList<>();
+		
+		//los usuarios en vacaciones, comisión y licencia se agrupan en una sola lista
+		for (String permiso : listaEmpleadosDeVacacionesHoy) {
+			listaEmpleadosConPermiso.add(permiso);
+		}
+		
+		for (String permiso : listaEmpleadosDeComisionHoy) {
+			listaEmpleadosConPermiso.add(permiso);
+		}
+		
+		for (String permiso : listaEmpleadosDeLicenciaHoy) {
+			listaEmpleadosConPermiso.add(permiso);
+		}
+		
+		//se aplican las reglas para crear inasistencias
+		reglasParaCrearInasistencias(listaAsistencia, listaEmpleadosConPermiso, diaAyer);
+		
+	}
+	
+	private void reglasParaCrearInasistencias(List<AsistenciaDto> listaAsistencia, List<String> listaEmpleadosConPermiso, Timestamp diaAyer) {
+		for (UsuarioDto usuario : listaUsuarios) {
+			if (!listaClaveUsuariosEnAsistencia.contains(usuario.getClaveUsuario())) {
+				AsistenciaDto asistencia = new AsistenciaDto();
+				
+				//empleados que faltaron justificadamente
+				if (!listaEmpleadosConPermiso.isEmpty()) {
+
+					//si el usuario no está de vacación, comision ó licencia se le genera inasistencia
+					if (!listaEmpleadosConPermiso.contains(usuario.getClaveUsuario())) {
+
+						//se revisa si es día inhábil y se crea día inhábil
+						esDiaInhabil(asistencia, diaAyer, listaAsistencia, usuario);
+						
+					} else {
+						//cuando el empleado que faltó sí se encuentra de vacaciones no se requiere ninguna acción
+						logger.info("el empleado se encuentra con permiso: {} ","* " + usuario.getClaveUsuario() );
+					}
+					
+				} else { //si no hay ningún usuario que esté de vacación, de comisión ó licencia, entonces se revisa si es día inhábil
+						
+					//se revisa si es día inhábil y se crea día inhábil
+					esDiaInhabil(asistencia, diaAyer, listaAsistencia, usuario);
+					
+				}
+			} 
+		}
+	}
+	
+	private void esDiaInhabil(AsistenciaDto asistencia, Timestamp ayer, List<AsistenciaDto> listaAsistencia, UsuarioDto usuario) {
+		List<DiaFestivoDto> listaDiaFestivo = diaFestivoRepository.obtenerListaDiasFestivos();
+		
+		//obtiene día de ayer
+		Boolean esInhabil = false;
+		Date diaAyer = new Date();
+		Calendar c = Calendar.getInstance(); 
+		c.setLenient(false);
+	    c.setTime(diaAyer);
+	    c.add(Calendar.DATE, -1);
+	    c.set(Calendar.HOUR_OF_DAY, 0);
+	    c.set(Calendar.MINUTE,0);
+	    c.set(Calendar.SECOND,0);
+	    c.set(Calendar.MILLISECOND,0);
+	    diaAyer = c.getTime();
+		
+		//compara los días festivos con el día de ayer		
+		for (DiaFestivoDto diaFestivo : listaDiaFestivo) {
+			
+			//si el día de ayer está en la lista de día inhábil, entonces es día inhábil
+			if (diaAyer.compareTo(diaFestivo.getFecha()) == 0) {
+				esInhabil = true;
+			} 
+		}
+		
+		if (esInhabil) { //al ser día inhábil crea una asistencia con día inhábil
+			TipoDiaDto tipoDiaInhabil = new TipoDiaDto();
+			tipoDiaInhabil.setIdTipoDia(9); //día inhábil
+			
+			asistencia.setEntrada(ayer);
+			asistencia.setUsuarioDto(usuario);
+			asistencia.setIdTipoDia(tipoDiaInhabil); 	
+			
+			listaAsistencia.add(asistencia);
+		} else { //al ser día hábil crea una inasistencia
+			TipoDiaDto tipoDiaInasistencia = obtieneTipoDia(8);
+			
+			asistencia.setEntrada(ayer);
+			asistencia.setUsuarioDto(usuario);
+			asistencia.setIdTipoDia(tipoDiaInasistencia);
+			
+			listaAsistencia.add(asistencia);
 		}
 	}
 }
