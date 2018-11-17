@@ -131,10 +131,9 @@ public class CargaAsistenciaRules extends RecursoBase {
 		List<UsuarioChecada> listaUsuarioChecadas = new ArrayList<>();
 		List<AsistenciaDto> listaAsistenciaCalculada = new ArrayList<>();
 		listaClaveUsuariosEnAsistencia = new ArrayList<>();
-		Calendar calendar = Calendar.getInstance();
 		
 		//recupera de la asistencia los id's de usuarios: sin repetidos y les agrupa sus asistencias a cada uno
-		listaUsuarioChecadas = ligaAsistenciasAUsuario(listaAsistencia, hashSetIdUsuarios, listaUsuarioChecadas);
+		ligaAsistenciasAUsuario(listaAsistencia, hashSetIdUsuarios, listaUsuarioChecadas);
 		
 		//recorre usuarios
 		for (UsuarioChecada usuarioChecada : listaUsuarioChecadas) {		
@@ -161,61 +160,8 @@ public class CargaAsistenciaRules extends RecursoBase {
 					fechaEventoAnterior = usuarioChecada.getListaChecadas().get(i - 1);
 				}
 				
-				//null: no hay evento siguiente
-				if (fechaEventoSiguiente != null) {
-					//se configura en ceros la hora de las fechas del evento actual y siguiente
-					calendar.setTime(new Date(fechaEvento.getTime()));
-					calendar.set(Calendar.HOUR_OF_DAY, 0);
-					calendar.set(Calendar.MINUTE, 0);
-					calendar.set(Calendar.SECOND, 0);
-					calendar.set(Calendar.MILLISECOND, 0);
-					 
-					Date fechaEventoSinHora = calendar.getTime();
-					
-					calendar.setTime(new Date(fechaEventoSiguiente.getTime()));
-					calendar.set(Calendar.HOUR_OF_DAY, 0);
-					calendar.set(Calendar.MINUTE, 0);
-					calendar.set(Calendar.SECOND, 0);
-					calendar.set(Calendar.MILLISECOND, 0);
-					
-					Date fechaEventoSiguienteSinHora = calendar.getTime();
-					
-					/*
-					 * definición de entrada y salida
-					 */
-					
-					//¿ocurrieron varios eventos en el mismo día? entonces se puede calcular entrada y salida
-					if (fechaEventoSinHora.compareTo(fechaEventoSiguienteSinHora) == 0) {							
-						//el primer evento del día se coloca como entrada
-						asistenciaCalculada.setEntrada(fechaEvento);
-						
-						//se guarda en la lista el segundo evento en el mismo día
-						listaEventosMultiples.add(fechaEventoSiguiente);
-						
-						listaEventosMultiples = buscaMasEventosDelDia(usuarioChecada, fechaEvento, fechaEventoSiguiente, listaEventosMultiples, i);
-						
-						//el último evento del día se coloca como salida
-						int ultimoEventoDelDia = listaEventosMultiples.size() - 1;
-						asistenciaCalculada.setSalida(listaEventosMultiples.get(ultimoEventoDelDia));
-						
-						if (!listaEventosMultiples.contains(fechaEvento)) { 
-							listaAsistenciaCalculada.add(asistenciaCalculada);
-						}							
-					} else {
-						//Evento que sólo tiene entrada
-						asistenciaCalculada.setEntrada(fechaEvento);
-						asistenciaCalculada.setSalida(null);
-						if (!listaEventosMultiples.contains(fechaEvento)) { 
-							listaAsistenciaCalculada.add(asistenciaCalculada);
-						}	
-					}
-				} else { //al ser el último evento sólo se coloca la entrada
-					asistenciaCalculada.setEntrada(fechaEvento);
-					asistenciaCalculada.setSalida(null);
-					if (!listaEventosMultiples.contains(fechaEvento)) { 
-						listaAsistenciaCalculada.add(asistenciaCalculada);
-					}
-				}			
+				//Calcula entradas y salidas. Toma el primer evento como la fecha de entrada y el úlitmo como la fecha de salida
+				calculaEntradaSalida(fechaEvento, fechaEventoSiguiente, listaEventosMultiples, asistenciaCalculada, listaAsistenciaCalculada, usuarioChecada, i);
 			}
 		}
 		
@@ -353,7 +299,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 		return listaUsuarioChecadas;
 	}
 	
-	private List<Timestamp> buscaMasEventosDelDia(UsuarioChecada usuarioChecada, Timestamp fechaEvento, Timestamp fechaEventoSiguiente, List<Timestamp> listaEventosMultiples, int i) {
+	private void buscaMasEventosDelDia(UsuarioChecada usuarioChecada, Timestamp fechaEvento, Timestamp fechaEventoSiguiente, List<Timestamp> listaEventosMultiples, int i) {
 		//se continúa buscando eventos en el mismo día y se guardan en la lista
 		for (int y = 2; true ; y++) {
 			
@@ -378,7 +324,6 @@ public class CargaAsistenciaRules extends RecursoBase {
 			}
 		}
 		
-		return listaEventosMultiples;
 	}
 	
 	private void calculoIncidencias(List<AsistenciaDto> listaAsistencia) {
@@ -526,6 +471,67 @@ public class CargaAsistenciaRules extends RecursoBase {
 			asistencia.setIdTipoDia(tipoDiaInasistencia);
 			
 			listaAsistencia.add(asistencia);
+		}
+	}
+	
+	private void calculaEntradaSalida(Timestamp fechaEvento, Timestamp fechaEventoSiguiente, List<Timestamp> listaEventosMultiples,
+			AsistenciaDto asistenciaCalculada, List<AsistenciaDto> listaAsistenciaCalculada, UsuarioChecada usuarioChecada, int i) {
+		
+		//null: no hay evento siguiente
+		if (fechaEventoSiguiente != null) {
+			Calendar calendar = Calendar.getInstance();
+			//se configura en ceros la hora de las fechas del evento actual y siguiente
+			calendar.setTime(new Date(fechaEvento.getTime()));
+			calendar.set(Calendar.HOUR_OF_DAY, 0);
+			calendar.set(Calendar.MINUTE, 0);
+			calendar.set(Calendar.SECOND, 0);
+			calendar.set(Calendar.MILLISECOND, 0);
+			 
+			Date fechaEventoSinHora = calendar.getTime();
+			
+			calendar.setTime(new Date(fechaEventoSiguiente.getTime()));
+			calendar.set(Calendar.HOUR_OF_DAY, 0);
+			calendar.set(Calendar.MINUTE, 0);
+			calendar.set(Calendar.SECOND, 0);
+			calendar.set(Calendar.MILLISECOND, 0);
+			
+			Date fechaEventoSiguienteSinHora = calendar.getTime();
+			
+			/*
+			 * definición de entrada y salida
+			 */
+			
+			//¿ocurrieron varios eventos en el mismo día? entonces se puede calcular entrada y salida
+			if (fechaEventoSinHora.compareTo(fechaEventoSiguienteSinHora) == 0) {							
+				//el primer evento del día se coloca como entrada
+				asistenciaCalculada.setEntrada(fechaEvento);
+				
+				//se guarda en la lista el segundo evento en el mismo día
+				listaEventosMultiples.add(fechaEventoSiguiente);
+				
+				buscaMasEventosDelDia(usuarioChecada, fechaEvento, fechaEventoSiguiente, listaEventosMultiples, i);
+				
+				//el último evento del día se coloca como salida
+				int ultimoEventoDelDia = listaEventosMultiples.size() - 1;
+				asistenciaCalculada.setSalida(listaEventosMultiples.get(ultimoEventoDelDia));
+				
+				if (!listaEventosMultiples.contains(fechaEvento)) { 
+					listaAsistenciaCalculada.add(asistenciaCalculada);
+				}							
+			} else {
+				//Evento que sólo tiene entrada
+				asistenciaCalculada.setEntrada(fechaEvento);
+				asistenciaCalculada.setSalida(null);
+				if (!listaEventosMultiples.contains(fechaEvento)) { 
+					listaAsistenciaCalculada.add(asistenciaCalculada);
+				}	
+			}
+		} else { //al ser el último evento sólo se coloca la entrada
+			asistenciaCalculada.setEntrada(fechaEvento);
+			asistenciaCalculada.setSalida(null);
+			if (!listaEventosMultiples.contains(fechaEvento)) { 
+				listaAsistenciaCalculada.add(asistenciaCalculada);
+			}
 		}
 	}
 }

@@ -460,7 +460,6 @@ public class ExcelUtil {
         if (listTextosStr != null) {
             for (String texto: listTextosStr) {
                 this.columnaInicial = this.columnaFinal;
-                this.columnaFinal = (this.columnaInicial);
                 agregaDimension(loFila, this.columnaInicial, 
                                 this.columnaFinal, 
                                 estiloCelda.getEstilo(), 
