@@ -167,6 +167,7 @@ public class NivelOrganizacionalRepositoryImpl extends RepositoryBase implements
 		if(rs.next()) {
 			existe = true;
 		}
+		
 		return existe;
 	}
 
