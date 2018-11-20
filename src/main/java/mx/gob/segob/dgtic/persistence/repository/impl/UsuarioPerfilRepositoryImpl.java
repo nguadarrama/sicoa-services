@@ -62,7 +62,7 @@ public class UsuarioPerfilRepositoryImpl extends RepositoryBase implements Usuar
 		+"where relacion.cve_m_usuario=usuario.cve_m_usuario and relacion.cve_c_perfil=perfil.cve_c_perfil and usuario.cve_m_usuario = '"+claveUsuario+"'";
 		logger.info("consulta:{} ",query);
 		
-        List<Map<String, Object>> usuariosPerfiles = jdbcTemplate.queryForList(query);
+        List<Map<String, Object>> usuariosPerfiles = jdbcTemplate.queryForList(query.toString());
         List<UsuarioPerfilDto> listaUsuarioPerfil = new ArrayList<>();
         
         for (Map<String, Object> usuarioPerfil : usuariosPerfiles) {

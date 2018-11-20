@@ -157,7 +157,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 				
 				//sólo se calcula evento anterior a partir del segundo elemento de la lista
 				if (i > 0) {
-					fechaEventoAnterior = usuarioChecada.getListaChecadas().get(i - 1);
+					 usuarioChecada.getListaChecadas().get(i - 1);
 				}
 				
 				//Calcula entradas y salidas. Toma el primer evento como la fecha de entrada y el úlitmo como la fecha de salida

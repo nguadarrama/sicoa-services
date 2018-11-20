@@ -119,7 +119,7 @@ public class UnidadAdministrativaRepositoryImpl extends RepositoryBase implement
 		+"from c_unidad_administrativa unidad, m_usuario usuario, usuario_unidad_administrativa relacion "
 		+"where usuario.cve_m_usuario=relacion.cve_m_usuario and unidad.id_unidad=relacion.id_unidad and usuario.cve_m_usuario ='"+claveUsuario+"');";
 		logger.info("query: {} ",query);
-		List<Map<String, Object>> unidadesArdminsitrativas = jdbcTemplate.queryForList(query);
+		List<Map<String, Object>> unidadesArdminsitrativas = jdbcTemplate.queryForList(query.toString());
         List<UsuarioUnidadAdministrativaDto> listaUnidadAdministrativa = new ArrayList<>();
         
         for (Map<String, Object> unidad : unidadesArdminsitrativas) {
