@@ -220,7 +220,7 @@ public class VacacionPeriodoRepositoryImpl extends RepositoryBase implements Vac
 		logger.info("ap.Paterno: {} ",apellidoPaterno);
 		logger.info("ap.Materno: {} ",apellidoMaterno);
 		logger.info("idUnidad: {} ",idUnidad);
-		String query="";
+		StringBuilder qry = new StringBuilder();
 		Date fecha= new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat(ServiceConstants.YYYY_MM_DD); 
 		String fechaCadena = formatter.format(fecha);
@@ -230,28 +230,27 @@ public class VacacionPeriodoRepositoryImpl extends RepositoryBase implements Vac
 		 fecha=fechaA.getTime();
 		String fechaCadena1 = formatter.format(fecha);
 		 
-		query+="select distinct (usuario.id_usuario) id_usuario ,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, vacacionPeriodo.dias, periodo.descripcion, periodo.id_periodo, vacacionPeriodo.id_vacacion ";
-        query+="from m_usuario usuario, m_vacacion_periodo vacacionPeriodo, r_periodo periodo, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion ";
-        query+="where periodo.id_periodo=vacacionPeriodo.id_periodo and usuario.id_usuario=vacacionPeriodo.id_usuario and vacacionPeriodo.dias>0 "
-        		+ "and date_add(periodo.fecha_fin, interval 1 year) >= '"+fechaCadena+"' and periodo.fecha_inicio <= '"+fechaCadena+"' and usuario.fecha_ingreso <= '"+fechaCadena1+"' and unidad.id_unidad = relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario ";
+		qry.append("select distinct (usuario.id_usuario) id_usuario ,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, vacacionPeriodo.dias, periodo.descripcion, periodo.id_periodo, vacacionPeriodo.id_vacacion ");
+		qry.append("from m_usuario usuario, m_vacacion_periodo vacacionPeriodo, r_periodo periodo, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion ");
+		qry.append("where periodo.id_periodo=vacacionPeriodo.id_periodo and usuario.id_usuario=vacacionPeriodo.id_usuario and vacacionPeriodo.dias>0 ");
+		qry.append("and date_add(periodo.fecha_fin, interval 1 year) >= '"+fechaCadena+"' and periodo.fecha_inicio <= '"+fechaCadena+"' and usuario.fecha_ingreso <= '"+fechaCadena1+"' and unidad.id_unidad = relacion.id_unidad and usuario.cve_m_usuario=relacion.cve_m_usuario ");
         if(claveUsuario!=null && !claveUsuario.isEmpty()){
-        	query+="and usuario.cve_m_usuario like '%"+removerGuionBajo(claveUsuario)+"%' ";
+        	qry.append("and usuario.cve_m_usuario like '%"+removerGuionBajo(claveUsuario)+"%' ");
         }
         if(nombre!=null && !nombre.isEmpty()){
-        	query+="and usuario.nombre like '%"+removerGuionBajo(nombre)+"%' ";
+        	qry.append("and usuario.nombre like '%"+removerGuionBajo(nombre)+"%' ");
         }
         if(apellidoPaterno!=null && !apellidoPaterno.isEmpty()){
-        	query+="and usuario.apellido_paterno like '%"+removerGuionBajo(apellidoPaterno)+"%' ";
+        	qry.append("and usuario.apellido_paterno like '%"+removerGuionBajo(apellidoPaterno)+"%' ");
         }
         if(apellidoMaterno!=null && !apellidoMaterno.isEmpty()){
-        	query+="and usuario.apellido_materno like '%"+removerGuionBajo(apellidoMaterno)+"%' ";
+        	qry.append("and usuario.apellido_materno like '%"+removerGuionBajo(apellidoMaterno)+"%' ");
         }
         if(idUnidad!=null && !idUnidad.isEmpty()){
-        	query+="and unidad.id_unidad ='"+idUnidad+"' ";
+        	qry.append("and unidad.id_unidad ='"+idUnidad+"' ");
         }
-        query+="order by periodo.fecha_inicio asc ";
-       logger.info("Query: {} ",query);
-		List<Map<String, Object>> detalleVacaciones = jdbcTemplate.queryForList(query);
+        qry.append("order by periodo.fecha_inicio asc ");
+		List<Map<String, Object>> detalleVacaciones = jdbcTemplate.queryForList(qry.toString());
 		List<VacacionPeriodoDto> listaVacacionPeriodo=new  ArrayList<>();
 		for (Map<String, Object> detalleVacacion : detalleVacaciones) {
 			VacacionPeriodoDto vacacionPeriodoDto= new VacacionPeriodoDto();

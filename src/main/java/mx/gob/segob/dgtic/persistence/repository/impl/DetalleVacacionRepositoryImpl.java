@@ -183,19 +183,19 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 		SimpleDateFormat sdf = new SimpleDateFormat(RepositoryConstants.YYYY_MM_DD);
 		String fechaIni=sdf.format(detalleVacacionDto.getFechaInicio());
 		String fechaF=sdf.format(detalleVacacionDto.getFechaFin());
-		String query="select id_detalle from d_detalle_vacacion where (((fecha_inicio between '"+fechaIni+AND+fechaF+"') "
-				+ "or (fecha_fin between '"+fechaIni+AND+fechaF+"' )) "+
-				" or('"+fechaIni+"'>fecha_inicio and fecha_inicio<'"+fechaF+"' and fecha_fin>'"+fechaF+"')) and (id_estatus != 3 and id_estatus != 6) "
-						+ "and id_usuario='"+detalleVacacionDto.getIdUsuario().getIdUsuario()+"' ";
-		logger.info("query.. {} ",query);
-        List<Map<String, Object>> detalleVacaciones = jdbcTemplate.queryForList(query);
+		StringBuilder qry = new StringBuilder();
+		qry.append("select id_detalle from d_detalle_vacacion where (((fecha_inicio between '"+fechaIni+AND+fechaF+"') ");
+		qry.append("or (fecha_fin between '"+fechaIni+AND+fechaF+"' )) ");
+		qry.append("or('"+fechaIni+"'>fecha_inicio and fecha_inicio<'"+fechaF+"' and fecha_fin>'"+fechaF+"')) and (id_estatus != 3 and id_estatus != 6) ");
+		qry.append("and id_usuario='"+detalleVacacionDto.getIdUsuario().getIdUsuario()+"' ");
+        List<Map<String, Object>> detalleVacaciones = jdbcTemplate.queryForList(qry.toString());
         logger.info("Datos de la consulta-- {} ",detalleVacaciones.size());
         if(detalleVacaciones.isEmpty()){
         	
 			Date fechaActual = new Date();
 			/**System.out.println("Fecha actual "+fechaActual+" dias por descontar "+detalleVacacionDto.getDias());**/
 			detalleVacacionDto.setFechaRegistro(fechaActual);
-			StringBuilder qry = new StringBuilder();
+			qry = new StringBuilder();
 			qry.append("INSERT INTO d_detalle_vacacion (id_usuario, id_vacacion, id_responsable, id_estatus, fecha_inicio,fecha_fin, dias, fecha_registro ) ");
 			qry.append("VALUES (:idUsuario, :idVacacion, :idResponsable, :idEstatus, :fechaInicio, :fechaFin, :dias, :fechaRegistro) ");
 			

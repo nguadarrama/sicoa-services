@@ -94,6 +94,7 @@ public class DetalleVacacionRules extends RecursoBase {
 		detalleAux=detalleVacacionRepository.buscaDetalleVacacion(detalleVacacionDto.getIdDetalle());
 		detalleVacacionDto.setFechaInicio(detalleAux.getFechaInicio());
 		detalleVacacionDto.setFechaFin(detalleAux.getFechaFin());
+		detalleVacacionDto.setIdUsuario(detalleAux.getIdUsuario());
 		
 		if(detalleVacacionDto.getIdEstatus().getIdEstatus()==2){
 			java.sql.Date fechaInicioDate = null;
@@ -113,75 +114,20 @@ public class DetalleVacacionRules extends RecursoBase {
 				logger.error("Error. {} ",e);
 			}
 			
-			
+			if(parsedInicial!=null){
 			fechaInicioDate = new java.sql.Date(parsedInicial.getTime());
+			}
+			if(parsedFinal!=null){
 			fechaFinDate = new java.sql.Date(parsedFinal.getTime());
-			Calendar c = Calendar.getInstance();
-			c.setTime(fechaFinDate);
-			c.add(Calendar.DAY_OF_MONTH, 1);  
-			fechaFinDate.setTime(c.getTimeInMillis());
+			}
 			UsuarioDto usuarioDto;
 		    usuarioDto=usuarioRepository.buscaUsuarioPorId(detalleVacacionDto.getIdUsuario().getIdUsuario());
 		    logger.info("FechaInicial: {} ",parsedInicial);
 		    logger.info("fechaActual: {} ",fechaActual);
 			if((fechaActual.before(parsedInicial) || fechaActual.equals(parsedInicial))){
-				logger.info("FechaInicial. {} ",parsedInicial);
-				logger.info("fechaActual. {} ",fechaActual);
-					Date fechaInicio=detalleVacacionDto.getFechaInicio();
-					Date fechaFin=detalleVacacionDto.getFechaFin();
-					Calendar c1 = Calendar.getInstance();
-				    c1.setTime(fechaInicio);
-				    Calendar c2 = Calendar.getInstance();
-				    c2.setTime(fechaFin);
-				    List<Date> listaFechas;
-				    listaFechas=removerFinesDeSemana(fechaInicio, fechaFin);
-				    EstatusDto estatusDto = new EstatusDto();
-				    estatusDto.setIdEstatus(2);
-				    TipoDiaDto tipoDiaDto = new TipoDiaDto();
-				    tipoDiaDto.setIdTipoDia(5);
-				    for (Iterator<Date> it = listaFechas.iterator(); it.hasNext();) {
-				        	Date date = it.next();
-					        AsistenciaDto asistenciaDto = new AsistenciaDto(); 
-					        asistenciaDto.setEntrada(new Timestamp(date.getTime()));
-					        asistenciaDto.setSalida(new Timestamp(date.getTime()));
-					        asistenciaDto.setUsuarioDto(usuarioDto);
-					        asistenciaDto.setIdEstatus(estatusDto);
-					        asistenciaDto.setIdTipoDia(tipoDiaDto);
-					        asistenciaRepository.agregaAsistencia(asistenciaDto);
-				    }
-				    aux= detalleVacacionRepository.aceptaORechazaDetalleVacacion(detalleVacacionDto); 
+				aceptaVacacionesFuturas(parsedInicial, detalleVacacionDto, usuarioDto);
 			}else{
-				logger.info("3FechaInicial: {} ",parsedInicial);
-				logger.info("3fechaActual: {} ",fechaActual);
-				List<AsistenciaDto> listaAsistencia= asistenciaRepository.buscaAsistenciaEmpleado(usuarioDto.getClaveUsuario(), 0, 0, fechaInicioDate, fechaFinDate);
-				Boolean bandera=false;
-				for(AsistenciaDto asistencia: listaAsistencia){
-					logger.info("entrada . {} ",fechaInicioDate);
-					logger.debug("entrada.. {} ",asistencia.getEntrada());
-					logger.info("tipoDia -- {}",asistencia.getIdTipoDia());
-					if(fechaInicioDate.toString().equals(asistencia.getEntrada().toString()) && !asistencia.getIdTipoDia().getIdTipoDia().toString().equals("8")){
-						bandera=true;
-					}
-				}
-				if(bandera){
-					for(AsistenciaDto asistencia2: listaAsistencia){
-						logger.info("idAsistencia: {} ",asistencia2.getIdAsistencia());
-						if(asistencia2.getIdTipoDia().getIdTipoDia().toString().equals("8")){
-							asistenciaRepository.eliminaAsistencia(asistencia2.getIdAsistencia());
-							TipoDiaDto tipoDia= new TipoDiaDto();
-							tipoDia.setIdTipoDia(5);
-							asistencia2.setIdTipoDia(tipoDia);
-							asistenciaRepository.agregaAsistencia(asistencia2);
-						}
-					}
-					EstatusDto estatus =new EstatusDto();
-					estatus.setIdEstatus(2);
-					detalleVacacionDto.setIdEstatus(estatus);
-					aux=detalleVacacionRepository.aceptaORechazaDetalleVacacion(detalleVacacionDto);
-					
-				}else{
-					aux.setMensaje("Error, no se pueden aceptar las vacaciones porque existe un regitro en asistencia");
-				}
+				aceptaVacacionesPasadas(fechaInicioDate, fechaFinDate, detalleVacacionDto, usuarioDto);
 			}
 			
 		}else if(detalleVacacionDto.getIdEstatus().getIdEstatus()==3){
@@ -229,68 +175,9 @@ public class DetalleVacacionRules extends RecursoBase {
 				fechaInicio = new java.sql.Date(parsedInicial.getTime());
 				fechaFin = new java.sql.Date(parsedFinal.getTime());
 				if((fechaActual.before(parsedInicial) || fechaActual.equals(parsedInicial))){
-					Calendar c = Calendar.getInstance();
-					c.setTime(fechaFin);
-					c.add(Calendar.DAY_OF_MONTH, 1);  
-					fechaFin.setTime(c.getTimeInMillis());
-					List<AsistenciaDto> listaAsistencia= asistenciaRepository.buscaAsistenciaEmpleado(usuario.getClaveUsuario(), 5, 0, fechaInicio, fechaFin); 
-					logger.info("resultado de consulta asistencia - {}",listaAsistencia.size());
-					logger.info("filtros claveUsuario- {} ",usuario.getClaveUsuario());
-					logger.info("fechaInicio . {}",fechaInicio);
-					logger.info("fechaFin.- {} ",fechaFin);
-					for(AsistenciaDto asistencia: listaAsistencia){
-						logger.info("idAsistencia-- {} ",asistencia.getIdAsistencia());
-						asistenciaRepository.eliminaAsistencia(asistencia.getIdAsistencia());
-					}
-					EstatusDto estatus= new EstatusDto();
-					estatus.setIdEstatus(6);
-					detalleVacacionDto.setIdEstatus(estatus);
-					detalleAux=detalleVacacionRepository.aceptaORechazaDetalleVacacion(detalleVacacionDto);
-					VacacionPeriodoDto vacacionPeriodoDto;
-				    //se obtienen los datos de la tabla vacacion_periodo
-				    vacacionPeriodoDto=vacacionPeriodoRepository.buscaVacacionPeriodo(detalleVacacionDto.getIdVacacion().getIdVacacion());
-				    //Suma los dias pedidos que ya no se necesitan
-				    Integer resta=vacacionPeriodoDto.getDias()+detalleVacacionDto.getDias();
-				    //setea el nueo numero de dias disponibles
-				    vacacionPeriodoDto.setDias(resta);
-				    //modificamos el numero de vacaciones en la tabla vacacion_periodo
-				    vacacionPeriodoRepository.modificaVacacionPeriodo(vacacionPeriodoDto);
+					vacacionesFuturas(usuario, fechaInicio, fechaFin, detalleVacacionDto);
 				}else{
-					List<AsistenciaDto> listaAsistencia= asistenciaRepository.buscaAsistenciaEmpleado(usuario.getClaveUsuario(), 0, 0, fechaInicio, fechaFin);
-					Boolean bandera=false;
-					for(AsistenciaDto asistencia: listaAsistencia){
-						logger.info("entrada.- {} ",fechaInicio);
-						logger.info("Entrada.- {} ",asistencia.getEntrada());
-						logger.info("tipoDia.- {} ",asistencia.getIdTipoDia());
-						if(fechaInicio.toString().equals(asistencia.getEntrada().toString()) && !asistencia.getIdTipoDia().getIdTipoDia().toString().equals("8")){
-							bandera=true;
-						}
-					}
-					if(bandera){
-						for(AsistenciaDto asistencia2: listaAsistencia){
-							logger.info("idAsistencia -- {}",asistencia2.getIdAsistencia());
-							if(asistencia2.getIdTipoDia().getIdTipoDia().toString().equals("5")){
-								asistenciaRepository.eliminaAsistencia(asistencia2.getIdAsistencia());
-							}
-							
-						}
-						EstatusDto estatus =new EstatusDto();
-						estatus.setIdEstatus(6);
-						detalleVacacionDto.setIdEstatus(estatus);
-						detalleAux=detalleVacacionRepository.aceptaORechazaDetalleVacacion(detalleVacacionDto);
-						VacacionPeriodoDto vacacionPeriodoDto;
-					    //se obtienen los datos de la tabla vacacion_periodo
-					    vacacionPeriodoDto=vacacionPeriodoRepository.buscaVacacionPeriodo(detalleVacacionDto.getIdVacacion().getIdVacacion());
-					    //Suma los dias pedidos que ya no se necesitan
-					    Integer resta=vacacionPeriodoDto.getDias()+detalleVacacionDto.getDias();
-					    //setea el nueo numero de dias disponibles
-					    vacacionPeriodoDto.setDias(resta);
-					    //modificamos el numero de vacaciones en la tabla vacacion_periodo
-					    vacacionPeriodoRepository.modificaVacacionPeriodo(vacacionPeriodoDto);
-						
-					}else{
-						detalleAux.setMensaje("Error, no se pueden cancelar las vacaciones porque existe una inasistencia");
-					}
+					vacacionesPasadas(usuario, fechaInicio, fechaFin, detalleVacacionDto);
 					
 				}
 /**				if(fechaActual.after(parsedInicial) && fechaActual.after(parsedFinal)){
@@ -367,5 +254,140 @@ public class DetalleVacacionRules extends RecursoBase {
 
 		    return listaFechas;
 		  }
+	 
+	 private DetalleVacacionDto vacacionesFuturas(UsuarioDto usuario, java.sql.Date fechaInicio, java.sql.Date fechaFin, DetalleVacacionDto detalleVacacionDto){
+		 	DetalleVacacionDto detalleAux=null;
+		 	Calendar c = Calendar.getInstance();
+			c.setTime(fechaFin);
+			c.add(Calendar.DAY_OF_MONTH, 1);  
+			fechaFin.setTime(c.getTimeInMillis());
+			List<AsistenciaDto> listaAsistencia= asistenciaRepository.buscaAsistenciaEmpleado(usuario.getClaveUsuario(), 5, 0, fechaInicio, fechaFin); 
+			logger.info("resultado de consulta asistencia - {}",listaAsistencia.size());
+			logger.info("filtros claveUsuario- {} ",usuario.getClaveUsuario());
+			logger.info("fechaInicio . {}",fechaInicio);
+			logger.info("fechaFin.- {} ",fechaFin);
+			for(AsistenciaDto asistencia: listaAsistencia){
+				logger.info("idAsistencia-- {} ",asistencia.getIdAsistencia());
+				asistenciaRepository.eliminaAsistencia(asistencia.getIdAsistencia());
+			}
+			EstatusDto estatus= new EstatusDto();
+			estatus.setIdEstatus(6);
+			detalleVacacionDto.setIdEstatus(estatus);
+			detalleAux=detalleVacacionRepository.aceptaORechazaDetalleVacacion(detalleVacacionDto);
+			VacacionPeriodoDto vacacionPeriodoDto;
+		    //se obtienen los datos de la tabla vacacion_periodo
+		    vacacionPeriodoDto=vacacionPeriodoRepository.buscaVacacionPeriodo(detalleVacacionDto.getIdVacacion().getIdVacacion());
+		    //Suma los dias pedidos que ya no se necesitan
+		    Integer resta=vacacionPeriodoDto.getDias()+detalleVacacionDto.getDias();
+		    //setea el nueo numero de dias disponibles
+		    vacacionPeriodoDto.setDias(resta);
+		    //modificamos el numero de vacaciones en la tabla vacacion_periodo
+		    vacacionPeriodoRepository.modificaVacacionPeriodo(vacacionPeriodoDto);
+		    
+		    return detalleAux;
+	 }
+	 
+	 private DetalleVacacionDto vacacionesPasadas(UsuarioDto usuario, java.sql.Date fechaInicio, java.sql.Date fechaFin, DetalleVacacionDto detalleVacacionDto){
+		 DetalleVacacionDto detalleAux= null;
+		 List<AsistenciaDto> listaAsistencia= asistenciaRepository.buscaAsistenciaEmpleado(usuario.getClaveUsuario(), 0, 0, fechaInicio, fechaFin);
+			Boolean bandera=false;
+			for(AsistenciaDto asistencia: listaAsistencia){
+				logger.info("entrada.- {} ",fechaInicio);
+				logger.info("Entrada.- {} ",asistencia.getEntrada());
+				logger.info("tipoDia.- {} ",asistencia.getIdTipoDia());
+				if(fechaInicio.toString().equals(asistencia.getEntrada().toString()) && !asistencia.getIdTipoDia().getIdTipoDia().toString().equals("8")){
+					bandera=true;
+				}
+			}
+			if(bandera){
+				for(AsistenciaDto asistencia2: listaAsistencia){
+					logger.info("idAsistencia -- {}",asistencia2.getIdAsistencia());
+					if(asistencia2.getIdTipoDia().getIdTipoDia().toString().equals("5")){
+						asistenciaRepository.eliminaAsistencia(asistencia2.getIdAsistencia());
+					}
+				}
+				EstatusDto estatus =new EstatusDto();
+				estatus.setIdEstatus(6);
+				detalleVacacionDto.setIdEstatus(estatus);
+				detalleAux=detalleVacacionRepository.aceptaORechazaDetalleVacacion(detalleVacacionDto);
+				VacacionPeriodoDto vacacionPeriodoDto;
+			    //se obtienen los datos de la tabla vacacion_periodo
+			    vacacionPeriodoDto=vacacionPeriodoRepository.buscaVacacionPeriodo(detalleVacacionDto.getIdVacacion().getIdVacacion());
+			    //Suma los dias pedidos que ya no se necesitan
+			    Integer resta=vacacionPeriodoDto.getDias()+detalleVacacionDto.getDias();
+			    //setea el nueo numero de dias disponibles
+			    vacacionPeriodoDto.setDias(resta);
+			    //modificamos el numero de vacaciones en la tabla vacacion_periodo
+			    vacacionPeriodoRepository.modificaVacacionPeriodo(vacacionPeriodoDto);
+				
+			}else{
+				detalleAux.setMensaje("Error, no se pueden cancelar las vacaciones porque existe una inasistencia");
+			}
+		return detalleAux;
+	 }
+	 
+	 private DetalleVacacionDto aceptaVacacionesFuturas(Date parsedInicial, DetalleVacacionDto detalleVacacionDto, UsuarioDto usuarioDto){
+		 DetalleVacacionDto aux= null;
+		 logger.info("FechaInicial. {} ",parsedInicial);
+				Date fechaInicio=detalleVacacionDto.getFechaInicio();
+				Date fechaFin=detalleVacacionDto.getFechaFin();
+				Calendar c1 = Calendar.getInstance();
+			    c1.setTime(fechaInicio);
+			    Calendar c2 = Calendar.getInstance();
+			    c2.setTime(fechaFin);
+			    List<Date> listaFechas;
+			    listaFechas=removerFinesDeSemana(fechaInicio, fechaFin);
+			    EstatusDto estatusDto = new EstatusDto();
+			    estatusDto.setIdEstatus(2);
+			    TipoDiaDto tipoDiaDto = new TipoDiaDto();
+			    tipoDiaDto.setIdTipoDia(5);
+			    for (Iterator<Date> it = listaFechas.iterator(); it.hasNext();) {
+			        	Date date = it.next();
+				        AsistenciaDto asistenciaDto = new AsistenciaDto(); 
+				        asistenciaDto.setEntrada(new Timestamp(date.getTime()));
+				        asistenciaDto.setSalida(new Timestamp(date.getTime()));
+				        asistenciaDto.setUsuarioDto(usuarioDto);
+				        asistenciaDto.setIdEstatus(estatusDto);
+				        asistenciaDto.setIdTipoDia(tipoDiaDto);
+				        asistenciaRepository.agregaAsistencia(asistenciaDto);
+			    }
+			    aux= detalleVacacionRepository.aceptaORechazaDetalleVacacion(detalleVacacionDto); 
+		 return aux;
+	 }
+	 
+	 private DetalleVacacionDto aceptaVacacionesPasadas(java.sql.Date fechaInicioDate, java.sql.Date fechaFinDate, DetalleVacacionDto detalleVacacionDto,
+			 UsuarioDto usuarioDto){
+		 DetalleVacacionDto aux= new DetalleVacacionDto();
+			List<AsistenciaDto> listaAsistencia= asistenciaRepository.buscaAsistenciaEmpleado(usuarioDto.getClaveUsuario(), 0, 0, fechaInicioDate, fechaFinDate);
+			Boolean bandera=false;
+			for(AsistenciaDto asistencia: listaAsistencia){
+				logger.info("entrada . {} ",fechaInicioDate);
+				logger.debug("entrada.. {} ",asistencia.getEntrada());
+				logger.info("tipoDia -- {}",asistencia.getIdTipoDia());
+				if(fechaInicioDate.toString().equals(asistencia.getEntrada().toString()) && !asistencia.getIdTipoDia().getIdTipoDia().toString().equals("8")){
+					bandera=true;
+				}
+			}
+			if(bandera){
+				for(AsistenciaDto asistencia2: listaAsistencia){
+					logger.info("idAsistencia: {} ",asistencia2.getIdAsistencia());
+					if(asistencia2.getIdTipoDia().getIdTipoDia().toString().equals("8")){
+						asistenciaRepository.eliminaAsistencia(asistencia2.getIdAsistencia());
+						TipoDiaDto tipoDia= new TipoDiaDto();
+						tipoDia.setIdTipoDia(5);
+						asistencia2.setIdTipoDia(tipoDia);
+						asistenciaRepository.agregaAsistencia(asistencia2);
+					}
+				}
+				EstatusDto estatus =new EstatusDto();
+				estatus.setIdEstatus(2);
+				detalleVacacionDto.setIdEstatus(estatus);
+				aux=detalleVacacionRepository.aceptaORechazaDetalleVacacion(detalleVacacionDto);
+				
+			}else{
+				aux.setMensaje("Error, no se pueden aceptar las vacaciones porque existe un regitro en asistencia");
+			}
+			return aux;
+	 }
 
 }

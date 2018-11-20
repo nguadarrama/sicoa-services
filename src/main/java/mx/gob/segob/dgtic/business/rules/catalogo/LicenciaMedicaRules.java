@@ -47,67 +47,16 @@ public class LicenciaMedicaRules extends RepositoryBase{
 	}
 	
 	public LicenciaMedicaDto modificaLicenciaMedica(LicenciaMedicaDto licenciaMedicaDto){
-		LicenciaMedicaDto licenciaAux;
-		licenciaAux=buscaLicenciaMedica(licenciaMedicaDto.getIdLicencia());
+		LicenciaMedicaDto licenciaAux= null;
 		if(licenciaMedicaDto.getIdEstatus().getIdEstatus()==1){
-			licenciaAux=licenciaMedicaRepository.modificaLicenciaMedica(licenciaMedicaDto);
+			licenciaAux=pendienteVacacion(licenciaMedicaDto);
 		}
 		
 		if(licenciaMedicaDto.getIdEstatus().getIdEstatus()==2){
-			List<DiaFestivoDto> listaDias;
-			listaDias=diaFestivoRepository.obtenerDiasFestivosActivos();
-			licenciaMedicaDto.setFechaInicio(licenciaAux.getFechaInicio());
-			licenciaMedicaDto.setFechaFin(licenciaAux.getFechaFin());
-			Date fechaInicio=licenciaMedicaDto.getFechaInicio();
-			Date fechaFin=licenciaMedicaDto.getFechaFin();
-			Calendar c1 = Calendar.getInstance();
-			logger.info("Fechas fecha inicial: {} ",licenciaMedicaDto.getFechaInicio()+" fecha final "+licenciaMedicaDto.getFechaFin());
-		    c1.setTime(fechaInicio);
-		    Calendar c2 = Calendar.getInstance();
-		    c2.setTime(fechaFin);
-		    List<Date> listaFechas = new ArrayList<>();
-		    while (!c1.after(c2)) {
-		    	if((c1.get(Calendar.DAY_OF_WEEK)==Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY)){
-		        	logger.info("Datos dentro de la comparación ");
-		        	
-		        	c1.add(Calendar.DAY_OF_MONTH, 1);
-		        }else{
-		        	listaFechas.add(c1.getTime());
-		        	c1.add(Calendar.DAY_OF_MONTH, 1);
-		        }
-		    }
-		    
-		    for(DiaFestivoDto diaFestivo : listaDias){
-	        	for(Date lista: listaFechas){
-		        	if(diaFestivo.getFecha().equals(lista)){
-		        		listaFechas.remove(lista);
-		        	}
-	        	}
-	        	
-	        }
-		    
-		    EstatusDto estatusDto = new EstatusDto();
-		    estatusDto.setIdEstatus(2);
-		    TipoDiaDto tipoDiaDto = new TipoDiaDto();
-		    tipoDiaDto.setIdTipoDia(6);
-		    UsuarioDto usuarioDto;
-		    usuarioDto=usuarioRepository.buscaUsuarioPorId(licenciaMedicaDto.getIdUsuario().getIdUsuario());
-		    for (Iterator<Date> it = listaFechas.iterator(); it.hasNext();) {
-		        Date date = it.next();
-		        AsistenciaDto asistenciaDto = new AsistenciaDto(); 
-		        asistenciaDto.setEntrada(new Timestamp(date.getTime()));
-		        asistenciaDto.setSalida(new Timestamp(date.getTime()));
-		        logger.info("detalleVacacionDto.getIdUsuario().getIdUsuario(): {} ",licenciaMedicaDto.getIdUsuario().getIdUsuario());
-		        asistenciaDto.setUsuarioDto(usuarioDto);
-		        asistenciaDto.setIdEstatus(estatusDto);
-		        asistenciaDto.setIdTipoDia(tipoDiaDto);
-		        asistenciaRepository.agregaAsistencia(asistenciaDto);
-		        logger.info("Fecha: {} ",date);  
-		       licenciaAux=licenciaMedicaRepository.modificaLicenciaMedica(licenciaMedicaDto);
-		    }
+			licenciaAux= aceptaLicencia(licenciaMedicaDto);
 			
 		}else if(licenciaMedicaDto.getIdEstatus().getIdEstatus()==3){
-			licenciaAux=licenciaMedicaRepository.modificaLicenciaMedica(licenciaMedicaDto);
+			licenciaAux=pendienteVacacion(licenciaMedicaDto);
 		}
 		return licenciaAux;
 	}
@@ -137,4 +86,69 @@ public class LicenciaMedicaRules extends RepositoryBase{
 	public LicenciaMedicaDto consultaDiasLicenciaMedica(String claveUsuario){
 		return licenciaMedicaRepository.consultaDiasLicenciaMedica(claveUsuario);
 	}
+	
+	public LicenciaMedicaDto pendienteVacacion(LicenciaMedicaDto licenciaMedicaDto){
+		LicenciaMedicaDto licenciaAux = null;
+		licenciaAux=licenciaMedicaRepository.modificaLicenciaMedica(licenciaMedicaDto);
+		return licenciaAux;
+	}
+	
+	public LicenciaMedicaDto aceptaLicencia(LicenciaMedicaDto licenciaMedicaDto){
+		LicenciaMedicaDto licenciaAux= null;
+		licenciaAux=buscaLicenciaMedica(licenciaMedicaDto.getIdLicencia());
+		List<DiaFestivoDto> listaDias;
+		listaDias=diaFestivoRepository.obtenerDiasFestivosActivos();
+		licenciaMedicaDto.setFechaInicio(licenciaAux.getFechaInicio());
+		licenciaMedicaDto.setFechaFin(licenciaAux.getFechaFin());
+		Date fechaInicio=licenciaMedicaDto.getFechaInicio();
+		Date fechaFin=licenciaMedicaDto.getFechaFin();
+		Calendar c1 = Calendar.getInstance();
+		logger.info("Fechas fecha inicial: {} ",licenciaMedicaDto.getFechaInicio()+" fecha final "+licenciaMedicaDto.getFechaFin());
+	    c1.setTime(fechaInicio);
+	    Calendar c2 = Calendar.getInstance();
+	    c2.setTime(fechaFin);
+	    List<Date> listaFechas = new ArrayList<>();
+	    while (!c1.after(c2)) {
+	    	if((c1.get(Calendar.DAY_OF_WEEK)==Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY)){
+	        	logger.info("Datos dentro de la comparación ");
+	        	
+	        	c1.add(Calendar.DAY_OF_MONTH, 1);
+	        }else{
+	        	listaFechas.add(c1.getTime());
+	        	c1.add(Calendar.DAY_OF_MONTH, 1);
+	        }
+	    }
+	    
+	    for(DiaFestivoDto diaFestivo : listaDias){
+        	for(Date lista: listaFechas){
+	        	if(diaFestivo.getFecha().equals(lista)){
+	        		listaFechas.remove(lista);
+	        	}
+        	}
+        	
+        }
+	    
+	    EstatusDto estatusDto = new EstatusDto();
+	    estatusDto.setIdEstatus(2);
+	    TipoDiaDto tipoDiaDto = new TipoDiaDto();
+	    tipoDiaDto.setIdTipoDia(6);
+	    UsuarioDto usuarioDto;
+	    usuarioDto=usuarioRepository.buscaUsuarioPorId(licenciaMedicaDto.getIdUsuario().getIdUsuario());
+	    for (Iterator<Date> it = listaFechas.iterator(); it.hasNext();) {
+	        Date date = it.next();
+	        AsistenciaDto asistenciaDto = new AsistenciaDto(); 
+	        asistenciaDto.setEntrada(new Timestamp(date.getTime()));
+	        asistenciaDto.setSalida(new Timestamp(date.getTime()));
+	        logger.info("detalleVacacionDto.getIdUsuario().getIdUsuario(): {} ",licenciaMedicaDto.getIdUsuario().getIdUsuario());
+	        asistenciaDto.setUsuarioDto(usuarioDto);
+	        asistenciaDto.setIdEstatus(estatusDto);
+	        asistenciaDto.setIdTipoDia(tipoDiaDto);
+	        asistenciaRepository.agregaAsistencia(asistenciaDto);
+	        logger.info("Fecha: {} ",date);  
+	       licenciaAux=licenciaMedicaRepository.modificaLicenciaMedica(licenciaMedicaDto);
+	    }
+	    return licenciaAux;
+	}
+	
+	
 }
