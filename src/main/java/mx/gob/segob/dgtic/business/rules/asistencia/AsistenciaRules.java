@@ -113,7 +113,7 @@ public class AsistenciaRules {
 		}
 
 		//si no existe filtro de permiso, entonces sólo extrae la información de asistencias
-		if (asistenciaBusquedaUtil.getPermisos().isEmpty() && !hayPermisoCombo) {
+		if ((asistenciaBusquedaUtil.getPermisos().isEmpty() || asistenciaBusquedaUtil.getPermisos().equals("descuento")) && !hayPermisoCombo) {
 			listaAsistencia = asistenciaRepository.reporteDireccion(asistenciaBusquedaUtil);
 		} else { //si existe filtro de permiso, sólo trae la información de los permisos
         	reporteDireccionPermisos(listaAsistencia, asistenciaBusquedaUtil);
@@ -136,7 +136,7 @@ public class AsistenciaRules {
 		}
 
 		//si no existe filtro de permiso, entonces sólo extrae la información de asistencias
-		if (asistenciaBusquedaUtil.getPermisos().isEmpty() && !hayPermisoCombo) {
+		if ((asistenciaBusquedaUtil.getPermisos().isEmpty() || asistenciaBusquedaUtil.getPermisos().equals("descuento")) && !hayPermisoCombo) {
 			listaAsistencia = asistenciaRepository.reporteCoordinador(asistenciaBusquedaUtil);
 		} else {
 			reporteCoordinadorPermisos(listaAsistencia, asistenciaBusquedaUtil);
