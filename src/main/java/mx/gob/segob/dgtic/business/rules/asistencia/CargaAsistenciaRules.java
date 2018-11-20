@@ -304,21 +304,14 @@ public class CargaAsistenciaRules extends RecursoBase {
 		for (int y = 2; true ; y++) {
 			
 			//¿la búsqueda hacia adelante de los eventos está dentro del tamaño de la lista de eventos?
-			if ((i + y) < usuarioChecada.getListaChecadas().size()) {
-				if (fechaEvento.getYear() == fechaEventoSiguiente.getYear()) {
-					if (fechaEvento.getMonth() == fechaEventoSiguiente.getMonth()) {
-						if (fechaEventoSiguiente.getDate() == usuarioChecada.getListaChecadas().get(i + y).getDate()) {
-							//se guardan en la lista los demás eventos del mismo día
-							listaEventosMultiples.add(usuarioChecada.getListaChecadas().get(i + y));
-						} else {
-							break; //si no encuentra más eventos en el mismo día, rompe for
-						}
-					} else {
-						break; //si no encuentra más eventos en el mismo día, rompe for
-					}
-				} else {
-					break; //si no encuentra más eventos en el mismo día, rompe for
-				}
+			if (
+					((i + y) < usuarioChecada.getListaChecadas().size()) && 
+					(fechaEvento.getYear() == fechaEventoSiguiente.getYear()) && 
+					(fechaEvento.getMonth() == fechaEventoSiguiente.getMonth()) && 
+					(fechaEventoSiguiente.getDate() == usuarioChecada.getListaChecadas().get(i + y).getDate()) 
+			) {
+				//se guardan en la lista los demás eventos del mismo día
+				listaEventosMultiples.add(usuarioChecada.getListaChecadas().get(i + y));
 			} else {
 				break; //si no encuentra más eventos en el mismo día, rompe for
 			}
