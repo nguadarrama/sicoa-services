@@ -57,13 +57,12 @@ public class UsuarioPerfilRepositoryImpl extends RepositoryBase implements Usuar
 		/**StringBuilder qry = new StringBuilder();
 		qry.append("select usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, perfil.cve_c_perfil, perfil.descripcion ");
 		qry.append("");**/
-		String query="";
-		query="select relacion.id_usuario_perfil, usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, perfil.cve_c_perfil, perfil.descripcion "
+		String query="select relacion.id_usuario_perfil, usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno, perfil.cve_c_perfil, perfil.descripcion "
 		+"from m_usuario usuario, c_perfil perfil, d_usuario_perfil relacion "
 		+"where relacion.cve_m_usuario=usuario.cve_m_usuario and relacion.cve_c_perfil=perfil.cve_c_perfil and usuario.cve_m_usuario = '"+claveUsuario+"'";
 		logger.info("consulta:{} ",query);
 		
-        List<Map<String, Object>> usuariosPerfiles = jdbcTemplate.queryForList(query.toString());
+        List<Map<String, Object>> usuariosPerfiles = jdbcTemplate.queryForList(query);
         List<UsuarioPerfilDto> listaUsuarioPerfil = new ArrayList<>();
         
         for (Map<String, Object> usuarioPerfil : usuariosPerfiles) {

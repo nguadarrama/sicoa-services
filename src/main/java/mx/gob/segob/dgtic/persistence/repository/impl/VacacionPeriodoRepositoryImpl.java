@@ -157,7 +157,7 @@ public class VacacionPeriodoRepositoryImpl extends RepositoryBase implements Vac
 		StringBuilder qry = new StringBuilder();
 		Boolean bandera=periodoRepository.validaPeriodo(idPeriodo);
 		VacacionPeriodoDto vacacion= new VacacionPeriodoDto();
-		if(bandera==true){
+		if(bandera){
 			logger.info("Dato claveUsuario: {} ",claveUsuario);
 			logger.info("idPeriodo: {} ",idPeriodo);
 			logger.info("estatus del periodo: {} ",bandera);

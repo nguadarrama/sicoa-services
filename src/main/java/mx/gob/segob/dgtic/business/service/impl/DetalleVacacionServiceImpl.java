@@ -138,7 +138,6 @@ public class DetalleVacacionServiceImpl extends ServiceBase implements DetalleVa
 			File file = new File(jasper);
 			InputStream  template = new FileInputStream(file);
 
-			if( template != null ){
 			   JasperReport jasperReport = JasperCompileManager.compileReport(template);
 				logger.info("Datos: {} ",generaReporteArchivo.getNombre());
 				JRDataSource dataSource= new JREmptyDataSource();
@@ -182,18 +181,19 @@ public class DetalleVacacionServiceImpl extends ServiceBase implements DetalleVa
 				parametros.put(ServiceConstants.NUMERO_EMPLEADO, generaReporteArchivo.getNumeroEmpleado());
 				parametros.put(ServiceConstants.DIAS_VACACIONES, generaReporteArchivo.getDias());
 				Integer diasRestantes = 0;
-				if(vacacion.getDias() != null){
+				if(vacacion != null && vacacion.getDias()> 0){
 					diasRestantes = vacacion.getDias();
 					parametros.put("diasRestantes",""+diasRestantes);
+					parametros.put("periodo", vacacion.getIdPeriodo().getDescripcion());
 				}
 				logger.info("idVacacion para el archivo: {} ", generaReporteArchivo.getIdVacacion()+" fechaInicio "+generaReporteArchivo.getFechaInicio()+ 
-						" fechaFin "+generaReporteArchivo.getFechaFin()+" periodo "+vacacion.getIdPeriodo().getDescripcion());
-				parametros.put("periodo", vacacion.getIdPeriodo().getDescripcion());
+						" fechaFin "+generaReporteArchivo.getFechaFin());
+				
 				parametros.put("fechaActual",generaReporteArchivo.getFechaPeticion());
 				JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
 				output = JasperExportManager.exportReportToPdf (jasperPrint); 
 				 repo.setNombre(output);
-			}
+			
 
 		return repo;
 	}
