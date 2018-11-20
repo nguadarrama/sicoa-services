@@ -14,34 +14,7 @@ public class ComisionAux {
   private String comision;
   private String fechaRegistro;
   private Integer idHorario;
-  /**
-   * @param idComision
-   * @param idUsuario
-   * @param idResponsable
-   * @param idAarchivo
-   * @param idEstatus
-   * @param fechaInicio
-   * @param fechaFin
-   * @param dias
-   * @param comision
-   * @param fechaRegistro
-   */
-  public ComisionAux(Integer idComision, Integer idUsuario, Integer idResponsable,
-      Integer idArchivo, Integer idEstatus, String fechaInicio, String fechaFin, Integer dias,
-      String comision, String fechaRegistro, Integer idHorario) {
-    super();
-    this.idComision = idComision;
-    this.idUsuario = idUsuario;
-    this.idResponsable = idResponsable;
-    this.idArchivo = idArchivo;
-    this.idEstatus = idEstatus;
-    this.fechaInicio = fechaInicio;
-    this.fechaFin = fechaFin;
-    this.dias = dias;
-    this.comision = comision;
-    this.fechaRegistro = fechaRegistro;
-    this.idHorario = idHorario;
-  }
+  
   /**
    * @return the idComision
    */
