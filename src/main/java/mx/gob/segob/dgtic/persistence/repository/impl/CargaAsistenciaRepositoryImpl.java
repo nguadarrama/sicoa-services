@@ -32,7 +32,7 @@ public class CargaAsistenciaRepositoryImpl extends RecursoBase implements CargaA
 		
 		//se obtiene la asistencia a partir de a la última fecha que se realizó
 		StringBuilder qry = new StringBuilder();
-        qry.append("select id_enrolamiento, fecha from m_asistencia where fecha >= ? ");
+        qry.append("select id_enrolamiento, fecha from m_asistencia where fecha >= ? order by fecha asc ");
         List<Map<String, Object>> asistencias = jdbcTemplateSqlServer.queryForList(qry.toString(), ultimaFechaCarga);
         List<AsistenciaDto> listaAsistencia = new ArrayList<>();
         
