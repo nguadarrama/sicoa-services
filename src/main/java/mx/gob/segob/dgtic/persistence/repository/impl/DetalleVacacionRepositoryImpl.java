@@ -459,7 +459,7 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 	Date fechaInicio = null;
 	Integer dias = 0;
 	Date fechaFin = null; 
-	Boolean bandera = true; 
+	Boolean bandera = false; 
 	Integer diasTotales = 0;
 	
 	

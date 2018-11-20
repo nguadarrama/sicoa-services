@@ -24,12 +24,16 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import mx.gob.segob.dgtic.business.service.DetalleVacacionService;
+import mx.gob.segob.dgtic.business.service.UsuarioService;
 import mx.gob.segob.dgtic.business.service.base.ServiceBase;
 import mx.gob.segob.dgtic.business.service.constants.ServiceConstants;
 import mx.gob.segob.dgtic.comun.sicoa.dto.ArchivoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.BusquedaDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.DetalleVacacionDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.EstatusDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.GeneraReporteArchivo;
+import mx.gob.segob.dgtic.comun.sicoa.dto.UsuarioDto;
+import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionPeriodoDto;
 import mx.gob.segob.dgtic.comun.sicoa.dto.VacacionesAux;
 import mx.gob.segob.dgtic.comun.transport.constants.StatusResponse;
 import mx.gob.segob.dgtic.webservices.util.ResponseJSONGenericoUtil;
@@ -41,6 +45,9 @@ public class DetalleVacacionRecurso extends ServiceBase{
 
 	@Autowired
 	private DetalleVacacionService detalleVacacionService;
+	
+	@Autowired 
+	private UsuarioService usuarioService;
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -92,13 +99,37 @@ public class DetalleVacacionRecurso extends ServiceBase{
 	@Path("agregaDetalleVacacion")	
 	public Response agregaDetalleVacacion(@RequestParam String jsonDetalleVacacion) {
 		jsonDetalleVacacion = this.cambiaCaracter(jsonDetalleVacacion);
-		JsonObject jsonObject = new JsonParser().parse(jsonDetalleVacacion).getAsJsonObject();		
-		GsonBuilder builder = new GsonBuilder();
-		Gson gson = builder.create();
-		VacacionesAux detalleVacacionDto = gson.fromJson(jsonObject.get(ServiceConstants.DETALLE_VACACION), VacacionesAux.class);
-		logger.info("Datos para idVacacion en recurso "+detalleVacacionDto.getIdVacacion()+" fechaInicio "+detalleVacacionDto.getFechaInicio()+
-				" fechaFin "+detalleVacacionDto.getFechaFin());
-		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.agregaDetalleVacacion(detalleVacacionDto));
+		//JsonObject jsonObject = new JsonParser().parse(jsonDetalleVacacion).getAsJsonObject();		
+		//GsonBuilder builder = new GsonBuilder();
+		//Gson gson = builder.create();
+		JsonObject jsonObject = new JsonParser().parse(jsonDetalleVacacion).getAsJsonObject();	
+		JsonObject detalle = jsonObject.getAsJsonObject("detalleVacacion");
+		JsonElement fechaInicio  =  detalle.get("fechaInicio");
+		JsonElement fechaFin  =  detalle.get("fechaFin");
+		JsonElement dias  =  detalle.get("dias");
+		JsonObject vacacion = detalle.getAsJsonObject("idVacacion");
+		JsonElement idVacacion  =  vacacion.get("idVacacion");
+		JsonObject usuario = detalle.getAsJsonObject("idUsuario");
+		JsonElement idUsuario =  usuario.get("idUsuario");
+		UsuarioDto usuarioDto= new UsuarioDto();
+		usuarioDto=usuarioService.buscaUsuarioPorId(idUsuario.getAsInt());
+		VacacionPeriodoDto vacacionPeriodo = new VacacionPeriodoDto();
+		vacacionPeriodo.setIdVacacion(idVacacion.getAsInt());
+		EstatusDto estatus= new EstatusDto();
+		estatus.setIdEstatus(1);
+		VacacionesAux detalleVacacion= new VacacionesAux();
+		detalleVacacion.setDias(dias.getAsInt());
+		detalleVacacion.setFechaFin(fechaFin.getAsString());
+		detalleVacacion.setFechaInicio(fechaInicio.getAsString());
+		detalleVacacion.setIdUsuario(usuarioDto);
+		detalleVacacion.setIdVacacion(vacacionPeriodo);
+		detalleVacacion.setIdEstatus(estatus);
+		System.out.println("usuario "+gson.toJson(usuarioDto));
+		//VacacionesAux detalleVacacionDto = gson.fromJson(jsonObject.get(ServiceConstants.DETALLE_VACACION), VacacionesAux.class);
+		
+		logger.info("Datos para idVacacion en recurso "+detalleVacacion.getIdVacacion()+" fechaInicio "+detalleVacacion.getFechaInicio()+
+				" fechaFin "+detalleVacacion.getFechaFin());
+		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, detalleVacacionService.agregaDetalleVacacion(detalleVacacion));
 	}
 	
 	@GET
