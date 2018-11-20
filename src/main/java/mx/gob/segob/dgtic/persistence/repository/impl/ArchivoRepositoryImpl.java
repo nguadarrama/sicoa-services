@@ -75,10 +75,10 @@ public class ArchivoRepositoryImpl extends RecursoBase implements ArchivoReposit
 		StringBuilder qry = new StringBuilder();
 		qry.append("UPDATE m_archivo SET nombre= :nombre, url = :url, size = :size, activo = :activo ");
 		qry.append("WHERE id_archivo = :idArchivo");
-		if(archivoDto.getArchivo()!=null){
+		if(archivoDto.getArchivoByte()!=null){
 			try {
 				logger.info("Guardando archivo");
-			byte[] bite=archivoDto.getArchivo();
+			byte[] bite=archivoDto.getArchivoByte();
 			logger.info("datos del archivo: {} ",bite);
 			Path path= Paths.get(archivoDto.getUrl());
 			Path pathNombre= Paths.get(archivoDto.getUrl()+archivoDto.getNombre()+archivoDto.getIdArchivo()+".pdf");
@@ -131,10 +131,10 @@ public class ArchivoRepositoryImpl extends RecursoBase implements ArchivoReposit
 				id++;
 			}
         archivoDto.setNombre(archivoDto.getNombre()+id+".pdf");
-		if(archivoDto.getArchivo()!=null){
+		if(archivoDto.getArchivoByte()!=null){
 			try {
 				logger.info("Guardando archivo");
-			byte[] bite=archivoDto.getArchivo();
+			byte[] bite=archivoDto.getArchivoByte();
 			logger.info("datos del archivo: {} ",bite);
 			Path path= Paths.get(archivoDto.getUrl());
 			Path pathNombre= Paths.get(archivoDto.getUrl()+archivoDto.getNombre());

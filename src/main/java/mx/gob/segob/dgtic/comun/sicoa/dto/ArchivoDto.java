@@ -38,7 +38,7 @@ public class ArchivoDto {
 	    */
 	   @MapeaColumna(columna = "activo") private Boolean activo;
 	   
-	   private byte[] archivo;
+	   private byte[] archivoByte;
 	   
 	   private String accion;
 	   
@@ -146,12 +146,12 @@ public class ArchivoDto {
 			this.activo = activo;
 		}
 
-		public byte[] getArchivo() {
-			return archivo;
+		public byte[] getArchivoByte() {
+			return archivoByte;
 		}
 
-		public void setArchivo(byte[] archivo) {
-			this.archivo = archivo;
+		public void setArchivoByte(byte[] archivo) {
+			this.archivoByte = archivo;
 		}
 
 		public String getAccion() {

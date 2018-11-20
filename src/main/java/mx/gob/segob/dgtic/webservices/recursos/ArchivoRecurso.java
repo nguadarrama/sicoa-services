@@ -75,7 +75,7 @@ public class ArchivoRecurso extends ServiceBase{
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		ArchivoDto archivoDto = gson.fromJson(jsonObject.get("archivo"), ArchivoDto.class);
-		logger.info("archivo en recurso: {} ",archivoDto.getArchivo());
+		logger.info("archivo en recurso: {} ",archivoDto.getArchivoByte());
 
 		return ResponseJSONGenericoUtil.getRespuestaExito(StatusResponse.OK, archivoService.agregaArhivo(archivoDto));
 	}

@@ -14,8 +14,15 @@ public class VacacionesAux {
 	private Integer dias;
 	private String fechaRegistro;
     private String name;
+    private String mensaje;
     
-    public VacacionesAux(){
+    public String getMensaje() {
+		return mensaje;
+	}
+	public void setMensaje(String mensaje) {
+		this.mensaje = mensaje;
+	}
+	public VacacionesAux(){
     	
     }
     public VacacionesAux(Integer idUsuario, Integer idVacacion, Integer idResponsable, Integer idEstatus, String fechaInicio, String fechaFin, 
