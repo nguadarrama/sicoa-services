@@ -77,7 +77,7 @@ public class ComisionServiceImpl extends ServiceBase implements ComisionService 
       comisionDto.setFechaFin(fechaFinal);
     }
     if (comisionAux.getComision() != null && !comisionAux.getComision().isEmpty()) {
-      comisionDto.setComision(comisionAux.getComision());
+      comisionDto.setComisionDesc(comisionAux.getComision());
     }
     comisionDto.setDias(comisionAux.getDias());
     Horario horario = new Horario();
@@ -124,7 +124,7 @@ public class ComisionServiceImpl extends ServiceBase implements ComisionService 
     comisionDto.setFechaInicio(fechaInicial);
     comisionDto.setFechaFin(fechaFinal);
     comisionDto.setFechaRegistro(fechaSolicitud);
-    comisionDto.setComision(comisionAux.getComision());
+    comisionDto.setComisionDesc(comisionAux.getComision());
     comisionDto.setDias(comisionAux.getDias());
     Horario horario = new Horario();
     horario.setIdHorario(comisionAux.getIdHorario());

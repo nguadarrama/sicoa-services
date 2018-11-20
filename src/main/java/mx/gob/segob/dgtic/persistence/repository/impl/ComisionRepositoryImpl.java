@@ -104,7 +104,7 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
       comisionDto.setFechaInicio((Date) comision.get(COLUMNA_FECHA_INICIO));
       comisionDto.setFechaFin((Date) comision.get(COLUMNA_FECHA_FIN));
       comisionDto.setDias((Integer) comision.get(COLUMNA_DIAS));
-      comisionDto.setComision((String) comision.get(COLUMNA_COMISION));
+      comisionDto.setComisionDesc((String) comision.get(COLUMNA_COMISION));
       Horario horario = new Horario();
       horario.setIdHorario((Integer) comision.get(COLUMNA_ID_HORARIO));
       comisionDto.setIdHorario(horario);
@@ -181,7 +181,7 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
     comisionDto.setFechaInicio(fechaInicio);
     comisionDto.setFechaFin(fechaFinal);
     comisionDto.setFechaRegistro(fechaRegistro);
-    comisionDto.setComision((String) informacionConsulta.get(COLUMNA_COMISION));
+    comisionDto.setComisionDesc((String) informacionConsulta.get(COLUMNA_COMISION));
     Horario idHorario = new Horario();
     idHorario.setIdHorario((Integer) informacionConsulta.get(COLUMNA_ID_HORARIO));
     comisionDto.setIdHorario(idHorario);
@@ -204,7 +204,7 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
     parametros.addValue(PARAMETRO_FECHA_INICIO, comisionDto.getFechaInicio());
     parametros.addValue(PARAMETRO_FECHA_FIN, comisionDto.getFechaFin());
     parametros.addValue(PARAMETRO_DIAS, comisionDto.getDias());
-    parametros.addValue(PARAMETRO_COMISION, comisionDto.getComision());
+    parametros.addValue(PARAMETRO_COMISION, comisionDto.getComisionDesc());
     parametros.addValue(PARAMETRO_ID_HORARIO, comisionDto.getIdHorario().getIdHorario());
     logger.info(QUERY_LOGGER, qry);
     try {
@@ -268,7 +268,7 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
     parametros.addValue(PARAMETRO_FECHA_INICIO, comisionDto.getFechaInicio());
     parametros.addValue(PARAMETRO_FECHA_FIN, comisionDto.getFechaFin());
     parametros.addValue(PARAMETRO_DIAS, comisionDto.getDias());
-    parametros.addValue(PARAMETRO_COMISION, comisionDto.getComision());
+    parametros.addValue(PARAMETRO_COMISION, comisionDto.getComisionDesc());
     parametros.addValue(PARAMETRO_FECHA_REGISTRO, comisionDto.getFechaRegistro());
     parametros.addValue(PARAMETRO_ID_HORARIO, comisionDto.getIdHorario().getIdHorario());
     logger.info(QUERY_LOGGER, qry);
@@ -351,7 +351,7 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
       comision.setFechaFin((Date) comisiones.get(COLUMNA_FECHA_FIN));
       comision.setFechaInicio((Date) comisiones.get(COLUMNA_FECHA_INICIO));
       comision.setIdResponsable((Integer) comisiones.get(COLUMNA_ID_RESPONSABLE));
-      comision.setComision((String) comisiones.get(COLUMNA_COMISION));
+      comision.setComisionDesc((String) comisiones.get(COLUMNA_COMISION));
       comision.setFechaRegistro((Date) comisiones.get(COLUMNA_FECHA_REGISTRO));
       listaComisiones.add(comision);
     }
@@ -423,7 +423,7 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
       comision.setFechaFin((Date) comisiones.get(COLUMNA_FECHA_FIN));
       comision.setFechaInicio((Date) comisiones.get(COLUMNA_FECHA_INICIO));
       comision.setIdResponsable((Integer) comisiones.get(COLUMNA_ID_RESPONSABLE));
-      comision.setComision((String) comisiones.get(COLUMNA_COMISION));
+      comision.setComisionDesc((String) comisiones.get(COLUMNA_COMISION));
       comision.setFechaRegistro((Date) comisiones.get(COLUMNA_FECHA_REGISTRO));
       listaComisiones.add(comision);
     }

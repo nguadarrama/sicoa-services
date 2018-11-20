@@ -51,7 +51,7 @@ public class ComisionDto {
 	    /**
 	     * La descripci&oacute;n de la comisi&oacute;n.
 	     */
-	    @MapeaColumna(columna = "comision") private String comision;
+	    @MapeaColumna(columna = "comision") private String comisionDesc;
 	    
 	    /**
          * La descripci&oacute;n de la comisi&oacute;n.
@@ -200,21 +200,19 @@ public class ComisionDto {
 			this.dias = dias;
 		}
 		
-		/**
-	     * La descripci&oacute;n de la comisi&oacute;n.
-	     * @return comision
-	     */
-		public String getComision() {
-			return comision;
-		}
-		
-		/**
-	     * La descripci&oacute;n de la comisi&oacute;n.
-	     * @param comision
-	     */
-		public void setComision(String comision) {
-			this.comision = comision;
-		}
+    /**
+     * @return the comisionDesc
+     */
+    public String getComisionDesc() {
+      return comisionDesc;
+    }
+
+    /**
+     * @param comisionDesc the comisionDesc to set
+     */
+    public void setComisionDesc(String comisionDesc) {
+      this.comisionDesc = comisionDesc;
+    }
 
     /**
      * @return the fechaRegistro
