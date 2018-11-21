@@ -148,7 +148,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 				
 				Timestamp fechaEvento = usuarioChecada.getListaChecadas().get(i);
 				Timestamp fechaEventoSiguiente = null;
-				Timestamp fechaEventoAnterior = null;
+				
 				
 				//¿la búsqueda hacia adelante del evento siguiente está dentro del tamaño de la lista?
 				if (i < usuarioChecada.getListaChecadas().size() - 1) {
@@ -198,6 +198,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 	
 	@SuppressWarnings("deprecation")
 	private boolean esPuntualEntrada(Timestamp a, Time usuario) {
+		boolean response;
 		Date usuarioEntradaChecada = new Date();
 		usuarioEntradaChecada.setHours(a.getHours());
 		usuarioEntradaChecada.setMinutes(a.getMinutes());
@@ -215,14 +216,16 @@ public class CargaAsistenciaRules extends RecursoBase {
 		Date entradaTolerancia = cal.getTime();
 		
 		if (usuarioEntradaChecada.before(entradaTolerancia) || usuarioEntradaChecada.equals(entradaTolerancia)) {  
-			return true;
+			response =  true;
 		} else {
-			return false;
+			response =  false;
 		}
+		return response;
 	}
 	
 	@SuppressWarnings("deprecation")
 	private boolean esPuntualSalida(Timestamp a, Time usuario) {
+		boolean response ;
 		Date usuarioSalidaChecada = new Date();
 		usuarioSalidaChecada.setHours(a.getHours());
 		usuarioSalidaChecada.setMinutes(a.getMinutes());
@@ -240,10 +243,11 @@ public class CargaAsistenciaRules extends RecursoBase {
 		Date salidaTolerancia = cal.getTime();
 		
 		if (usuarioSalidaChecada.after(salidaTolerancia) || usuarioSalidaChecada.equals(salidaTolerancia)) { 
-			return true;
+			response =  true;
 		} else {
-			return false;
+			response =  false;
 		}
+		return response;
 	}
 	
 	private void actualizaNomina() {
@@ -299,6 +303,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 		return listaUsuarioChecadas;
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void buscaMasEventosDelDia(UsuarioChecada usuarioChecada, Timestamp fechaEvento, Timestamp fechaEventoSiguiente, List<Timestamp> listaEventosMultiples, int i) {
 		//se continúa buscando eventos en el mismo día y se guardan en la lista
 		for (int y = 2; true ; y++) {
