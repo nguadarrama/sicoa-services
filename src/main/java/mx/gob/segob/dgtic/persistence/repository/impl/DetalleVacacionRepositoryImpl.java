@@ -474,7 +474,7 @@ public class DetalleVacacionRepositoryImpl extends RepositoryBase implements Det
 		validaFechasVacaciones(this.claveUsuario, this.fechaInicio, this.fechaFin);
 		contador++;
 		}
-		while(!bandera);
+		while(bandera);
 			logger.info("Contador: {} ",contador);
 		if(diasTotales>10){
 			respuesta="Estas solicitando vacaciones un día inmediato posterior o anterior, a otra solicitud de vacaciones "
