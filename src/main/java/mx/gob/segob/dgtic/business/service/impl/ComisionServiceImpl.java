@@ -63,7 +63,7 @@ public class ComisionServiceImpl extends ServiceBase implements ComisionService 
     ComisionDto comisionDto = new ComisionDto();
     Date fechaInicial = null;
     Date fechaFinal = null;
-    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 
     if (comisionAux.getFechaInicio() != null && !comisionAux.getFechaInicio().isEmpty()
         && comisionAux.getFechaFin() != null && !comisionAux.getFechaFin().isEmpty()) {
