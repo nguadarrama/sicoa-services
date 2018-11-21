@@ -51,6 +51,8 @@ public class IncidenciaDto {
 	    @MapeaColumna(columna = "id_justificacion") private JustificacionDto justificacion;
 	    
 	    @MapeaColumna(columna = "nombre_autorizador") private String nombreAutorizador;
+	    
+	    private String dictaminacion;
 
 	    /**
 		    * El id incidencia.
@@ -195,6 +197,11 @@ public class IncidenciaDto {
 		public void setNombreAutorizador(String nombreAutorizador) {
 			this.nombreAutorizador = nombreAutorizador;
 		}
-		
+		public String getDictaminacion() {
+			return dictaminacion;
+		}
+		public void setDictaminacion(String dictaminacion) {
+			this.dictaminacion = dictaminacion;
+		}
 		
 }
