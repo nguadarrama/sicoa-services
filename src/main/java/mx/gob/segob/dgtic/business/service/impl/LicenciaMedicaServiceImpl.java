@@ -62,9 +62,10 @@ public class LicenciaMedicaServiceImpl extends ServiceBase implements LicenciaMe
     	DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
     	
     	try {
-    		fechaInicial = df.parse(licenciaMedicaDto.getFechaInicioAux());
-    		fechaFinal=df.parse(licenciaMedicaDto.getFechaFinAux());
-    		logger.info("fechaInicio: {} ",fechaInicial);
+    		logger.info("fechaInicio: {} ",licenciaMedicaDto.getFechaInicio());
+    		fechaInicial = df.parse(licenciaMedicaDto.getFechaInicio());
+    		fechaFinal=df.parse(licenciaMedicaDto.getFechaFin());
+    		
     		logger.info("fechaInicial: {} ",fechaInicial);
 		} catch (ParseException e) {
 			logger.error("error: {}",e);
