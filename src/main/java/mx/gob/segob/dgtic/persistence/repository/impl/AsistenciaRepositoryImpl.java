@@ -533,17 +533,20 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
 		try {
 			Integer respuesta = nameParameterJdbcTemplate.update(qry.toString(), parametros);
 			
-			if (respuesta == 1) {
+			if (respuesta == 1 && incidencia.getDictaminacion().equals("Autorizar")) {
 				if (incidencia.getDescuento()) { 
-					if (incidencia.getEstatus().getIdEstatus() == 1) { //justificación enviada a descuento
-						return 3;
-					} else { //descuento aprobado
-						return 2;
-					}
-				} else if (!incidencia.getDescuento()) {
-					return 1; 
+					return 1;			//Descuento aprobado
+				} else {
+					return 2;           //Justificación aprobada
+				}
+			} else if (respuesta == 1 && incidencia.getDictaminacion().equals("Rechazar")) {
+				if (incidencia.getDescuento() && incidencia.getEstatus().getIdEstatus() == 1) {
+					return 4;      //justificación enviada a descuento
+				} else {
+					return 3;           //Descuento rechazado
 				}
 			}
+			
 		} catch (Exception e) {
 			logger.error("Error al dictaminar la justificación, en la indicencia: {} ", incidencia.getIdAsistencia().getIdAsistencia() + " " + e.getMessage());
 		}
