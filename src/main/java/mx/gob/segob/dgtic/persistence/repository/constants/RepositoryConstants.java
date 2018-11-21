@@ -229,7 +229,7 @@ public class RepositoryConstants {
 	public static final String ARIL167 = " and u.apellido_paterno like '%";
 	public static final String ARIL171 = " and u.apellido_materno like '%";
 	public static final String ARIL175 = " and ua.nombre like '' ";
-	public static final String ARIL179 = " and u.nivel like '%";
+	public static final String ARIL179 = " and u.nivel = '";
 	public static final String ARIL183 = " and t.id_tipo_dia = ";
 	public static final String ARIL187 = " and e.id_estatus = ";
 	/**
@@ -292,7 +292,7 @@ public class RepositoryConstants {
 	public static final String ARIL258 = " and u.apellido_paterno like '%";
 	public static final String ARIL262 = " and u.apellido_materno like '%";
 	public static final String ARIL266 = " and ua.id_unidad = ";
-	public static final String ARIL270 = " and u.nivel like '%";
+	public static final String ARIL270 = " and u.nivel like '";
 	public static final String ARIL274 = " and t.id_tipo_dia = ";
 	public static final String ARIL278 = " and e.id_estatus = ";
 	/**
@@ -339,7 +339,7 @@ public class RepositoryConstants {
 	public static final String ARIL674 = " and u.apellido_paterno like '%";
 	public static final String ARIL678 = " and u.apellido_materno like '%";
 	public static final String ARIL682 = " and ua.id_unidad = ";
-	public static final String ARIL686 = " and u.nivel like '%";
+	public static final String ARIL686 = " and u.nivel = '";
 	public static final String ARIL690 = " and t.id_tipo_dia = ";
 	public static final String ARIL694 = " and e.id_estatus = ";
 //	public static final String ARIL6

@@ -176,7 +176,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         }
         
         if (!asistenciaBusquedaUtil.getNivel().isEmpty()) {
-        	qry.append(RepositoryConstants.ARIL179 + asistenciaBusquedaUtil.getNivel() + "%' ");
+        	qry.append(RepositoryConstants.ARIL179 + asistenciaBusquedaUtil.getNivel() + "' ");
         }
         
         if (asistenciaBusquedaUtil.getTipo() != null) {
@@ -267,7 +267,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
         }
         
         if (!asistenciaBusquedaUtil.getNivel().isEmpty()) {
-        	qry.append(RepositoryConstants.ARIL270 + asistenciaBusquedaUtil.getNivel() + "%' ");
+        	qry.append(RepositoryConstants.ARIL270 + asistenciaBusquedaUtil.getNivel() + "' ");
         }
         
         if (asistenciaBusquedaUtil.getTipo() != null) {
@@ -881,7 +881,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
       }
       
       if (!asistenciaBusquedaUtil.getNivel().isEmpty()) {
-      	qry.append(RepositoryConstants.ARIL686 + asistenciaBusquedaUtil.getNivel() + "%' ");
+      	qry.append(RepositoryConstants.ARIL686 + asistenciaBusquedaUtil.getNivel() + "' ");
       }
       
       if (asistenciaBusquedaUtil.getEstado() != null) {
@@ -917,7 +917,7 @@ public class AsistenciaRepositoryImpl extends RecursoBase implements AsistenciaR
        }
        
        if (!asistenciaBusquedaUtil.getNivel().isEmpty()) {
-    	   qry.append(" and u.nivel like '%" + asistenciaBusquedaUtil.getNivel() + "%' ");
+    	   qry.append(" and u.nivel = '" + asistenciaBusquedaUtil.getNivel() + "' ");
        }
        
        if (asistenciaBusquedaUtil.getEstado() != null) {
