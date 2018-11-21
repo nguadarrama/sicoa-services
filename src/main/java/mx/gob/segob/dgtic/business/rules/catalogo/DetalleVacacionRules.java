@@ -125,9 +125,9 @@ public class DetalleVacacionRules extends RecursoBase {
 		    logger.info("FechaInicial: {} ",parsedInicial);
 		    logger.info("fechaActual: {} ",fechaActual);
 			if((fechaActual.before(parsedInicial) || fechaActual.equals(parsedInicial))){
-				aceptaVacacionesFuturas(parsedInicial, detalleVacacionDto, usuarioDto);
+				aux=aceptaVacacionesFuturas(parsedInicial, detalleVacacionDto, usuarioDto);
 			}else{
-				aceptaVacacionesPasadas(fechaInicioDate, fechaFinDate, detalleVacacionDto, usuarioDto);
+				aux=aceptaVacacionesPasadas(fechaInicioDate, fechaFinDate, detalleVacacionDto, usuarioDto);
 			}
 			
 		}else if(detalleVacacionDto.getIdEstatus().getIdEstatus()==3){
@@ -175,9 +175,9 @@ public class DetalleVacacionRules extends RecursoBase {
 				fechaInicio = new java.sql.Date(parsedInicial.getTime());
 				fechaFin = new java.sql.Date(parsedFinal.getTime());
 				if((fechaActual.before(parsedInicial) || fechaActual.equals(parsedInicial))){
-					vacacionesFuturas(usuario, fechaInicio, fechaFin, detalleVacacionDto);
+					detalleAux=vacacionesFuturas(usuario, fechaInicio, fechaFin, detalleVacacionDto);
 				}else{
-					vacacionesPasadas(usuario, fechaInicio, fechaFin, detalleVacacionDto);
+					detalleAux=vacacionesPasadas(usuario, fechaInicio, fechaFin, detalleVacacionDto);
 					
 				}
 /**				if(fechaActual.after(parsedInicial) && fechaActual.after(parsedFinal)){
@@ -256,7 +256,7 @@ public class DetalleVacacionRules extends RecursoBase {
 		  }
 	 
 	 private DetalleVacacionDto vacacionesFuturas(UsuarioDto usuario, java.sql.Date fechaInicio, java.sql.Date fechaFin, DetalleVacacionDto detalleVacacionDto){
-		 	DetalleVacacionDto detalleAux=null;
+		 	DetalleVacacionDto detalleAux=new DetalleVacacionDto();
 		 	Calendar c = Calendar.getInstance();
 			c.setTime(fechaFin);
 			c.add(Calendar.DAY_OF_MONTH, 1);  
@@ -288,7 +288,7 @@ public class DetalleVacacionRules extends RecursoBase {
 	 }
 	 
 	 private DetalleVacacionDto vacacionesPasadas(UsuarioDto usuario, java.sql.Date fechaInicio, java.sql.Date fechaFin, DetalleVacacionDto detalleVacacionDto){
-		 DetalleVacacionDto detalleAux= null;
+		 DetalleVacacionDto detalleAux= new DetalleVacacionDto();
 		 List<AsistenciaDto> listaAsistencia= asistenciaRepository.buscaAsistenciaEmpleado(usuario.getClaveUsuario(), 0, 0, fechaInicio, fechaFin);
 			Boolean bandera=false;
 			for(AsistenciaDto asistencia: listaAsistencia){
@@ -327,7 +327,7 @@ public class DetalleVacacionRules extends RecursoBase {
 	 }
 	 
 	 private DetalleVacacionDto aceptaVacacionesFuturas(Date parsedInicial, DetalleVacacionDto detalleVacacionDto, UsuarioDto usuarioDto){
-		 DetalleVacacionDto aux= null;
+		 DetalleVacacionDto aux= new DetalleVacacionDto();
 		 logger.info("FechaInicial. {} ",parsedInicial);
 				Date fechaInicio=detalleVacacionDto.getFechaInicio();
 				Date fechaFin=detalleVacacionDto.getFechaFin();
