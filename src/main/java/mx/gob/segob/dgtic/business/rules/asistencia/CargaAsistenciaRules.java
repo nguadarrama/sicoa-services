@@ -125,7 +125,7 @@ public class CargaAsistenciaRules extends RecursoBase {
 
 	}
 	
-	@SuppressWarnings({ "unused" })
+	
 	private List<AsistenciaDto> calculaEntradasSalidas(List<AsistenciaDto> listaAsistencia) {
 		Set<String> hashSetIdUsuarios = new HashSet<>();
 		List<UsuarioChecada> listaUsuarioChecadas = new ArrayList<>();
