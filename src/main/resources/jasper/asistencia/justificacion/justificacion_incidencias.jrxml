@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="justificacion_incidencias" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="278501ae-7448-4c4b-9795-a8055ee58510">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="16"/>
 	<parameter name="fechaIncidencia" class="java.lang.String"/>
 	<parameter name="nombre" class="java.lang.String"/>
 	<parameter name="unidad" class="java.lang.String"/>
@@ -65,22 +65,22 @@
 				<text><![CDATA[AREA SOLICITANTE:   DIRECCIÓN GENERAL DE ADMINISTRACIÓN]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="402" y="34" width="39" height="15" uuid="2b13212b-1edc-40e0-ae8e-c7441146af0f"/>
+				<reportElement x="59" y="73" width="39" height="15" uuid="2b13212b-1edc-40e0-ae8e-c7441146af0f"/>
 				<text><![CDATA[FECHA:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="112" y="93" width="100" height="35" uuid="f41ec717-8aee-4075-b475-ce90d17a7fc9"/>
+				<reportElement x="112" y="120" width="100" height="35" uuid="f41ec717-8aee-4075-b475-ce90d17a7fc9"/>
 				<text><![CDATA[NOMBRE Y FIRMA DE AUTORIZACIÓN:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="334" y="91" width="127" height="20" uuid="85b39b12-d7fa-4c06-ac9c-1bcf6b9a83ec"/>
+				<reportElement x="334" y="124" width="127" height="20" uuid="85b39b12-d7fa-4c06-ac9c-1bcf6b9a83ec"/>
 				<text><![CDATA[SELLO DE RECEPCIÓN:]]></text>
 			</staticText>
 			<line>
-				<reportElement x="70" y="156" width="180" height="1" uuid="3addda9e-e634-4f08-8435-028f19e861f5"/>
+				<reportElement x="70" y="178" width="180" height="1" uuid="3addda9e-e634-4f08-8435-028f19e861f5"/>
 			</line>
 			<line>
-				<reportElement x="302" y="155" width="180" height="1" uuid="2b51d3d6-d56a-485f-80f3-ca30c99b1460"/>
+				<reportElement x="302" y="177" width="180" height="1" uuid="2b51d3d6-d56a-485f-80f3-ca30c99b1460"/>
 			</line>
 			<staticText>
 				<reportElement x="163" y="50" width="112" height="15" uuid="2c850b2a-b0b8-4d3c-8769-5b85dd7095ac"/>
@@ -161,7 +161,7 @@
 				<textFieldExpression><![CDATA[$P{codigoIncidencia}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="446" y="34" width="100" height="20" uuid="d6869e64-9c94-4e98-aa47-33f9b60ec44a"/>
+				<reportElement x="112" y="73" width="370" height="34" uuid="d6869e64-9c94-4e98-aa47-33f9b60ec44a"/>
 				<textFieldExpression><![CDATA[$P{fechaIncidencia}]]></textFieldExpression>
 			</textField>
 		</band>
