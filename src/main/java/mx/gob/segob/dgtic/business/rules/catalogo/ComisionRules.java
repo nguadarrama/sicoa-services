@@ -37,6 +37,9 @@ public class ComisionRules extends RecursoBase {
   
   private static final Integer TIPO_COMISION = 7;
   private static final Integer TIPO_INASISTENCIA = 8;
+  private static final Integer ESTATUS_ACEPTADA = 2;
+  private static final Integer ESTATUS_RECHAZADA = 3;
+  private static final Integer ESTATUS_CANCELADA = 6;
 
   public List<ComisionDto> obtenerListaComisiones() {
     return comisionRepository.obtenerListaComisiones();
@@ -47,46 +50,12 @@ public class ComisionRules extends RecursoBase {
   }
 
   public ComisionDto modificaComisionEstatusArchivo(ComisionDto comisionDto) {
-    ComisionDto comisionAux = buscaComision(comisionDto.getIdComision());
-    if (comisionDto.getIdEstatus().getIdEstatus() == 2) {
-      comisionDto.setFechaInicio(comisionAux.getFechaInicio());
-      comisionDto.setFechaFin(comisionAux.getFechaFin());
-      Date fechaInicio = comisionDto.getFechaInicio();
-      Date fechaFin = comisionDto.getFechaFin();
-      logger.info("Fechas: fechaInicial: {} fechaFin: {} ", comisionDto.getFechaInicio(),
-          comisionDto.getFechaFin());
-      List<Date> listaFechas = removerFinesDeSemana(fechaInicio, fechaFin);
-
-      EstatusDto estatusDto = new EstatusDto();
-      estatusDto.setIdEstatus(2);
-      TipoDiaDto tipoDiaDto = new TipoDiaDto();
-      tipoDiaDto.setIdTipoDia(7);
-      UsuarioDto usuarioDto =
-          usuarioRepository.buscaUsuarioPorId(comisionDto.getIdUsuario().getIdUsuario());
-
-      /** Obtener lista de Asistencias **/
-      List<AsistenciaDto> listaAsistencias =
-          asistenciaRepository.buscaAsistenciaEmpleado(usuarioDto.getClaveUsuario(), 0, 0,
-              new Timestamp(fechaInicio.getTime()), new Timestamp(fechaFin.getTime()));
-      logger.info("listaAsistencias: {}", listaAsistencias.size());
-
-      /** Si lista de Asistencias no es vacia entra a verificar de que tipo son **/
-      if (!listaAsistencias.isEmpty()) {
-        logger.info("La comision esta corriendo {}", listaFechas.size());
-        List<Date> fechasSinAsistencias = listaFechasLimpia(listaFechas, listaAsistencias);
-        logger.info("Lista comision final {}", fechasSinAsistencias.size());
-
-        agregarFechasAsistencias(fechasSinAsistencias, usuarioDto, estatusDto, tipoDiaDto);
-        comisionAux = comisionRepository.modificaComisionEstatusArchivo(comisionDto);
-        return comisionAux;
-      }
-
-      agregarFechasAsistencias(listaFechas, usuarioDto, estatusDto, tipoDiaDto);
+    ComisionDto comisionAux = null;
+    if (comisionDto.getIdEstatus().getIdEstatus() == ESTATUS_ACEPTADA) {
+      comisionAux = aceptarComision(comisionDto);
+    } else if (comisionDto.getIdEstatus().getIdEstatus() == ESTATUS_RECHAZADA) {
       comisionAux = comisionRepository.modificaComisionEstatusArchivo(comisionDto);
-
-    } else if (comisionDto.getIdEstatus().getIdEstatus() == 3) {
-      comisionAux = comisionRepository.modificaComisionEstatusArchivo(comisionDto);
-    } else if (comisionDto.getIdEstatus().getIdEstatus() == 6) {
+    } else if (comisionDto.getIdEstatus().getIdEstatus() == ESTATUS_CANCELADA) {
       comisionAux = cancelarComision(comisionDto);
     } else {
       comisionAux = comisionRepository.modificaComisionEstatusArchivo(comisionDto);
@@ -138,6 +107,12 @@ public class ComisionRules extends RecursoBase {
         apellidoPaterno, apellidoMaterno);
   }
   
+  /**
+   * Cancela comision.
+   * 
+   * @param comisionDto
+   * @return
+   */
   private ComisionDto cancelarComision(ComisionDto comisionDto) {
     /** Buscamos la comision por el id para obtener periodo. **/
     ComisionDto comisionAux = buscaComision(comisionDto.getIdComision());
@@ -269,5 +244,51 @@ public class ComisionRules extends RecursoBase {
       asistenciaRepository.agregaAsistencia(asistenciaDto);
       logger.info("Registro insertado Fecha: {}", date);
     }
+  }
+  
+  /**
+   * Acepta comision.
+   * 
+   * @param comisionDto
+   * @return
+   */
+  private ComisionDto aceptarComision(ComisionDto comisionDto) {
+    ComisionDto comisionAux = buscaComision(comisionDto.getIdComision());
+    comisionDto.setFechaInicio(comisionAux.getFechaInicio());
+    comisionDto.setFechaFin(comisionAux.getFechaFin());
+    Date fechaInicio = comisionDto.getFechaInicio();
+    Date fechaFin = comisionDto.getFechaFin();
+    logger.info("Fechas: fechaInicial: {} fechaFin: {} ", comisionDto.getFechaInicio(),
+        comisionDto.getFechaFin());
+    List<Date> listaFechas = removerFinesDeSemana(fechaInicio, fechaFin);
+
+    EstatusDto estatusDto = new EstatusDto();
+    estatusDto.setIdEstatus(2);
+    TipoDiaDto tipoDiaDto = new TipoDiaDto();
+    tipoDiaDto.setIdTipoDia(7);
+    UsuarioDto usuarioDto =
+        usuarioRepository.buscaUsuarioPorId(comisionDto.getIdUsuario().getIdUsuario());
+
+    /** Obtener lista de Asistencias **/
+    List<AsistenciaDto> listaAsistencias =
+        asistenciaRepository.buscaAsistenciaEmpleado(usuarioDto.getClaveUsuario(), 0, 0,
+            new Timestamp(fechaInicio.getTime()), new Timestamp(fechaFin.getTime()));
+    logger.info("listaAsistencias: {}", listaAsistencias.size());
+
+    /** Si lista de Asistencias no es vacia entra a verificar de que tipo son **/
+    if (!listaAsistencias.isEmpty()) {
+      logger.info("La comision esta corriendo {}", listaFechas.size());
+      List<Date> fechasSinAsistencias = listaFechasLimpia(listaFechas, listaAsistencias);
+      logger.info("Lista comision final {}", fechasSinAsistencias.size());
+
+      agregarFechasAsistencias(fechasSinAsistencias, usuarioDto, estatusDto, tipoDiaDto);
+      comisionAux = comisionRepository.modificaComisionEstatusArchivo(comisionDto);
+      return comisionAux;
+    }
+
+    agregarFechasAsistencias(listaFechas, usuarioDto, estatusDto, tipoDiaDto);
+    comisionAux = comisionRepository.modificaComisionEstatusArchivo(comisionDto);
+
+    return comisionAux;
   }
 }

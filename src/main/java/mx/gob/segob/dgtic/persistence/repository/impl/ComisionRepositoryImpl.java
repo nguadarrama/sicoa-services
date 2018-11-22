@@ -486,7 +486,7 @@ public class ComisionRepositoryImpl extends RecursoBase implements ComisionRepos
     query.append("WHERE ((comision.fecha_inicio <= '" + fechaInicio + "' AND comision.fecha_fin >= '" + fechaFin + "') ");
     query.append("OR comision.fecha_fin BETWEEN '" + fechaInicio + "' AND '" + fechaFin + "' ");
     query.append("OR comision.fecha_inicio BETWEEN '" + fechaInicio + "' AND '" + fechaFin + "') ");
-    query.append("AND comision.id_usuario = '" + idUsuario + "'");
+    query.append("AND comision.id_usuario = '" + idUsuario + "' AND id_estatus IN (1,2)");
     
     logger.info(QUERY_LOGGER, query);
     List<Map<String, Object>> consulta = jdbcTemplate.queryForList(query.toString());
