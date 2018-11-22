@@ -294,7 +294,7 @@ public class DetalleVacacionRules extends RecursoBase {
 				logger.info("entrada.- {} ",fechaInicio);
 				logger.info("Entrada.- {} ",asistencia.getEntrada());
 				logger.info("tipoDia.- {} ",asistencia.getIdTipoDia());
-				if(fechaInicio.toString().equals(asistencia.getEntrada().toString().substring(0, 10)) && !asistencia.getIdTipoDia().getIdTipoDia().toString().equals("8")){
+				if(fechaInicio.toString().equals(asistencia.getEntrada().toString().substring(0, 10)) && (!asistencia.getIdTipoDia().getIdTipoDia().toString().equals("8") && !asistencia.getIdTipoDia().getIdTipoDia().toString().equals("5"))){
 					bandera=true;
 				}
 			}
