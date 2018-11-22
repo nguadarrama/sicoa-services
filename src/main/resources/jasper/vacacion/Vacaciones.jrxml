@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Vacaciones" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f165d569-c59e-418b-8f22-e606d38f4bc2">
 	<property name="ireport.zoom" value="1.3636363636363635"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="290"/>
+	<property name="ireport.y" value="530"/>
 	<parameter name="nombre" class="java.lang.String"/>
 	<parameter name="apellidoPaterno" class="java.lang.String"/>
 	<parameter name="apellidoMaterno" class="java.lang.String"/>
@@ -103,7 +103,7 @@
 				<textFieldExpression><![CDATA[$P{apellidoPaterno}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement isPrintRepeatedValues="false" x="10" y="273" width="268" height="20" isPrintWhenDetailOverflows="true" uuid="3fc9db4c-0de5-4d18-8028-de769dec41d2"/>
+				<reportElement x="10" y="275" width="268" height="20" uuid="3fc9db4c-0de5-4d18-8028-de769dec41d2"/>
 				<text><![CDATA[Número de días pendientes por disfrutar en el periodo:]]></text>
 			</staticText>
 			<staticText>
@@ -111,7 +111,7 @@
 				<text><![CDATA[al:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement isPrintRepeatedValues="false" x="10" y="334" width="537" height="20" isPrintWhenDetailOverflows="true" uuid="8c2b0af7-baa2-409b-bff2-608b35cea698"/>
+				<reportElement x="10" y="334" width="537" height="20" isPrintWhenDetailOverflows="true" uuid="8c2b0af7-baa2-409b-bff2-608b35cea698"/>
 				<textElement>
 					<font size="9"/>
 				</textElement>
@@ -153,14 +153,14 @@
 				<textFieldExpression><![CDATA[$P{puesto}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement isPrintRepeatedValues="false" x="10" y="191" width="376" height="20" isPrintWhenDetailOverflows="true" uuid="fd59de49-be41-4ab5-8c1a-ff56fe378589"/>
+				<reportElement x="10" y="193" width="376" height="20" isPrintWhenDetailOverflows="true" uuid="fd59de49-be41-4ab5-8c1a-ff56fe378589"/>
 				<textElement>
 					<font size="9" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Trabajadores al Servico del Estado, solicito disfrutar de vacaciones del periodo:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement isPrintRepeatedValues="false" x="10" y="293" width="268" height="20" isPrintWhenDetailOverflows="true" uuid="ba55ed1b-9851-419b-8305-493e9e5e4b8a"/>
+				<reportElement x="10" y="297" width="268" height="20" uuid="ba55ed1b-9851-419b-8305-493e9e5e4b8a"/>
 				<text><![CDATA[Motivo por el que no se pueden disfrutar:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
@@ -192,7 +192,7 @@
 				<textFieldExpression><![CDATA[$P{numeroEmpleado}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="333" y="273" width="100" height="20" uuid="940e5ffb-073d-440d-9012-a0b68d8035f8"/>
+				<reportElement x="333" y="275" width="100" height="20" uuid="940e5ffb-073d-440d-9012-a0b68d8035f8"/>
 				<textElement>
 					<font isItalic="true" isUnderline="false"/>
 				</textElement>
@@ -202,7 +202,7 @@
 				<reportElement x="332" y="304" width="204" height="1" uuid="50c69211-91dc-435f-8158-fe33d77d07ab"/>
 			</line>
 			<staticText>
-				<reportElement isPrintRepeatedValues="false" x="305" y="120" width="231" height="20" isPrintWhenDetailOverflows="true" uuid="1ee2ec23-ff15-430a-bcec-5928d5ac916d"/>
+				<reportElement x="305" y="120" width="231" height="20" uuid="1ee2ec23-ff15-430a-bcec-5928d5ac916d"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -223,7 +223,7 @@
 				<text><![CDATA[Del :]]></text>
 			</staticText>
 			<staticText>
-				<reportElement isPrintRepeatedValues="false" x="10" y="253" width="268" height="20" isPrintWhenDetailOverflows="true" uuid="2f00e3d6-426b-446c-b4a2-b7cbc728ed85"/>
+				<reportElement x="10" y="253" width="268" height="20" uuid="2f00e3d6-426b-446c-b4a2-b7cbc728ed85"/>
 				<text><![CDATA[Número de días hábiles autorizados en el periodo:]]></text>
 			</staticText>
 			<staticText>
@@ -241,7 +241,7 @@
 				<text><![CDATA[APELLIDO PATERNO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement isPrintRepeatedValues="false" x="10" y="171" width="526" height="20" isPrintWhenDetailOverflows="true" uuid="d3114840-9c7b-4cb5-91f2-9432b3a7e990"/>
+				<reportElement x="10" y="171" width="526" height="20" isPrintWhenDetailOverflows="true" uuid="d3114840-9c7b-4cb5-91f2-9432b3a7e990"/>
 				<textElement>
 					<font size="9"/>
 				</textElement>
@@ -255,7 +255,7 @@
 				<text><![CDATA[NOMBRE]]></text>
 			</staticText>
 			<staticText>
-				<reportElement isPrintRepeatedValues="false" x="10" y="120" width="289" height="20" isPrintWhenDetailOverflows="true" forecolor="#333333" uuid="ff6dd741-77e0-4bbb-bf2d-94b194bed661"/>
+				<reportElement x="10" y="120" width="289" height="20" forecolor="#333333" uuid="ff6dd741-77e0-4bbb-bf2d-94b194bed661"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -283,14 +283,14 @@
 				<text><![CDATA[FECHA DE INGRESO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement isPrintRepeatedValues="false" x="10" y="354" width="537" height="20" isPrintWhenDetailOverflows="true" uuid="64d5d2c7-0062-47a1-ace1-06b86b232222"/>
+				<reportElement x="10" y="357" width="537" height="20" isPrintWhenDetailOverflows="true" uuid="64d5d2c7-0062-47a1-ace1-06b86b232222"/>
 				<textElement>
 					<font size="9"/>
 				</textElement>
 				<text><![CDATA[contar con más de seis meses de servicios ininterrumpidos en el desempeño de mi cargo.]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="386" y="191" width="150" height="20" isPrintWhenDetailOverflows="true" uuid="af802633-c272-4f60-9809-1dd418db0207"/>
+				<reportElement x="386" y="193" width="150" height="20" isPrintWhenDetailOverflows="true" uuid="af802633-c272-4f60-9809-1dd418db0207"/>
 				<textElement>
 					<font size="9" isItalic="true"/>
 				</textElement>
@@ -368,14 +368,14 @@
 				<text><![CDATA[*En caso de que el periodo a disfrutar contemple dos meses anexar un formato por cada mes.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement isPrintRepeatedValues="false" x="11" y="53" width="536" height="20" isPrintWhenDetailOverflows="true" uuid="2789238a-6142-4a95-b214-71a6fe8c0b76"/>
+				<reportElement x="11" y="53" width="536" height="20" isPrintWhenDetailOverflows="true" uuid="2789238a-6142-4a95-b214-71a6fe8c0b76"/>
 				<textElement>
 					<font size="9"/>
 				</textElement>
 				<text><![CDATA[En mi caracter de superior jerarquico del servidor público solicitante y de conformidad con las disposiciones legales]]></text>
 			</staticText>
 			<staticText>
-				<reportElement isPrintRepeatedValues="false" x="11" y="73" width="536" height="20" isPrintWhenDetailOverflows="true" uuid="1916d2f5-428f-4322-b198-67e1fe332676"/>
+				<reportElement x="11" y="76" width="536" height="20" uuid="1916d2f5-428f-4322-b198-67e1fe332676"/>
 				<textElement>
 					<font size="9"/>
 				</textElement>

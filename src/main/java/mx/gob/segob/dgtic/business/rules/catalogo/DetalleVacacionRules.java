@@ -178,7 +178,6 @@ public class DetalleVacacionRules extends RecursoBase {
 					detalleAux=vacacionesFuturas(usuario, fechaInicio, fechaFin, detalleVacacionDto);
 				}else{
 					detalleAux=vacacionesPasadas(usuario, fechaInicio, fechaFin, detalleVacacionDto);
-					
 				}
 /**				if(fechaActual.after(parsedInicial) && fechaActual.after(parsedFinal)){
 //					Integer contadorDias=0;
@@ -256,7 +255,7 @@ public class DetalleVacacionRules extends RecursoBase {
 		  }
 	 
 	 private DetalleVacacionDto vacacionesFuturas(UsuarioDto usuario, java.sql.Date fechaInicio, java.sql.Date fechaFin, DetalleVacacionDto detalleVacacionDto){
-		 	DetalleVacacionDto detalleAux=new DetalleVacacionDto();
+		 	DetalleVacacionDto detalleAux=null;
 		 	Calendar c = Calendar.getInstance();
 			c.setTime(fechaFin);
 			c.add(Calendar.DAY_OF_MONTH, 1);  
@@ -295,7 +294,7 @@ public class DetalleVacacionRules extends RecursoBase {
 				logger.info("entrada.- {} ",fechaInicio);
 				logger.info("Entrada.- {} ",asistencia.getEntrada());
 				logger.info("tipoDia.- {} ",asistencia.getIdTipoDia());
-				if(fechaInicio.toString().equals(asistencia.getEntrada().toString()) && !asistencia.getIdTipoDia().getIdTipoDia().toString().equals("8")){
+				if(fechaInicio.toString().equals(asistencia.getEntrada().toString().substring(0, 10)) && !asistencia.getIdTipoDia().getIdTipoDia().toString().equals("8")){
 					bandera=true;
 				}
 			}
@@ -327,7 +326,7 @@ public class DetalleVacacionRules extends RecursoBase {
 	 }
 	 
 	 private DetalleVacacionDto aceptaVacacionesFuturas(Date parsedInicial, DetalleVacacionDto detalleVacacionDto, UsuarioDto usuarioDto){
-		 DetalleVacacionDto aux= new DetalleVacacionDto();
+		 DetalleVacacionDto aux= null;
 		 logger.info("FechaInicial. {} ",parsedInicial);
 				Date fechaInicio=detalleVacacionDto.getFechaInicio();
 				Date fechaFin=detalleVacacionDto.getFechaFin();
@@ -362,9 +361,9 @@ public class DetalleVacacionRules extends RecursoBase {
 			Boolean bandera=false;
 			for(AsistenciaDto asistencia: listaAsistencia){
 				logger.info("entrada . {} ",fechaInicioDate);
-				logger.debug("entrada.. {} ",asistencia.getEntrada());
+				logger.info("fecha de asistencia.. {} ",asistencia.getEntrada());
 				logger.info("tipoDia -- {}",asistencia.getIdTipoDia());
-				if(fechaInicioDate.toString().equals(asistencia.getEntrada().toString()) && asistencia.getIdTipoDia().getIdTipoDia().toString().equals("8")){
+				if(fechaInicioDate.toString().equals(asistencia.getEntrada().toString().substring(0, 10)) && (asistencia.getIdTipoDia().getIdTipoDia().toString().equals("8"))){
 					bandera=true;
 				}
 			}
@@ -373,19 +372,37 @@ public class DetalleVacacionRules extends RecursoBase {
 					logger.info("idAsistencia: {} ",asistencia2.getIdAsistencia());
 					if(asistencia2.getIdTipoDia().getIdTipoDia().toString().equals("8")){
 						asistenciaRepository.eliminaAsistencia(asistencia2.getIdAsistencia());
-						TipoDiaDto tipoDia= new TipoDiaDto();
-						tipoDia.setIdTipoDia(5);
-						asistencia2.setIdTipoDia(tipoDia);
-						asistenciaRepository.agregaAsistencia(asistencia2);
 					}
 				}
+				Date fechaInicio=detalleVacacionDto.getFechaInicio();
+				Date fechaFin=detalleVacacionDto.getFechaFin();
+				Calendar c1 = Calendar.getInstance();
+			    c1.setTime(fechaInicio);
+			    Calendar c2 = Calendar.getInstance();
+			    c2.setTime(fechaFin);
+			    List<Date> listaFechas;
+			    listaFechas=removerFinesDeSemana(fechaInicio, fechaFin);
+			    EstatusDto estatusDto = new EstatusDto();
+			    estatusDto.setIdEstatus(2);
+			    TipoDiaDto tipoDiaDto = new TipoDiaDto();
+			    tipoDiaDto.setIdTipoDia(5);
+			    for (Iterator<Date> it = listaFechas.iterator(); it.hasNext();) {
+			        	Date date = it.next();
+				        AsistenciaDto asistenciaDto = new AsistenciaDto(); 
+				        asistenciaDto.setEntrada(new Timestamp(date.getTime()));
+				        asistenciaDto.setSalida(new Timestamp(date.getTime()));
+				        asistenciaDto.setUsuarioDto(usuarioDto);
+				        asistenciaDto.setIdEstatus(estatusDto);
+				        asistenciaDto.setIdTipoDia(tipoDiaDto);
+				        asistenciaRepository.agregaAsistencia(asistenciaDto);
+			    }
 				EstatusDto estatus =new EstatusDto();
 				estatus.setIdEstatus(2);
 				detalleVacacionDto.setIdEstatus(estatus);
 				aux=detalleVacacionRepository.aceptaORechazaDetalleVacacion(detalleVacacionDto);
 				
 			}else{
-				aux.setMensaje("Error, no se pueden aceptar las vacaciones porque existe un regitro en asistencia");
+				aux.setMensaje("Error, no se pueden aceptar las vacaciones porque existe un registro en asistencia");
 			}
 			return aux;
 	 }
