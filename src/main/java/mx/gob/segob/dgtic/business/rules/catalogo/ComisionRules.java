@@ -197,31 +197,29 @@ public class ComisionRules extends RecursoBase {
   }
   
   /**
-   * Compara la lista de fechas con la lista de asistencias eliminando las fechas de listaFechas
-   * que contengan asistencias o retardos.
+   * Compara la lista de fechas con la lista de asistencias eliminando las fechas de listaFechas que
+   * contengan asistencias o retardos.
    * 
    * @param listaFechas
    * @param listaAsistencias
    * @return listaFechas Lista de fechas sin asistencias o retardos.
    */
-  private List<Date> listaFechasLimpia(List<Date> listaFechas,
-      List<AsistenciaDto> listaAsistencias) {
-    List<Date> aEliminar = new ArrayList<>();
+  private Integer listaFechasLimpia(List<Date> listaFechas, List<AsistenciaDto> listaAsistencias) {
+    Integer existeAsistencia = 0;
     for (Date date : listaFechas) {
       for (AsistenciaDto asistencia : listaAsistencias) {
-        if (date.getTime() == asistencia.getEntrada().getTime()) {
+        if(date.getTime() == asistencia.getEntrada().getTime()) {
           if (asistencia.getIdTipoDia().getIdTipoDia() == 8) {
             /** Eliminar inasistencia **/
             asistenciaRepository.eliminaAsistencia(asistencia.getIdAsistencia());
           } else {
-            aEliminar.add(date);
+            existeAsistencia = 1;
+            return existeAsistencia;
           }
         }
       }
     }
-    listaFechas.removeAll(aEliminar);
-
-    return listaFechas;
+    return existeAsistencia;
   }
   
   /**
@@ -278,10 +276,15 @@ public class ComisionRules extends RecursoBase {
     /** Si lista de Asistencias no es vacia entra a verificar de que tipo son **/
     if (!listaAsistencias.isEmpty()) {
       logger.info("La comision esta corriendo {}", listaFechas.size());
-      List<Date> fechasSinAsistencias = listaFechasLimpia(listaFechas, listaAsistencias);
-      logger.info("Lista comision final {}", fechasSinAsistencias.size());
-
-      agregarFechasAsistencias(fechasSinAsistencias, usuarioDto, estatusDto, tipoDiaDto);
+      Integer existeAsistencia = listaFechasLimpia(listaFechas, listaAsistencias);
+      logger.info("ExisteAsistencia: {}", existeAsistencia);
+      
+      if (existeAsistencia == 1) {
+        comisionAux.setMensaje("Lo sentimos el usuario cuenta con registro de entrada o salida de los días a aceptar");
+        return comisionAux;
+      }
+      
+      agregarFechasAsistencias(listaFechas, usuarioDto, estatusDto, tipoDiaDto);
       comisionAux = comisionRepository.modificaComisionEstatusArchivo(comisionDto);
       return comisionAux;
     }
