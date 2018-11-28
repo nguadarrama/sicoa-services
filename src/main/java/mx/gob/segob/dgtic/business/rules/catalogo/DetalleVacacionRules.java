@@ -227,6 +227,7 @@ public class DetalleVacacionRules extends RecursoBase {
 	
 	 private List<Date> removerFinesDeSemana(Date fechaInicio, Date fechaFin) {
 		    List<Date> listaFechas = new ArrayList<>();
+		    List<Date> listaFechasFinal = new ArrayList<>();
 		    List<DiaFestivoDto> listaDiasFestivos = diaFestivoRepository.obtenerDiasFestivosActivos();
 
 		    Calendar c1 = Calendar.getInstance();
@@ -242,16 +243,19 @@ public class DetalleVacacionRules extends RecursoBase {
 		        c1.add(Calendar.DAY_OF_MONTH, 1);
 		      }
 		    }
-
+		    
+		    listaFechasFinal=listaFechas;
+		    
 		    for (DiaFestivoDto diaFestivo : listaDiasFestivos) {
+		    	
 		      for (Date fecha : listaFechas) {
 		        if (diaFestivo.getFecha().equals(fecha)) {
-		          listaFechas.remove(fecha);
+		        	listaFechasFinal.remove(fecha);
 		        }
 		      }
 		    }
 
-		    return listaFechas;
+		    return listaFechasFinal;
 		  }
 	 
 	 private DetalleVacacionDto vacacionesFuturas(UsuarioDto usuario, java.sql.Date fechaInicio, java.sql.Date fechaFin, DetalleVacacionDto detalleVacacionDto){
