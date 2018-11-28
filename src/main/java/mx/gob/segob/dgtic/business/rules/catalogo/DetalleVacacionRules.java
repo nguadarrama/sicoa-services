@@ -240,11 +240,10 @@ public class DetalleVacacionRules extends RecursoBase {
 		        c1.add(Calendar.DAY_OF_MONTH, 1);
 		      } else {
 		        listaFechas.add(c1.getTime());
+		        listaFechasFinal.add(c1.getTime());
 		        c1.add(Calendar.DAY_OF_MONTH, 1);
 		      }
 		    }
-		    
-		    listaFechasFinal=listaFechas;
 		    
 		    for (DiaFestivoDto diaFestivo : listaDiasFestivos) {
 		    	
