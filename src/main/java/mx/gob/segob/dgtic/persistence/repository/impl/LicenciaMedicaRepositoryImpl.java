@@ -319,8 +319,8 @@ public class LicenciaMedicaRepositoryImpl extends RepositoryBase implements Lice
 			String apellidoPaterno, String apellidoMaterno) {
 		StringBuilder qry = new StringBuilder();
 		qry.append("select sum(licencia.dias) suma_dias, count(licencia.id_licencia) total_licencias, usuario.id_usuario ,usuario.cve_m_usuario, usuario.nombre, usuario.apellido_paterno, usuario.apellido_materno ");
-		qry.append("from m_licencia_medica licencia right join m_usuario usuario on usuario.id_usuario=licencia.id_usuario, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion ");
-		qry.append("where usuario.cve_m_usuario=relacion.cve_m_usuario and unidad.id_unidad=relacion.id_unidad and unidad.id_unidad ='"+idUnidad+"' and licencia.id_estatus != 3 ");
+		qry.append("from m_licencia_medica licencia right join m_usuario usuario on usuario.id_usuario=licencia.id_usuario and licencia.id_estatus!=3, c_unidad_administrativa unidad, usuario_unidad_administrativa relacion ");
+		qry.append("where usuario.cve_m_usuario=relacion.cve_m_usuario and unidad.id_unidad=relacion.id_unidad and unidad.id_unidad ='"+idUnidad+"' ");
 		if(claveUsuario!=null && !claveUsuario.trim().isEmpty()){
 			qry.append("and usuario.cve_m_usuario = '"+claveUsuario+"' ");
 	    }

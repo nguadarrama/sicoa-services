@@ -169,6 +169,7 @@ public class ComisionRules extends RecursoBase {
    */
   private List<Date> removerFinesDeSemana(Date fechaInicio, Date fechaFin) {
     List<Date> listaFechas = new ArrayList<>();
+    List<Date> listaFechasFinal = new ArrayList<>();
     List<DiaFestivoDto> listaDiasFestivos = diaFestivoRepository.obtenerDiasFestivosActivos();
 
     Calendar c1 = Calendar.getInstance();
@@ -181,6 +182,7 @@ public class ComisionRules extends RecursoBase {
         c1.add(Calendar.DAY_OF_MONTH, 1);
       } else {
         listaFechas.add(c1.getTime());
+        listaFechasFinal.add(c1.getTime());
         c1.add(Calendar.DAY_OF_MONTH, 1);
       }
     }
@@ -188,12 +190,12 @@ public class ComisionRules extends RecursoBase {
     for (DiaFestivoDto diaFestivo : listaDiasFestivos) {
       for (Date fecha : listaFechas) {
         if (diaFestivo.getFecha().equals(fecha)) {
-          listaFechas.remove(fecha);
+        	listaFechasFinal.remove(fecha);
         }
       }
     }
 
-    return listaFechas;
+    return listaFechasFinal;
   }
   
   /**

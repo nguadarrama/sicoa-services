@@ -108,6 +108,7 @@ public class LicenciaMedicaRules extends RepositoryBase{
 	    Calendar c2 = Calendar.getInstance();
 	    c2.setTime(fechaFin);
 	    List<Date> listaFechas = new ArrayList<>();
+	    List<Date> listaFechasFinal = new ArrayList<>();
 	    while (!c1.after(c2)) {
 	    	if((c1.get(Calendar.DAY_OF_WEEK)==Calendar.SATURDAY) || (c1.get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY)){
 	        	logger.info("Datos dentro de la comparación ");
@@ -115,6 +116,7 @@ public class LicenciaMedicaRules extends RepositoryBase{
 	        	c1.add(Calendar.DAY_OF_MONTH, 1);
 	        }else{
 	        	listaFechas.add(c1.getTime());
+	        	listaFechasFinal.add(c1.getTime());
 	        	c1.add(Calendar.DAY_OF_MONTH, 1);
 	        }
 	    }
@@ -122,7 +124,7 @@ public class LicenciaMedicaRules extends RepositoryBase{
 	    for(DiaFestivoDto diaFestivo : listaDias){
         	for(Date lista: listaFechas){
 	        	if(diaFestivo.getFecha().equals(lista)){
-	        		listaFechas.remove(lista);
+	        		listaFechasFinal.remove(lista);
 	        	}
         	}
         	
@@ -134,7 +136,7 @@ public class LicenciaMedicaRules extends RepositoryBase{
 	    tipoDiaDto.setIdTipoDia(6);
 	    UsuarioDto usuarioDto;
 	    usuarioDto=usuarioRepository.buscaUsuarioPorId(licenciaMedicaDto.getIdUsuario().getIdUsuario());
-	    for (Iterator<Date> it = listaFechas.iterator(); it.hasNext();) {
+	    for (Iterator<Date> it = listaFechasFinal.iterator(); it.hasNext();) {
 	        Date date = it.next();
 	        AsistenciaDto asistenciaDto = new AsistenciaDto(); 
 	        asistenciaDto.setEntrada(new Timestamp(date.getTime()));
