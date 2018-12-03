@@ -33,7 +33,7 @@ public class CargaInicialRepositoryImpl extends RecursoBase implements CargaInic
 	public List<UsuarioDto> recuperarUsuariosCargaInicial() {
 		StringBuilder qry = new StringBuilder();
         qry.append("SELECT NUMERO_EMPLEADO, NOMBRE, APELLIDO_PATERNO, APELLIDO_MATERNO, FECHA_ING_SECRETARIA, PUESTO_EMPLEADO, RFC, NIVEL, NOMBRE_JEFE ");
-        qry.append("FROM VW_SEGOB_W00_ACT ");
+        qry.append("FROM APPS.VW_SEGOB_W00_ACT ");
         
         List<Map<String, Object>> usuarios = jdbcTemplateOracle.queryForList(qry.toString());
         List<UsuarioDto> listaUsuario = new ArrayList<>();
@@ -82,7 +82,7 @@ public class CargaInicialRepositoryImpl extends RecursoBase implements CargaInic
 	public UsuarioDto obtieneUsuarioPorCveMusuario(String cveMusuario) {
 		StringBuilder qry = new StringBuilder();
 		qry.append("SELECT NUMERO_EMPLEADO, NOMBRE, APELLIDO_PATERNO, APELLIDO_MATERNO, FECHA_ING_SECRETARIA, PUESTO_EMPLEADO, RFC, NIVEL, NOMBRE_JEFE ");
-        qry.append("FROM VW_SEGOB_W00_ACT ");
+        qry.append("FROM APPS.VW_SEGOB_W00_ACT ");
         qry.append("WHERE NUMERO_EMPLEADO = '" + cveMusuario + "' ");
         
         List<Map<String, Object>> usuarios = jdbcTemplateOracle.queryForList(qry.toString());
