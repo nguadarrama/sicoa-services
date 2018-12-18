@@ -55,6 +55,7 @@ public class AutenticacionRepositoryImpl extends RepositoryBase implements Auten
     @Override
 	public String obtenerPalabraClavePorUsuario(String cveUsuario) 
 							throws CredentialNotFoundException{
+    	logger.info("password en repository: {} ",cveUsuario);
     	 StringBuilder qry = new StringBuilder();
 	     qry.append(" SELECT password ");
 	     qry.append(" FROM m_usuario  ");
@@ -65,6 +66,7 @@ public class AutenticacionRepositoryImpl extends RepositoryBase implements Auten
 	     try {
 	    	 palabraClave = jdbcTemplate.queryForObject( 
 	 					qry.toString(),parametros, String.class);
+	    	 logger.info("Se consulto en repository: {} ",cveUsuario);
 	     } catch(EmptyResultDataAccessException exception){
 	    	 throw new CredentialNotFoundException(); 
 	     }	     
@@ -80,6 +82,7 @@ public class AutenticacionRepositoryImpl extends RepositoryBase implements Auten
 	 */
 	@Override
 	public UsuarioAcceso obtenerUsuarioAccesoByCve(String cveUsuario){
+		logger.info("Usuario de acceso en repository: {} ",cveUsuario);
 		StringBuilder qry = new StringBuilder();
 		qry.append(" SELECT cve_m_usuario, ");
 		qry.append(" 	EN_SESION, ");
@@ -100,6 +103,7 @@ public class AutenticacionRepositoryImpl extends RepositoryBase implements Auten
 			usuarioAcceso =jdbcTemplate.queryForObject( qry.toString(), 
 										parametros, 
 										new RowAnnotationBeanMapper<UsuarioAcceso>(UsuarioAcceso.class)); 
+			logger.info("Se realizó consulta de usuario en repository: {} ",cveUsuario);
 		}  catch(EmptyResultDataAccessException exception){
 			usuarioAcceso = null; 
 		}
@@ -120,7 +124,7 @@ public class AutenticacionRepositoryImpl extends RepositoryBase implements Auten
 		StringBuilder qry = new StringBuilder();
 		qry.append("UPDATE m_usuario  SET numero_intentos = :numeroIntentos ");
 		qry.append("WHERE cve_m_usuario = :cveUsuarioAcceso");
-		
+		logger.info("Se registra intentos de acceso: {} ",cveUsuario);
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("numeroIntentos", numeroIntento);
 		parametros.addValue("cveUsuarioAcceso", cveUsuario);
@@ -143,7 +147,7 @@ public class AutenticacionRepositoryImpl extends RepositoryBase implements Auten
 		qry.append("UPDATE m_usuario SET bloqueado = :bloqueado, ");
 		qry.append("    fecha_bloqueo = :fechaBloqueo ");
 		qry.append("WHERE cve_m_usuario = :cveUsuarioBloqueo");
-		
+		logger.info("Se bloquea Usuario en repository: {} ",cveUsuario);
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("bloqueado", DecisionEnum.S.toString());
 		parametros.addValue("fechaBloqueo", Calendar.getInstance().getTime());
@@ -195,7 +199,7 @@ public class AutenticacionRepositoryImpl extends RepositoryBase implements Auten
 		qry.append(" 	BLOQUEADO = :bloqueado, ");
 		qry.append(" 	FECHA_BLOQUEO = NULL ");
 		qry.append(" WHERE cve_m_usuario = :cveUsuarioRegistro");
-		
+		logger.info("Se registra acceso del usuario en repository: {} ",cveUsuario);
 		MapSqlParameterSource parametros = new MapSqlParameterSource();
 		parametros.addValue("enSesion", DecisionEnum.S.toString());
 		parametros.addValue("bloqueado", DecisionEnum.N.toString());
@@ -223,7 +227,7 @@ public class AutenticacionRepositoryImpl extends RepositoryBase implements Auten
 		
 		parametros.addValue("enSesion", DecisionEnum.N.toString());
 		parametros.addValue("cveUsuarioCierre", cveUsuario);
-		
+		logger.info("Se cierra sesion en repository: {} ",cveUsuario);
 		jdbcTemplate.update(qry.toString(), parametros);		
 	}
 	

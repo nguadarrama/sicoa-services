@@ -71,7 +71,7 @@ public class UnidadAdministrativaRepositoryImpl extends RepositoryBase implement
 		qry.append("select id_unidad, cve_m_usuario ");
         qry.append("from usuario_unidad_administrativa ");
         qry.append("where cve_m_usuario = :claveUsuario and encargado=false");
-        
+        System.out.println("clave: " + claveUsuario);
         MapSqlParameterSource parametros = new MapSqlParameterSource();
         parametros.addValue("claveUsuario", claveUsuario);
         UsuarioUnidadAdministrativaDto usuarioUnidadAdministrativaDto= new UsuarioUnidadAdministrativaDto();

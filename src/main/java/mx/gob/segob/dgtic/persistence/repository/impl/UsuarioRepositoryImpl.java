@@ -186,6 +186,7 @@ public class UsuarioRepositoryImpl extends RecursoBase implements UsuarioReposit
 
 	@Override
 	public String consultaContrasenia(String claveUsuario) {
+		logger.info("password en repository: {} ",claveUsuario);
 	StringBuilder qry = new StringBuilder();
 	UsuarioDto usuarioDto=null;
 	       qry.append("select password ");
