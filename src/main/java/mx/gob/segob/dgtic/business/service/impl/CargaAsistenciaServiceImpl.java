@@ -12,7 +12,7 @@ public class CargaAsistenciaServiceImpl {
 	@Autowired
 	private CargaAsistenciaRules asistenciaRules;
 	
-	@Scheduled(cron = "0 0 18 * * *") //todos los días a las 3 am
+	@Scheduled(cron = "0 0 8 * * *") //todos los días a las 3 am
 //	@Scheduled(fixedDelay = 600000) //5 min
 	public void procesaAsistencia() {
 		asistenciaRules.procesaAsistencia();
